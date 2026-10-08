@@ -142,7 +142,10 @@ export class BoardInput {
   }
 
   context(event) {
-    if (!this.enabled() || event.isPrimary === false || event.button != null && event.button !== 0 && event.button !== 2) return;
+    // contextmenu is a semantic inspect request. Its primary-pointer flag may
+    // be unset even when the preceding real mouse press was primary. Pointer
+    // starts/releases still require primary identity; this path cannot attack.
+    if (!this.enabled() || event.button != null && event.button !== 0 && event.button !== 2) return;
     const hit = this.hit(event);
     if (hit?.kind !== "unit") return;
     event.preventDefault?.(); event.stopPropagation?.();
@@ -151,7 +154,7 @@ export class BoardInput {
       // Native menus can arrive before or after pointerup, including after a
       // touch long press. Keep its consumed/cancelled state through both orders.
       if (press.consumed) return;
-      if (!this.valid(press) || event.isPrimary === false ||
+      if (!this.valid(press) ||
         Number.isFinite(event.pointerId) && event.pointerId >= 0 && event.pointerId !== press.pointerId ||
         !this.same(hit, press.hit) || !(this.distance(press, event) <= 10)) {
         this.cancel(); return;

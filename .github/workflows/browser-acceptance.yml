@@ -38,10 +38,14 @@ jobs:
         env:
           E2E_SUITE: smoke
         run: npx --no-install playwright test --grep @smoke
-      - name: Full UI match, recovery, persistence and responsive acceptance
+      - name: Board inspection and cancelled gestures
+        env:
+          E2E_SUITE: interaction
+        run: npx --no-install playwright test --grep @interaction
+      - name: Remaining UI match, recovery, persistence and responsive acceptance
         env:
           E2E_SUITE: full
-        run: npx --no-install playwright test --grep-invert @smoke
+        run: npx --no-install playwright test --grep-invert '@smoke|@interaction'
       - name: Keep only safe evidence for three days
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

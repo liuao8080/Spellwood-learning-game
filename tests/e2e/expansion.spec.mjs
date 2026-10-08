@@ -67,11 +67,12 @@ async function playExpansionChoice(actor, other, testInfo) {
   const target = chosen.targets[0];
   const before = structuredClone(room.players[target.seat].board.find(unit => unit.uid === target.target));
   const side = target.seat === room.youSeat ? 'friendly' : 'enemy';
+  const capture = `${actor.label}-${(actor.metrics.newTargetActions?.length || 0) + 1}-${chosen.card}-${side}`;
   expect(side).toBe(['reed_frog', 'ember_salamander'].includes(chosen.card) ? 'enemy' : 'friendly');
   const advertised = chosen.targets.filter(item => item.target !== 'hero').map(item => `${item.seat}:${item.target}`).sort();
   await expect.poll(() => page.locator('.unit-label.targetable').evaluateAll(elements =>
     elements.map(element => `${element.dataset.seat}:${element.dataset.uid}`).sort())).toEqual(advertised);
-  await safeScreenshot(page, testInfo, `${chosen.card}-${side}-legal-targets`);
+  await safeScreenshot(page, testInfo, `${capture}-legal-targets`);
   await uiCommand(actor, () => page.locator(`.unit-label.targetable[data-seat="${target.seat}"][data-uid="${target.target}"]`).click());
   await sync(actor, other);
   expect(actor.observed.room.selfHandIds.includes(chosen.handId), 'the accepted targeted play consumed its own hand instance').toBe(false);
@@ -87,9 +88,10 @@ async function playExpansionChoice(actor, other, testInfo) {
     expect(after.hp).toBe(Math.min(before.hp + 2, before.maxHp + 2));
   } else expect(after).toBeUndefined();
   actor.metrics.newTargetActions ??= [];
-  actor.metrics.newTargetActions.push({ card: chosen.card, side });
+  const publicStats = unit => unit ? { attack: unit.atk, health: unit.hp, maximumHealth: unit.maxHp, shield: unit.shield } : null;
+  actor.metrics.newTargetActions.push({ card: chosen.card, side, before: publicStats(before), after: publicStats(after) });
   await waitForBoard(actor);
-  await safeScreenshot(page, testInfo, `${chosen.card}-${side}-accepted-effect`);
+  await safeScreenshot(page, testInfo, `${capture}-accepted-effect`);
   return { kind: side };
 }
 
@@ -606,7 +608,7 @@ async function verifyBoardUnchanged(actor, before, commandsBefore) {
     'viewing or dismissing details must not send a game command').toEqual([]);
 }
 
-test('armed unit inspection by right click native touch and keyboard never spends an action', async ({ actors }, testInfo) => {
+test('@interaction armed unit inspection by right click native touch and keyboard never spends an action', async ({ actors }, testInfo) => {
   test.setTimeout(150_000);
   testInfo.annotations.push({ type: 'coverage', description: 'Two real isolated players summon through visible UI and wait for a ready own unit. While attack is armed, own/enemy projected DOM labels open exact-instance details by right click and 520ms Chromium CDP touch hold; I/ContextMenu also inspect. Closing preserves selection, both boards, own mana/hand/ready and command count. One Escape from hand focus then clicking an enemy does not attack. This covers DOM labels and Chromium touch-event emulation, not physical touch hardware or direct 3D model picking.' });
   const a = await actors('inspection-A', { hasTouch: true });
@@ -635,11 +637,37 @@ test('armed unit inspection by right click native touch and keyboard never spend
   const own = room.players[room.youSeat].board.find(unit => unit.ready);
   const enemy = room.players[1 - room.youSeat].board[0];
   const label = unit => page.locator(`.unit-label[data-uid="${unit.uid}"]`);
-  await label(own).click();
-  await expect(page.locator('.target-command')).toBeVisible();
-  await expect(label(enemy)).toHaveClass(/targetable/);
   const client = await actor.context.newCDPSession(page);
+  await page.evaluate(() => {
+    const events = [], types = ['pointerdown', 'pointerup', 'contextmenu'];
+    const number = value => typeof value === 'number' && Number.isFinite(value) ? value : null;
+    const record = event => {
+      const control = event.target?.closest?.('[data-action="unit"]');
+      events.push({
+        type: event.type,
+        eventClass: event instanceof PointerEvent ? 'PointerEvent' : event instanceof MouseEvent ? 'MouseEvent' : 'Event',
+        button: number(event.button), buttons: number(event.buttons),
+        pointerId: number(event.pointerId),
+        pointerType: ['mouse', 'touch', 'pen', ''].includes(event.pointerType) ? event.pointerType : null,
+        isPrimary: typeof event.isPrimary === 'boolean' ? event.isPrimary : null,
+        targetUnitUid: control?.dataset.uid?.slice(0, 80) || null,
+      });
+      if (events.length > 96) events.shift();
+    };
+    for (const type of types) document.addEventListener(type, record, { capture: true, passive: true });
+    // Plain, allowlisted public input metadata only. No Event objects, game
+    // state, question content, session IDs, hand instances or DOM text survive.
+    window.__finishInspectionInputEvidence = () => {
+      for (const type of types) document.removeEventListener(type, record, true);
+      delete window.__finishInspectionInputEvidence;
+      return events;
+    };
+  });
+  actor.metrics.inspectionGesture = { input: 'arm', side: 'own', targetUnitUid: own.uid };
   try {
+    await label(own).click();
+    await expect(page.locator('.target-command')).toBeVisible();
+    await expect(label(enemy)).toHaveClass(/targetable/);
     const cases = [
       { input: 'right', unit: enemy, mine: false },
       { input: 'right', unit: own, mine: true },
@@ -649,6 +677,7 @@ test('armed unit inspection by right click native touch and keyboard never spend
       { input: 'ContextMenu', unit: enemy, mine: false },
     ];
     for (const item of cases) {
+      actor.metrics.inspectionGesture = { input: item.input, side: item.mine ? 'own' : 'enemy', targetUnitUid: item.unit.uid, phase: 'open' };
       if (item.input === 'touch') await page.setViewportSize({ width: 390, height: 844 });
       const control = label(item.unit);
       await expect(control).toBeInViewport();
@@ -668,6 +697,7 @@ test('armed unit inspection by right click native touch and keyboard never spend
       }
       const dialog = page.locator('.card-info-dialog.board-card-info');
       await expect(dialog).toBeVisible();
+      actor.metrics.inspectionGesture.phase = 'verify';
       await expect(dialog.locator('#card-info-title')).toHaveText(publicName);
       await expect(dialog.locator('.card-facts')).toContainText(`当前攻击 ${item.unit.atk}`);
       await expect(dialog.locator('.card-facts')).toContainText(`生命 ${item.unit.hp}/${item.unit.maxHp}`);
@@ -681,19 +711,27 @@ test('armed unit inspection by right click native touch and keyboard never spend
       await expect(page.locator('.target-command')).toBeVisible();
       await expect(label(enemy)).toHaveClass(/targetable/);
       await verifyBoardUnchanged(actor, before, commandsBefore);
+      actor.metrics.inspectionGesture.phase = 'closed-and-unchanged';
     }
-  } finally { await client.detach(); }
-  const before = boardReadOnlySnapshot(actor), commandsBefore = actor.observed.commands.length;
-  await page.locator('#hand-semantics [data-hand-index]').first().focus();
-  await page.keyboard.press('Escape');
-  await expect(page.locator('.target-command')).toBeHidden();
-  await expect(label(enemy)).not.toHaveClass(/targetable/);
-  await label(enemy).click();
-  await verifyBoardUnchanged(actor, before, commandsBefore);
-  await safeScreenshot(page, testInfo, 'escape-cancelled-attack-from-hand-focus');
-  actor.metrics.unitInspection = { rightClickOwn: true, rightClickEnemy: true, nativeTouchOwn: true, nativeTouchEnemy: true, holdMs: 520, keyboardI: true, keyboardContextMenu: true, escapeFromHandFocus: true };
-  for (const participant of [a, b]) {
-    expect(participant.observed.errors).toEqual([]);
-    expect(participant.observed.room.assisted).toBe(false);
+    actor.metrics.inspectionGesture = { input: 'escape-from-hand-focus', side: 'enemy', targetUnitUid: enemy.uid, phase: 'cancel' };
+    const before = boardReadOnlySnapshot(actor), commandsBefore = actor.observed.commands.length;
+    await page.locator('#hand-semantics [data-hand-index]').first().focus();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.target-command')).toBeHidden();
+    await expect(label(enemy)).not.toHaveClass(/targetable/);
+    await label(enemy).click();
+    await verifyBoardUnchanged(actor, before, commandsBefore);
+    await safeScreenshot(page, testInfo, 'escape-cancelled-attack-from-hand-focus');
+    actor.metrics.inspectionGesture.phase = 'completed-and-unchanged';
+    actor.metrics.unitInspection = { rightClickOwn: true, rightClickEnemy: true, nativeTouchOwn: true, nativeTouchEnemy: true, holdMs: 520, keyboardI: true, keyboardContextMenu: true, escapeFromHandFocus: true };
+    for (const participant of [a, b]) {
+      expect(participant.observed.errors).toEqual([]);
+      expect(participant.observed.room.assisted).toBe(false);
+    }
+  } finally {
+    const events = await page.evaluate(() => window.__finishInspectionInputEvidence?.()).catch(() => null);
+    actor.metrics.inspectionInputEvents = events || [];
+    actor.metrics.inspectionEventsCaptured = Array.isArray(events);
+    await client.detach();
   }
 });

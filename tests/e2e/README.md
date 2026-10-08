@@ -68,10 +68,15 @@ never controls random draws: a failure to reach both directions is reported as
 a coverage gap until its cause is diagnosed, not automatically a product bug.
 Captured screenshots still need human visual review.
 
-The original nine scenarios remain, and six expansion scenarios bring the list
-to fifteen. Per-test expansion bounds are 90–180 seconds. One worker, no retries,
-the thirteen-minute global browser budget and twenty-minute workflow budget are
-unchanged. Local validation is listing only; CI establishes actual elapsed time.
+The original nine scenarios remain, and seven expansion/inspection scenarios
+bring the list to sixteen. Per-test expansion bounds are 90–180 seconds.
+One worker and no retries are used. The workflow runs the smoke scenario,
+then the focused `@interaction` scenario, then the other fourteen scenarios;
+the early check is not duplicated in the final group. Each invocation has a
+thirteen-minute global browser ceiling; the entire standard-runner job has a
+twenty-five-minute ceiling. Local validation is listing only; CI establishes
+actual elapsed time. The inspection case passively records a bounded set of
+public pointer/context-menu event fields to diagnose native input differences.
 
 ## Evidence and privacy
 

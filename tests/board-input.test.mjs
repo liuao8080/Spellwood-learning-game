@@ -198,8 +198,17 @@ test("nonprimary, middle-button, button-chord and invalid pointer starts are ign
     h.fire("pointerdown", event); h.advance(500); h.fire("pointerup", event);
     assert.equal(h.input.active, null); assert.equal(h.timers.size, 0);
   }
-  h.fire("contextmenu", { isPrimary: false }); h.fire("contextmenu", { button: 1 });
+  h.fire("contextmenu", { button: 1 });
   assert.deepEqual(h.activated, []); assert.deepEqual(h.inspected, []);
+});
+
+test('a native context menu without the primary flag still inspects the preceding primary mouse press', t => {
+  const h=harness(t);
+  h.fire('pointerdown',{pointerType:'mouse',button:2});
+  h.fire('contextmenu',{pointerType:'mouse',button:2,isPrimary:false});
+  h.fire('pointerup',{pointerType:'mouse',button:2});h.fire('click',{button:2});
+  assert.equal(h.inspected.length,1);assert.equal(h.inspected[0].source,'contextmenu');
+  assert.deepEqual(h.activated,[]);
 });
 
 for (const interruption of ["revision", "move", "entity", "cancel"])
