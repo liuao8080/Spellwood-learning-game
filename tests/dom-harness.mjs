@@ -135,6 +135,7 @@ export function domHarness(
   });
   window.speechSynthesis = ctx.speechSynthesis;
   const src = [
+    "question-banks",
     "cards",
     "random",
     "opening",

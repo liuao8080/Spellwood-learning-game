@@ -47,6 +47,7 @@ export function createProgressBridge({progress,identityStore,now=()=>Date.now(),
     result(playerId,snapshot) {
       if(!playerId)return true;
       const data={phase:snapshot.phase,roomId:snapshot.roomId,youSeat:snapshot.youSeat,
+        bank:snapshot.bank ?? 'school',
         grade:snapshot.grade,course:snapshot.course,ruleset:snapshot.ruleset,combatRules:snapshot.combatRules,
         contentVersion:snapshot.contentVersion,mode:snapshot.mode,assisted:snapshot.assisted,
         result:structuredClone(snapshot.result),self:{deckId:snapshot.self?.deckId},serverTime:snapshot.serverTime,
@@ -56,11 +57,18 @@ export function createProgressBridge({progress,identityStore,now=()=>Date.now(),
     participation(playerId,challengeId) {
       const eventId=`participation:${challengeId}`;
       if(identityStore.hasPlayerEvent(playerId,eventId))return {player:ensureSynced(playerId),duplicate:true,receipt:{changed:false}};
-      ensureSynced(playerId);
+      const player=ensureSynced(playerId);
       const entry=timing.get(key(playerId,challengeId));
       if(!entry||!Number.isFinite(entry.answeredAt))fail('INVALID_PARTICIPATION');
-      return progress.participation(playerId,challengeId,{questionMs:entry.answeredAt-entry.issuedAt,
-        feedbackMs:now()-entry.answeredAt,now:now()});
+      const at=now(),questionMs=entry.answeredAt-entry.issuedAt,feedbackMs=at-entry.answeredAt;
+      // Leaving a valid answered question early is normal navigation, not a
+      // failed account write. Keep its mastery receipt, grant no reward, and
+      // leave qualification uncommitted so a later valid read can qualify once.
+      if(Number.isSafeInteger(questionMs)&&questionMs>=0&&questionMs<=7200000&&
+          Number.isSafeInteger(feedbackMs)&&feedbackMs>=0&&feedbackMs<=7200000&&
+          (questionMs<2000||feedbackMs<1200))
+        return {player,duplicate:false,receipt:{changed:false,qualified:false}};
+      return progress.participation(playerId,challengeId,{questionMs,feedbackMs,now:at});
     },
     retryPending() {
       for(const playerId of new Set([...pending.values()].map(x=>x.playerId)))try{ensureSynced(playerId);}catch{}

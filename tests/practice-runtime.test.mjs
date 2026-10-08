@@ -54,7 +54,8 @@ test("isolated browser practice plays a whole computer battle and starts a clean
 });
 test("practice study has the same catalogue, single question and idempotent answer flow", async () => {
   const catalogue = await (await runtime.studyFetch("/api/curriculum")).json();
-  assert.equal(catalogue.questions.length, 432);
+  assert.equal(catalogue.questions.length, 480);
+  assert.equal(catalogue.questions.filter(q => q.bank === "teacher-academic").length, 48);
   for (let grade = 1; grade <= 6; grade++) {
     const q = catalogue.questions.find(x => x.grade === grade);
     const challenge = await (await runtime.studyFetch(`/api/study/${q.id}`)).json();

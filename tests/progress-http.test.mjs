@@ -84,3 +84,21 @@ test('a repeated collection request keeps its original ten results and rejects c
   const first=await(await post(intent)).json(),second=await(await post(intent)).json();assert.deepEqual(second.data,first.data);assert.equal(second.data.collection.openingIds.length,1);
   const forged=await post({requestId:'forged-opening-request',action:{kind:'open-pack',mode:'test',cards:[{cardId:'golem',finish:'gold'}]}});assert.equal(forged.status,400);
 });
+
+test('leaving an answered question too quickly keeps learning and does not lock account progress',async t=>{
+  const s=await setup(t),a=browser(s);await a.identity.bootstrap();const store=await a.progress();
+  const meta=await(await a.fetcher('/api/curriculum')).json();
+  const qid=meta.questions.find(q=>q.bank==='teacher-academic').id;
+  const challenge=await(await a.fetcher('/api/study/'+qid)).json();
+  const feedback=await(await a.fetcher('/api/study/'+qid+'/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({challengeId:challenge.challengeId,optionId:challenge.question.options[0].id})})).json();
+  assert.equal((await store.applyLearning(feedback)).ok,true);
+  const early=await store.qualifyLearning(challenge.challengeId,{questionMs:900000,feedbackMs:900000});
+  assert.equal(early.ok,true);assert.equal(early.changed,false);
+  assert.equal(store.issue,null);assert.equal(store.dirty,false);
+  assert.equal(store.data.legacy.mastery[qid].seen,1);assert.equal(store.data.collection.totalDays,0);
+  assert.equal(s.identityStore.hasPlayerEvent(a.identity.player.playerId,'participation:'+challenge.challengeId),false);
+  assert.equal((await store.qualifyLearning(challenge.challengeId)).ok,true);
+  assert.equal((await store.updatePreferences({bank:'teacher-academic',teacherCourse:'reading'})).ok,true);
+  assert.equal((await store.exportLatest()).ok,true);
+  const next=await a.fetcher('/api/study/'+meta.questions[0].id);assert.equal(next.ok,true);
+});

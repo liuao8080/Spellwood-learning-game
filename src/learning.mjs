@@ -1,4 +1,5 @@
 import { rng, shuffle, scoreMatch } from "./engine.mjs";
+import { SCHOOL_BANK, bankFor, validBank, validTeacherCourse } from "./question-banks.mjs";
 import {
   RULES,
   CARD,
@@ -21,6 +22,8 @@ export function freshSave() {
   return {
     schema: 1,
     nickname: "Leaf",
+    bank: SCHOOL_BANK,
+    teacherCourse: "all",
     grade: 1,
     course: "s1",
     deckId: "grove",
@@ -253,6 +256,11 @@ export function validateSave(input, questions = []) {
   if (typeof input.nickname !== "string" || input.nickname.length > 16)
     throw Error("昵称不符合存档格式");
   clean.nickname = input.nickname.trim() || "Leaf";
+  const bank = bankFor(input.bank);
+  if (!validBank(bank) || (input.teacherCourse !== undefined && !validTeacherCourse(input.teacherCourse)))
+    throw Error("题库或教师分类格式有误");
+  clean.bank = bank;
+  clean.teacherCourse = input.teacherCourse ?? "all";
   if (
     !int(input.grade, 1, 6) ||
     !DECKS.some((d) => d.id === input.deckId) ||

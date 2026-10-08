@@ -138,6 +138,7 @@ export class GameService {
         type: "queue.status",
         status: "waiting",
         matchBy: s.queue.deadline,
+        bank: s.queue.options.bank ?? "school",
         grade: s.queue.options.grade,
         course: s.queue.options.course,
       });
@@ -462,7 +463,7 @@ export class GameService {
     fail("UNKNOWN_COMMAND");
   }
   queueKey(p) {
-    return [p.ruleset, p.combatRules, p.contentVersion, p.grade, p.course].join(
+    return [p.ruleset, p.combatRules, p.contentVersion, p.bank ?? "school", p.grade, p.course].join(
       "|",
     );
   }
@@ -475,7 +476,7 @@ export class GameService {
       if (this.now() - other.createdAt >= this.config.sessionTtlMs) { this.expireSession(other); continue; }
       if (other.queue || other.roomId && this.rooms.get(other.roomId)?.phase !== 'finished') fail('PLAYER_ALREADY_ACTIVE');
     }
-    this.questions.createDeck({ grade: options.grade, course: options.course });
+    this.questions.createDeck({ bank: options.bank, grade: options.grade, course: options.course });
     if (s.roomId) {
       const r = this.rooms.get(s.roomId);
       if (r && r.phase !== "finished") fail("ALREADY_MATCHED");
@@ -534,6 +535,7 @@ export class GameService {
       type: "queue.status",
       status: "waiting",
       matchBy: deadline,
+      bank: options.bank ?? "school",
       grade: options.grade,
       course: options.course,
     });
@@ -609,6 +611,7 @@ export class GameService {
         },
       ),
       computer,
+      bank: opts.bank ?? "school",
       grade: opts.grade,
       course: opts.course,
       createdAt: this.now(),
@@ -636,6 +639,7 @@ export class GameService {
       feedbacks: new Map(),
       playerId: e.session?.playerId ?? null,
       questionDeck: this.questions.createDeck({
+        bank: r.bank,
         grade: r.grade,
         course: r.course,
       }),
@@ -922,6 +926,7 @@ export class GameService {
       draw = r.result.reason === "draw";
     return {
       ...r.result,
+      bank: r.bank,
       finishedAt: r.finishedAt,
       ...(r.computer ? { computer: { ...r.computer } } : {}),
       ownLearning: { attempts: l.attempts, correct: l.correct },
@@ -973,6 +978,7 @@ export class GameService {
       revision: r.revision,
       ...versions,
       rules: versions.ruleset,
+      bank: r.bank,
       grade: r.grade,
       course: r.course,
       mode: r.mode,

@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "actors": [
+    {
+      "label": "teacher-account",
+      "playerKind": "account",
+      "learnedQuestions": 2,
+      "collectionCopies": 0,
+      "roomMessages": 0,
+      "sessionReadyMessages": 3,
+      "successfulActions": {},
+      "rejectedCommandCodes": [],
+      "duplicateEventRevisions": 0,
+      "feedbackCount": 0,
+      "pageErrorCount": 0,
+      "pageErrors": [],
+      "uiInteractions": {
+        "summons": 0,
+        "attacks": 0,
+        "answers": 0
+      },
+      "catalogueCounts": {
+        "school": 432,
+        "teacher": 48
+      },
+      "queueScope": null,
+      "challengeScopes": [],
+      "queueWaitMs": null,
+      "result": null,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "visibilityAtSample": "visible",
+      "renderers": [
+        {
+          "id": "lobby-scene",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        },
+        {
+          "id": "arena",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": true
+        },
+        {
+          "id": "hand-canvas",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        }
+      ],
+      "renderingCaveat": "One sampled renderer/frame-rate diagnostic, not a whole-session performance measurement or physical-device test"
+    },
+    {
+      "label": "independent-school-guest",
+      "playerKind": "guest",
+      "learnedQuestions": 1,
+      "collectionCopies": 0,
+      "roomMessages": 0,
+      "sessionReadyMessages": 4,
+      "successfulActions": {},
+      "rejectedCommandCodes": [],
+      "duplicateEventRevisions": 0,
+      "feedbackCount": 0,
+      "pageErrorCount": 0,
+      "pageErrors": [],
+      "uiInteractions": {
+        "summons": 0,
+        "attacks": 0,
+        "answers": 0
+      },
+      "catalogueCounts": {
+        "school": 432,
+        "teacher": 48
+      },
+      "queueScope": null,
+      "challengeScopes": [],
+      "queueWaitMs": null,
+      "result": null,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "visibilityAtSample": "visible",
+      "renderers": [
+        {
+          "id": "lobby-scene",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        },
+        {
+          "id": "arena",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": true
+        },
+        {
+          "id": "hand-canvas",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        }
+      ],
+      "renderingCaveat": "One sampled renderer/frame-rate diagnostic, not a whole-session performance measurement or physical-device test"
+    }
+  ]
+}

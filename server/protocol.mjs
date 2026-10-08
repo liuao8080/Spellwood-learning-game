@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { bankFor, validBank, TEACHER_BANK, validTeacherCourse } from "../src/question-banks.mjs";
 import {
   DECKS,
   RULES,
@@ -78,6 +79,7 @@ export function payload(command) {
       exact(
         p,
         [
+          "bank",
           "grade",
           "course",
           "deckId",
@@ -88,11 +90,12 @@ export function payload(command) {
         ],
         ["grade", "course", "deckId"],
       );
+      const bank = bankFor(p.bank);
       if (
-        !Number.isInteger(p.grade) ||
-        p.grade < 1 ||
-        p.grade > 6 ||
-        !validCourse(p.course) ||
+        !validBank(bank) ||
+        (bank === TEACHER_BANK
+          ? p.grade !== null || !validTeacherCourse(p.course)
+          : !Number.isInteger(p.grade) || p.grade < 1 || p.grade > 6 || !validCourse(p.course)) ||
         (p.deckId === "custom"
           ? !validateCustomDeck(p.customDeck)
           : !DECKS.some((d) => d.id === p.deckId)) ||
@@ -103,6 +106,7 @@ export function payload(command) {
         if (p[key] !== undefined && p[key] !== versions[key])
           fail("VERSION_MISMATCH");
       return {
+        bank,
         grade: p.grade,
         course: p.course,
         deckId: p.deckId,

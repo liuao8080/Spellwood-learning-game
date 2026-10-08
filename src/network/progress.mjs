@@ -1,4 +1,5 @@
 import { freshSave, validateSave, recordLearning } from "../learning.mjs";
+import { TEACHER_BANK, bankFor, validBank, validTeacherCourse } from "../question-banks.mjs";
 import { DECKS, OPPONENTS, validCourse, validateCustomDeck } from "../cards.mjs";
 import { freshCollection, validateCollection, qualifyDay, applyCollectionOperation, generatePack } from "../collection.mjs";
 import { freshCombatRating, normalizeCombatRating, normalizeDifficulty, recordCombatResult, COMBAT_MODES, DIFFICULTIES } from "../combat-rating.mjs";
@@ -29,6 +30,7 @@ const validResultKey = (value) =>
     value.at(-2) === ":" &&
     token(value.slice(0, -2)));
 const sameOldResult = (a, b) =>
+  bankFor(a.bank) === bankFor(b.bank) &&
   [
     "grade",
     "course",
@@ -114,6 +116,8 @@ const select = (x, fields) =>
   );
 const MASTERY_FIELDS = ["seen", "correct", "streak", "due", "last"];
 const PREF_FIELDS = [
+  "bank",
+  "teacherCourse",
   "nickname",
   "grade",
   "course",
@@ -211,6 +215,8 @@ function preferencePatch(patch) {
     if (key === "nickname" && (typeof value !== "string" || value.length > 16))
       fail("INVALID_PREFERENCES");
     if (key === "grade" && !integer(value, 1, 6)) fail("INVALID_PREFERENCES");
+    if (key === "bank" && !validBank(value)) fail("INVALID_PREFERENCES");
+    if (key === "teacherCourse" && !validTeacherCourse(value)) fail("INVALID_PREFERENCES");
     if (key === "course" && !validCourse(value)) fail("INVALID_PREFERENCES");
     if (key === "deckId" && value !== "custom" && !DECKS.some((d) => d.id === value))
       fail("INVALID_PREFERENCES");
@@ -249,11 +255,14 @@ function learningEvent(feedback, questionIds) {
 }
 
 function onlineRecord(input) {
+  const bank = bankFor(input?.bank);
   if (
     !plain(input) ||
     !token(input.id) ||
-    !integer(input.grade, 1, 6) ||
-    !validCourse(input.course) ||
+    !validBank(bank) ||
+    (bank === TEACHER_BANK
+      ? input.grade !== null || !validTeacherCourse(input.course)
+      : !integer(input.grade, 1, 6) || !validCourse(input.course)) ||
     !["pvp", "pve"].includes(input.mode) ||
     typeof input.assisted !== "boolean" ||
     !["win", "loss", "draw"].includes(input.result) ||
@@ -287,6 +296,7 @@ function onlineRecord(input) {
     "turns",
     "date",
   ]);
+  clean.bank = bank;
   if (input.youSeat !== undefined) {
     if (![0, 1].includes(input.youSeat)) fail("INVALID_RESULT");
     clean.youSeat = input.youSeat;
@@ -315,6 +325,7 @@ function resultFromSnapshot(s) {
   return onlineRecord({
     id: s.roomId,
     youSeat: s.youSeat,
+    bank: bankFor(s.bank),
     grade: s.grade,
     course: s.course,
     ruleset: s.ruleset,
@@ -565,7 +576,9 @@ export class ProgressStore {
     this.onIssue = onIssue;
     this.questions = questions.map((q) => ({
       id: q.id,
+      bank: bankFor(q.bank),
       grade: q.grade,
+      ...(q.bank === TEACHER_BANK ? { category: q.category, semester: q.semester } : {}),
       ...(q.semester ? { semester: q.semester } : {}),
       ...(q.unitId ? { unitId: q.unitId } : {}),
     }));
@@ -577,7 +590,10 @@ export class ProgressStore {
           q.id.length > 80 ||
           Object.hasOwn(Object.prototype, q.id) ||
           q.id === "prototype" ||
-          !integer(q.grade, 1, 6),
+          !validBank(q.bank) ||
+          (q.bank === TEACHER_BANK
+            ? q.grade !== null || q.semester !== null || q.category === "all" || !validTeacherCourse(q.category)
+            : !integer(q.grade, 1, 6)),
       ) ||
       new Set(this.questions.map((q) => q.id)).size !== this.questions.length
     )

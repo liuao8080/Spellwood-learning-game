@@ -4,11 +4,12 @@ import { DuelConnection as Transport } from "../network/client.mjs";
 import { GameService } from "../../server/service.mjs";
 import { createQuestionService } from "../../server/questions.mjs";
 import questions from "../questions.json";
+import teacherQuestions from "../teacher-questions.json";
 import curriculum from "../curriculum.json";
 import speechAssets from "../speech-assets.json";
 
 export const isPractice = true;
-const bank = createQuestionService({ questions, curriculum, speechAssets });
+const bank = createQuestionService({ questions, curriculum, speechAssets, teacherQuestions });
 const study = new Map();
 const response = (status, data) => ({ ok: status >= 200 && status < 300, status, json: async () => structuredClone(data) });
 export async function studyFetch(url, options = {}) {

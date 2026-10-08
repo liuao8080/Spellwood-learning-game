@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { TEACHER_CATEGORIES } from '../src/question-banks.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
@@ -204,7 +205,7 @@ function appModel(t,server) {
   class Identity extends IdentityClient {constructor(config){super({...config,fetch:browser.fetch});}}
   class IdentityView extends IdentityPanel {constructor(config){super({...config,document:doc});}}
   class Desk extends StudyDesk { constructor(config) { super({ ...config, storage: memoryStorage(), locks: null }); } }
-  const sandbox={HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:browser.fetch,IdentityClient:Identity,IdentityPanel:IdentityView,RemoteProgressStore,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,CollectionView,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,queueMicrotask,
+  const sandbox={TEACHER_CATEGORIES,HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:browser.fetch,IdentityClient:Identity,IdentityPanel:IdentityView,RemoteProgressStore,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,CollectionView,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,queueMicrotask,
     addEventListener(name,handler){pageHandlers.set(name,handler);},
     SOUND:{unlock(){},sync(){},duckSpeech(){},visibility(){},play(){}},
     setTimeout(fn,ms){const id=setTimeout(fn,ms);id.unref?.();timers.add(id);return id;},clearTimeout(id){clearTimeout(id);timers.delete(id);},

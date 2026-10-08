@@ -3,7 +3,7 @@ name: Browser acceptance
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, codex/import-spellwood-v3.2.9]
+    branches: [main, codex/import-spellwood-v3.2.9, codex/guest-online-v4]
 
 permissions:
   contents: read

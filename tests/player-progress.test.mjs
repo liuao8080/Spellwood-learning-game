@@ -364,7 +364,7 @@ test("profile and progress byte limits differ, and over-limit commits leave no e
   assert.equal(store.getPublicPlayer(playerId).revision, updated.revision);
 });
 
-test("432 questions, 8192 learning receipts, and both 65536 UUID ledgers fit the normalized progress limit", (t) => {
+test("full catalogue, 8192 learning receipts, and both 65536 UUID ledgers fit the normalized progress limit", (t) => {
   const { store, playerId, player } = fixture(t);
   const data = model.fresh(playerId, "UTC");
   const uuid = (index) => `00000000-0000-4000-8000-${String(index).padStart(12, "0")}`;
@@ -383,5 +383,5 @@ test("432 questions, 8192 learning receipts, and both 65536 UUID ledgers fit the
   t.diagnostic(`Full normal-ID fixture: ${bytes} normalized UTF-8 bytes; limit ${PLAYER_PROGRESS_MAX_BYTES}`);
   const saved = store.updatePlayerData(playerId, { expectedRevision: player.revision, progress: clean });
   assert.equal(saved.progress.resultIds.length, 65536);
-  assert.equal(Object.keys(saved.progress.legacy.mastery).length, 432);
+  assert.equal(Object.keys(saved.progress.legacy.mastery).length, questions.length);
 });
