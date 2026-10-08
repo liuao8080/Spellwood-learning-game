@@ -1,6 +1,6 @@
 # Teacher academic-English candidate verification
 
-Candidate: 4.0.0-alpha.2, based on verified account/server checkpoint 84f8b18. Public computer site remains 3.2.9-preview until separately published. New card/skin/reward work is outside this branch.
+Release: 4.0.0-alpha.2, based on verified account/server checkpoint 84f8b18. The public computer Site was updated as version20 on2026-10-08T12:09:56Z. New card/skin/reward work is outside this branch.
 
 ## Completed on 8 October 2026
 
@@ -29,4 +29,12 @@ The original failed run has64safe JSON/PNG files, archive SHA-256 1cf6501a2d155d
 
 The repaired complete Node suite passed696/696. The latest browser archive has69original files (58PNG and11JSON),15,602,717bytes, SHA-256 aec70b86da2bf0801874d87cbb8d19363092589ebf8ff3a0cae2947b13203c43. Teacher observations and suite summaries are retained under evidence/teacher-browser/run2; original pictures are delivered in the Library verification ZIP. The independent pixel review is content/TEACHER-BROWSER-REVIEW.md.
 
-The existing public computer Site remains3.2.9-preview. Teacher static build version20 was saved, but production publication has not occurred because the requested internal-test scope requires explicit public-release approval. Do not present the old public URL as the teacher release or claim publicly hosted human matchmaking.
+The user explicitly authorized updating the public teacher preview. Sites version20 successfully deployed on2026-10-08T12:09:56Z at https://spellwood-3d-grove.hhhappygod.chatgpt.site. Site source1d7636c2362b26ef960fa263e363beb9297742e5 is the verified static computer build. Independent cloud-browser checks confirmed actual public teacher selection, correct/wrong feedback, prompt return to the catalogue, restored teacher scope and learned counts after refresh, preserved school grade6/lower-book Unit3, and a teacher reading ritual in a real computer game. The public service remains computer-only; no public human authority has been deployed.
+
+The documentation checkpoint53425d2e7b5b5223cad93753ab727631d3a327ed also passed its complete browser workflow37773235965. The final publication-note update changes documentation only; production code, tests, workflow and dependency inputs remain identical to that checked source. The public browser check uses the assistant cloud browser, not a physical mobile device. Narrow viewports remain covered by the earlier explicit Chromium simulations.
+
+## Hosting suitability discovered after the release test
+
+Official Sites Terms section2.5(d), https://openai.com/policies/chatgpt-sites-terms/, restrict Sites and Website Content that target or are designed for children under13 or the applicable digital-consent age. The original product targets primary-school learners, so the student production route should move to a normal authorized Node host. An adult teacher label is not an automatic exemption for the original design. Further Sites expansion is stopped; the user is deciding whether to pause the existing preview. The successful deployment and desktop smoke above remain historical verification facts, not a claim of hosting suitability.
+
+The public-site smoke used a dedicated assistant cloud-browser tab and preserved existing records. It produced16original1180×757JPEG screenshots. A late optional recapture was denied and was not retried; the main answer, return, refresh, school-switch and computer-ritual checks had already completed. Narrow public-browser resizing was unavailable, so the mobile evidence remains the separate explicit GitHub viewport simulations.
