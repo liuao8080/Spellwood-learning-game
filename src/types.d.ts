@@ -96,6 +96,8 @@ export interface ScoreRecord {
 export interface SaveData {
   schema: number;
   nickname: string;
+  bank?: "school" | "teacher-academic";
+  teacherCourse?: string;
   grade: number;
   course: string;
   deckId: string;

@@ -28,8 +28,9 @@ async function fixture(t, override) {
 
 test("study desk loads all curriculum metadata while selecting only one six-item unit", async (t) => {
   const { desk } = await fixture(t);
-  assert.equal(desk.catalogue.questions.length, 432);
-  assert.equal(desk.store.questions.length, 432, "migration must know every current question ID");
+  assert.equal(desk.catalogue.questions.length, 480);
+  assert.equal(desk.catalogue.questions.filter(q => (q.bank || "school") === "school").length, 432);
+  assert.equal(desk.store.questions.length, 480, "migration must know every current question ID");
   assert.equal(desk.scope().length, 6);
   assert.equal(desk.data.legacy.records.length, 0);
   assert.equal(desk.store.singlePage, true);

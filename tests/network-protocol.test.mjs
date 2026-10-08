@@ -285,6 +285,7 @@ test("HTTP exposes only explicit public assets and answer-free metadata, then on
   t.after(() => server.close());
   for (const endpoint of [
     "/src/questions.json",
+    "/src/teacher-questions.json",
     "/src/speech-assets.json",
     "/dist/index.html",
     "/package.json",
@@ -293,7 +294,9 @@ test("HTTP exposes only explicit public assets and answer-free metadata, then on
   ])
     assert.equal((await fetch(server.origin + endpoint)).status, 404, endpoint);
   const meta = await (await fetch(server.origin + "/api/curriculum")).json();
-  assert.equal(meta.questions.length, 432);
+  assert.equal(meta.questions.length, 480);
+  assert.equal(meta.questions.filter((q) => q.bank === "school").length, 432);
+  assert.equal(meta.questions.filter((q) => q.bank === "teacher-academic").length, 48);
   assert(!JSON.stringify(meta).includes('"answer"'));
   assert(!JSON.stringify(meta).includes('"target"'));
   const guest = await fetch(server.origin + '/api/identity/guest', {method:'POST',headers:{Origin:server.origin,'Content-Type':'application/json'},body:'{}'});

@@ -2,6 +2,7 @@
 import { readFileSync } from "node:fs";
 import { randomBytes, randomInt } from "node:crypto";
 import { PICTURE_SHEETS } from "../src/learning-visuals.mjs";
+import { SCHOOL_BANK, TEACHER_BANK, TEACHER_CATEGORIES, bankFor, validBank, validTeacherCourse } from "../src/question-banks.mjs";
 
 const GRADES = new Set([1, 2, 3, 4, 5, 6]);
 const KINDS = new Set(["insight", "spark", "bloom"]);
@@ -74,12 +75,19 @@ function visualFor(question) {
 }
 
 function normalizeQuestion(question, units) {
+  const bank = bankFor(question?.bank);
+  const teacher = bank === TEACHER_BANK;
+  const category = teacher && TEACHER_CATEGORIES.find(({ id }) => id === question.category);
   if (
     !question ||
     typeof question.id !== "string" ||
     !question.id ||
-    !GRADES.has(question.grade) ||
-    ![1, 2].includes(question.semester) ||
+    !validBank(bank) ||
+    (teacher
+      ? question.grade !== null || question.semester !== null || !category ||
+        typeof question.unitId !== "string" || !question.unitId.trim()
+      : !GRADES.has(question.grade) || ![1, 2].includes(question.semester)) ||
+    (question.passage !== undefined && typeof question.passage !== "string") ||
     !TYPES.has(question.type) ||
     typeof question.prompt !== "string" ||
     typeof question.text !== "string" ||
@@ -99,9 +107,9 @@ function normalizeQuestion(question, units) {
     fail("INVALID_QUESTION_BANK", "Question bank contains an invalid question");
   const unit = units.get(question.unitId);
   if (
-    !unit ||
+    !teacher && (!unit ||
     unit.grade !== question.grade ||
-    unit.semester !== question.semester
+    unit.semester !== question.semester)
   )
     fail(
       "INVALID_QUESTION_BANK",
@@ -110,11 +118,14 @@ function normalizeQuestion(question, units) {
   // Copy only supported source fields so injected objects cannot extend the wire shape.
   return Object.freeze({
     id: question.id,
+    bank,
     grade: question.grade,
     semester: question.semester,
     unitId: question.unitId,
     topic:
-      typeof question.topic === "string" ? question.topic : unit.unit_title,
+      typeof question.topic === "string" ? question.topic : teacher ? category.labelEn : unit.unit_title,
+    ...(teacher ? { category: question.category } : {}),
+    ...(question.passage !== undefined ? { passage: question.passage } : {}),
     type: question.type,
     prompt: question.prompt,
     text: question.text,
@@ -140,7 +151,15 @@ export function createQuestionService(options = {}) {
   const input = options.questions ?? readJSON("../src/questions.json");
   if (!Array.isArray(input) || !input.length)
     fail("INVALID_QUESTION_BANK", "Question bank must be a nonempty array");
-  const questions = input.map((question) => normalizeQuestion(question, units));
+  // Test/offline callers injecting an explicit school fixture stay isolated.
+  // Production defaults always load both private banks.
+  const teacherInput = options.teacherQuestions ?? (options.questions === undefined
+    ? readJSON("../src/teacher-questions.json") : []);
+  if (!Array.isArray(teacherInput)) fail("INVALID_QUESTION_BANK", "Teacher bank must be an array");
+  if (input.some((q) => bankFor(q?.bank) !== SCHOOL_BANK) ||
+      teacherInput.some((q) => q?.bank !== TEACHER_BANK))
+    fail("INVALID_QUESTION_BANK", "Questions must belong to their explicit bank");
+  const questions = [...input, ...teacherInput].map((question) => normalizeQuestion(question, units));
   if (
     new Set(questions.map((question) => question.id)).size !== questions.length
   )
@@ -155,22 +174,24 @@ export function createQuestionService(options = {}) {
   const decks = new WeakSet();
   const challenges = new WeakSet();
 
-  function createDeck({ grade, course = "all" } = {}) {
-    if (!GRADES.has(grade))
+  function createDeck({ bank = SCHOOL_BANK, grade, course = "all" } = {}) {
+    if (!validBank(bank)) fail("INVALID_BANK", "Unknown question bank");
+    const teacher = bank === TEACHER_BANK;
+    if (teacher ? grade !== null : !GRADES.has(grade))
       fail("INVALID_GRADE", "Grade must be an integer from 1 to 6");
     const unit =
       typeof course === "string" && /^s[12]-u[1-9]\d*$/.test(course)
         ? units.get(`g${grade}-${course}`)
         : null;
-    if (course !== "all" && course !== "s1" && course !== "s2" && !unit)
+    if (teacher ? !validTeacherCourse(course) : course !== "all" && course !== "s1" && course !== "s2" && !unit)
       fail(
         "INVALID_COURSE",
         "Course must select a valid semester or unit for this grade",
       );
     const allowed = questions.filter(
       (question) =>
-        question.grade === grade &&
-        (course === "all" ||
+        question.bank === bank && question.grade === grade &&
+        (teacher ? course === "all" || question.category === course : course === "all" ||
           (course === "s1" || course === "s2"
             ? question.semester === Number(course[1])
             : question.unitId === unit.id)),
@@ -222,12 +243,13 @@ export function createQuestionService(options = {}) {
         .join(" ");
     // Rebuild listening from visible material, never from answer-only speak,
     // target, explanation, or a potentially stale source listen value.
-    let listenText = source.text.trim()
-      ? source.text.replace(/_{2,}/g, " … ")
+    const visibleText = [source.passage, source.text].filter((text) => text?.trim()).join("\n\n");
+    let listenText = visibleText.trim()
+      ? visibleText.replace(/_{2,}/g, " … ")
       : readOptions(options);
     let listenAudioUrl = safeAudioUrl(speechAssets[listenText]);
     let listenAudioUrls;
-    if (!source.text.trim() && !listenAudioUrl) {
+    if (!visibleText.trim() && !listenAudioUrl) {
       const urls = options.map(({ text }) => safeAudioUrl(speechAssets[text]));
       // Never expose a partial set of clips: availability could identify an
       // answer. Preserve a safe original whole clip before falling back to TTS.
@@ -243,12 +265,18 @@ export function createQuestionService(options = {}) {
       }
     }
     const unit = units.get(source.unitId);
+    const teacher = source.bank === TEACHER_BANK;
     const question = {
+      bank: source.bank,
       type: source.type,
       prompt: source.prompt,
       text: source.text,
       grade: source.grade,
-      unitLabel: `${source.semester === 1 ? "上册" : "下册"} · Unit ${unit.unit} ${unit.unit_title_zh || unit.unit_title}`,
+      unitLabel: teacher
+        ? `教师内测 · ${TEACHER_CATEGORIES.find(({ id }) => id === source.category).label}`
+        : `${source.semester === 1 ? "上册" : "下册"} · Unit ${unit.unit} ${unit.unit_title_zh || unit.unit_title}`,
+      ...(teacher ? { category: source.category } : {}),
+      ...(source.passage !== undefined ? { passage: source.passage } : {}),
       options: options.map(({ id, text }) => Object.freeze({ id, text })),
       listenText,
       listenAudioUrl,
@@ -290,15 +318,18 @@ export function createQuestionService(options = {}) {
   function metadata() {
     // Source IDs belong only in the explicit study catalogue, never a battle
     // challenge. Catalogue labels describe curriculum scope, not solutions.
+    const teacherNumbers = new Map();
     return {
       contentVersion: curriculum.version,
       books: (curriculum.books ?? []).map((book) => ({
+        bank: SCHOOL_BANK,
         id: book.id,
         grade: book.grade,
         semester: book.semester,
         title: book.title,
       })),
       units: [...units.values()].map((unit) => ({
+        bank: SCHOOL_BANK,
         id: unit.id,
         book_id: unit.book_id,
         grade: unit.grade,
@@ -309,6 +340,8 @@ export function createQuestionService(options = {}) {
       })),
       questions: questions.map((question) => {
         const unit = units.get(question.unitId);
+        if (question.bank === TEACHER_BANK)
+          teacherNumbers.set(question.category, (teacherNumbers.get(question.category) ?? 0) + 1);
         const typeLabel = {
           word: "词语",
           sentence: "句子",
@@ -316,12 +349,16 @@ export function createQuestionService(options = {}) {
         }[question.type];
         return {
           id: question.id,
+          bank: question.bank,
           grade: question.grade,
           type: question.type,
           semester: question.semester,
           unitId: question.unitId,
           topic: question.topic,
-          displayLabel: `${question.semester === 1 ? "上册" : "下册"} · Unit ${unit.unit} ${unit.unit_title_zh || unit.unit_title} · ${typeLabel}`,
+          ...(question.bank === TEACHER_BANK ? { category: question.category } : {}),
+          displayLabel: question.bank === TEACHER_BANK
+            ? `教师内测 · ${TEACHER_CATEGORIES.find(({ id }) => id === question.category).label} ${String(teacherNumbers.get(question.category)).padStart(2, "0")} · ${question.topic}`
+            : `${question.semester === 1 ? "上册" : "下册"} · Unit ${unit.unit} ${unit.unit_title_zh || unit.unit_title} · ${typeLabel}`,
         };
       }),
     };
@@ -344,11 +381,14 @@ export function createQuestionService(options = {}) {
       target: challenge.target,
       expiresAt: challenge.expiresAt,
       question: {
+        bank: question.bank,
         type: question.type,
         prompt: question.prompt,
         text: question.text,
         grade: question.grade,
         unitLabel: question.unitLabel,
+        ...(question.category !== undefined ? { category: question.category } : {}),
+        ...(question.passage !== undefined ? { passage: question.passage } : {}),
         options: question.options.map(({ id, text }) => ({ id, text })),
         listenText: question.listenText,
         listenAudioUrl: question.listenAudioUrl,

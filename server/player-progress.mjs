@@ -114,8 +114,12 @@ export function createPlayerProgress({
     },
     addResult(playerId, serverOwnSnapshot) {
       const record = model.result(serverOwnSnapshot);
+      // Preserve the pre-bank fingerprint of school receipts already committed
+      // to the account ledger. Teacher receipts retain their explicit scope.
+      const payload = clone(record);
+      if (payload.bank === "school") delete payload.bank;
       return commit(playerId, {
-        eventId: `result:${record.id}:${record.youSeat}`, type: "result", payload: record,
+        eventId: `result:${record.id}:${record.youSeat}`, type: "result", payload,
       }, (player) => model.addResult(player.progress, serverOwnSnapshot));
     },
     preferences(playerId, patch, requestId) {

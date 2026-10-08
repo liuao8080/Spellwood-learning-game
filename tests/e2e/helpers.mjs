@@ -87,6 +87,7 @@ function observe(page) {
     session: null, sessions: 0, commands: [], acknowledgements: new Map(),
     events: new Map(), eventRevisions: new Map(), duplicateEventRevisions: 0,
     feedbackCount: 0, queueStartedAt: null, queueDeadline: null, firstRoomAt: null,
+    catalogueCounts: null, queueScope: null, challengeScopes: [],
     errors: [], pageErrorCount: 0, pageErrors: [],
   };
   page.on('pageerror', error => {
@@ -107,6 +108,12 @@ function observe(page) {
         const { playerId, revision, data } = await response.json();
         if (data && revision >= (state.progress.get(playerId)?.revision ?? -1))
           state.progress.set(playerId, { revision, data });
+      } else if (pathname === '/api/curriculum') {
+        const { questions } = await response.json();
+        state.catalogueCounts = {
+          school: questions.filter(question => (question.bank || 'school') === 'school').length,
+          teacher: questions.filter(question => question.bank === 'teacher-academic').length,
+        };
       }
     } catch { /* Navigation can cancel a response; UI assertions remain authoritative. */ }
   });
@@ -119,7 +126,10 @@ function observe(page) {
           id: message.commandId, type: message.type,
           action: message.payload?.action?.type || null,
         });
-        if (message.type === 'queue.join') state.queueStartedAt = Date.now();
+        if (message.type === 'queue.join') {
+          state.queueStartedAt = Date.now();
+          state.queueScope = { bank: message.payload.bank || 'school', grade: message.payload.grade, course: message.payload.course };
+        }
       } catch { /* Only JSON game messages are relevant. */ }
     });
     socket.on('framereceived', ({ payload }) => {
@@ -135,13 +145,19 @@ function observe(page) {
           state.queueDeadline = message.matchBy;
         } else if (message.type === 'private.feedback') {
           state.feedbackCount += 1;
+        } else if (message.type === 'private.challenge') {
+          // Public scope metadata only; do not retain question text or options.
+          state.challengeScopes.push({
+            bank: message.question.bank || 'school', grade: message.question.grade,
+            category: message.question.category || null, hasPassage: Boolean(message.question.passage),
+          });
         } else if (message.type === 'room.snapshot') {
           state.firstRoomAt ??= Date.now();
           state.roomMessages += 1;
           state.room = {
             roomId: message.roomId, revision: message.revision, phase: message.phase,
             youSeat: message.youSeat, activeSeat: message.activeSeat,
-            grade: message.grade, course: message.course, turn: message.turn,
+            bank: message.bank || 'school', grade: message.grade, course: message.course, turn: message.turn,
             mode: message.mode, assisted: message.assisted,
             selfController: message.self.controller, opponentController: message.opponent.controller,
             opponentConnected: message.opponent.connected,
@@ -203,6 +219,8 @@ export async function diagnostics(actor) {
     feedbackCount: observed.feedbackCount, pageErrorCount: observed.pageErrorCount,
     pageErrors: observed.pageErrors,
     uiInteractions: actor.metrics,
+    catalogueCounts: observed.catalogueCounts, queueScope: observed.queueScope,
+    challengeScopes: observed.challengeScopes,
     queueWaitMs: observed.firstRoomAt && observed.queueStartedAt ? observed.firstRoomAt - observed.queueStartedAt : null,
     result: observed.room?.result || null,
     viewport: page.viewportSize(),

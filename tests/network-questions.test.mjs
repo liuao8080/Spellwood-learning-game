@@ -204,6 +204,7 @@ test("public challenges contain only whitelisted public material, recursively", 
     "target",
   ]);
   assert.deepEqual(Object.keys(visible.question).sort(), [
+    "bank",
     "grade",
     "listenAudioUrl",
     "listenText",
@@ -612,9 +613,12 @@ test("study metadata exposes only catalogue identifiers and curriculum labels", 
   assert.equal(data.contentVersion, "pep1-2026.1");
   assert.equal(data.books.length, 12);
   assert.equal(data.units.length, 72);
-  assert.equal(data.questions.length, 432);
-  for (const question of data.questions) {
+  assert.equal(data.questions.length, 480);
+  const school = data.questions.filter((question) => question.bank === "school");
+  assert.equal(school.length, 432);
+  for (const question of school) {
     assert.deepEqual(Object.keys(question).sort(), [
+      "bank",
       "displayLabel",
       "grade",
       "id",

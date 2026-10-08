@@ -47,6 +47,7 @@ export function createProgressBridge({progress,identityStore,now=()=>Date.now(),
     result(playerId,snapshot) {
       if(!playerId)return true;
       const data={phase:snapshot.phase,roomId:snapshot.roomId,youSeat:snapshot.youSeat,
+        bank:snapshot.bank ?? 'school',
         grade:snapshot.grade,course:snapshot.course,ruleset:snapshot.ruleset,combatRules:snapshot.combatRules,
         contentVersion:snapshot.contentVersion,mode:snapshot.mode,assisted:snapshot.assisted,
         result:structuredClone(snapshot.result),self:{deckId:snapshot.self?.deckId},serverTime:snapshot.serverTime,
