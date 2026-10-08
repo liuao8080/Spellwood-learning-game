@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "suite": "smoke",
+  "status": "passed",
+  "generatedAt": "2026-10-08T11:36:02.123Z",
+  "commit": "3536f815713e76f5799db1fc763bb2062dd3e22e",
+  "environment": "GitHub standard Ubuntu runner; official Playwright Chromium",
+  "evidencePolicy": "Explicit safe screenshots and reduced observations only; no trace, HAR, video, cookies, recovery codes, database or raw network bodies",
+  "tests": [
+    {
+      "title": "@smoke guest learning and visible registration preserve identity; account and guest match",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 44531,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/acceptance.spec.mjs",
+        "line": 8
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Smoke only: two real isolated contexts, guest learning, registration preservation, matched opening. Does not claim a completed battle."
+      ]
+    }
+  ]
+}

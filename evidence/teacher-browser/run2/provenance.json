@@ -1,0 +1,14 @@
+{
+  "runId": 37770911932,
+  "head": "8f594ececfb06dd578d32e9c0ef11b6ae96f9950",
+  "testCheckout": "3536f815713e76f5799db1fc763bb2062dd3e22e",
+  "sameTree": "c7737884a530fb57b3bde1be3432a585f7a1f250",
+  "archiveSha256": "aec70b86da2bf0801874d87cbb8d19363092589ebf8ff3a0cae2947b13203c43",
+  "archiveBytes": 15602717,
+  "rawFiles": 69,
+  "png": 58,
+  "json": 11,
+  "testsPassed": 9,
+  "pageErrors": 0,
+  "observedRoles": 19
+}

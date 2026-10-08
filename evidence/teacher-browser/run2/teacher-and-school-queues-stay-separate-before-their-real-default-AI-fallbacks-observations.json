@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "actors": [
+    {
+      "label": "unmatched-teacher",
+      "playerKind": "guest",
+      "learnedQuestions": 0,
+      "collectionCopies": 0,
+      "roomMessages": 4,
+      "sessionReadyMessages": 1,
+      "successfulActions": {
+        "queue.join": 1,
+        "opening.choose": 1
+      },
+      "rejectedCommandCodes": [],
+      "duplicateEventRevisions": 0,
+      "feedbackCount": 0,
+      "pageErrorCount": 0,
+      "pageErrors": [],
+      "uiInteractions": {
+        "summons": 0,
+        "attacks": 0,
+        "answers": 0
+      },
+      "catalogueCounts": {
+        "school": 432,
+        "teacher": 48
+      },
+      "queueScope": {
+        "bank": "teacher-academic",
+        "grade": null,
+        "course": "grammar"
+      },
+      "challengeScopes": [],
+      "queueWaitMs": 10030,
+      "result": null,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "visibilityAtSample": "visible",
+      "renderers": [
+        {
+          "id": "lobby-scene",
+          "renderer": "WebGL2",
+          "recentFrameRate": 2,
+          "hidden": true
+        },
+        {
+          "id": "arena",
+          "renderer": "WebGL2",
+          "recentFrameRate": 2,
+          "hidden": false
+        },
+        {
+          "id": "hand-canvas",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        }
+      ],
+      "renderingCaveat": "One sampled renderer/frame-rate diagnostic, not a whole-session performance measurement or physical-device test"
+    },
+    {
+      "label": "unmatched-school",
+      "playerKind": "guest",
+      "learnedQuestions": 0,
+      "collectionCopies": 0,
+      "roomMessages": 4,
+      "sessionReadyMessages": 1,
+      "successfulActions": {
+        "queue.join": 1,
+        "opening.choose": 1
+      },
+      "rejectedCommandCodes": [],
+      "duplicateEventRevisions": 0,
+      "feedbackCount": 0,
+      "pageErrorCount": 0,
+      "pageErrors": [],
+      "uiInteractions": {
+        "summons": 0,
+        "attacks": 0,
+        "answers": 0
+      },
+      "catalogueCounts": {
+        "school": 432,
+        "teacher": 48
+      },
+      "queueScope": {
+        "bank": "school",
+        "grade": 6,
+        "course": "s2-u6"
+      },
+      "challengeScopes": [],
+      "queueWaitMs": 10026,
+      "result": null,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "visibilityAtSample": "visible",
+      "renderers": [
+        {
+          "id": "lobby-scene",
+          "renderer": "WebGL2",
+          "recentFrameRate": 2,
+          "hidden": true
+        },
+        {
+          "id": "arena",
+          "renderer": "WebGL2",
+          "recentFrameRate": 4,
+          "hidden": false
+        },
+        {
+          "id": "hand-canvas",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        }
+      ],
+      "renderingCaveat": "One sampled renderer/frame-rate diagnostic, not a whole-session performance measurement or physical-device test"
+    }
+  ]
+}

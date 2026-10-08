@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "suite": "full",
+  "status": "passed",
+  "generatedAt": "2026-10-08T11:43:35.219Z",
+  "commit": "3536f815713e76f5799db1fc763bb2062dd3e22e",
+  "environment": "GitHub standard Ubuntu runner; official Playwright Chromium",
+  "evidencePolicy": "Explicit safe screenshots and reduced observations only; no trace, HAR, video, cookies, recovery codes, database or raw network bodies",
+  "tests": [
+    {
+      "title": "two isolated browsers finish a human UI match with summons attacks English and reconnect",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 183772,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/acceptance.spec.mjs",
+        "line": 30
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Automated browser UI driven PvP: genuine pointer card selection, keyboard I/Enter, summons, attacks, first visible English choices, short offline/reload recovery, health/draw terminal state with no proxy assistance."
+      ]
+    },
+    {
+      "title": "an unmatched guest waits the real default ten seconds before the declared AI fallback",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 17688,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/acceptance.spec.mjs",
+        "line": 101
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Real default 10-second matchmaking wait and explicitly identified AI fallback; this is not a completed browser game or a timeout-proxy test."
+      ]
+    },
+    {
+      "title": "account and guest progress stay separate across login logout and a real SQLite server restart",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 85645,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/acceptance.spec.mjs",
+        "line": 126
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Visible learning and test collection persist for a registered account across fresh-context login and a real server process restart; original guest progress stays isolated; unfinished room is interrupted rather than fabricated."
+      ]
+    },
+    {
+      "title": "320 and 390 portrait plus 844 by 390 landscape expose readable real UI screenshots",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 22461,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/acceptance.spec.mjs",
+        "line": 196
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Chromium viewport emulation: 320x740 and 390x844 portrait; 844x390 landscape. Real UI clicks and bounded layout checks; no claim of physical touch-device, whole-session FPS or pixel-perfect visual approval."
+      ]
+    },
+    {
+      "title": "teacher preference reload preserves school scope mastery and account isolation",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 34292,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/teacher-bank.spec.mjs",
+        "line": 64
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Visible bank/course switching and server-backed reload; the existing school mastery entry remains byte-for-byte unchanged; an independent guest can log into and out of the fictional account without mixing either profile."
+      ]
+    },
+    {
+      "title": "teacher reading passage choices and wrong-answer explanation fit narrow portrait and landscape",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 14031,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/teacher-bank.spec.mjs",
+        "line": 136
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Real UI at 320x740 and 844x390. Scrolls through a long academic reading passage, checks all four answer targets and feedback controls, deliberately selects a visible distractor, and saves viewport screenshots. This is Chromium emulation, not a physical-device claim."
+      ]
+    },
+    {
+      "title": "two teacher browsers pair by academic scope and use real cards and teacher rituals",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 46797,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/teacher-bank.spec.mjs",
+        "line": 202
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Two isolated cookie jars pair in teacher reading scope; both answer a genuine server-issued teacher ritual through the UI and at least one real summon is acknowledged. This focused case does not claim to complete a whole match."
+      ]
+    },
+    {
+      "title": "teacher and school queues stay separate before their real default AI fallbacks",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 46793,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/teacher-bank.spec.mjs",
+        "line": 240
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Simultaneous teacher and school queue requests from independent real browsers never pair; each waits the default approximately ten seconds and receives a separate, visibly identified computer opponent."
+      ]
+    }
+  ]
+}
