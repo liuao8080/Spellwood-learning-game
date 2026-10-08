@@ -11,6 +11,8 @@ import {
   LEGACY_RULES,
   LEGACY_FINITE_RULES,
   LEGACY_OPENING_RULES,
+  LEGACY_EXPANDED_RULES,
+  isCardAvailable,
   hasOpening,
   hasFiniteRituals,
   RITUAL_LIMIT,
@@ -114,7 +116,7 @@ export function validateMatch(s) {
   if (
     !plain(s) ||
     s.schema !== 1 ||
-    ![RULES, LEGACY_OPENING_RULES, LEGACY_FINITE_RULES, LEGACY_RULES].includes(
+    ![RULES, LEGACY_EXPANDED_RULES, LEGACY_OPENING_RULES, LEGACY_FINITE_RULES, LEGACY_RULES].includes(
       s.rules,
     ) ||
     (s.contentVersion !== undefined &&
@@ -137,7 +139,11 @@ export function validateMatch(s) {
     s.players.length !== 2
   )
     return false;
-  for (const p of s.players) {
+  const currentRules = s.rules === RULES;
+  if (currentRules ? !Number.isSafeInteger(s.handSeq) || s.handSeq < 0 : s.handSeq !== undefined)
+    return false;
+  const handIds = new Set();
+  for (const [side, p] of s.players.entries()) {
     if (
       !plain(p) ||
       !int(p.hp, -1000, 18) ||
@@ -153,17 +159,32 @@ export function validateMatch(s) {
       !Array.isArray(p.deck) ||
       p.deck.length > 20 ||
       ![...p.hand, ...p.deck].every(
-        (id) => typeof id === "string" && Object.hasOwn(CARD, id),
+        (id) => typeof id === "string" && isCardAvailable(id, s.rules),
       ) ||
       !Array.isArray(p.board) ||
       p.board.length > 4
     )
       return false;
+    if (currentRules) {
+      if (!Array.isArray(p.handIds) || p.handIds.length !== p.hand.length ||
+          p.handIds.some((id) => typeof id !== "string" || !/^h[1-9][0-9]*$/.test(id) ||
+            !Number.isSafeInteger(Number(id.slice(1))) || Number(id.slice(1)) > s.handSeq ||
+            handIds.has(id))) return false;
+      for (const id of p.handIds) {
+        if (handIds.has(id)) return false;
+        handIds.add(id);
+      }
+      if (p.handBoosts !== undefined && (!plain(p.handBoosts) ||
+          Object.entries(p.handBoosts).some(([id, boost]) =>
+            !p.handIds.includes(id) || !plain(boost) || boost.amount !== 1 ||
+            boost.turn !== s.turn || side !== s.active ||
+            Object.keys(boost).some((key) => !["amount", "turn"].includes(key))))) return false;
+    } else if (p.handIds !== undefined || p.handBoosts !== undefined) return false;
     for (const u of p.board) {
       if (
         !plain(u) ||
         typeof u.cardId !== "string" ||
-        !Object.hasOwn(CARD, u.cardId) ||
+        !isCardAvailable(u.cardId, s.rules) ||
         CARD[u.cardId].type === "spell" ||
         typeof u.uid !== "string" ||
         !/^u[1-9][0-9]{0,5}$/.test(u.uid) ||
@@ -173,7 +194,9 @@ export function validateMatch(s) {
         !int(u.maxHp, 1, 100) ||
         u.hp > u.maxHp ||
         typeof u.ready !== "boolean" ||
-        (u.shield !== undefined && typeof u.shield !== "boolean")
+        (u.shield !== undefined && typeof u.shield !== "boolean") ||
+        (u.kingfisherDrawTurn !== undefined && (!currentRules || u.cardId !== "storm_kingfisher" ||
+          !int(u.kingfisherDrawTurn, 1, s.turn)))
       )
         return false;
     }

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createMatch, chooseAI } from "../src/engine.mjs";
+import { createMatch, chooseAI, ensureHandIds } from "../src/engine.mjs";
 import { startServer, Client, pair, openBoth } from "./network-helpers.mjs";
 function chooseFromVisible(v) {
   const s = createMatch();
@@ -21,6 +21,9 @@ function chooseFromVisible(v) {
     ritualUsed: p.ritualUsed,
     ritualsLeft: p.ritualsLeft,
   }));
+  // This rule-only client reconstructs private synthetic IDs from its visible
+  // placeholders. It never receives the engine authority's hN or enemy IDs.
+  ensureHandIds(s);
   if (v.youSeat === 0) s.players.reverse();
   return chooseAI(s, "control");
 }
@@ -56,7 +59,7 @@ function publicState(v) {
     turn: v.turn,
     revision: v.revision,
     winner: v.result?.winnerSeat,
-    players: v.state.players.map(({ hand, controlRequestPending, ...p }) => p),
+    players: v.state.players.map(({ hand, handIds, handCosts, handBoosts, legalCardTargets, drawEnglish, deckId, controlRequestPending, ...p }) => p),
   };
 }
 test("two real protocol clients finish an entire PvP game using only their own filtered views", async (t) => {

@@ -1,0 +1,242 @@
+[
+  {
+    "id": "acorn_squirrel",
+    "original": "originals/acorn_squirrel.png",
+    "runtime": "acorn_squirrel.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2442972,
+    "runtime_bytes": 137962,
+    "original_sha256": "667b78f6485110c556dc28047401ae40d9df271f4d902bb1c12d01fc7576e8cc",
+    "runtime_sha256": "109c9ba6521c0e58d8c2e72a8131d55b56a4c0e56cc5f8c210b2dbb617483b12",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  },
+  {
+    "id": "mushroom_medic",
+    "original": "originals/mushroom_medic.png",
+    "runtime": "mushroom_medic.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2389546,
+    "runtime_bytes": 123220,
+    "original_sha256": "2a917c426e63ceb1f2fa165bcb2f96f88294b485993c0b01dc6f9d9d65dc21c5",
+    "runtime_sha256": "d3ccd74b4e4d2b036f46946e5a08f09ad57841c68db8a9ad4dda5bbf0b11ca8f",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  },
+  {
+    "id": "reed_frog",
+    "original": "originals/reed_frog.png",
+    "runtime": "reed_frog.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2358541,
+    "runtime_bytes": 121294,
+    "original_sha256": "b7fab08df1780be154a8115d7cb810d36f8cfa12f6a27aea5f99aa2f6f5b2084",
+    "runtime_sha256": "88d94d80d08743de984a9e6e923ea2616b34e45cb67e1315c01aa434f1a15656",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  },
+  {
+    "id": "glass_snail",
+    "original": "originals/glass_snail.png",
+    "runtime": "glass_snail.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2330118,
+    "runtime_bytes": 129534,
+    "original_sha256": "95b0eed252151002aa74bedf35b7c552ddc0b23fe1b186474a22a2bb8cbe58fa",
+    "runtime_sha256": "b259561ddfff4d5ab496ef679e5c53720f3579ddf0a5f2aa890c446a3d719666",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  },
+  {
+    "id": "storm_kingfisher",
+    "original": "originals/storm_kingfisher.png",
+    "runtime": "storm_kingfisher.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2340791,
+    "runtime_bytes": 129558,
+    "original_sha256": "4f09a6ed6b3e7f6760a6ccdc5d185a45af57400d10751fb2b2d584b15f3670f1",
+    "runtime_sha256": "3e8e44bf57e88d8670af348a0a23a7787cd38d5edf78a8e23a082daccff967c2",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  },
+  {
+    "id": "sun_badger",
+    "original": "originals/sun_badger.png",
+    "runtime": "sun_badger.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2544826,
+    "runtime_bytes": 132878,
+    "original_sha256": "b52da58086ec971bc3fcfaf2099a6888800207422477b5a1587f167b147a05f9",
+    "runtime_sha256": "d3ee44c428242e2f06e9917186d120db2fddca7e86fbbf112987b2c728245681",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  },
+  {
+    "id": "crystal_ram",
+    "original": "originals/crystal_ram.png",
+    "runtime": "crystal_ram.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2431430,
+    "runtime_bytes": 132652,
+    "original_sha256": "17818c8250b86be634c69a1e1ffafc47f02afa140fcfc693a64f6bd515061ede",
+    "runtime_sha256": "5092b24a96d25d7ba2819068d5cbb64f4a9d2317a246bf91c1d536558fdff112",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  },
+  {
+    "id": "ember_salamander",
+    "original": "originals/ember_salamander.png",
+    "runtime": "ember_salamander.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2372691,
+    "runtime_bytes": 137974,
+    "original_sha256": "363f35ff864a7085b00a4f80b6d3b4084f1fad390f5cb283d94c01d65087e0d9",
+    "runtime_sha256": "53cd24ee63f3380402b19d217e0cf1666d929a24d700250964aca48b5f98512e",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  },
+  {
+    "id": "thorn_sweep",
+    "original": "originals/thorn_sweep.png",
+    "runtime": "thorn_sweep.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2584308,
+    "runtime_bytes": 161538,
+    "original_sha256": "48562d2e4f7d41b9a072738ea04ec0e0542d2b9a045a24527212f7cdf28391eb",
+    "runtime_sha256": "ba0fe6ebd9db75423b1c6616313cdffc4d74be2a0cbe90bebca2f55679f8d398",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  },
+  {
+    "id": "mending_rain",
+    "original": "originals/mending_rain.png",
+    "runtime": "mending_rain.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2604226,
+    "runtime_bytes": 159520,
+    "original_sha256": "edb43187b932e21ebbc35a0af60fe95ac81ed5f4de2c88501449a1b3bd79b6d7",
+    "runtime_sha256": "51bc2e9b0b9deb544144fd3d65d1a957d5ae5b5d8961efcd9bb9d91eecde6b05",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  },
+  {
+    "id": "tidal_recall",
+    "original": "originals/tidal_recall.png",
+    "runtime": "tidal_recall.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2443051,
+    "runtime_bytes": 146760,
+    "original_sha256": "1ca04b9ea49749abd5cdb1d4df63330838f2765288dba559d52e313d46a7320b",
+    "runtime_sha256": "ff09b9711f076c3fdc7f1a309fb2466c4a96049c651604a32fd1d96914ee0d6a",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  },
+  {
+    "id": "sunseed_blessing",
+    "original": "originals/sunseed_blessing.png",
+    "runtime": "sunseed_blessing.webp",
+    "original_dimensions": [
+      1254,
+      1254
+    ],
+    "runtime_dimensions": [
+      768,
+      768
+    ],
+    "original_bytes": 2219623,
+    "runtime_bytes": 114606,
+    "original_sha256": "f70d2023e08c59c5221e5c9a9b93cbcc58a23448332a279ba3ee9dcd12292a44",
+    "runtime_sha256": "ceb250ac97d993a57e072b3b325cf04b97bb742fb4f3c1228a899a71468dcc66",
+    "object_position": "50% 50%",
+    "original_mode": "built-in image_gen",
+    "webp_conversion": "Pillow RGB resize 768x768 LANCZOS; WebP quality 88 method 6"
+  }
+]

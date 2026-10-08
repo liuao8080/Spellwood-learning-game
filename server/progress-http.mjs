@@ -1,20 +1,23 @@
 import {randomUUID} from 'node:crypto';
 import {generatePack} from '../src/collection.mjs';
 import {plain} from './protocol.mjs';
+import {skinIntent} from '../src/network/progress.mjs';
 
 const requestId=value=>typeof value==='string'&&/^[A-Za-z0-9_-]{8,128}$/.test(value);
 const fail=code=>{throw Object.assign(Error(code),{code});};
 const fields=(value,allowed)=>plain(value)&&Object.keys(value).every(k=>allowed.includes(k));
-export function createProgressHttp({identityStore,progress,bridge,identityHttp,readJson,json,validOrigin}) {
+export function createProgressHttp({identityStore,progress,bridge,identityHttp,readJson,json,validOrigin,now=()=>Date.now()}) {
   let importing=false;
   function envelope(player,extra={}) {
-    return {data:player.progress,playerId:player.playerId,revision:player.progress.revision,...extra};
+    const serverNow=now();
+    if(!Number.isSafeInteger(serverNow)||serverNow<0||serverNow>4102444800000)fail('PROGRESS_UNAVAILABLE');
+    return {data:player.progress,playerId:player.playerId,revision:player.progress.revision,...extra,serverNow};
   }
   function reply(res,result) {
     json(res,200,envelope(result.player,{receipt:result.receipt,changed:result.receipt?.changed??false}));
   }
   function error(res,e) {
-    const code=typeof e.code==='string'&&(/^(INVALID_|STALE_|LEGACY_|PLAYER_EVENT_|PLAYER_DATA_|IMPORT_|PAYLOAD_|NOT_ENOUGH_|FINISH_|PACK_|NO_REWARD_|TEST_PACKS_|COLLECTION_|REWARD_)/.test(e.code))?e.code:
+    const code=typeof e.code==='string'&&(/^(INVALID_|STALE_|LEGACY_|PLAYER_EVENT_|PLAYER_DATA_|IMPORT_|PAYLOAD_|NOT_ENOUGH_|FINISH_|PACK_|NO_REWARD_|TEST_PACKS_|COLLECTION_|REWARD_|SKIN_|INSUFFICIENT_)/.test(e.code))?e.code:
       e.code==='PROGRESS_PENDING'?'PROGRESS_PENDING':'PROGRESS_UNAVAILABLE';
     const status=['PROGRESS_UNAVAILABLE','PROGRESS_PENDING'].includes(code)?503:
       ['STALE_REVISION','LEGACY_IMPORT_CONFLICT','PLAYER_EVENT_CONFLICT'].includes(code)?409:
@@ -44,7 +47,7 @@ export function createProgressHttp({identityStore,progress,bridge,identityHttp,r
           json(res,200,envelope(player,receipt?{receipt}:{}));return true;
         }
         const route=pathname.slice('/api/progress/'.length);
-        if(req.method!=='POST'||!['preferences','participation','collection','legacy-import'].includes(route)){json(res,404,{code:'NOT_FOUND'});return true;}
+        if(req.method!=='POST'||!['preferences','participation','collection','skins','legacy-import'].includes(route)){json(res,404,{code:'NOT_FOUND'});return true;}
         if(!validOrigin(req)){json(res,403,{code:'ORIGIN_REJECTED'});return true;}
         if(!req.headers['content-type']?.startsWith('application/json')){json(res,415,{code:'JSON_REQUIRED'});return true;}
         if(route==='legacy-import'&&importing){json(res,429,{code:'RATE_LIMIT'});return true;}
@@ -60,6 +63,9 @@ export function createProgressHttp({identityStore,progress,bridge,identityHttp,r
           } else if(route==='participation') {
             if(!fields(body,['requestId','challengeId'])||!requestId(body.challengeId))fail('INVALID_PARTICIPATION');
             result=bridge.participation(playerId,body.challengeId);
+          } else if(route==='skins') {
+            if(!fields(body,['requestId','action']))fail('INVALID_SKIN_ACTION');
+            result=progress.skins(playerId,skinIntent(body.action),body.requestId);
           } else if(route==='legacy-import') {
             if(!fields(body,['requestId','raw','expectedRevision'])||!Number.isSafeInteger(body.expectedRevision))fail('INVALID_IMPORT');
             result=progress.importLegacy(playerId,body.raw,body.requestId,{expectedRevision:body.expectedRevision});

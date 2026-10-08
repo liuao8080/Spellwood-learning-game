@@ -2,7 +2,7 @@
  * Renders the same Three.js geometry/camera. No browser flags or GPU APIs.
  * Authored vertex-normal lighting and a CPU depth buffer; no GPU shadows.
  */
-import { Matrix4, Matrix3, Vector3, Color, DoubleSide, BackSide } from "three";
+import { Matrix4, Matrix3, Vector3, Color, BufferAttribute, DoubleSide, BackSide } from "three";
 
 // Linear-to-display lookup keeps curved shading out of the per-pixel hot path.
 const DISPLAY = Uint8Array.from({ length: 4097 }, (_, i) => {
@@ -20,6 +20,7 @@ export class SoftwareRenderer {
     this.shadowMap = {};
     this.info = { render: { triangles: 0, calls: 0 } };
     this.cache = new WeakMap(); this.textureCache = new WeakMap();
+    this.trianglePool = []; this.triangleCursor = 0; this.previousTriangleCount = 0;
     this.viewProjection = new Matrix4(); this.transform = new Matrix4(); this.normalMatrix = new Matrix3();
     this.light = new Vector3(-.4, .83, .38).normalize();
     this.highlight = new Vector3(-.2, .69, .69).normalize();
@@ -36,7 +37,20 @@ export class SoftwareRenderer {
     this.frame = this.context.createImageData(this.width, this.height);
     this.pixels = new Uint32Array(this.frame.data.buffer); this.depths = new Float32Array(this.width * this.height);
   }
-  dispose() { this.cache = new WeakMap(); this.textureCache = new WeakMap(); this.staticFrame = null; this.frame = this.pixels = this.depths = null; }
+  dispose() { this.cache = new WeakMap(); this.textureCache = new WeakMap(); this.staticFrame = null; this.frame = this.pixels = this.depths = null; this.trianglePool.length = 0; this.triangleCursor = this.previousTriangleCount = 0; }
+  triangleCommand() {
+    const index = this.triangleCursor++;
+    let item = this.trianglePool[index];
+    if (!item) {
+      item = { kind: "triangle", depth: 0, order: 0, alpha: 1,
+        x0: 0, y0: 0, x1: 0, y1: 0, x2: 0, y2: 0, z0: 0, z1: 0, z2: 0,
+        q0: 0, q1: 0, q2: 0, color: 0, texture: null, shade: null, uv: null,
+        shadeBuffer: new Float32Array(9), uvBuffer: new Float64Array(6) };
+      // Bound retained storage even if a caller supplies unusually dense geometry.
+      if (index < 32768) this.trianglePool[index] = item;
+    }
+    return item;
+  }
   geometryData(geometry) {
     let data = this.cache.get(geometry);
     const position = geometry.attributes.position;
@@ -46,8 +60,60 @@ export class SoftwareRenderer {
     }
     return data;
   }
+  projectPositions(pos, points, w, h) {
+    const e = this.transform.elements;
+    // Use raw storage only for ordinary, non-normalized BufferAttributes.
+    // Interleaved, half-float, normalized and customized accessors keep Three's
+    // conversion path. Preserve applyMatrix4's operation order and W precision.
+    if (!pos.normalized && pos.getX === BufferAttribute.prototype.getX &&
+        pos.getY === BufferAttribute.prototype.getY && pos.getZ === BufferAttribute.prototype.getZ) {
+      const source = pos.array, stride = pos.itemSize;
+      for (let i = 0, sourceOffset = 0, dest = 0; i < pos.count; i++, sourceOffset += stride, dest += 4) {
+        const x = source[sourceOffset], y = source[sourceOffset + 1], z = source[sourceOffset + 2];
+        const q = 1 / (e[3] * x + e[7] * y + e[11] * z + e[15]);
+        points[dest] = ((e[0] * x + e[4] * y + e[8] * z + e[12]) * q + 1) * w / 2;
+        points[dest + 1] = (1 - (e[1] * x + e[5] * y + e[9] * z + e[13]) * q) * h / 2;
+        points[dest + 2] = (e[2] * x + e[6] * y + e[10] * z + e[14]) * q;
+        points[dest + 3] = q;
+      }
+    } else {
+      for (let i = 0; i < pos.count; i++) {
+        this.point.fromBufferAttribute(pos, i).applyMatrix4(this.transform);
+        points[i * 4] = (this.point.x + 1) * w / 2;
+        points[i * 4 + 1] = (1 - this.point.y) * h / 2;
+        points[i * 4 + 2] = this.point.z;
+        points[i * 4 + 3] = 1 / (e[3] * pos.getX(i) + e[7] * pos.getY(i) + e[11] * pos.getZ(i) + e[15]);
+      }
+    }
+  }
+  lightingUnchanged(data, normals, colors, base, emission, intensity, specular, vertexColors) {
+    const state = data.lighting || (data.lighting = { matrix: new Float64Array(9) });
+    const e = this.normalMatrix.elements, light = this.light, highlight = this.highlight;
+    const er = emission?.r || 0, eg = emission?.g || 0, eb = emission?.b || 0;
+    const useColors = !!vertexColors, colorVersion = colors?.version;
+    let same = state.normals === normals && state.colors === colors &&
+      state.normalVersion === normals.version && state.colorVersion === colorVersion &&
+      state.r === base.r && state.g === base.g && state.b === base.b &&
+      state.er === er && state.eg === eg && state.eb === eb &&
+      state.intensity === intensity && state.specular === specular && state.vertexColors === useColors &&
+      state.lx === light.x && state.ly === light.y && state.lz === light.z &&
+      state.hx === highlight.x && state.hy === highlight.y && state.hz === highlight.z;
+    for (let i = 0; i < 9 && same; i++) same = state.matrix[i] === e[i];
+    if (same) return true;
+    // Retain numeric inputs instead of rebuilding and joining a 26-value key
+    // for every mesh on every frame. Shared geometries still validate each use.
+    state.matrix.set(e); state.normals = normals; state.colors = colors;
+    state.normalVersion = normals.version; state.colorVersion = colorVersion;
+    state.r = base.r; state.g = base.g; state.b = base.b;
+    state.er = er; state.eg = eg; state.eb = eb;
+    state.intensity = intensity; state.specular = specular; state.vertexColors = useColors;
+    state.lx = light.x; state.ly = light.y; state.lz = light.z;
+    state.hx = highlight.x; state.hy = highlight.y; state.hz = highlight.z;
+    return false;
+  }
   render(scene, camera) {
     const start = performance.now();
+    this.triangleCursor = 0;
     scene.updateMatrixWorld(); camera.updateMatrixWorld();
     this.viewProjection.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
     const commands = [], staticCommands = [], w = this.width, h = this.height;
@@ -72,13 +138,7 @@ export class SoftwareRenderer {
       const data = this.geometryData(geometry), points = data.projected;
       this.transform.multiplyMatrices(this.viewProjection, object.matrixWorld);
       this.normalMatrix.getNormalMatrix(object.matrixWorld);
-      for (let i = 0; i < pos.count; i++) {
-        this.point.fromBufferAttribute(pos, i).applyMatrix4(this.transform);
-        points[i * 4] = (this.point.x + 1) * w / 2;
-        points[i * 4 + 1] = (1 - this.point.y) * h / 2;
-        points[i * 4 + 2] = this.point.z;
-        const e = this.transform.elements; points[i * 4 + 3] = 1 / (e[3] * pos.getX(i) + e[7] * pos.getY(i) + e[11] * pos.getZ(i) + e[15]);
-      }
+      this.projectPositions(pos, points, w, h);
       const groups = Array.isArray(object.material) ? geometry.groups : [{ start: 0, count: idx?.count ?? pos.count, materialIndex: 0 }];
       for (const group of groups) {
         const material = Array.isArray(object.material) ? object.material[group.materialIndex] : object.material;
@@ -90,9 +150,7 @@ export class SoftwareRenderer {
         if (smooth) {
           const base = material.color, emission = material.emissive, intensity = material.emissiveIntensity || 0;
           const specular = material.roughness < .4 ? .24 : .035;
-          const lightingKey = [...this.normalMatrix.elements, base.r,base.g,base.b, emission?.r||0,emission?.g||0,emission?.b||0,intensity,specular,!!material.vertexColors,norms.version,colors?.version,this.light.x,this.light.y,this.light.z,this.highlight.x,this.highlight.y,this.highlight.z].join(',');
-          if(data.lightingKey!==lightingKey || data.lightingNormals!==norms || data.lightingColors!==colors){
-          data.lightingKey=lightingKey;data.lightingNormals=norms;data.lightingColors=colors;
+          if (!this.lightingUnchanged(data, norms, colors, base, emission, intensity, specular, material.vertexColors)) {
           for (let i = 0; i < pos.count; i++) {
             this.normal.fromBufferAttribute(norms, i).applyNormalMatrix(this.normalMatrix);
             const diffuse = .38 + .72 * Math.max(0, this.normal.dot(this.light));
@@ -124,21 +182,48 @@ export class SoftwareRenderer {
             if (cross > 0) this.normal.negate();
             light = .5 + .73 * Math.max(0, this.normal.dot(this.light)) + .12 * Math.max(0, -this.normal.z);
           }
-          this.color.copy(material.color || new Color(0xffffff));
-          if (colors && material.vertexColors) {
-            this.color.r *= (colors.getX(a) + colors.getX(b) + colors.getX(c)) / 3;
-            this.color.g *= (colors.getY(a) + colors.getY(b) + colors.getY(c)) / 3;
-            this.color.b *= (colors.getZ(a) + colors.getZ(b) + colors.getZ(c)) / 3;
+          // Smooth shading already carries the lit vertex colors. Computing an
+          // unused average color and sRGB conversion for every face adds work.
+          let faceColor = 0;
+          if (!smooth) {
+            if (material.color) this.color.copy(material.color); else this.color.setHex(0xffffff);
+            if (colors && material.vertexColors) {
+              this.color.r *= (colors.getX(a) + colors.getX(b) + colors.getX(c)) / 3;
+              this.color.g *= (colors.getY(a) + colors.getY(b) + colors.getY(c)) / 3;
+              this.color.b *= (colors.getZ(a) + colors.getZ(b) + colors.getZ(c)) / 3;
+            }
+            this.color.multiplyScalar(light);
+            if (material.emissive) this.color.add(this.pointColor(material.emissive, material.emissiveIntensity || 0));
+            faceColor = this.color.getHex();
           }
-          this.color.multiplyScalar(light);
-          if (material.emissive) this.color.add(this.pointColor(material.emissive, material.emissiveIntensity || 0));
-          (object.userData.cpuStatic ? staticCommands : commands).push({ kind: "triangle", depth: (z0 + z1 + z2) / 3, order: object.renderOrder || 0, alpha: material.opacity,
-            x0, y0, x1, y1, x2, y2, z0, z1, z2, q0: points[ai + 3], q1: points[bi + 3], q2: points[ci + 3], color: this.color.getHex(), texture,
-            shade: smooth ? [shades[a*3], shades[a*3+1], shades[a*3+2], shades[b*3], shades[b*3+1], shades[b*3+2], shades[c*3], shades[c*3+1], shades[c*3+2]] : null,
-            uv: texture ? [uv.getX(a), 1 - uv.getY(a), uv.getX(b), 1 - uv.getY(b), uv.getX(c), 1 - uv.getY(c)] : null });
+          const item = this.triangleCommand();
+          item.depth = (z0 + z1 + z2) / 3; item.order = object.renderOrder || 0; item.alpha = material.opacity;
+          item.x0 = x0; item.y0 = y0; item.x1 = x1; item.y1 = y1; item.x2 = x2; item.y2 = y2;
+          item.z0 = z0; item.z1 = z1; item.z2 = z2;
+          item.q0 = points[ai + 3]; item.q1 = points[bi + 3]; item.q2 = points[ci + 3];
+          item.color = faceColor; item.texture = texture;
+          item.shade = smooth ? item.shadeBuffer : null;
+          if (smooth) {
+            const dest = item.shadeBuffer;
+            for (let channel = 0; channel < 3; channel++) {
+              dest[channel] = shades[a * 3 + channel]; dest[3 + channel] = shades[b * 3 + channel]; dest[6 + channel] = shades[c * 3 + channel];
+            }
+          }
+          item.uv = texture ? item.uvBuffer : null;
+          if (texture) {
+            const dest = item.uvBuffer;
+            dest[0] = uv.getX(a); dest[1] = 1 - uv.getY(a); dest[2] = uv.getX(b); dest[3] = 1 - uv.getY(b); dest[4] = uv.getX(c); dest[5] = 1 - uv.getY(c);
+          }
+          (object.userData.cpuStatic ? staticCommands : commands).push(item);
         }
       }
     });
+    const geometryFinished = performance.now();
+    // A smaller next frame must not retain textures from disappeared cards.
+    for (let i = this.triangleCursor; i < this.previousTriangleCount; i++) {
+      const item = this.trianglePool[i]; if (item) { item.texture = null; item.shade = null; item.uv = null; }
+    }
+    this.previousTriangleCount = Math.min(this.triangleCursor, this.trianglePool.length);
     // Opaque and textured geometry use per-pixel depth, so tabletop/card layers
     // cannot cut through one another as they can with triangle-average sorting.
     let triangles = 0;
@@ -146,6 +231,7 @@ export class SoftwareRenderer {
       for (const item of staticCommands) this.rasterize(item);
       this.staticFrame = { root: staticRoot, key: staticKey, pixels: this.pixels.slice(), depths: this.depths.slice(), triangles: staticCommands.length };
     }
+    const staticFinished = performance.now();
     const translucent = [], overlays = [];
     for (const item of commands) {
       if (item.kind !== "triangle") { overlays.push(item); continue; }
@@ -154,6 +240,7 @@ export class SoftwareRenderer {
     }
     translucent.sort((a,b) => b.depth - a.depth);
     for (const item of translucent) { this.rasterize(item); triangles++; }
+    const rasterFinished = performance.now();
     ctx.putImageData(this.frame, 0, 0);
     overlays.sort((a,b) => a.order - b.order || b.depth - a.depth);
     for (const item of overlays) {
@@ -164,7 +251,9 @@ export class SoftwareRenderer {
     }
     ctx.globalAlpha = 1;
     this.info.render = { triangles: triangles + (reuseStatic ? 0 : staticCommands.length), calls: commands.length + (reuseStatic ? 0 : staticCommands.length), cachedTriangles: this.staticFrame?.triangles || 0 };
-    this.lastRenderMs = performance.now() - start;
+    const finished = performance.now();
+    this.lastRenderMs = finished - start;
+    this.lastRenderBreakdown = { geometryMs: geometryFinished - start, staticMs: staticFinished - geometryFinished, dynamicRasterMs: rasterFinished - staticFinished, presentMs: finished - rasterFinished };
   }
   pointColor(color, intensity) { return { r: color.r * intensity, g: color.g * intensity, b: color.b * intensity }; }
   textureData(texture) {
@@ -184,7 +273,11 @@ export class SoftwareRenderer {
     const w=this.width,h=this.height;
     const minX=Math.max(0,Math.floor(Math.min(t.x0,t.x1,t.x2))),maxX=Math.min(w-1,Math.ceil(Math.max(t.x0,t.x1,t.x2)));
     const minY=Math.max(0,Math.floor(Math.min(t.y0,t.y1,t.y2))),maxY=Math.min(h-1,Math.ceil(Math.max(t.y0,t.y1,t.y2)));
-    if(t.texture||t.alpha<.995||(maxX-minX)*(maxY-minY)<100)return this.rasterizeGeneral(t);
+    if(t.texture||t.alpha<.995)return this.rasterizeGeneral(t,minX,maxX,minY,maxY);
+    if((maxX-minX)*(maxY-minY)<100){
+      if(t.alpha>=.995)return this.rasterizeOpaqueSmall(t,minX,maxX,minY,maxY);
+      return this.rasterizeGeneral(t,minX,maxX,minY,maxY);
+    }
     const denominator=(t.y1-t.y2)*(t.x0-t.x2)+(t.x2-t.x1)*(t.y0-t.y2);
     if(Math.abs(denominator)<.001)return;
     const dx0=(t.y1-t.y2)/denominator,dx1=(t.y2-t.y0)/denominator,dx2=-dx0-dx1;
@@ -206,10 +299,34 @@ export class SoftwareRenderer {
       }else for(let x=lo;x<=hi;x++,index++,z+=dz){if(z<this.depths[index]){this.pixels[index]=pixel;this.depths[index]=z;}}
     }
   }
-  rasterizeGeneral(t) {
-    const w = this.width, h = this.height;
-    const minX = Math.max(0, Math.floor(Math.min(t.x0, t.x1, t.x2))), maxX = Math.min(w - 1, Math.ceil(Math.max(t.x0, t.x1, t.x2)));
-    const minY = Math.max(0, Math.floor(Math.min(t.y0, t.y1, t.y2))), maxY = Math.min(h - 1, Math.ceil(Math.max(t.y0, t.y1, t.y2)));
+  rasterizeOpaqueSmall(t, minX, maxX, minY, maxY) {
+    const denominator = (t.y1 - t.y2) * (t.x0 - t.x2) + (t.x2 - t.x1) * (t.y0 - t.y2);
+    if (Math.abs(denominator) < .001) return;
+    const dx0 = (t.y1 - t.y2) / denominator, dx1 = (t.y2 - t.y0) / denominator;
+    const dy0 = (t.x2 - t.x1) / denominator, dy1 = (t.x0 - t.x2) / denominator;
+    let row0 = dx0 * (minX + .5 - t.x2) + dy0 * (minY + .5 - t.y2);
+    let row1 = dx1 * (minX + .5 - t.x2) + dy1 * (minY + .5 - t.y2);
+    const color = (255 << 24 | (t.color & 255) << 16 | (t.color >> 8 & 255) << 8 | (t.color >> 16 & 255)) >>> 0;
+    const s = t.shade, pixels = this.pixels, depths = this.depths, w = this.width;
+    // Match the general path's per-pixel barycentrics exactly. The scanline
+    // path rounds and accumulates differently, which can change tiny faces.
+    for (let y = minY; y <= maxY; y++, row0 += dy0, row1 += dy1) {
+      let a = row0, b = row1, index = y * w + minX;
+      for (let x = minX; x <= maxX; x++, index++, a += dx0, b += dx1) {
+        const c = 1 - a - b;
+        if (a < -.000001 || b < -.000001 || c < -.000001) continue;
+        const z = a * t.z0 + b * t.z1 + c * t.z2;
+        if (z >= depths[index]) continue;
+        pixels[index] = s ? (255 << 24 | Math.round(a * s[2] + b * s[5] + c * s[8]) << 16 |
+          Math.round(a * s[1] + b * s[4] + c * s[7]) << 8 | Math.round(a * s[0] + b * s[3] + c * s[6])) >>> 0 : color;
+        depths[index] = z;
+      }
+    }
+  }
+  rasterizeGeneral(t,
+    minX = Math.max(0, Math.floor(Math.min(t.x0, t.x1, t.x2))), maxX = Math.min(this.width - 1, Math.ceil(Math.max(t.x0, t.x1, t.x2))),
+    minY = Math.max(0, Math.floor(Math.min(t.y0, t.y1, t.y2))), maxY = Math.min(this.height - 1, Math.ceil(Math.max(t.y0, t.y1, t.y2)))) {
+    const w = this.width;
     const denominator = (t.y1 - t.y2) * (t.x0 - t.x2) + (t.x2 - t.x1) * (t.y0 - t.y2);
     if (Math.abs(denominator) < .001) return;
     // Shared edges belong to one triangle, avoiding double alpha blending.

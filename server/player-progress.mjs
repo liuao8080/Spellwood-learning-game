@@ -1,7 +1,9 @@
-import { createHash } from "node:crypto";
-import { createProgressModel, PROGRESS_LIMITS } from "../src/network/progress.mjs";
+import { createHash, randomInt } from "node:crypto";
+import { createProgressModel, PROGRESS_LIMITS, skinIntent } from "../src/network/progress.mjs";
 import { freshCollection } from "../src/collection.mjs";
+import { freshJourney, applyQualifiedLearning, applyQualifiedMatch, openSkinPack, revealSkinPack, closeSkinPack, redeemSkin, equipSkin } from "../src/reward-journey.mjs";
 import { freshCombatRating } from "../src/combat-rating.mjs";
+import { SCHOOL_BANK, TEACHER_BANK, bankFor, validTeacherCourse } from "../src/question-banks.mjs";
 
 const clone = (value) => structuredClone(value);
 const plain = (value) => !!value && typeof value === "object" && !Array.isArray(value);
@@ -31,7 +33,7 @@ function summary(data) {
   };
 }
 
-/** Server-owned account progress, using the same validated v3 data as StudyDesk.
+/** Server-owned account progress, using the same validated v4 data as StudyDesk.
  * Call learning/result/participation/collection only with server-generated
  * inputs. An HTTP handler may accept preferences and explicit legacy imports;
  * never expose these authority-bearing methods as a generic client mutation.
@@ -40,10 +42,12 @@ function summary(data) {
  */
 export function createPlayerProgress({
   identityStore, questions, timeZone = "Asia/Shanghai", now = () => Date.now(),
+  random = () => randomInt(0x100000000) / 0x100000000,
 } = {}) {
   if (!identityStore?.commitPlayerEvent || !identityStore?.getPlayerEvent)
     fail("IDENTITY_STORE_REQUIRED");
   const model = createProgressModel({ questions });
+  const questionById = new Map(questions.map(question => [question.id, question]));
   // Validate configuration before an account can be modified.
   model.fresh("configuration-check", timeZone);
 
@@ -53,10 +57,23 @@ export function createPlayerProgress({
       if (!player) fail("PLAYER_NOT_FOUND");
       if (!plain(player.progress)) fail("INVALID_STORED_PROGRESS");
       if (Object.keys(player.progress).length) {
+        const storedSchema = player.progress.schema;
         try { player.progress = model.validate(player.progress); }
         catch (error) { fail("INVALID_STORED_PROGRESS", { cause: error }); }
         if (player.progress.profileId !== playerId) fail("PROGRESS_IDENTITY_MISMATCH");
-        return player;
+        if (storedSchema === 4) return player;
+        // Migration owns one durable CAS revision; repeated reads and competing
+        // requests cannot issue a second default journey or lose prior data.
+        player.progress.revision = player.revision + 1;
+        try {
+          return identityStore.updatePlayerData(playerId, {
+            expectedRevision: player.revision, progress: player.progress,
+            profile: { ...player.profile, progressAuthority: authority(player.profile, now()) },
+          });
+        } catch (error) {
+          if (error.code !== "REVISION_CONFLICT") throw error;
+          continue;
+        }
       }
       const progress = model.fresh(playerId, timeZone);
       progress.revision = player.revision + 1;
@@ -74,12 +91,12 @@ export function createPlayerProgress({
 
   function commit(playerId, event, apply) {
     const replay = identityStore.getPlayerEvent(playerId, event);
-    if (replay) return replay;
+    if (replay) return { ...replay, player: ensure(playerId) };
     for (let attempt = 0; attempt < 32; attempt++) {
       const player = ensure(playerId);
       // A competing request may have committed while the candidate was read.
       const duplicate = identityStore.getPlayerEvent(playerId, event);
-      if (duplicate) return duplicate;
+      if (duplicate) return { ...duplicate, player: ensure(playerId) };
       const candidate = apply(player);
       candidate.data.revision = player.revision + 1;
       const profile = candidate.profile ?? clone(player.profile);
@@ -101,6 +118,15 @@ export function createPlayerProgress({
     fail("PROGRESS_BUSY");
   }
 
+  function withReward(candidate, reward) {
+    const balance = candidate.data.collection.earned.dust + reward.officialDustDelta;
+    if (!Number.isSafeInteger(balance) || balance < 0 || balance > 100000000) fail("REWARD_BALANCE_LIMIT");
+    candidate.data.journey = reward.state;
+    candidate.data.collection.earned.dust = balance;
+    return { ...candidate, changed: candidate.changed || reward.changed,
+      receipt: { ...candidate.receipt, reward: reward.receipt } };
+  }
+
   return Object.freeze({
     ensure,
     applyLearning(playerId, serverFeedback) {
@@ -114,13 +140,30 @@ export function createPlayerProgress({
     },
     addResult(playerId, serverOwnSnapshot) {
       const record = model.result(serverOwnSnapshot);
-      // Preserve the pre-bank fingerprint of school receipts already committed
-      // to the account ledger. Teacher receipts retain their explicit scope.
-      const payload = clone(record);
-      if (payload.bank === "school") delete payload.bank;
+      const participation = serverOwnSnapshot.participation;
+      let qualifiedMatch;
+      if (participation !== undefined) {
+        if (!plain(participation) || !Number.isSafeInteger(participation.startedAt) || participation.startedAt < 0 ||
+            participation.startedAt > record.date || !Number.isSafeInteger(participation.ownTurns) || participation.ownTurns < 0 ||
+            !Number.isSafeInteger(participation.ownActions) || participation.ownActions < 0)
+          fail("INVALID_QUALIFIED_MATCH");
+        const termination = ["health", "draw"].includes(record.reason) ? "normal" :
+          record.reason === "surrender" ? "surrender" : record.reason === "expired" ? "expired" : "quit";
+        qualifiedMatch = { ownerId: playerId,
+          eventId: `match:${createHash("sha256").update(`${record.id}:${record.youSeat}`).digest("hex")}`,
+          matchId: record.id, mode: record.mode, termination, issuedAt: participation.startedAt,
+          finishedAt: record.date, ownTurns: participation.ownTurns, ownActions: participation.ownActions };
+      }
+      // School receipts predate explicit bank tags. Keep their original
+      // fingerprint; teacher scope and new participation remain explicit.
+      const payload = { ...record, ...(qualifiedMatch ? { participation: qualifiedMatch } : {}) };
+      if (payload.bank === SCHOOL_BANK) delete payload.bank;
       return commit(playerId, {
         eventId: `result:${record.id}:${record.youSeat}`, type: "result", payload,
-      }, (player) => model.addResult(player.progress, serverOwnSnapshot));
+      }, (player) => {
+        const candidate = model.addResult(player.progress, serverOwnSnapshot);
+        return qualifiedMatch ? withReward(candidate, applyQualifiedMatch(candidate.data.journey, qualifiedMatch)) : candidate;
+      });
     },
     preferences(playerId, patch, requestId) {
       const clean = model.preferencePatch(patch);
@@ -130,24 +173,56 @@ export function createPlayerProgress({
     },
     participation(playerId, challengeId, serverTiming) {
       requestKey(challengeId);
-      // These durations must come from server-observed participation, never
-      // client-reported focus timers. Preserve the existing v3 qualification.
-      const timing = {
-        questionMs: serverTiming?.questionMs,
-        feedbackMs: serverTiming?.feedbackMs,
-        now: serverTiming?.now,
-      };
-      if (!Number.isSafeInteger(timing.questionMs) || timing.questionMs < 2000 || timing.questionMs > 7200000 ||
-          !Number.isSafeInteger(timing.feedbackMs) || timing.feedbackMs < 1200 || timing.feedbackMs > 7200000 ||
-          !Number.isSafeInteger(timing.now) || timing.now < 0)
-        fail("INVALID_PARTICIPATION");
+      // The permanent ledger is consulted before ephemeral timing or bounded
+      // journey history, including after restart and historical compaction.
       return commit(playerId, {
         eventId: `participation:${challengeId}`, type: "participation", payload: { challengeId },
       }, (player) => {
         const receipt = player.progress.learningReceipts[challengeId];
-        if (!receipt || timing.now < receipt.answeredAt || timing.now - receipt.answeredAt > 7200000)
+        if (!receipt) fail("INVALID_PARTICIPATION");
+        const answeredAt = serverTiming?.answeredAt ?? receipt.answeredAt;
+        const issuedAt = serverTiming?.issuedAt ?? answeredAt - serverTiming?.questionMs;
+        const qualifiedAt = serverTiming?.qualifiedAt ?? serverTiming?.now;
+        const source = serverTiming?.source ?? "study";
+        if (![issuedAt, answeredAt, qualifiedAt].every(value => Number.isSafeInteger(value) && value >= 0) ||
+            answeredAt !== receipt.answeredAt || answeredAt < issuedAt || qualifiedAt < answeredAt + 1200 ||
+            qualifiedAt < issuedAt + 3200 || qualifiedAt - issuedAt > 7200000 || !["study", "match"].includes(source))
           fail("INVALID_PARTICIPATION");
-        return model.participation(player.progress, challengeId, timing);
+        const question = questionById.get(receipt.qid);
+        if (!question || typeof question.unitId !== "string" ||
+            !/^[A-Za-z0-9_.-]{1,80}$/.test(question.unitId)) fail("INVALID_PARTICIPATION");
+        const bank = bankFor(question.bank), book = question.bookId ?? question.semester;
+        let unitId;
+        if (bank === TEACHER_BANK) {
+          if (question.grade !== null || question.semester !== null ||
+              question.category === "all" || !validTeacherCourse(question.category)) fail("INVALID_PARTICIPATION");
+          unitId = `${TEACHER_BANK}:${question.category}:${question.unitId}`;
+        } else {
+          if (bank !== SCHOOL_BANK || ![1, 2, 3, 4, 5, 6].includes(question.grade) ||
+              !["string", "number"].includes(typeof book) || !/^[A-Za-z0-9_.-]{1,24}$/.test(String(book)))
+            fail("INVALID_PARTICIPATION");
+          // Preserve the existing school namespace and all original qids.
+          unitId = `g${question.grade}:b${book}:${question.unitId}`;
+        }
+        // A fast answer can finish the remaining reading time on the feedback
+        // screen. The old card-day reducer receives the same issuedAt day and
+        // a server-verified 2s+1.2s budget, without editing the actual answer.
+        const candidate = model.participation(player.progress, challengeId,
+          { issuedAt, questionMs: 2000, feedbackMs: qualifiedAt - answeredAt, now: qualifiedAt });
+        return withReward(candidate, applyQualifiedLearning(candidate.data.journey, {
+          ownerId: playerId, eventId: challengeId, qid: receipt.qid, unitId, source, issuedAt, answeredAt, qualifiedAt,
+        }));
+      });
+    },
+    skins(playerId, action, requestId) {
+      const intent = skinIntent(action), operationId = requestKey(requestId);
+      const reducers = { open: openSkinPack, reveal: revealSkinPack, close: closeSkinPack, redeem: redeemSkin, equip: equipSkin };
+      return commit(playerId, { eventId: `skin:${operationId}`, type: "skin", payload: intent }, (player) => {
+        const data = model.validate(player.progress);
+        const request = { ...intent, ownerId: playerId, operationId, issuedAt: now() };
+        const options = { officialDustBalance: data.collection.earned.dust,
+          ...(intent.kind === "open" ? { randomValues: Array.from({ length: intent.count }, () => random()) } : {}) };
+        return withReward({ data, changed: false }, reducers[intent.kind](data.journey, request, options));
       });
     },
     collection(playerId, serverAction, requestId) {
@@ -186,13 +261,19 @@ export function createPlayerProgress({
         const current = summary(player.progress);
         const active = player.profile.legacyImport || player.profile.progressAuthority?.mutations > 0 ||
           current.learningAttempts || current.onlineRecords || current.legacyRecords ||
-          current.learningDays || current.collectionCopies || player.progress.legacy.match;
+          current.learningDays || current.collectionCopies || player.progress.legacy.match ||
+          player.progress.journey.revision || player.progress.journey.newcomerGranted || player.progress.journey.skinTickets ||
+          player.progress.journey.official.owned.length || player.progress.journey.test.owned.length;
         if (active) fail("LEGACY_IMPORT_CONFLICT", {
           summary: { current, incoming, currentRevision: player.progress.revision, canReplace: false },
         });
         const data = clone(source);
         data.profileId = playerId;
         data.timeZone = timeZone;
+        data.journey = freshJourney({ ownerId: playerId });
+        data.journey.test.owned = [...new Set([...source.journey.test.owned, ...source.journey.official.owned])];
+        if (source.journey.equipped.mode !== "base")
+          data.journey.equipped = { mode: "test", skinId: source.journey.equipped.skinId };
         delete data.recoveryKey;
         // Imported mastery is preserved as its aggregate. Old receipt counts
         // and cutoff remain a summary, not authority over new server events.
@@ -225,6 +306,7 @@ export function createPlayerProgress({
             equipped: clone(source.collection.equipped), opening: clone(source.collection.opening),
             recent: clone(source.collection.recent),
           },
+          journey: clone(source.journey),
           combatRating: clone(source.combatRating),
           onlineRecords: clone(source.onlineRecords),
           resultCount: source.resultIds.length,

@@ -47,7 +47,7 @@ test("study desk sends an opaque answer once and persists its receipt across rel
   assert(desk.data.learningReceipts[challengeId]);
   desk.receiveFeedback(desk.answer); await until(() => !desk.flushing);
   assert.equal(desk.data.legacy.mastery[qid].seen, 1);
-  const raw = storage.getItem("spellwood.save.v3");
+  const raw = storage.getItem("spellwood.save.v4");
   assert.doesNotMatch(raw, /correctOptionId|listenAudio|resumeToken/);
   const answer = desk.answer; await desk.store.load(); desk.receiveFeedback(answer); await until(() => !desk.flushing);
   assert.equal(desk.data.legacy.mastery[qid].seen, 1);
@@ -122,7 +122,7 @@ test("full export uses the latest durable API and does not label a memory rescue
   const { desk } = await fixture(t); desk.open("data");
   const downloads = []; desk.download = (text, name) => downloads.push({ text, name });
   await desk.click("desk-export"); assert.equal(downloads.length, 1);
-  assert.equal(JSON.parse(downloads[0].text).schema, 3);
+  assert.equal(JSON.parse(downloads[0].text).schema, 4);
   assert.match(desk.message, /已生成备份下载/);
   await desk.click("desk-rescue"); assert.equal(downloads.length, 2);
   assert.match(desk.message, /可能不含另一页/);

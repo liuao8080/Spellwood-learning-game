@@ -30,6 +30,9 @@ test('teacher personal scores remain separate from missing-bank legacy school ro
  const {desk,preferences}=fixture();preferences.course='all';
  const base={course:'all',ruleset:'net-1.1',reason:'health',assisted:false,turns:6,date:1,result:'win',attempts:2,correct:1,mode:'pve'};
  desk.data.onlineRecords=[{...base,id:'school',grade:6,score:777},{...base,id:'teacher',bank:'teacher-academic',grade:null,score:888}];
+ assert.doesNotMatch(desk.recordsHtml(),/777分/);
+ // Old results remain available under their original network rules.
+ desk.recordRules='net-1.1';
  let html=desk.recordsHtml();assert.match(html,/777分/);assert.doesNotMatch(html,/888分/);
  preferences.bank='teacher-academic';html=desk.recordsHtml();assert.match(html,/教师内测/);assert.match(html,/888分/);assert.doesNotMatch(html,/777分/);desk.dispose();
 });

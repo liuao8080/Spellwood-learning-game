@@ -13,8 +13,12 @@ import { targetPreview } from '../src/arena3d/targeting.mjs';
 import { createGameServer } from '../server/index.mjs';
 import { CARD, CARDS, DECKS, GRADES, validateCustomDeck } from '../src/cards.mjs';
 import { lobbyView } from '../src/network/lobby-view.mjs';
-import { CardLibrary, artThumb } from '../src/network/card-library.mjs';
+import { CardLibrary, artThumb, cardArtUrl } from '../src/network/card-library.mjs';
 import { CollectionView } from '../src/network/collection-view.mjs';
+import { WardrobeView } from '../src/network/wardrobe-view.mjs';
+import { rewardView, savedDailySummary } from '../src/network/reward-view.mjs';
+import { getHeroSkin } from '../src/hero-skins.mjs';
+import { selectedCardOption, cardTargetAllowed, selectedTargetIds, answerCommand, drawFeedbackText } from '../src/network/battle-options.mjs';
 import { cardGuide } from '../src/card-guide.mjs';
 import { selectDifficulty } from '../src/combat-rating.mjs';
 import { equippedFinishes, rewardBalance, COLLECTION_TEST_MODE } from '../src/collection.mjs';
@@ -183,7 +187,7 @@ function appModel(t,server) {
     addEventListener(){}
     replaceChildren(){this.innerHTML="";}
   }
-  for(const id of ['interface','unit-labels','modal-root','notice','renderer-warning','arena','collection-root','lobby-scene','hand-stage','hand-canvas','hand-prev','hand-next','hand-hint','hand-semantics'])roots.set('#'+id,new Element(id));
+  for(const id of ['interface','unit-labels','modal-root','notice','renderer-warning','arena','collection-root','wardrobe-root','lobby-scene','hand-stage','hand-canvas','hand-prev','hand-next','hand-hint','hand-semantics'])roots.set('#'+id,new Element(id));
   doc={hidden:false,activeElement:null,body:new Element('body'),createElement:()=>new Element(),querySelector:s=>roots.get(s)||null,querySelectorAll:s=>[...roots.values()].flatMap(x=>x.querySelectorAll(s)),addEventListener:(name,fn)=>handlers.set(name,fn),removeEventListener:(name,fn)=>{if(handlers.get(name)===fn)handlers.delete(name);}};
   class Scene {
     constructor(){sceneInstance=this;this.history=[];this.attackResolvers=[];}
@@ -205,7 +209,7 @@ function appModel(t,server) {
   class Identity extends IdentityClient {constructor(config){super({...config,fetch:browser.fetch});}}
   class IdentityView extends IdentityPanel {constructor(config){super({...config,document:doc});}}
   class Desk extends StudyDesk { constructor(config) { super({ ...config, storage: memoryStorage(), locks: null }); } }
-  const sandbox={TEACHER_CATEGORIES,HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:browser.fetch,IdentityClient:Identity,IdentityPanel:IdentityView,RemoteProgressStore,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,CollectionView,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,queueMicrotask,
+  const sandbox={TEACHER_CATEGORIES,HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:browser.fetch,IdentityClient:Identity,IdentityPanel:IdentityView,RemoteProgressStore,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,cardArtUrl,CollectionView,WardrobeView,rewardView,savedDailySummary,getHeroSkin,selectedCardOption,cardTargetAllowed,selectedTargetIds,answerCommand,drawFeedbackText,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,queueMicrotask,
     addEventListener(name,handler){pageHandlers.set(name,handler);},
     SOUND:{unlock(){},sync(){},duckSpeech(){},visibility(){},play(){}},
     setTimeout(fn,ms){const id=setTimeout(fn,ms);id.unref?.();timers.add(id);return id;},clearTimeout(id){clearTimeout(id);timers.delete(id);},

@@ -13,8 +13,12 @@ import { playSceneSound } from "./scene-audio.mjs";
 import { targetPreview } from "../arena3d/targeting.mjs";
 import { ServerClock, durationText } from "./deadlines.mjs";
 import { cardGuide } from "../card-guide.mjs";
-import { CardLibrary, artThumb } from "./card-library.mjs";
+import { CardLibrary, artThumb, cardArtUrl } from "./card-library.mjs";
 import { CollectionView } from "./collection-view.mjs";
+import { rewardView, savedDailySummary } from "./reward-view.mjs";
+import { WardrobeView } from "./wardrobe-view.mjs";
+import { getHeroSkin } from "../hero-skins.mjs";
+import { selectedCardOption, cardTargetAllowed, selectedTargetIds, answerCommand, drawFeedbackText } from "./battle-options.mjs";
 import { equippedFinishes, rewardBalance, COLLECTION_TEST_MODE } from "../collection.mjs";
 import { IdentityClient } from './identity-client.mjs';
 import { IdentityPanel } from './identity-view.mjs';
@@ -35,12 +39,12 @@ let lastBattleFeedback = null, recapExpanded = false;
 let visualBusy = false;
 let labelSignature = "", renderedModalKey = null, renderedFeedback = false, renderedModalHTML = null;
 let renderedSelection = "", sceneFault = false;
-let desk, deadlineTimer = null, collectionView, handScene, lobbyScene;
+let desk, rewardDayTimer = null, deadlineTimer = null, collectionView, wardrobeView, handScene, lobbyScene;
 let identityClient=null, identityPanel=null, activeIdentity=null, identityEpoch=0, identityChannel=null, identityRefreshPending=false;
 let identityVerified = isPractice, identityCheckError = "", identityCheckTask = null;
 let handIntroductionShown = false;
 let pageSuspended = false;
-let inspectCardId = null, modalOpener = null, handStatus = {available:null}, lobbyStatus = {available:null}, handSemanticKey = null;
+let inspectCardId = null, inspectHandId = null, modalOpener = null, handStatus = {available:null}, lobbyStatus = {available:null}, handSemanticKey = null;
 const library=new CardLibrary({preferences:()=>preferences,onChange:()=>render(),onNotice:notice,onClose:()=>{panel=null;render();},onSave:async customDeck=>{const result=await desk?.preferences({deckId:"custom",customDeck});if(result?.ok){preferences.deckId="custom";preferences.customDeck=customDeck;return true;}return false;}});
 const serverClock = new ServerClock();
 const finishSaves = new Set();
@@ -90,8 +94,9 @@ function listen(urls) {
 }
 
 const link = new DuelConnection({
+  getJourney: () => desk?.data?.journey,
   onConnection(info) {
-    connectionState = info.state; connectionRetries = info.retry || 0;
+    connectionState = info.state; if(info.state === "incompatible") notice("版本已更新，请刷新页面后继续"); connectionRetries = info.retry || 0;
     if (info.state === "replaced") { selected = null; if (room) { challenge = feedback = null; panel = null; cancelVoice(); } }
     if (info.state === "expired") clearRoom(isPractice ? "临时连接已结束，请重新匹配。本机学习记录仍保留。" : "对局连接已结束，请重新匹配。已保存的账号记录仍保留。");
     if (!isPractice && info.state === 'expired' && identityClient && !identityClient.state.busy) void verifyIdentity();
@@ -113,7 +118,7 @@ const link = new DuelConnection({
     if (message.type === "session.error") { waiting = false; notice("临时连接已结束，请重新连接。未完成房间不能从本机备份恢复。"); }
     if (message.type === "room.snapshot") acceptSnapshot(message);
     if (message.type === "room.expired" && room?.roomId === message.roomId) clearRoom("临时房间已结束，可以重新匹配");
-    if (message.type === "private.challenge" && room?.roomId === message.roomId && room.phase !== "finished") { cancelVoice(); challenge = message; desk?.beginAttention(message.challengeId); feedback = null; recapExpanded = false; selected = null; }
+    if (message.type === "private.challenge" && room?.roomId === message.roomId && room.phase !== "finished") { cancelVoice(); challenge = message; desk?.beginAttention(message.challengeId,"match",message.issuedAt); feedback = null; recapExpanded = false; selected = null; }
     if (message.type === "private.feedback") {
       if (message.learning) { pendingLearning.set(message.challengeId, message); desk?.receiveFeedback(message); }
       if (message.roomId === room?.roomId) lastBattleFeedback = message;
@@ -129,6 +134,7 @@ function stateForScene(s) {
 function clearRoom(message) {
   sceneEpoch++; scene?.cancel(); sceneTransition = Promise.resolve();
   visualBusy = false; serverClock.reset();
+  if(challenge?.challengeId)void desk?.finishAttention(challenge.challengeId);
   room = latestRoom = displayRoom = null; challenge = feedback = lastBattleFeedback = null;
   selected = null; recapExpanded = false; openingSelection = []; panel = null; waiting = false; sceneRevision = null;
   visibleEvents.clear(); cancelVoice();
@@ -137,6 +143,7 @@ function clearRoom(message) {
 }
 function applySceneState(next) {
   displayRoom = next;
+  scene?.setHeroSkins?.({self:next.self.skinId,opponent:next.opponent.skinId});
   try { scene?.setBattle(stateForScene(next), next.youSeat); sceneFault = false; }
   catch (error) { sceneFault = true; notice("场景暂时未能完整显示，已保留简化操作"); console.warn("Scene synchronization failed", error.message); }
 }
@@ -145,13 +152,13 @@ function acceptSnapshot(next) {
   if (previous?.roomId === next.roomId && next.revision < previous.revision) return;
   serverClock.sync(next.serverTime);
   room = latestRoom = next; waiting = false;
-  if (selected?.kind === "card" && previous?.roomId === next.roomId && previous.self.hand[selected.index] !== next.self.hand[selected.index]) selected = null;
+  if (selected?.kind === "card" && previous?.roomId === next.roomId && (previous.self.handIds?.[selected.index] !== next.self.handIds?.[selected.index] || previous.self.hand[selected.index] !== next.self.hand[selected.index])) selected = null;
   const event = next.event || next.events?.at(-1);
   const eventId = event?.eventId || event?.id;
   const animate = eventId && !visibleEvents.has(eventId) && !next.resync && previous?.roomId === next.roomId;
   const terminalMotion = next.phase === "finished" && previous?.phase === "playing" && animate && ["attack", "play", "ritual"].includes(event.kind);
   const replaceScene = next.resync || previous?.roomId !== next.roomId || (next.phase === "finished" && previous?.phase !== "finished" && !terminalMotion);
-  if (previous?.roomId !== next.roomId) { openingSelection = []; selected = null; panel = null; inspectCardId = null; challenge = null; feedback = null; lastBattleFeedback = null; visibleEvents.clear(); sceneRevision = null; }
+  if (previous?.roomId !== next.roomId) { openingSelection = []; selected = null; panel = null; inspectCardId = null; inspectHandId = null; challenge = null; feedback = null; lastBattleFeedback = null; visibleEvents.clear(); sceneRevision = null; }
   if (replaceScene) { sceneEpoch++; scene?.cancel(); sceneTransition = Promise.resolve(); visualBusy = false; }
   if (eventId) { visibleEvents.add(eventId); if (visibleEvents.size > 128) visibleEvents.delete(visibleEvents.values().next().value); }
   if (replaceScene) {
@@ -179,7 +186,7 @@ function acceptSnapshot(next) {
       }
       if (epoch !== sceneEpoch) return;
       applySceneState(next);
-      if (terminalMotion && !sceneFault) await scene?.celebrate?.(next.result?.winnerSeat === next.youSeat);
+      if (terminalMotion && !sceneFault) await scene?.celebrate?.([0,1].includes(next.result?.winnerSeat) ? next.result.winnerSeat === next.youSeat : null);
     }).catch((error) => {
       if (epoch !== sceneEpoch) return;
       displayRoom = next; sceneFault = true;
@@ -197,6 +204,7 @@ function acceptSnapshot(next) {
   if (next.phase === "finished") {
     const saveKey = `${next.roomId}:${next.youSeat}`;
     if (!finishSaves.has(saveKey)) { finishSaves.add(saveKey); desk?.receiveResult(next); }
+    if(challenge?.challengeId)void desk?.finishAttention(challenge.challengeId);
     selected = null; challenge = null; feedback = null; panel = null; cancelVoice(); }
 }
 
@@ -205,9 +213,10 @@ async function send(type, payload = {}, roomCommand = true) {
   commandBusy = true; render();
   try {
     await link.command(type, payload, roomCommand && room ? { roomId: room.roomId, expectedRevision: room.revision } : {});
+    return true;
   } catch (e) {
     const messages = { NOT_YOUR_TURN: "现在是对手的回合", STALE_REVISION: "场面已更新，请按新场面操作", ILLEGAL_ACTION: "这个动作当前不可用", "not-connected": "连接恢复后才能行动", "pending-command": "上一动作正在确认" };
-    notice(messages[e.code] || "这次操作没有提交，请按当前场面重试");
+    notice(messages[e.code] || "这次操作没有提交，请按当前场面重试");return false;
   } finally { commandBusy = false; render(); }
 }
 
@@ -216,15 +225,16 @@ function pick(item) {
   if (item.kind === "card") {
     selected = selected?.kind === "card" && selected.index === item.index ? null : item;
   } else if (item.kind === "unit") {
-    if (item.seat === room.youSeat) selected = selected?.uid === item.uid ? null : { kind: "unit", uid: item.uid };
-    else target(item.uid);
-  } else if (item.kind === "hero" && item.relativeSeat === 1) target("hero");
+    if (selected?.kind === "card") { target(item.uid,item.seat); }
+    else if (item.seat === room.youSeat) selected = selected?.uid === item.uid ? null : { kind: "unit", uid: item.uid };
+    else target(item.uid,item.seat);
+  } else if (item.kind === "hero" && item.relativeSeat === 1) target("hero",1-room.youSeat);
   render();
 }
-function target(value) {
+function target(value, seat = 1-room.youSeat) {
   if (!selected || !room?.canAct || commandBusy || visualBusy || challenge || panel) return;
   if (selected.kind === "unit") send("battle.action", { action: { type: "attack", uid: selected.uid, target: value } });
-  else if (selected.kind === "card" && CARD[room.self.hand[selected.index]]?.keyword === "damage") send("battle.action", { action: { type: "play", index: selected.index, target: value } });
+  else if (selected.kind === "card") { if(!cardTargetAllowed(room,selected.index,value,seat)){notice("请选择亮起的合法目标");return;} send("battle.action", { action: { type: "play", index: selected.index, target: value } }); }
   else if (selected.kind === "ritual") send("ritual.begin", { kind: "spark", target: value });
   selected = null;
 }
@@ -246,9 +256,17 @@ function difficultyControl() {
   const plan=selectDifficulty(desk?.data?.combatRating,preferences.combatMode),profile=desk?.data?.combatRating;
   return `<label>${isPractice ? "电脑挑战" : "无人匹配时的电脑挑战"}<select id="combat-mode"><option value="adaptive" ${preferences.combatMode === "adaptive" ? "selected" : ""}>跟着我的进步调整</option><option value="easy" ${preferences.combatMode === "easy" ? "selected" : ""}>轻松练习</option><option value="standard" ${preferences.combatMode === "standard" ? "selected" : ""}>标准挑战</option></select></label><p class="difficulty-note">下一局：${esc(plan.name)}${plan.provisional ? ` · 定位中 ${Math.min(5,profile?.games||0)}/5` : ""} <button class="quiet" data-action="difficulty-info">怎么看强度</button></p>${plan.tutorial ? `<p class="first-game-guide">第一次来？先召唤低费伙伴，下回合选伙伴再点敌人。长按手牌可以看完整说明，轻松电脑会给你更多练习空间。</p>` : ""}`;
 }
+function rewardNow() { return desk?.store?.remote ? desk.store.rewardNow?.() ?? null : desk?.store?.now?.() ?? Date.now(); }
+function scheduleRewardDay() {
+  clearTimeout(rewardDayTimer);rewardDayTimer=null;
+  if(document.hidden||pageSuspended||room)return;
+  const summary=daily();const now=rewardNow();if(!summary||now===null)return;
+  rewardDayTimer=setTimeout(()=>{render();},Math.max(100,Math.min(86400000,summary.endAt-now+50)));
+}
+function daily() { const now=rewardNow(); return now!==null && desk?.canStart ? savedDailySummary(desk.data,now) : null; }
 function lobby() {
   const plan = selectDifficulty(desk?.data?.combatRating, preferences.combatMode);
-  return lobbyView({preferences, waiting, connected:connectionState === "ready", name:session?.name, identity:activeIdentity, warning:desk?.issue || desk?.store?.dirty ? desk.warning() : null, testMode:COLLECTION_TEST_MODE, practice:isPractice, difficulty:plan.name, connectionState, connectionRetries});
+  return lobbyView({preferences, waiting, connected:connectionState === "ready", name:session?.name, identity:activeIdentity, warning:desk?.issue || desk?.store?.dirty ? desk.warning() : null, testMode:COLLECTION_TEST_MODE, practice:isPractice, difficulty:plan.name, connectionState, connectionRetries, daily:daily(), equippedSkin:getHeroSkin(desk?.data?.journey?.equipped.skinId)});
 }
 function matchSetup() {
   return `<section class="dialog match-setup" role="dialog" aria-modal="true" aria-labelledby="match-title"><header><div><p class="eyebrow">YOUR NEXT ADVENTURE</p><h2 id="match-title">准备这次冒险</h2></div><button data-action="close-panel" aria-label="关闭准备面板">×</button></header><p class="intro">选好学习范围，带上熟悉的伙伴。</p>${bankControl()}${teacherSelected() ? "" : `<div class="grades" aria-label="年级">${GRADES.map((g) => `<button data-action="grade" data-value="${g.n}" class="${g.n === preferences.grade ? "chosen" : ""}" aria-pressed="${g.n === preferences.grade}">${g.n}<small>年级</small></button>`).join("")}</div>`}${courseSelect()}<label>我的套牌<select id="deck">${DECKS.map((d) => `<option value="${d.id}" ${d.id === preferences.deckId ? "selected" : ""}>${d.name} · ${d.sub}</option>`).join("")}${validateCustomDeck(preferences.customDeck) ? `<option value="custom" ${preferences.deckId === "custom" ? "selected" : ""}>我的自选套牌 · 20张</option>` : ""}</select></label>${difficultyControl()}<button class="primary match-button" data-action="match" ${connectionState !== "ready" || commandBusy || waiting || !desk?.canStart ? "disabled" : ""}>${waiting ? (isPractice ? "伙伴正在准备…" : "正在寻找对手…") : (isPractice ? "开始对战" : "开始匹配")}<span>✦</span></button>${waiting ? `<p role="status">${isPractice ? "森林电脑角色正在准备" : teacherSelected() ? "正在寻找相同教师题库与范围的对手" : "正在寻找相同年级与范围的对手"}</p><button class="quiet" data-action="cancel-match" ${commandBusy ? "disabled" : ""}>取消匹配</button>` : `<p class="subtle">${session ? `本局身份：${esc(session.name)} · 无需真实姓名` : "正在连接森林…"}</p>`}${["expired", "replaced"].includes(connectionState) ? '<button data-action="reconnect">重新连接</button>' : ""}<p class="save-state" role="status">${esc(desk?.warning() || (isPractice ? "正在读取本机记录…" : "正在读取账号记录…"))}</p>${connectionRetries >= 3 ? `<button data-action="retry-connection">重试连接</button><p class="subtle">请确认本地游戏服务器仍在运行。已有记录不会因重连被清除。</p>` : ""}<p class="camp-note">${isPractice ? "三维试玩 · 对手为电脑角色 · 记录仅存本机" : "全部卡牌已解锁 · 没有付费抽卡"}</p></section>`;
@@ -269,21 +287,27 @@ function connectionBanner() {
 function battle() {
   const s = room, myTurn = s.canAct && connectionState === "ready" && !commandBusy && !visualBusy;
   const card = selected?.kind === "card" ? CARD[s.self.hand[selected.index]] : null;
-  const canPlay = card && myTurn && s.self.mana >= card.cost && (card.type === "spell" || s.self.board.length < 4) && (card.keyword !== "restore" || s.self.hp < 18);
-  const cardReason = !card ? "" : !s.canAct ? "等你的回合再出牌" : commandBusy || visualBusy ? "正在结算，请稍候" : s.self.mana < card.cost ? `还差${card.cost - s.self.mana}点能量` : card.type !== "spell" && s.self.board.length >= 4 ? "伙伴位置已满，需要先腾出空位" : card.keyword === "restore" && s.self.hp >= 18 ? "生命已满，暂时不用治疗" : card.keyword === "damage" ? "点击亮起的敌人来施放" : "";
+  const option=card?selectedCardOption(s,selected.index):null;
+  const cost=option?.cost??card?.cost;
+  const canPlay=!!option?.legal?.untargeted&&myTurn;
+  const hasTargets=!!option?.legal?.targets.length;
+  const cardReason = !card ? "" : !s.canAct ? "等你的回合再出牌" : commandBusy || visualBusy ? "正在结算，请稍候" : s.self.mana < cost ? `还差${cost - s.self.mana}点能量` : card.type !== "spell" && s.self.board.length >= 4 ? "伙伴位置已满，需要先腾出空位" : card.keyword === "restore" && s.self.hp >= 18 ? "生命已满，暂时不用治疗" : hasTargets ? "点亮起的伙伴或目标，完成这张牌的效果" : !option?.legal ? "当前没有可用的出牌方式" : "";
   const ritualButtons = [["insight", "☾", "灵光", "抽1张牌"], ["spark", "✦", "火花", "造成2伤害"], ["bloom", "❧", "守护", "恢复3生命"]].map(([id, icon, name, sub]) => {
     const reason = id === "bloom" && s.self.hp >= 18 ? "生命已满" : id === "insight" && s.self.hand.length >= 7 ? "手牌已满" : id === "insight" && s.self.deckCount === 0 ? "牌库已空" : "";
-    const disabled = !myTurn || s.self.ritualUsed || s.self.ritualReserved || s.self.ritualsLeft < 1 || reason;
+    const disabled = !myTurn || s.self.ritualUsed || s.self.ritualReserved || s.self.drawEnglish?.usedThisTurn || s.self.drawEnglish?.pending || s.self.ritualsLeft < 1 || reason;
     return `<button data-action="ritual" data-value="${id}" ${disabled ? "disabled" : ""} title="${reason || sub}" aria-label="${name}，${reason || sub}"><span>${icon}</span><div>${name}<small class="${reason ? "ritual-reason" : ""}">${reason || sub}</small></div></button>`;
   }).join("");
-  const selectHint = !s.canAct ? "等待你的回合，可以先看看卡牌" : selected?.kind === "unit" && !s.self.board.find((u) => u.uid === selected.uid)?.ready ? "这位伙伴要等到下一回合" : selected?.kind === "unit" ? "选择亮起的目标 · 守卫会阻挡普通攻击" : selected?.kind === "ritual" || card?.keyword === "damage" ? "选择法术目标 · 法术可以越过守卫" : "";
-  return `<div class="battle-ui">${connectionBanner()}${fallbackBoard()}<div class="battle-context"><b>${s.bank === "teacher-academic" ? `教师内测 · ${teacherLabels[s.course]?.split(" · ")[0] || "学术英语"}` : `${s.grade}年级 · ${s.course === "all" ? "全年" : s.course.startsWith("s1") ? "上册" : "下册"}`}</b><span>第${Math.ceil(s.turn / 2) || 1}回合</span>${s.phase === "playing" ? deadlineTag(s.turnDeadline) : ""}</div>${hero(s.opponent, false)}${hero(s.self, true)}<div class="turn-banner">${s.phase === "opening" ? "准备你的起手" : s.phase === "finished" ? "对战结束" : s.self.controller === "proxy" ? s.self.controlRequestPending ? "已申请 · 下个自己的回合接回" : "伙伴托管中 · 可接回操作" : s.canAct ? "你的回合" : s.opponent.controller === "proxy" ? "对手暂由伙伴托管" : "对手的回合"}</div>${s.self.controller === "proxy" ? `<button class="reclaim primary" data-action="reclaim" ${commandBusy || s.self.controlRequestPending ? "disabled" : ""}>${s.self.controlRequestPending ? "已申请接回" : "接回操作"}</button>` : ""}<aside class="rituals"><h2>词灵仪式 <span>${s.self.ritualsLeft}/4</span></h2>${ritualButtons}<button class="end-turn" data-action="end" ${!myTurn ? "disabled" : ""}>结束回合</button></aside>${selected ? `<div class="command-bar ${card ? "card-command" : "target-command"}"><div>${card ? `<b>${esc(card.name)}</b>${cardReason ? `<small class="card-reason" role="status">${esc(cardReason)}</small>` : ""}<span class="card-resources">费用 ${card.cost} · 当前能量 ${s.self.mana}/${s.self.maxMana}${card.type !== "spell" ? ` · 攻击 ${card.atk} · 生命 ${card.hp}` : ""}</span>` : `<b>${selectHint}</b>`}</div>${card ? `<button data-action="card-info">卡牌说明</button>` : ""}${card && card.keyword !== "damage" ? `<button class="primary" data-action="play" ${!canPlay ? "disabled" : ""}>${card.type === "spell" ? "施放" : "召唤"}</button>` : ""}<button data-action="clear">取消</button></div>` : ""}<button class="leave quiet" data-action="leave">离开对局</button>${desk?.issue || desk?.store?.dirty ? `<p class="battle-save-warning" role="status">${esc(desk.warning())}</p>` : ""}</div>`;
+  const draw=s.self.drawEnglish;
+  const drawCard=draw?.eligibleHandId?s.self.hand[s.self.handIds?.indexOf(draw.eligibleHandId)]:null;
+  const drawButton=draw?.canBegin&&drawCard?`<button class="draw-english" data-action="draw-begin" ${!myTurn?"disabled":""} aria-label="为新抽到的${esc(CARD[drawCard].name)}选择英语助力，答对后该牌本回合减1费，剩${draw.chargesLeft}次"><div>英语助力<small>答对减1费</small></div></button>`:"";
+  const selectHint = !s.canAct ? "等待你的回合，可以先看看卡牌" : selected?.kind === "unit" && !s.self.board.find((u) => u.uid === selected.uid)?.ready ? "这位伙伴要等到下一回合" : selected?.kind === "unit" ? "选择亮起的目标 · 守卫会阻挡普通攻击" : selected?.kind === "ritual" || hasTargets ? "选择法术目标 · 法术可以越过守卫" : "";
+  return `<div class="battle-ui">${connectionBanner()}${fallbackBoard()}<div class="battle-context"><b>${s.bank === "teacher-academic" ? `教师内测 · ${teacherLabels[s.course]?.split(" · ")[0] || "学术英语"}` : `${s.grade}年级 · ${s.course === "all" ? "全年" : s.course.startsWith("s1") ? "上册" : "下册"}`}</b><span>第${Math.ceil(s.turn / 2) || 1}回合</span>${s.phase === "playing" ? deadlineTag(s.turnDeadline) : ""}</div>${hero(s.opponent, false)}${hero(s.self, true)}<div class="turn-banner">${s.phase === "opening" ? "准备你的起手" : s.phase === "finished" ? "对战结束" : s.self.controller === "proxy" ? s.self.controlRequestPending ? "已申请 · 下个自己的回合接回" : "伙伴托管中 · 可接回操作" : s.canAct ? "你的回合" : s.opponent.controller === "proxy" ? "对手暂由伙伴托管" : "对手的回合"}</div>${s.self.controller === "proxy" ? `<button class="reclaim primary" data-action="reclaim" ${commandBusy || s.self.controlRequestPending ? "disabled" : ""}>${s.self.controlRequestPending ? "已申请接回" : "接回操作"}</button>` : ""}<aside class="rituals"><h2>仪式 <span>${s.self.ritualsLeft}/4</span>${draw?` · 助力 ${draw.chargesLeft}/2`:""}</h2>${ritualButtons}${drawButton}<button class="end-turn" data-action="end" ${!myTurn ? "disabled" : ""}>结束回合</button></aside>${selected ? `<div class="command-bar ${card ? "card-command" : "target-command"}"><div>${card ? `<b>${esc(card.name)}</b>${cardReason ? `<small class="card-reason" role="status">${esc(cardReason)}</small>` : ""}<span class="card-resources">费用 ${cost}${cost<card.cost?"（本回合减1）":""} · 当前能量 ${s.self.mana}/${s.self.maxMana}${card.type !== "spell" ? ` · 攻击 ${card.atk} · 生命 ${card.hp}` : ""}</span>` : `<b>${selectHint}</b>`}</div>${card ? `<button data-action="card-info">卡牌说明</button>` : ""}${card && !hasTargets ? `<button class="primary" data-action="play" ${!canPlay ? "disabled" : ""}>${card.type === "spell" ? "施放" : "召唤"}</button>` : ""}<button data-action="clear">取消</button></div>` : ""}<button class="leave quiet" data-action="leave">离开对局</button>${desk?.issue || desk?.store?.dirty ? `<p class="battle-save-warning" role="status">${esc(desk.warning())}</p>` : ""}</div>`;
 }
 
 function openingArtwork(id) {
   const independent = CARD[id]?.art >= 6;
   const card = CARD[id];
-  const src = independent ? `/assets/cards/${id}.webp` : "/assets/creatures.webp";
+  const src = cardArtUrl(id);
   return `<span class="opening-art ${independent ? "individual" : "atlas"}"><img alt="" src="${src}" style="${independent ? "" : `transform:translate(${-100 * (card.art % 3) / 3}%,${-50 * Math.floor(card.art / 3)}%)`}" draggable="false"></span>`;
 }
 function opening() {
@@ -302,7 +326,11 @@ function visualCue(v) {
   return "";
 }
 function quiz() {
-  const q = challenge.question, answered = !!feedback;
+  const q = challenge.question, answered = !!feedback, drawQuestion=challenge.purpose === "draw";
+  if(drawQuestion && answered) {
+    const correct=q.options.find(o=>o.id===feedback.correctOptionId)?.text;
+    return `<section class="dialog battle-recap" role="dialog" aria-modal="true" aria-labelledby="quiz-title"><h2 id="quiz-title">${drawFeedbackText(feedback.outcome)}</h2>${correct?`<p class="recap-answer"><span>正确答案</span><strong>${esc(correct)}</strong></p>`:""}<div class="feedback"><p>${esc(feedback.explanation||"这次机会已结束，可以继续出牌。")}</p></div>${desk?.attentionHint(challenge.challengeId)||""}<button class="primary" data-action="quiz-close">回到棋盘</button></section>`;
+  }
   if (answered) {
     const timedOut = feedback.outcome === "unanswered";
     if (visualBusy && !preferences.reduced && !recapExpanded) {
@@ -311,9 +339,9 @@ function quiz() {
     const correct = q.options.find(option => option.id === feedback.correctOptionId)?.text;
     const chosen = q.options.find(option => option.id === feedback.selectedOptionId)?.text;
     const completed = !timedOut && feedback.speak && feedback.speak !== correct ? feedback.speak : null;
-    return `<section class="dialog battle-recap" role="dialog" aria-modal="true" aria-labelledby="quiz-title" aria-describedby="recap-explanation"><p class="eyebrow">WORD MAGIC</p><header><h2 id="quiz-title">${timedOut ? "先守住这一回合" : feedback.outcome === "correct" ? "词灵回应了你" : "再记住这一点"}</h2><button data-action="listen" ${!feedback.audioUrl || !preferences.speech ? "disabled" : ""} aria-label="${preferences.speech ? "听正确英语" : "朗读已关闭"}">${voice || voiceTimer ? "■ 停止" : "♫ 朗读"}</button></header>${!timedOut && correct ? `<p class="recap-answer"><span>正确答案</span><strong>${esc(correct)}</strong></p>` : ""}${completed ? `<p class="recap-sentence">${esc(completed)}</p>` : ""}${!timedOut && feedback.outcome === "wrong" && chosen ? `<p class="recap-choice">刚才选择了：${esc(chosen)}</p>` : ""}<div class="feedback" id="recap-explanation"><p>${timedOut ? "这次未作答，不记学习错误。获得1点护甲，下一轮再试。" : esc(feedback.explanation || "把这条英语再读一遍。")}</p>${feedback.outcome === "wrong" ? "<p>这次仍获得1点护甲。</p>" : ""}</div><button class="primary" data-action="quiz-close">回到棋盘</button></section>`;
+    return `<section class="dialog battle-recap" role="dialog" aria-modal="true" aria-labelledby="quiz-title" aria-describedby="recap-explanation"><p class="eyebrow">WORD MAGIC</p><header><h2 id="quiz-title">${timedOut ? "先守住这一回合" : feedback.outcome === "correct" ? "词灵回应了你" : "再记住这一点"}</h2><button data-action="listen" ${!feedback.audioUrl || !preferences.speech ? "disabled" : ""} aria-label="${preferences.speech ? "听正确英语" : "朗读已关闭"}">${voice || voiceTimer ? "■ 停止" : "♫ 朗读"}</button></header>${!timedOut && correct ? `<p class="recap-answer"><span>正确答案</span><strong>${esc(correct)}</strong></p>` : ""}${completed ? `<p class="recap-sentence">${esc(completed)}</p>` : ""}${!timedOut && feedback.outcome === "wrong" && chosen ? `<p class="recap-choice">刚才选择了：${esc(chosen)}</p>` : ""}<div class="feedback" id="recap-explanation"><p>${timedOut ? "这次未作答，不记学习错误。获得1点护甲，下一轮再试。" : esc(feedback.explanation || "把这条英语再读一遍。")}</p>${feedback.outcome === "wrong" ? "<p>这次仍获得1点护甲。</p>" : ""}</div>${desk?.attentionHint(challenge.challengeId)||""}<button class="primary" data-action="quiz-close">回到棋盘</button></section>`;
   }
-  return `<section class="dialog quiz ${q.bank === "teacher-academic" ? "teacher-quiz" : ""}" role="dialog" aria-modal="true" aria-labelledby="quiz-title"><p class="eyebrow">WORD MAGIC</p><header><h2 id="quiz-title">唤醒词灵</h2><button data-action="listen" ${!preferences.speech || !(answered ? feedback.audioUrl : q.listenAudioUrl || q.listenAudioUrls?.length) ? "disabled" : ""} aria-label="${preferences.speech ? "听英语" : "朗读已关闭，可在设置开启"}">${voice || voiceTimer ? "■ 停止朗读" : preferences.speech ? "♫ 听英语" : "朗读已关闭"}</button></header><p class="subtle question-timing">${esc(q.unitLabel)} ${deadlineTag(challenge.expiresAt, "question")}</p><h3>${esc(q.prompt)}</h3>${q.bank === "teacher-academic" ? `<p class="teacher-audio-note">学术英语内测 · 文字题目</p>` : ""}${visualCue(q.visual)}${q.passage ? `<section class="academic-passage" aria-label="阅读材料"><p>${esc(q.passage)}</p></section>` : ""}${q.text ? `<p class="english">${esc(q.text)}</p>` : ""}<div class="answers">${q.options.map((o, i) => `<button data-action="answer" data-option="${esc(o.id)}" ${answered || commandBusy || connectionState !== "ready" ? "disabled" : ""} class="${answered && feedback.correctOptionId === o.id ? "correct" : ""}"><span>${String.fromCharCode(65 + i)}</span>${esc(o.text)}</button>`).join("")}</div>${answered ? `<div class="feedback"><b>${feedback.outcome === "correct" ? "词灵回应了你" : feedback.outcome === "unanswered" ? "先守住这一回合" : "得到1点护甲，再记住这一点"}</b><p>${esc(feedback.explanation || "这次没有记为学习答错。下一轮再试。")}</p></div><button class="primary" data-action="quiz-close">回到棋盘</button>` : `<p class="subtle">${connectionState === "ready" ? "选择一次，安心思考" : "连接恢复后就能继续回答，这道题仍会按服务器期限保留。"}</p>${connectionState !== "ready" ? `<button data-action="resume-connection">重试连接</button>` : ""}`}</section>`;
+  return `<section class="dialog quiz ${q.bank === "teacher-academic" ? "teacher-quiz" : ""}" role="dialog" aria-modal="true" aria-labelledby="quiz-title"><p class="eyebrow">WORD MAGIC</p><header><h2 id="quiz-title">${drawQuestion?"给新抽的牌一点助力":"唤醒词灵"}</h2><button data-action="listen" ${!preferences.speech || !(answered ? feedback.audioUrl : q.listenAudioUrl || q.listenAudioUrls?.length) ? "disabled" : ""} aria-label="${preferences.speech ? "听英语" : "朗读已关闭，可在设置开启"}">${voice || voiceTimer ? "■ 停止朗读" : preferences.speech ? "♫ 听英语" : "朗读已关闭"}</button></header><p class="subtle question-timing">${esc(q.unitLabel)} ${deadlineTag(challenge.expiresAt, "question")}</p><h3>${esc(q.prompt)}</h3>${q.bank === "teacher-academic" ? `<p class="teacher-audio-note">学术英语内测 · 文字题目</p>` : ""}${drawQuestion?'<p class="subtle">可选助力，每局最多2次；答对只让这张新抽的牌本回合减1费。答错或取消仍保留原牌。</p>':""}${visualCue(q.visual)}${q.passage ? `<section class="academic-passage" aria-label="阅读材料"><p>${esc(q.passage)}</p></section>` : ""}${q.text ? `<p class="english">${esc(q.text)}</p>` : ""}<div class="answers">${q.options.map((o, i) => `<button data-action="answer" data-option="${esc(o.id)}" ${answered || commandBusy || connectionState !== "ready" ? "disabled" : ""} class="${answered && feedback.correctOptionId === o.id ? "correct" : ""}"><span>${String.fromCharCode(65 + i)}</span>${esc(o.text)}</button>`).join("")}</div>${answered ? `<div class="feedback"><b>${feedback.outcome === "correct" ? "词灵回应了你" : feedback.outcome === "unanswered" ? "先守住这一回合" : "得到1点护甲，再记住这一点"}</b><p>${esc(feedback.explanation || "这次没有记为学习答错。下一轮再试。")}</p></div><button class="primary" data-action="quiz-close">回到棋盘</button>` : `<p class="subtle">${connectionState === "ready" ? "选择一次，安心思考" : "连接恢复后就能继续回答，这道题仍会按服务器期限保留。"}</p>${connectionState !== "ready" ? `<button data-action="resume-connection">重试连接</button>` : ""}`} ${drawQuestion&&!answered?'<button data-action="draw-cancel">不作答，保留原牌（本次机会已使用）</button>':""}</section>`;
 }
 function result() {
   const r = room.result || {}, won = r.winnerSeat === room.youSeat;
@@ -323,26 +351,29 @@ function result() {
 function cardInfo() {
   const id = inspectCardId || (selected?.kind === "card" ? room?.self.hand[selected.index] : null);
   const guide = cardGuide(id);
+  const inspectIndex=room?.self.handIds?.indexOf(inspectHandId)??-1;
+  const inspectedCost=inspectIndex>=0?room.self.handCosts?.[inspectIndex]??guide?.cost:guide?.cost;
   if (!guide) return `<section class="dialog" role="dialog" aria-modal="true"><p>这张牌已不在手中。</p><button data-action="card-info-close">返回棋盘</button></section>`;
-  return `<section class="dialog card-info-dialog" role="dialog" aria-modal="true" aria-labelledby="card-info-title"><header class="card-info-heading"><div class="card-info-portrait">${artThumb(id)}</div><div><p class="eyebrow">${esc(guide.element)} · ${esc(guide.keyword)}</p><h2 id="card-info-title">${esc(guide.name)}</h2><p class="card-facts"><span>${guide.cost} 能量</span>${guide.type === "伙伴" ? `<span>${guide.atk} 攻击</span><span>${guide.hp} 生命</span>` : "<span>法术</span>"}</p></div></header><p class="card-effect">${esc(guide.effect)}</p><div class="card-info-columns"><section><h3>怎么使用</h3><p>${esc(guide.target)}</p><p>${esc(guide.timing)}</p><h3>${esc(guide.keyword)}</h3><p>${esc(guide.rule)}</p></section><section><h3>试试看</h3><p>${esc(guide.example)}</p><details class="card-info-tip"><summary>${guide.exchange ? "攻击前看看" : "使用小提示"}</summary>${guide.exchange ? `<p>${esc(guide.exchange)}</p>` : ""}<p>${esc(guide.tip)}</p></details></section></div><footer class="card-info-footer">${room?.phase === "playing" ? `<p class="card-info-time">${room.canAct ? "你的回合" : "对手回合"} · ${deadlineTag(room.turnDeadline)} · 查看说明时继续计时</p>` : ""}<button class="primary" data-action="card-info-close">返回棋盘</button></footer></section>`;
+  return `<section class="dialog card-info-dialog" role="dialog" aria-modal="true" aria-labelledby="card-info-title"><header class="card-info-heading"><div class="card-info-portrait">${artThumb(id)}</div><div><p class="eyebrow">${esc(guide.element)} · ${esc(guide.keyword)}</p><h2 id="card-info-title">${esc(guide.name)}</h2><p class="card-facts"><span>${inspectedCost} 能量${inspectedCost<guide.cost?`（本回合减1，基础${guide.cost}）`:""}</span>${guide.type === "伙伴" ? `<span>${guide.atk} 攻击</span><span>${guide.hp} 生命</span>` : "<span>法术</span>"}</p></div></header><p class="card-effect">${esc(guide.effect)}</p><div class="card-info-columns"><section><h3>怎么使用</h3><p>${esc(guide.target)}</p><p>${esc(guide.timing)}</p><h3>${esc(guide.keyword)}</h3><p>${esc(guide.rule)}</p></section><section><h3>试试看</h3><p>${esc(guide.example)}</p><details class="card-info-tip"><summary>${guide.exchange ? "攻击前看看" : "使用小提示"}</summary>${guide.exchange ? `<p>${esc(guide.exchange)}</p>` : ""}<p>${esc(guide.tip)}</p></details></section></div><footer class="card-info-footer">${room?.phase === "playing" ? `<p class="card-info-time">${room.canAct ? "你的回合" : "对手回合"} · ${deadlineTag(room.turnDeadline)} · 查看说明时继续计时</p>` : ""}<button class="primary" data-action="card-info-close">返回棋盘</button></footer></section>`;
 }
 function settings() {
   const activeRenderer = room ? rendererStatus : lobbyStatus;
   return `<section class="dialog settings" role="dialog" aria-modal="true"><h2>声音与画面</h2><label><input id="setting-reduced" type="checkbox" ${preferences.reduced ? "checked" : ""}>减少动态</label><label><input id="setting-music" type="checkbox" ${preferences.music ? "checked" : ""}>背景音乐</label><label><input id="setting-sound" type="checkbox" ${preferences.sound ? "checked" : ""}>战斗音效</label><label><input id="setting-speech" type="checkbox" ${preferences.speech ? "checked" : ""}>英语朗读</label><label>音乐音量<input id="music-volume" type="range" min="0" max="100" value="${preferences.musicVolume}"></label><label>音效音量<input id="sound-volume" type="range" min="0" max="100" value="${preferences.soundVolume}"></label><p class="subtle">渲染：${esc(activeRenderer.renderer || "准备中")}${activeRenderer.fps ? ` · 最近画面约${activeRenderer.fps}fps` : ""}</p><button class="primary" data-action="save-settings">完成</button></section>`;
 }
 function render() {
+  desk?.syncAttention();
   const identityBlocked = !isPractice && !identityVerified;
   document.body.classList.toggle('identity-checking', identityBlocked);
   if (identityBlocked) {
     ui.inert = false;
     ui.innerHTML = `<main class="identity-check" role="status"><h1>正在确认营地身份</h1><p>${esc(identityCheckError || '确认后继续你的学习与收藏')}</p>${identityCheckError ? '<button class="primary" data-action="identity-retry">重新确认</button>' : ''}</main>`;
     modalRoot.innerHTML = ''; renderedModalHTML = null; renderedModalKey = null;
-    layer.inert = true; $('#collection-root').inert = true;
+    layer.inert = true; $('#collection-root').inert = true; $('#wardrobe-root').inert = true; wardrobeView?.visibility(true);
     if(identityPanel)identityPanel.root.inert = true;
     scene?.setHidden(true); handScene?.setHidden(true); lobbyScene?.setHidden(true);
     return;
   }
-  $('#collection-root').inert = false;
+  $('#collection-root').inert = false; $('#wardrobe-root').inert = false;
   if(identityPanel)identityPanel.root.inert = false;
   const selectionKey = JSON.stringify(selected);
   if (scene && selectionKey !== renderedSelection) { renderedSelection = selectionKey; try { scene.select(selected); } catch { sceneFault = true; } }
@@ -356,15 +387,18 @@ function render() {
   ui.innerHTML = header() + (room ? battle() : lobby());
 
   let contents = "";
-  if (connectionState === "replaced" && room) contents = '<section class="dialog" role="dialog" aria-modal="true"><h2>另一页面正在继续这局</h2><p>本页已暂停操作。可以在这里恢复同一场对局，或返回营地另开连接。</p><button class="primary" data-action="resume-connection">在这一页继续</button><button data-action="leave-replaced">返回营地</button></section>';
+  if (connectionState === "incompatible") contents = '<section class="dialog" role="dialog" aria-modal="true"><h2>森林版本已更新</h2><p>请刷新页面，再继续匹配。已保存的学习与收藏会保留。</p><button class="primary" data-action="reload-app">刷新到新版本</button></section>';
+  else if (connectionState === "replaced" && room) contents = '<section class="dialog" role="dialog" aria-modal="true"><h2>另一页面正在继续这局</h2><p>本页已暂停操作。可以在这里恢复同一场对局，或返回营地另开连接。</p><button class="primary" data-action="resume-connection">在这一页继续</button><button data-action="leave-replaced">返回营地</button></section>';
   else if (["study", "records", "data"].includes(panel) && desk) contents = desk.html();
   else if (panel === "leave") contents = '<section class="dialog" role="dialog" aria-modal="true"><h2>离开这场对局？</h2><p>离开会结束本局，并记为退出。已保存的学习与收藏会保留。</p><button class="primary" data-action="confirm-leave">确认离开</button><button data-action="close-panel">继续对战</button></section>';
   else if (panel === "match-setup" && !room) contents = matchSetup();
   else if (panel === "library") contents = library.html();
+  else if (panel === "daily") contents = rewardView({data:desk?.data,ready:desk?.canStart&&rewardNow()!==null,now:rewardNow()});
+  else if (panel === "camp-more") contents = '<section class="dialog camp-more" role="dialog" aria-modal="true"><header><h2>营地里的小事</h2><button data-action="close-panel">返回</button></header><button data-action="collection">五日卡牌礼盒 · 独立外观收藏</button><button data-action="records">学习与对局成绩</button><button data-action="data">记录与备份</button></section>';
   else if (panel === "difficulty-info") { const plan=selectDifficulty(desk?.data?.combatRating,preferences.combatMode),profile=desk?.data?.combatRating; contents=`<section class="dialog" role="dialog" aria-modal="true"><h2>跟着战斗经验慢慢进步</h2><p>这是你的电脑挑战强度，与英语掌握分开。前3场自适应对局从轻松开始；只有自然结束且没有托管的电脑局更新表现，退出不会加减。</p><p>下一局${esc(plan.name)}：${esc(plan.description)}</p><p>当前参考值${profile?.rating ?? 700}，已完成${profile?.games ?? 0}场。连续失利会降低下一局档位；强度在开局确定，途中不改血量或伤害。</p><button class="primary" data-action="close-panel">知道了</button></section>`; }
   else if (panel === "card-info") contents = cardInfo();
   else if (panel === "settings") contents = settings();
-  else if (panel === "help") contents = '<section class="dialog" role="dialog" aria-modal="true"><h2>把伙伴放上棋盘</h2><p>直接点选实体手牌，再点召唤。长按约半秒或右键看详情；横向滑动查看更多手牌；键盘左右选牌，回车点选，I键看说明。选可以行动的伙伴，再选对面目标；守卫会挡住普通攻击。</p><p>卡牌左上的蓝色数字是能量费用，左下金色是攻击，右下红色是生命。先选一位准备好的伙伴，亮起的目标可以承受普通攻击；守卫会保护其他伙伴。</p><p>词灵仪式每局最多4次、每回合一次。先决定战术，再用英语唤醒效果。</p><p>'+(isPractice ? '本试玩页由森林电脑角色迎战，全部战斗与学习计算在当前浏览器进行。真人匹配属于独立的服务器版本。' : '开始匹配会寻找相同学习范围的对手；稍候无人时会由森林电脑角色迎战。对手资料会如实说明身份。')+'</p><button class="primary" data-action="close-panel">回到森林</button></section>';
+  else if (panel === "help") contents = '<section class="dialog" role="dialog" aria-modal="true"><h2>把伙伴放上棋盘</h2><p>直接点选实体手牌，再点召唤。长按约半秒或右键看详情；横向滑动查看更多手牌；键盘左右选牌，回车点选，I键看说明。选可以行动的伙伴，再选对面目标；守卫会挡住普通攻击。</p><p>卡牌左上的蓝色数字是能量费用，左下金色是攻击，右下红色是生命。先选一位准备好的伙伴，亮起的目标可以承受普通攻击；守卫会保护其他伙伴。</p><p>词灵仪式每局最多4次。自己的第2回合起，新自然抽到的牌有时可选英语助力，每局最多2次，答对让该牌本回合减1费。助力与仪式共享每回合一次英语行动；答错或取消保留原牌。</p><p>'+(isPractice ? '本试玩页由森林电脑角色迎战，全部战斗与学习计算在当前浏览器进行。真人匹配属于独立的服务器版本。' : '开始匹配会寻找相同学习范围的对手；稍候无人时会由森林电脑角色迎战。对手资料会如实说明身份。')+'</p><button class="primary" data-action="close-panel">回到森林</button></section>';
   else if (panel === "opponent") contents = `<section class="dialog" role="dialog" aria-modal="true"><h2>${esc(room?.opponent.name)}</h2>${room?.computer ? `<p>${esc(room.computer.name)} · ${esc(room.computer.description)}</p>` : ""}<p>${room?.opponent.controller === "bot" ? "森林电脑角色 · 根据公开场面与自己的手牌自主决策" : "本局匿名玩家 · 无需提供真实姓名"}</p><button class="primary" data-action="close-panel">返回</button></section>`;
   else if (challenge) contents = quiz();
   else if (room?.phase === "opening") contents = opening();
@@ -391,25 +425,25 @@ function render() {
     if (target && (!dialog || dialog.contains(target))) target.focus({ preventScroll: true });
   }
   renderedModalKey = modalKey; renderedFeedback = !!(feedback || desk?.answer);
-  ui.inert = !!dialog || panel === "collection" || !!identityPanel?.isOpen; layer.inert = !!dialog || panel === "collection" || !!identityPanel?.isOpen;
+  ui.inert = !!dialog || ["collection","wardrobe"].includes(panel) || !!identityPanel?.isOpen; layer.inert = !!dialog || ["collection","wardrobe"].includes(panel) || !!identityPanel?.isOpen;
   document.body.classList.toggle("collection-open",panel === "collection");
   document.body.classList.toggle("has-room", !!room);
   $("#lobby-scene").hidden = !!room;
   $("#arena").hidden = !room;
   scene?.setHidden(document.hidden || pageSuspended || !!panel || !room);
   lobbyScene?.setHidden(document.hidden || pageSuspended || !!room || !!panel);
-  syncHandView(!!dialog || panel === "collection");
+  syncHandView(!!dialog || ["collection","wardrobe"].includes(panel));
   const warning = $("#renderer-warning");
   warning.hidden = room ? rendererStatus.available !== false && !sceneFault : lobbyStatus.available !== false;
   warning.textContent = !room ? (lobbyStatus.available === false ? "营地画面暂不可用，四周入口仍然可以使用" : "") : sceneFault ? "场景暂时无法完整显示，已切换到简化操作。对局数值已按最新结果同步。" : rendererStatus.available === false ? "当前浏览器未能开启3D画面，已提供简化战场。可在支持WebGL2的浏览器中体验立体棋盘。" : "";
   if (room && rendererStatus.available !== false && !sceneFault) updateLabels(); else { layer.innerHTML = ""; labelSignature = ""; }
-  refreshDeadlines();
+  refreshDeadlines(); scheduleRewardDay();
 }
 let anchorPositions = [];
 function updateLabels() {
   if (!room || sceneFault || rendererStatus.available === false) return;
   const visual = displayRoom?.roomId === room.roomId ? displayRoom : room;
-  const targets = targetPreview(stateForScene(room), room.youSeat, selected).targets;
+  const targets = selected?.kind==="card" ? selectedTargetIds(room,selected.index) : targetPreview(stateForScene(room), room.youSeat, selected).targets;
   const signature = JSON.stringify([room.youSeat, room.canAct, room.activeSeat, connectionState, commandBusy, visualBusy, targets, visual.self.board, visual.opponent.board, anchorPositions.map((a) => [a.uid, a.visible])]);
   if (signature !== labelSignature) {
     labelSignature = signature;
@@ -438,13 +472,13 @@ document.addEventListener("click", (event) => {
     if(desk?.pendingCount || desk?.store?.dirty){notice('先确认当前记录已保存，再切换身份');return;}
     desk?.close();panel='identity';cancelVoice();identityPanel?.open();render();return;
   }
-  if(a.startsWith("collection-")) return;
+  if(a.startsWith("collection-") || button.dataset.skinAction) return;
   if(a.startsWith("library-")){void library.click(a,button.dataset.value);return;}
   if (a.startsWith("desk-")) { void desk?.click(a, button.dataset.value, button.dataset.option).then(()=>{
     if(!isPractice && activeIdentity && desk?.canStart && link.state==='closed')link.freshSession();
   }); return; }
   if (["camp", "clear", "close-panel"].includes(a)) { event.preventDefault(); desk?.close(); panel = null; selected = null; }
-  else if (a === "card-info") { inspectCardId = selected?.kind === "card" ? room?.self.hand[selected.index] : null; panel = "card-info"; cancelVoice(); }
+  else if (a === "card-info") { inspectCardId = selected?.kind === "card" ? room?.self.hand[selected.index] : null; inspectHandId=selected?.kind==="card"?room?.self.handIds?.[selected.index]:null; panel = "card-info"; cancelVoice(); }
   else if (a === "match-setup" && !room) { panel = "match-setup"; cancelVoice(); }
   else if (a === "card-info-close") panel = null;
   else if (a === "question-bank" && !waiting && !room && desk?.canStart && ["school","teacher-academic"].includes(button.dataset.value)) { preferences.bank = button.dataset.value; savePreferences({ bank: preferences.bank }); }
@@ -454,11 +488,16 @@ document.addEventListener("click", (event) => {
     if (preferences.deckId === "custom" && !validateCustomDeck(preferences.customDeck)) { notice("请先把自选套牌整理为20张，每种最多3张"); return; }
     send("queue.join", { bank: preferences.bank || "school", grade: teacherSelected() ? null : preferences.grade, course: teacherSelected() ? preferences.teacherCourse || "all" : preferences.course, deckId: preferences.deckId, ...(preferences.deckId === "custom" ? { customDeck: [...preferences.customDeck] } : {}) }, false);
   }
+  else if (a === "daily-study" && !waiting && !room) { openDesk("study"); void desk?.startDailyPractice(); }
+  else if (a === "daily-unit" && !waiting && !room) { openDesk("study"); void desk?.startUnitPractice(); }
+  else if (["daily","camp-more"].includes(a) && !waiting && !room) {desk?.close();panel=a;cancelVoice();}
+  else if (a === "wardrobe" && !waiting && !room) {desk?.close();panel="wardrobe";cancelVoice();wardrobeView?.open();}
   else if (a === "collection" && !waiting && !room) {panel="collection";cancelVoice();collectionView?.open();}
   else if (a === "library" && !waiting && !room) {library.open();panel="library";cancelVoice();}
   else if (["study", "records", "data"].includes(a)) openDesk(a);
   else if (a === "reclaim") send("room.reclaim", {});
   else if (a === "cancel-match") send("queue.cancel", {}, false);
+  else if (a === "reload-app") location.reload();
   else if (a === "reconnect") link.freshSession();
   else if (a === "leave-replaced") { clearRoom(); link.freshSession(); }
   else if (a === "resume-connection" || a === "retry-connection") { selected = null; link.connect(); }
@@ -471,7 +510,9 @@ document.addEventListener("click", (event) => {
   else if (a === "play" && selected?.kind === "card") { send("battle.action", { action: { type: "play", index: selected.index } }); selected = null; }
   else if (a === "end") { selected = null; send("battle.action", { action: { type: "end" } }); }
   else if (a === "ritual") { const kind = button.dataset.value; if (kind === "spark") { selected = { kind: "ritual", ritual: kind }; notice("请选择火花目标"); } else send("ritual.begin", { kind }); }
-  else if (a === "answer" && challenge && !feedback) send("ritual.answer", { challengeId: challenge.challengeId, optionId: button.dataset.option });
+  else if (a === "draw-begin" && room?.self.drawEnglish?.canBegin) send("draw.begin",{handId:room.self.drawEnglish.eligibleHandId});
+  else if (a === "draw-cancel" && challenge?.purpose === "draw" && !feedback) {const id=challenge.challengeId;void send("draw.cancel",{challengeId:id}).then(ok=>{if(ok&&challenge?.challengeId===id){challenge=null;feedback=null;cancelVoice();render();}});}
+  else if (a === "answer" && challenge && !feedback) send(answerCommand(challenge), { challengeId: challenge.challengeId, optionId: button.dataset.option });
   else if (a === "listen") listen(feedback ? feedback.audioUrl : challenge?.question.listenAudioUrls || challenge?.question.listenAudioUrl);
   else if (a === "recap-expand" && feedback) recapExpanded = true;
   else if (a === "quiz-close" && feedback) { void desk?.finishAttention(challenge?.challengeId); challenge = null; feedback = null; cancelVoice(); }
@@ -507,6 +548,7 @@ document.addEventListener("change", (event) => {
 document.addEventListener("keydown", (event) => {
   if(!isPractice && !identityVerified)return;
   if (panel === "collection") { collectionView?.keyHandler(event); return; }
+  if (panel === "wardrobe") { wardrobeView?.keyHandler(event); return; }
   if (!panel && !challenge && $("#hand-semantics").contains(document.activeElement) && handScene?.handleKey(event)) return;
   const dialog = modalRoot.querySelector(".dialog");
   if (event.key === "Tab" && dialog) {
@@ -517,7 +559,7 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "Escape" && (panel || (!challenge && room?.phase !== "opening"))) { const preserveCard = panel === "card-info"; panel = null; desk?.close(); if (!preserveCard) selected = null; render(); }
 });
-document.addEventListener("visibilitychange", () => { const hidden=document.hidden || pageSuspended; if(!hidden&&!isPractice){void verifyIdentity();return;} desk?.visibility(!hidden); collectionView?.visibility(hidden); SOUND.visibility?.(hidden); if (hidden) cancelVoice(); render(); });
+document.addEventListener("visibilitychange", () => { const hidden=document.hidden || pageSuspended; if(!hidden&&!isPractice){void verifyIdentity();return;} desk?.visibility(!hidden); collectionView?.visibility(hidden); wardrobeView?.visibility(hidden); SOUND.visibility?.(hidden); if (hidden) cancelVoice(); render(); });
 
 function createDesk() {
   const ownerId = activeIdentity?.playerId;
@@ -532,12 +574,13 @@ function createDesk() {
     if(!isPractice && ['PROFILE_CHANGED','IDENTITY_REQUIRED','SESSION_REQUIRED'].includes(created.issue?.code))queueMicrotask(()=>{if(desk===created)void verifyIdentity();});
     if (desk) for (const id of pendingLearning.keys()) if (!desk.pending.has(id)) pendingLearning.delete(id);
     if (desk?.data?.collection) scene?.setFinishes(equippedFinishes(desk.data.collection));
-    collectionView?.render();
+    collectionView?.render(); wardrobeView?.render();
     render();
   },
   onPreferences(value) { if(desk!==created)return;preferences = { ...preferences, ...value }; SOUND.sync(preferences); scene?.setReduced(preferences.reduced); handScene?.setReduced(preferences.reduced); lobbyScene?.setReduced(preferences.reduced); },
-  onNotice:text=>{if(desk===created)notice(text);}, onRestore(context) { if(desk!==created)return;collectionView?.reset(); clearRoom(); panel = "data"; finishSaves.clear(); pendingLearning.clear(); link.freshSession(); notice(context?.remote?'旧档学习和外观已导入，正式奖励记录保持独立':'本机备份已恢复'); },
+  onNotice:text=>{if(desk===created)notice(text);}, onRestore(context) { if(desk!==created)return;collectionView?.reset(); wardrobeView?.reset(); clearRoom(); panel = "data"; finishSaves.clear(); pendingLearning.clear(); link.freshSession(); notice(context?.remote?'旧档学习和外观已导入，正式奖励记录保持独立':'本机备份已恢复'); },
   getPreferences: () => preferences, visualCue, listen, cancelVoice, fetcher: ownedFetch,
+  canReadBattleFeedback: id => (isPractice || identityVerified) && challenge?.challengeId === id && !!feedback && !panel && (!visualBusy || preferences.reduced || recapExpanded),
 });
   return created;
 }
@@ -545,7 +588,7 @@ desk=createDesk();
 
 function resumeIdentityView() {
   const hidden=document.hidden || pageSuspended;
-  desk?.visibility(!hidden);collectionView?.visibility(hidden);SOUND.visibility?.(hidden);
+  desk?.visibility(!hidden);collectionView?.visibility(hidden); wardrobeView?.visibility(hidden);SOUND.visibility?.(hidden);
 }
 function beginIdentityCheck() {
   if(isPractice)return;
@@ -590,7 +633,7 @@ async function activateIdentity(player) {
     return;
   }
   identityVerified=false;identityCheckError="";
-  link.disconnect();desk?.dispose?.();collectionView?.reset();clearRoom();finishSaves.clear();pendingLearning.clear();
+  link.disconnect();desk?.dispose?.();collectionView?.reset(); wardrobeView?.reset();clearRoom();finishSaves.clear();pendingLearning.clear();
   panel=identityPanel?.isOpen?'identity':null;
   desk=createDesk();connectionState='closed';render();
   if(['guest','register','login','logout','recover'].includes(operation))identityChannel?.postMessage({type:'identity.changed'});
@@ -607,14 +650,14 @@ async function activateIdentity(player) {
 }
 render();
 scene = new ArenaScene({ canvas: $("#arena"), onPick: pick, reduced: preferences.reduced, externalHand:true,
-  onHandDraw({ids,count}) { if (!room || !handScene) return; handScene.setHand(ids,{revision:room.revision,selectedIndex:null,finishes:equippedFinishes(desk?.data?.collection)}); handScene.animateDraw(count); },
+  onHandDraw({ids,count}) { if (!room || !handScene) return; handScene.setHand(ids,{revision:room.revision,selectedIndex:null,costs:room.self.handCosts,finishes:equippedFinishes(desk?.data?.collection)}); handScene.animateDraw(count); },
   onAnchors(anchors) { anchorPositions = anchors; if (room) updateLabels(); },
   onStatus(status) { const changed = rendererStatus.available !== status.available; rendererStatus = { ...rendererStatus, ...status }; $("#arena").dataset.renderer = status.renderer; if (Number.isFinite(status.renderMs)) $("#arena").dataset.renderMs = String(status.renderMs); if (Number.isFinite(status.fps)) $("#arena").dataset.frameRate = String(status.fps); if (Number.isFinite(status.frameIntervalMs)) $("#arena").dataset.frameIntervalMs = String(status.frameIntervalMs); if (changed) render(); },
   onSound(kind) { playSceneSound(kind); },
 });
 handScene = new HandScene({canvas:$("#hand-canvas"), reduced:preferences.reduced,
   onSelect: handIntent,
-  onInspect(intent) { if (!validHandIntent(intent)) return; inspectCardId=intent.cardId; panel="card-info"; cancelVoice(); render(); },
+  onInspect(intent) { if (!validHandIntent(intent)) return; inspectCardId=intent.cardId; inspectHandId=room?.self.handIds?.[intent.index]; panel="card-info"; cancelVoice(); render(); },
   onFocus(intent) { updateHandFocus(intent?.index ?? 0); },
   onLayout(layout) { document.body.classList.toggle("hand-overflow",!!layout.maxScroll); const prev=$("#hand-prev"),next=$("#hand-next"); prev.hidden=!layout.maxScroll; next.hidden=!layout.maxScroll; prev.disabled=!layout.canScrollLeft; next.disabled=!layout.canScrollRight; $("#hand-hint").textContent=layout.maxScroll ? "滑动看更多 · 长按看详情" : "点选出牌 · 长按或右键看详情"; },
   onStatus(status) { const changed=handStatus.available!==status.available;handStatus=status;if(changed) syncHandView(!!modalRoot.querySelector(".dialog")); },
@@ -632,6 +675,7 @@ const arenaResizeObserver = typeof ResizeObserver === "function" ? new ResizeObs
 arenaResizeObserver?.observe($("#arena"));
 render();
 collectionView = new CollectionView({root:$("#collection-root"),store:()=>desk?.store,preferences:()=>preferences,onNotice:notice,onSound:playSceneSound,onMuteChange:muted=>{if(muted)cancelVoice();SOUND.setTemporaryMute?.(muted);},onClose:()=>{panel=null;render();},onStudy:()=>{panel=null;openDesk("study");render();}});
+wardrobeView = new WardrobeView({root:$("#wardrobe-root"),store:()=>desk?.store,preferences:()=>preferences,onNotice:notice,onSound:playSceneSound,onMuteChange:muted=>{if(muted)cancelVoice();SOUND.setTemporaryMute?.(muted);},onClose:()=>{panel=null;render();},onDaily:()=>{panel="daily";render();}});
 SOUND.sync(preferences);
 if(isPractice){link.connect();void desk.initialize();}
 else {
@@ -654,20 +698,20 @@ else {
 globalThis.addEventListener?.("pagehide", event => {
   pageSuspended = true;
   if(!isPractice){identityPanel?.close();beginIdentityCheck();}
-  SOUND.visibility?.(true); cancelVoice(); desk?.visibility(false); collectionView?.visibility(true);
+  SOUND.visibility?.(true); cancelVoice(); desk?.visibility(false); collectionView?.visibility(true); wardrobeView?.visibility(true);
   handScene?.setHidden(true); lobbyScene?.setHidden(true); scene?.setHidden(true);
-  clearTimeout(deadlineTimer); deadlineTimer = null;
+  clearTimeout(deadlineTimer); deadlineTimer = null; clearTimeout(rewardDayTimer); rewardDayTimer=null;
   // History-cache restoration reuses these same objects and practice authority.
   if (event.persisted) return;
   identityEpoch++;identityPanel?.destroy();identityChannel?.close();desk?.dispose?.();
-  collectionView?.reset(); handScene?.dispose(); lobbyScene?.dispose(); scene?.dispose(); arenaResizeObserver?.disconnect();
+  collectionView?.reset(); wardrobeView?.reset(); handScene?.dispose(); lobbyScene?.dispose(); scene?.dispose(); arenaResizeObserver?.disconnect();
   if (link.destroy) link.destroy(); else link.disconnect();
 });
 globalThis.addEventListener?.("pageshow", event => {
   if (!event.persisted || !pageSuspended) return;
   pageSuspended = false;
   if(!isPractice){void verifyIdentity();return;}
-  desk?.visibility(!document.hidden); collectionView?.visibility(document.hidden); SOUND.visibility?.(document.hidden);
+  desk?.visibility(!document.hidden); collectionView?.visibility(document.hidden); wardrobeView?.visibility(document.hidden); SOUND.visibility?.(document.hidden);
   render();
   if (!["expired", "replaced"].includes(connectionState)) link.connect();
 });
@@ -689,7 +733,7 @@ function syncHandView(blocked=false) {
   stage.classList.toggle("hand-fallback",handStatus.available===false);
   if(!active)return;
   const visible=displayRoom?.roomId===room.roomId?displayRoom:room;
-  const ids=visible.self.hand,key=ids.join("|")+":"+(handStatus.available===false);
-  if(key!==handSemanticKey){handSemanticKey=key;$("#hand-semantics").innerHTML=ids.map((id,index)=>`<button data-hand-index="${index}" tabindex="${handStatus.available===false||index===0?0:-1}" aria-label="${esc(CARD[id].name)}，${CARD[id].cost}能量，${esc(CARD[id].text)}。按I看完整说明">${esc(CARD[id].name)}</button>`).join("");}
-  handScene?.setHand(ids,{revision:room.revision,selectedIndex:selected?.kind==="card"?selected.index:null,finishes:equippedFinishes(desk?.data?.collection)});
+  const ids=visible.self.hand,key=ids.join("|")+":"+(handStatus.available===false)+":"+visible.self.handCosts?.join("|");
+  if(key!==handSemanticKey){handSemanticKey=key;$("#hand-semantics").innerHTML=ids.map((id,index)=>`<button data-hand-index="${index}" tabindex="${handStatus.available===false||index===0?0:-1}" aria-label="${esc(CARD[id].name)}，${visible.self.handCosts?.[index]??CARD[id].cost}能量，${esc(CARD[id].text)}。按I看完整说明">${esc(CARD[id].name)}</button>`).join("");}
+  handScene?.setHand(ids,{revision:room.revision,selectedIndex:selected?.kind==="card"?selected.index:null,costs:visible.self.handCosts,finishes:equippedFinishes(desk?.data?.collection)});
 }

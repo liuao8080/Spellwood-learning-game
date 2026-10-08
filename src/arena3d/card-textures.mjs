@@ -6,6 +6,21 @@ const individual = new Set(Object.keys(CARD).filter(id => CARD[id].art >= 6));
 const finishColors = {base:["#f4d89e","#92652d","#eac887","#674928"],leaf:["#ddf2b8","#486b40","#acdc6e","#2d4b35"],silver:["#f8ffff","#738c9b","#e6fbff","#476070"],star:["#f5e3ff","#6c4397","#ceb2ff","#352449"],gold:["#fff8b0","#bd7626","#ffe477","#70441c"]};
 const colors = { leaf: "#244e3d", ember: "#67392c", moon: "#343c64" };
 
+export function cardArtPath(card) {
+  return card.artPath || (individual.has(card.id) ? `/assets/cards/${card.id}.webp` : "/assets/creatures.webp");
+}
+
+export function cardDisplayCost(card, requested) {
+  return Number.isInteger(requested) && requested === Math.max(0, card.cost - 1) ? requested : card.cost;
+}
+
+/** Explicit single-card artwork keeps its entire source, including feet and props. */
+export function containedArtwork(width, height, x, y, boxWidth, boxHeight) {
+  const fit = Math.min(boxWidth / width, boxHeight / height);
+  const w = width * fit, h = height * fit;
+  return [x + (boxWidth - w) / 2, y + (boxHeight - h) / 2, w, h];
+}
+
 /** Short presentation copy. Numbers come from the card data, never a second rules table. */
 export function handRuleLines(cardOrId) {
   const card = typeof cardOrId === "string" ? CARD[cardOrId] : cardOrId;
@@ -23,6 +38,18 @@ export function handRuleLines(cardOrId) {
     case "insight": return [`抽${number}张牌`];
     case "barrier": return ["护盾", "挡首次伤害"];
     case "rally": return ["登场其余友方", `攻击+${number}`];
+    case "deathArmor": return ["生命归零退场", `英雄护甲+${number}`];
+    case "mend": return ["登场其他友方", `恢复${number}生命`];
+    case "weaken": return ["登场削弱敌方", `攻击−${number}至0`];
+    case "grantShield": return ["登场其他友方", "挡下次伤害"];
+    case "heroHitDraw": return [`攻英雄抽${number}牌`, "每回合限1次"];
+    case "companyArmor": return ["按其他友方", `护甲+${number}限${card.limit}`];
+    case "unitCharge": return ["主动攻击伙伴", `本次伤害+${number}`];
+    case "arrivalDamage": return ["登场敌方伙伴", `造成${number}伤害`];
+    case "sweep": return ["所有敌方伙伴", `各受${number}伤害`];
+    case "rain": return ["所有友方伙伴", `各恢复${number}生命`];
+    case "recall": return ["1友方回手", "恢复为基础卡"];
+    case "blessing": return [`最大生命+${number}`, `并恢复${number}生命`];
     default: return ["基础伙伴"];
   }
 }
@@ -96,17 +123,19 @@ export class CardTextures {
     return image;
   }
 
-  get(id, finish = "base", mode = "full") {
+  get(id, finish = "base", mode = "full", requestedCost) {
     finish = Object.hasOwn(finishColors,finish) ? finish : "base";
     mode = mode === "hand" ? "hand" : "full";
-    const key = mode === "hand" ? `${id}:${finish}:hand` : `${id}:${finish}`;
-    if (this.entries.has(key)) return this.entries.get(key).texture;
     if (!CARD[id] || this.disposed) return this.back;
+    const displayCost = cardDisplayCost(CARD[id], requestedCost);
+    const costKey = displayCost === CARD[id].cost ? "" : `:cost-${displayCost}`;
+    const key = (mode === "hand" ? `${id}:${finish}:hand` : `${id}:${finish}`) + costKey;
+    if (this.entries.has(key)) return this.entries.get(key).texture;
     const canvas = document.createElement("canvas");
     canvas.width = 512;
     canvas.height = 720;
-    const path = individual.has(id) ? `/assets/cards/${id}.webp` : "/assets/creatures.webp";
-    const entry = { canvas, texture: this.texture(canvas), path, cardId:id, finish, mode };
+    const path = cardArtPath(CARD[id]);
+    const entry = { canvas, texture: this.texture(canvas), path, cardId:id, finish, mode, displayCost };
     this.entries.set(key, entry);
     const image = this.image(path);
     this.paint(id, entry, image.complete && image.naturalWidth ? image : null);
@@ -128,7 +157,12 @@ export class CardTextures {
     ctx.fillStyle = colors[c.theme] || colors.leaf;
     round(ctx, 13, 13, 486, 694, 22); ctx.fill();
     ctx.save(); round(ctx, 25, 30, 462, 398, 16); ctx.clip();
-    if (image) {
+    if (image && c.artPath) {
+      // The nameplate starts at y=389, so it must not cover the contained image.
+      ctx.fillStyle = colors[c.theme] || colors.leaf; ctx.fillRect(25, 30, 462, 398);
+      ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight,
+        ...containedArtwork(image.naturalWidth, image.naturalHeight, 25, 30, 462, 359));
+    } else if (image) {
       const sx = individual.has(id) ? 0 : (c.art % 3) * 512;
       const sy = individual.has(id) ? 0 : Math.floor(c.art / 3) * 512;
       const sw = individual.has(id) ? image.naturalWidth : 512;
@@ -154,14 +188,18 @@ export class CardTextures {
     ctx.fillText(c.en, 256, 500);
     ctx.font = "bold 42px 'Noto Sans CJK SC',sans-serif";
     const preferred = ruleLines[id];
-    const description = preferred?.join("") === c.text && preferred.every(line => ctx.measureText(line).width <= 408)
+    let description = preferred?.join("") === c.text && preferred.every(line => ctx.measureText(line).width <= 408)
       ? preferred : lines(ctx, c.text, 408).slice(0, 3);
-    description.forEach((s, i) => ctx.fillText(s, 256, 551 + i * 44));
+    if (c.artPath) {
+      let size = 34;
+      do { ctx.font = `bold ${size}px 'Noto Sans CJK SC',sans-serif`; description = lines(ctx, c.text, 408); if (description.length <= 4) break; size -= 2; } while (size >= 24);
+      description.forEach((s, i) => ctx.fillText(s, 256, 538 + i * (size + 5)));
+    } else description.forEach((s, i) => ctx.fillText(s, 256, 551 + i * 44));
     ctx.fillStyle = "#4d8799";
     ctx.beginPath(); ctx.arc(48, 52, 45, 0, Math.PI * 2); ctx.fill();
     ctx.strokeStyle = "#cfe6dc"; ctx.lineWidth = 5; ctx.stroke();
     ctx.fillStyle = "#fff8dd"; ctx.font = "bold 80px Georgia,serif";
-    ctx.fillText(String(c.cost), 48, 81);
+    ctx.fillText(String(entry.displayCost ?? c.cost), 48, 81);
     if (c.type !== "spell") {
       for (const [x, value, fill] of [[47, c.atk, "#bd9447"], [465, c.hp, "#b95d4e"]]) {
         ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(x, 670, 38, 0, Math.PI * 2); ctx.fill();
@@ -185,7 +223,11 @@ export class CardTextures {
     ctx.fillStyle = frame; round(ctx, 0, 0, 512, 720, 25); ctx.fill();
     ctx.fillStyle = colors[card.theme] || colors.leaf; round(ctx, 10, 10, 492, 700, 18); ctx.fill();
     ctx.save(); round(ctx, 20, 22, 472, 323, 12); ctx.clip();
-    if (image) {
+    if (image && card.artPath) {
+      ctx.fillStyle = colors[card.theme] || colors.leaf; ctx.fillRect(20, 22, 472, 323);
+      ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight,
+        ...containedArtwork(image.naturalWidth, image.naturalHeight, 20, 22, 472, 323));
+    } else if (image) {
       const separate = individual.has(id), sx = separate ? 0 : card.art % 3 * 512, sy = separate ? 0 : Math.floor(card.art / 3) * 512;
       const sw = separate ? image.naturalWidth : 512, sh = separate ? image.naturalHeight : 512;
       const cropHeight = Math.min(sh, sw * 323 / 472);
@@ -207,7 +249,7 @@ export class CardTextures {
     summary.forEach((line, index) => ctx.fillText(line, 256, (summary.length === 1 ? 560 : 520) + index * 77, 442));
     ctx.fillStyle = "#286b7f"; ctx.beginPath(); ctx.arc(60, 62, 53, 0, Math.PI * 2); ctx.fill();
     ctx.strokeStyle = "#d8f5ed"; ctx.lineWidth = 5; ctx.stroke();
-    ctx.fillStyle = "#fff9e5"; ctx.font = `bold ${HAND_FONT.cost}px Georgia,serif`; ctx.fillText(String(card.cost), 60, 96);
+    ctx.fillStyle = "#fff9e5"; ctx.font = `bold ${HAND_FONT.cost}px Georgia,serif`; ctx.fillText(String(entry.displayCost ?? card.cost), 60, 96);
     if (card.type !== "spell") {
       for (const [x, value, fill] of [[78, card.atk, "#a87629"], [434, card.hp, "#a7433c"]]) {
         ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(x, 664, 47, 0, Math.PI * 2); ctx.fill();

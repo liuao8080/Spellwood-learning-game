@@ -2,6 +2,7 @@ import WebSocket from "ws";
 import { randomUUID } from "node:crypto";
 import { once } from "node:events";
 import { createGameServer } from "../server/index.mjs";
+import { PROTOCOL } from "../server/protocol.mjs";
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 export async function startServer(config = {}, extra = {}) {
   const s = createGameServer({
@@ -63,8 +64,8 @@ export class Client {
     this.ws.send(
       JSON.stringify(
         this.token
-          ? { type: "session.resume", protocol: 1, resumeToken: this.token }
-          : { type: "session.open", protocol: 1 },
+          ? { type: "session.resume", protocol: PROTOCOL, resumeToken: this.token }
+          : { type: "session.open", protocol: PROTOCOL },
       ),
     );
     const m = await this.wait(
@@ -108,6 +109,7 @@ export class Client {
       ...(type.startsWith("room.") ||
       type.startsWith("opening.") ||
       type.startsWith("battle.") ||
+      type.startsWith("draw.") ||
       type.startsWith("ritual.")
         ? { roomId: this.view?.roomId, expectedRevision: this.view?.revision }
         : {}),

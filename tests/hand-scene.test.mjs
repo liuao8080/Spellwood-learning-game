@@ -173,3 +173,13 @@ test("disposing twice removes listeners and releases shared resources exactly on
   assert.equal(counts.size, resources.length); assert.ok([...counts.values()].every(value => value === 1));
   h.scene.setHand(ids); assert.equal(h.scene.cards.length, 0);
 });
+
+
+test("same-name hand instances show their own saved costs and reset without growing texture caches",t=>{
+ const h=harness(t);h.scene.setHand(['fox','fox'],{revision:1,costs:[CARD.fox.cost-1,CARD.fox.cost]});
+ assert.deepEqual(h.scene.costs,[CARD.fox.cost-1,CARD.fox.cost]);assert.notEqual(h.scene.cards[0].frontTexture,h.scene.cards[1].frontTexture);assert.equal(h.scene.textures.entries.size,2);
+ const discounted=h.scene.cards[0].frontTexture;let disposed=0;discounted.addEventListener('dispose',()=>disposed++);
+ h.scene.setHand(['fox','fox'],{revision:2,costs:[CARD.fox.cost,CARD.fox.cost-1]});assert.equal(h.scene.cards[1].frontTexture,discounted);assert.equal(h.scene.textures.entries.size,2);
+ h.scene.setHand(['fox','fox'],{revision:3,costs:[CARD.fox.cost,CARD.fox.cost]});assert.equal(disposed,1);assert.equal(h.scene.cards[0].frontTexture,h.scene.cards[1].frontTexture);assert.equal(h.scene.textures.entries.size,1);
+ h.scene.setHand(['fox'],{revision:4,costs:[-1]});assert.deepEqual(h.scene.costs,[CARD.fox.cost]);h.scene.setHand([]);assert.equal(h.scene.textures.entries.size,0);
+});

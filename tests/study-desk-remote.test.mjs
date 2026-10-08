@@ -19,7 +19,7 @@ const feedback = (id = "challenge-before-import") => ({ challengeId: id, learnin
 async function remoteFixture(t, callbacks = {}) {
   const model = createProgressModel({ questions });
   const env = { model, progress: model.fresh("player-account-0001", "UTC"), calls: [], changes: [], preferences: [], notices: [], restores: [], handler: null };
-  env.success = extra => response({ data: env.progress, playerId: env.progress.profileId, revision: env.progress.revision, ...extra });
+  env.success = extra => response({ data: env.progress, playerId: env.progress.profileId, revision: env.progress.revision, serverNow: Date.UTC(2026, 9, 8, 12), ...extra });
   env.fetcher = async (path, init = {}) => {
     env.calls.push({ path, init, body: init.body ? JSON.parse(init.body) : undefined });
     if (path === "/api/curriculum") return response(metadata);
@@ -47,12 +47,12 @@ async function prepare(env) {
   return env.desk.prepared;
 }
 
-test("default store and local copy continue to use the original v3 key and wording", async t => {
+test("default store and local copy use the v4 key and retain local-only wording", async t => {
   const storage = memory();
   const desk = new StudyDesk({ storage, locks: null, fetcher: async () => response(metadata) });
   t.after(() => desk.dispose()); await desk.initialize();
   assert(desk.store instanceof ProgressStore); assert.equal(desk.remote, false);
-  assert(storage.values.has("spellwood.save.v3"));
+  assert(storage.values.has("spellwood.save.v4"));
   assert.match(desk.dataHtml(), /不会上传到服务器/);
   desk.view = "records"; assert.match(desk.html(), /本机排行榜/);
 });

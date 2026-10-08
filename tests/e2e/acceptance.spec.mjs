@@ -188,6 +188,7 @@ test('account and guest progress stay separate across login logout and a real SQ
   expect(fresh.observed.player.playerId).toBe(accountId);
   expect(currentProgress(fresh).legacy.mastery).toEqual(savedMastery);
   expect(currentProgress(fresh).collection).toEqual(savedCollection);
+  await action(fresh.page, 'camp-more').click();
   await action(fresh.page, 'data').click();
   await expect(fresh.page.locator('.study-desk')).toContainText('1项学习');
   await safeScreenshot(fresh.page, testInfo, 'durable-learning-in-fresh-context');

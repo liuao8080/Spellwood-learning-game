@@ -2,6 +2,7 @@
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { versions } from './protocol.mjs';
 
 export async function checkHealth({ port = Number(process.env.PORT || 4173), publicOrigin = process.env.PUBLIC_ORIGIN, timeoutMs = 3000 } = {}) {
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw Error('Invalid local port');
@@ -27,7 +28,7 @@ export async function checkHealth({ port = Number(process.env.PORT || 4173), pub
   }
   const [body] = await Promise.all([request('/health', 'GET'), request('/', 'HEAD'), request('/app.js', 'HEAD')]);
   let health; try { health = JSON.parse(body); } catch { throw Error('Invalid health response'); }
-  if (health.status !== 'ok' || health.protocol !== 1) throw Error('Server did not report a healthy protocol');
+  if (health.status !== 'ok' || health.protocol !== versions.protocol || health.ruleset !== versions.ruleset || health.combatRules !== versions.combatRules) throw Error('Server did not report a healthy protocol');
   return { status: 'ok', protocol: health.protocol, ruleset: health.ruleset, frontend: true, script: true };
 }
 

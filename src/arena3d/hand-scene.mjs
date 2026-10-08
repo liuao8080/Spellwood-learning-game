@@ -27,7 +27,7 @@ export class HandScene {
     if (!canvas) throw new TypeError("HandScene requires a canvas");
     Object.assign(this, { canvas, onSelect, onInspect, onHover, onFocus, onLayout, onStatus,
       reduced: !!reduced, mode });
-    this.cards = []; this.ids = []; this.finishes = {}; this.resources = new Set();
+    this.cards = []; this.ids = []; this.costs = []; this.finishes = {}; this.resources = new Set();
     this.revision = null; this.inputRevision = 0; this.selectedIndex = this.focusedIndex = this.hoveredIndex = null;
     this.scroll = 0; this.width = 1; this.height = 1; this.interactive = true;
     this.destroyed = false; this.hidden = false; this.pageHidden = !!globalThis.document?.hidden;
@@ -75,7 +75,7 @@ export class HandScene {
     const root = new Group(); root.name = `hand-card-${index}`;
     root.userData.handCard = { kind: "card", index, cardId: id };
     const finish = Object.hasOwn(FINISH, this.finishes[id]) ? this.finishes[id] : "base";
-    const frontTexture = this.textures.get(id, finish, "hand");
+    const frontTexture = this.textures.get(id, finish, "hand", this.costs[index]);
     const edge = new MeshStandardMaterial({ color: FINISH[finish], roughness: .45, metalness: .3 });
     const front = new MeshBasicMaterial({ map: frontTexture });
     root.add(new Mesh(this.bodyGeometry, edge), new Mesh(this.paperGeometry, this.paperMaterial));
@@ -87,15 +87,16 @@ export class HandScene {
     return { root, face, focus, frontTexture, resources: [edge, front], index, cardId: id, finish };
   }
 
-  setHand(ids, { revision = this.revision, selectedIndex = this.selectedIndex, finishes = this.finishes } = {}) {
+  setHand(ids, { revision = this.revision, selectedIndex = this.selectedIndex, finishes = this.finishes, costs = [] } = {}) {
     if (this.destroyed || !this.renderer) return;
     if (!Array.isArray(ids) || ids.length > 7 || ids.some(id => !CARD[id])) throw new TypeError("HandScene expects up to seven valid card ids");
-    const key = ids.map(id => `${id}:${finishes?.[id] || "base"}`).join("|");
+    const nextCosts=ids.map((id,index)=>costs[index]===Math.max(0,CARD[id].cost-1)?costs[index]:CARD[id].cost);
+    const key = ids.map((id,index) => `${id}:${finishes?.[id] || "base"}:${nextCosts[index]}`).join("|");
     const changed = key !== this.handKey, revised = revision !== this.revision;
     const nextSelected = Number.isInteger(selectedIndex) && selectedIndex >= 0 && selectedIndex < ids.length ? selectedIndex : null;
     if (!changed && !revised && nextSelected === this.selectedIndex) return;
     if (changed || revised) { this.inputRevision++; this.input.cancel(); }
-    this.revision = revision; this.ids = [...ids]; this.finishes = { ...finishes };
+    this.revision = revision; this.ids = [...ids]; this.costs=nextCosts; this.finishes = { ...finishes };
     if (changed) {
       this.clearCards(); this.handKey = key;
       this.cards = ids.map((id, index) => this.makeCard(id, index));

@@ -9,7 +9,7 @@ export function targetPreview(state, seat, selection) {
   const all = [...enemy.board.map((unit) => unit.uid), `hero:${1 - seat}`];
   if (selection.kind === "unit") {
     const unit = own.board.find((item) => item.uid === selection.uid);
-    if (!unit?.ready || unit.atk < 1) return none;
+    if (!unit?.ready) return none;
     const guards = enemy.board.filter((item) => CARD[item.cardId]?.keyword === "guard");
     return { source: unit.uid, targets: guards.length ? guards.map((item) => item.uid) : all };
   }

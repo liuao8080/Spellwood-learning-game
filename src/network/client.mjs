@@ -1,3 +1,5 @@
+import { RULES, CONTENT_VERSION } from "../cards.mjs";
+
 /** Browser transport for the authoritative server. No combat calculation lives here. */
 export class DuelConnection {
   constructor({ url, onMessage = () => {}, onConnection = () => {}, socketFactory = (u) => new WebSocket(u), storage = globalThis.sessionStorage, schedule = (fn, ms) => globalThis.setTimeout(fn, ms), unschedule = (id) => globalThis.clearTimeout(id) } = {}) {
@@ -26,7 +28,7 @@ export class DuelConnection {
     socket.addEventListener("open", () => {
       if (epoch !== this.transportEpoch) return;
       this.status("authenticating");
-      socket.send(JSON.stringify(this.saved ? { type: "session.resume", protocol: 1, resumeToken: this.saved.resumeToken } : { type: "session.open", protocol: 1 }));
+      socket.send(JSON.stringify(this.saved ? { type: "session.resume", protocol: 2, resumeToken: this.saved.resumeToken } : { type: "session.open", protocol: 2 }));
     });
     socket.addEventListener("message", (event) => {
       if (epoch !== this.transportEpoch || typeof event.data !== "string") return;
@@ -51,6 +53,7 @@ export class DuelConnection {
   receive(message) {
     if (message.type === "session.replaced") { this.endSession("replaced", false); this.onMessage(message); return; }
     if (message.type === "session.ready") {
+      if(message.protocol !== 2 || message.ruleset !== "net-2.3" || message.combatRules !== RULES || message.contentVersion !== CONTENT_VERSION){this.endSession("incompatible",true,"VERSION_MISMATCH");this.onMessage({type:"session.error",code:"VERSION_MISMATCH"});return;}
       this.session = message; this.nextSeq = message.nextClientSeq; this.reconnectAttempt = 0;
       if (message.resumeToken) {
         this.saved = { sessionId: message.sessionId, resumeToken: message.resumeToken };
@@ -62,7 +65,7 @@ export class DuelConnection {
       return;
     }
     if (message.type === "session.error") {
-      this.endSession("expired", true, message.code); this.onMessage(message); return;
+      this.endSession(message.code === "VERSION_MISMATCH" ? "incompatible" : "expired", true, message.code); this.onMessage(message); return;
     }
     if (message.type === "command.ack") {
       if (Number.isInteger(message.nextClientSeq)) this.nextSeq = message.nextClientSeq;

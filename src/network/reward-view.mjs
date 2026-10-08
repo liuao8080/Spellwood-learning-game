@@ -1,0 +1,12 @@
+import { dailySummary } from '../reward-journey.mjs';
+const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/** Read-only view over committed state. The UI never claims or grants rewards. */
+export function savedDailySummary(data, now = Date.now()) {
+  if (!data?.journey || !Number.isFinite(now)) return null;
+  try { return dailySummary(data.journey, now); } catch { return null; }
+}
+export function rewardView({data, ready, now = Date.now()}) {
+  const summary = ready && savedDailySummary(data, now);
+  if (!summary) return `<section class="dialog daily-panel" role="dialog" aria-modal="true" aria-labelledby="daily-title"><header><h2 id="daily-title">今日小任务</h2><button data-action="close-panel">返回营地</button></header><p>先确认已保存的学习记录，再查看今天的礼物。</p><button data-action="data">查看保存状态</button></section>`;
+  return `<section class="dialog daily-panel" role="dialog" aria-modal="true" aria-labelledby="daily-title"><header><div><p class="eyebrow">A LITTLE GIFT, EVERY DAY</p><h2 id="daily-title">今日小任务</h2></div><button data-action="close-panel">返回营地</button></header><p class="daily-message" role="status">${summary.message}</p><div class="daily-wallet"><span>造型券 <b>${summary.skinTickets}</b></span><span>正式叶屑 <b>${data.collection.earned.dust}</b></span><button data-action="wardrobe">去人物衣橱</button></div><div class="daily-tasks">${summary.tasks.map((task, i) => `<article class="daily-task ${task.complete?'complete':''}"><div><h3>${esc(task.label)}</h3><p>${i===2?'在学习桌练同单元2道不同题，或正常完成一局':'不同知识点，不要求答对'}</p></div><strong>${task.progress}/${task.target}</strong><progress max="${task.target}" value="${task.progress}" aria-label="${esc(task.label)}，已完成${task.progress}/${task.target}"></progress><span>${task.complete?'✓ 已收好':`完成得 ${task.reward}`}</span>${!task.complete?`<div class="daily-actions"><button data-action="${i===2?'daily-unit':'daily-study'}">${i===2?'去巩固单元':'去学一小轮'}</button>${i===2?'<button data-action="match-setup">去对战</button>':''}</div>`:''}</article>`).join('')}</div>${!summary.newcomerGranted?'<p class="daily-welcome">首次完成3题任务，另送1张造型券，只送一次。</p>':''}<details class="daily-rules"><summary>怎样计入今天的任务？</summary><p>读题、作答后继续阅读讲解；从出题起累计至少3.2秒，且答后讲解至少1.2秒。答得快可以继续读，不用重答；答错同样能推进。资格以保存回执为准。</p><p>对局路线需进入至少2个自己的回合，并亲自完成至少3次合法出牌或攻击。胜、负、平都算；退出、投降和托管动作不算。</p><p>学习日按上海时间切换，跨午夜的题算在出题那天。漏一天不扣任何奖励，没有连续签到要求。</p><p>累计5个正式学习日的卡牌外观十连仍独立保留。人物造型只改变外观，没有战斗加成。</p></details><button data-action="collection">查看五日卡牌礼盒</button></section>`;
+}

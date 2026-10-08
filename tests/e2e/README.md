@@ -39,6 +39,12 @@ and directory after the test. It does not use a public Site or anyone's computer
 | AI fallback | Visible waiting UI; actual default roughly 10-second server wait; `pve` / bot identity and visible computer description |
 | Durable identity | Learning and a ten-card test gift; account login from another cookie jar; original guest restored on logout with separate learning; consumed guest is not reused after registration; SQLite data survives a real process restart; unfinished rooms do not pretend to survive; fresh-context login sees the saved learning/collection |
 | Responsive | Real screenshots at 320×740, 390×844 and 844×390; camp, registration form, matchmaking options and English choices; basic width, target size and overflow checks |
+| New targets | Legal 20-card custom decks built by UI replacement, with three copies each of two new enemy-target cards and two new friendly-target cards; public highlight seats/UIDs and accepted attack, damage, growth or recall effects; must actually observe both directions within 24 alternating turns |
+| CPU compatibility | One isolated context returns null only for WebGL context requests; actual application CPU wardrobe/reveal and live hand pointer/keyboard interactions; 24 continuous RAF intervals and UI acknowledgement timings, explicitly not a performance pass or real GPU-absence claim |
+| Daily and official skin | Three distinct visible study questions, real foreground participation, daily/newcomer awards, one committed official debit, save-before-presentation ordering, equip and registration/reload preservation |
+| Wardrobe and resume | All 20 reward models selected sequentially, one actual preview model at a time, per-model screenshots; partial test ten-pull resumes the same saved batch after reload, reveal-all/archive, unchanged official wallet; compact daily/wardrobe/reveal controls hit-tested at 44px |
+| Card library | Three one-click presets, legal two-click custom replacement, saved/reloaded 20-card deck, all 36 free card details |
+| Draw English | Two real players' second/third own turns, visible grammar correctness/distractor and cancel, same pending challenge after reload, exact held-instance discount, expiry next turn, two-use caps and unchanged original ritual charges; compact hand and draw-action screenshots |
 
 The full-match driver intentionally uses a simple strategy: inspect accessible
 hand names and costs, play affordable cards, attack highlighted targets, and
@@ -53,9 +59,19 @@ attacks and answers, or if proxy assistance takes over.
 
 Short offline/reload recovery is separate from a turn-timeout proxy scenario.
 The suite does not claim to cover the latter. It also does not claim physical
-touchscreen/dragging, full-session FPS, polished visual approval from viewport
-checks alone, or the not-yet-implemented 20 skins, 36 cards and new daily tasks.
+touchscreen/dragging, full-session FPS, or polished visual approval from viewport
+checks alone. The missing-WebGL context is a narrowly scoped test simulation,
+not a browser launch flag or a change to browser security. Expansion tests do
+not import hidden answer keys; the grammar fixture chooses from displayed
+English using independently authored language expectations. The target scenario
+never controls random draws: a failure to reach both directions is reported as
+a coverage gap until its cause is diagnosed, not automatically a product bug.
 Captured screenshots still need human visual review.
+
+The original nine scenarios remain, and six expansion scenarios bring the list
+to fifteen. Per-test expansion bounds are 90–180 seconds. One worker, no retries,
+the thirteen-minute global browser budget and twenty-minute workflow budget are
+unchanged. Local validation is listing only; CI establishes actual elapsed time.
 
 ## Evidence and privacy
 

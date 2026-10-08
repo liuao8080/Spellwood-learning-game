@@ -12,7 +12,7 @@ node scripts/build-network.mjs
 HOST=127.0.0.1 PORT=4173 npm run server
 ```
 
-在同一个可访问该服务的运行环境打开http://127.0.0.1:4173。`GET /health`应返回ok、net-1.1、战斗2.2和题库版本。启动日志本身不证明另一个命令、容器或浏览器能够访问该端口；应分别验证health、首页和WebSocket。
+在同一个可访问该服务的运行环境打开http://127.0.0.1:4173。`GET /health`应返回ok、protocol2、net-2.3、战斗2.3和题库版本。启动日志本身不证明另一个命令、容器或浏览器能够访问该端口；应分别验证health、首页和WebSocket。
 
 如果4173已被占用，进程报告EADDRINUSE并停止，不会杀其他进程。若client-dist未构建，health仍可用，首页明确返回503 FRONTEND_NOT_BUILT。
 
@@ -25,7 +25,7 @@ HOST=127.0.0.1 PORT=4173 npm run server
 - CLIENT_DIST：可选前端输出目录
 - SPELLWOOD_DATABASE：持久SQLite路径，命令行默认.data/spellwood.sqlite；数据库及WAL/SHM禁止提交Git。测试createGameServer默认内存库，与命令行不同
 
-`createGameServer({port:0,config:{...}})`用于自动测试；客户端不能在协议里修改时限。默认时限见service.mjs中的DEFAULTS：匹配10秒，起手60秒，回合150秒，开始答题至少再留120秒，断线宽限20秒，双方离线/完成房间保留5分钟，会话和房间绝对上限2小时。
+`createGameServer({port:0,config:{...}})`用于自动测试；客户端不能在协议里修改时限。默认时限见service.mjs中的DEFAULTS：匹配10秒，起手60秒，回合150秒，原仪式开始答题至少再留120秒；抽牌英语仅在原回合还剩至少120秒时可开始，绝不延长回合，断线宽限20秒，双方离线/完成房间保留5分钟，会话和房间绝对上限2小时。
 
 ## 数据和信任边界
 

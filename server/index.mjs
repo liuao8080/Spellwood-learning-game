@@ -131,12 +131,13 @@ export function createGameServer(options = {}) {
     for(const ws of wss.clients)if(ws.player?.playerId===playerId)send(ws,{type:'progress.updated'});
   }});
   const service = new GameService({ questions, send, config: options.config,
+    cosmeticFor:session=>progressBridge.ensureSynced(session.playerId).progress.journey,
     computerFor:session=>{
       if(Object.hasOwn(options.config||{},'computerDifficulty'))return options.config.computerDifficulty;
       const player=progressBridge.ensureSynced(session.playerId);
       return selectDifficulty(player.progress.combatRating,player.progress.combatMode);
     },
-    beforeCommand(s,c){if(s.playerId&&c.type==='queue.join')progressBridge.ensureSynced(s.playerId);if(s.playerId&&c.type==='ritual.begin')progressBridge.assertCanIssue(s.playerId);},
+    beforeCommand(s,c){if(s.playerId&&c.type==='queue.join')progressBridge.ensureSynced(s.playerId);if(s.playerId&&['ritual.begin','draw.begin'].includes(c.type))progressBridge.assertCanIssue(s.playerId);},
     onChallenge:(...args)=>progressBridge.noteChallenge(...args),onLearning:(...args)=>progressBridge.learning(...args),onResult:(...args)=>progressBridge.result(...args)});
   function json(res, status, data) {
     if (res.destroyed || res.writableEnded) return;
@@ -263,8 +264,8 @@ export function createGameServer(options = {}) {
               feedback: null,
               optionId: null,
             });
-            progressBridge.noteChallenge(identity.player.playerId,c.challengeId,now);
-            json(res, 200, questions.toPublic(c));
+            progressBridge.noteChallenge(identity.player.playerId,c.challengeId,now,{source:'study'});
+            json(res, 200, { ...questions.toPublic(c), issuedAt: now });
             return;
           }
           if (route[2] && req.method === "POST") {
@@ -498,12 +499,13 @@ export function createGameServer(options = {}) {
         try {
           if (
             !plain(message) ||
-            message.protocol !== 1 ||
             Object.keys(message).some(
               (k) => !["type", "protocol", "resumeToken"].includes(k),
             )
           )
             throw Object.assign(Error(), { code: "BAD_HANDSHAKE" });
+          if (message.protocol !== versions.protocol)
+            throw Object.assign(Error(), { code: "VERSION_MISMATCH" });
           if (
             message.type === "session.open" &&
             message.resumeToken === undefined

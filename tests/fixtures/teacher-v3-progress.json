@@ -1,0 +1,359 @@
+{
+  "schema": 3,
+  "revision": 6,
+  "profileId": "teacher-v3-fixture",
+  "timeZone": "Asia/Shanghai",
+  "legacy": {
+    "schema": 1,
+    "nickname": "Fixture",
+    "bank": "teacher-academic",
+    "teacherCourse": "reading",
+    "grade": 6,
+    "course": "s2-u5",
+    "deckId": "grove",
+    "opponentId": "moss",
+    "sound": true,
+    "music": true,
+    "musicVolume": 35,
+    "soundVolume": 65,
+    "speech": true,
+    "reduced": false,
+    "mastery": {
+      "pep1-g1-s1-u1-q1": {
+        "seen": 1,
+        "correct": 1,
+        "streak": 1,
+        "due": 1791518400000,
+        "last": 1791432000000
+      },
+      "ta-vocab-01": {
+        "seen": 1,
+        "correct": 0,
+        "streak": 0,
+        "due": 1791432000001,
+        "last": 1791432000001
+      }
+    },
+    "archivedMastery": {},
+    "records": [],
+    "match": {
+      "schema": 1,
+      "rules": "2.2",
+      "contentVersion": "pep1-2026.1",
+      "course": "s2-u5",
+      "id": "fixture-unfinished-22",
+      "grade": 6,
+      "seed": "CORE-FIXTURE",
+      "deckId": "grove",
+      "opponentId": "moss",
+      "players": [
+        {
+          "hp": 18,
+          "armor": 0,
+          "mana": 1,
+          "maxMana": 1,
+          "board": [],
+          "hand": [
+            "sprout",
+            "otter",
+            "spark",
+            "fox"
+          ],
+          "deck": [
+            "dew",
+            "golem",
+            "stag",
+            "hedgehog",
+            "otter",
+            "spark",
+            "sprite",
+            "lantern",
+            "bloom",
+            "sprout",
+            "hedgehog",
+            "turtle",
+            "sprite",
+            "bear",
+            "bear",
+            "crane"
+          ],
+          "fatigue": 0,
+          "ritualUsed": false,
+          "ritualsLeft": 4
+        },
+        {
+          "hp": 18,
+          "armor": 0,
+          "mana": 0,
+          "maxMana": 0,
+          "board": [],
+          "hand": [
+            "otter",
+            "hedgehog",
+            "sprite",
+            "spark"
+          ],
+          "deck": [
+            "sprite",
+            "bloom",
+            "spark",
+            "dew",
+            "lantern",
+            "stag",
+            "fox",
+            "turtle",
+            "otter",
+            "bear",
+            "sprout",
+            "hedgehog",
+            "crane",
+            "sprout",
+            "golem",
+            "bear"
+          ],
+          "fatigue": 0,
+          "ritualUsed": false,
+          "ritualsLeft": 4
+        }
+      ],
+      "active": 0,
+      "turn": 1,
+      "seq": 0,
+      "phase": "playing",
+      "winner": null,
+      "log": [
+        "你的回合 · 1点能量"
+      ],
+      "questions": [],
+      "questionIndex": 0,
+      "correct": 0,
+      "attempts": 0,
+      "review": [],
+      "archivedReview": [],
+      "pending": null,
+      "recorded": false,
+      "opening": {
+        "player": [],
+        "opponent": [
+          1,
+          2
+        ]
+      }
+    }
+  },
+  "combatRating": {
+    "version": 1,
+    "rating": 746,
+    "games": 2,
+    "wins": 2,
+    "losses": 0,
+    "draws": 0,
+    "lossStreak": 0,
+    "lastResultId": "fixture-teacher-academic-result"
+  },
+  "combatMode": "easy",
+  "chosenDeckId": "custom",
+  "customDeck": [
+    "sprout",
+    "sprout",
+    "hedgehog",
+    "hedgehog",
+    "otter",
+    "otter",
+    "fox",
+    "sprite",
+    "sprite",
+    "turtle",
+    "crane",
+    "bear",
+    "bear",
+    "stag",
+    "golem",
+    "spark",
+    "spark",
+    "dew",
+    "bloom",
+    "lantern"
+  ],
+  "collection": {
+    "version": 1,
+    "days": {},
+    "totalDays": 0,
+    "earnedPacksSpent": 0,
+    "test": {
+      "dust": 9,
+      "cards": {
+        "sprout:leaf": 10
+      }
+    },
+    "earned": {
+      "dust": 0,
+      "cards": {}
+    },
+    "opening": {
+      "id": "fixture-card-pack",
+      "mode": "test",
+      "createdAt": 1791432000000,
+      "revealed": 0,
+      "cards": [
+        {
+          "cardId": "sprout",
+          "finish": "leaf",
+          "duplicate": false,
+          "dust": 0
+        },
+        {
+          "cardId": "sprout",
+          "finish": "leaf",
+          "duplicate": true,
+          "dust": 1
+        },
+        {
+          "cardId": "sprout",
+          "finish": "leaf",
+          "duplicate": true,
+          "dust": 1
+        },
+        {
+          "cardId": "sprout",
+          "finish": "leaf",
+          "duplicate": true,
+          "dust": 1
+        },
+        {
+          "cardId": "sprout",
+          "finish": "leaf",
+          "duplicate": true,
+          "dust": 1
+        },
+        {
+          "cardId": "sprout",
+          "finish": "leaf",
+          "duplicate": true,
+          "dust": 1
+        },
+        {
+          "cardId": "sprout",
+          "finish": "leaf",
+          "duplicate": true,
+          "dust": 1
+        },
+        {
+          "cardId": "sprout",
+          "finish": "leaf",
+          "duplicate": true,
+          "dust": 1
+        },
+        {
+          "cardId": "sprout",
+          "finish": "leaf",
+          "duplicate": true,
+          "dust": 1
+        },
+        {
+          "cardId": "sprout",
+          "finish": "leaf",
+          "duplicate": true,
+          "dust": 1
+        }
+      ]
+    },
+    "openingIds": [
+      "fixture-card-pack"
+    ],
+    "recent": [],
+    "equipped": {}
+  },
+  "onlineRecords": [
+    {
+      "id": "fixture-school-result",
+      "grade": 6,
+      "course": "s2-u5",
+      "ruleset": "net-1.1",
+      "combatRules": "2.2",
+      "contentVersion": "pep1-2026.1",
+      "mode": "pve",
+      "assisted": false,
+      "result": "win",
+      "reason": "health",
+      "score": 500,
+      "attempts": 1,
+      "correct": 1,
+      "turns": 4,
+      "date": 1791432000000,
+      "bank": "school",
+      "youSeat": 0,
+      "deckId": "grove",
+      "computer": {
+        "level": "easy",
+        "name": "轻松",
+        "opponentRating": 700,
+        "deckPolicy": "foundation",
+        "ritualLimit": 2,
+        "ritualStartRound": 3,
+        "ritualInterval": 2,
+        "description": "基础套牌 · 简单单步决策 · 第3轮起隔轮使用仪式，最多2次",
+        "mode": "easy",
+        "provisional": false,
+        "tutorial": false
+      }
+    },
+    {
+      "id": "fixture-teacher-academic-result",
+      "grade": null,
+      "course": "reading",
+      "ruleset": "net-1.1",
+      "combatRules": "2.2",
+      "contentVersion": "pep1-2026.1",
+      "mode": "pve",
+      "assisted": false,
+      "result": "win",
+      "reason": "health",
+      "score": 500,
+      "attempts": 1,
+      "correct": 1,
+      "turns": 4,
+      "date": 1791432000000,
+      "bank": "teacher-academic",
+      "youSeat": 0,
+      "deckId": "grove",
+      "computer": {
+        "level": "easy",
+        "name": "轻松",
+        "opponentRating": 700,
+        "deckPolicy": "foundation",
+        "ritualLimit": 2,
+        "ritualStartRound": 3,
+        "ritualInterval": 2,
+        "description": "基础套牌 · 简单单步决策 · 第3轮起隔轮使用仪式，最多2次",
+        "mode": "easy",
+        "provisional": false,
+        "tutorial": false
+      }
+    }
+  ],
+  "resultIds": [
+    "fixture-school-result:0",
+    "fixture-teacher-academic-result:0"
+  ],
+  "learningReceipts": {
+    "fixture-learning-0": {
+      "id": "fixture-learning-0",
+      "qid": "pep1-g1-s1-u1-q1",
+      "correct": true,
+      "answeredAt": 1791432000000
+    },
+    "fixture-learning-1": {
+      "id": "fixture-learning-1",
+      "qid": "ta-vocab-01",
+      "correct": false,
+      "answeredAt": 1791432000001
+    }
+  },
+  "learningBase": {
+    "pep1-g1-s1-u1-q1": null,
+    "ta-vocab-01": null
+  },
+  "learningCutoff": null,
+  "recoveryKey": "spellwood.save.v3.recovery.teacher-fixture"
+}

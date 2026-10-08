@@ -6,6 +6,8 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { build } from "esbuild";
 import vm from "node:vm";
+import { freshJourney } from "../src/reward-journey.mjs";
+import { HERO_SKINS } from "../src/hero-skins.mjs";
 import { chooseComputer } from "../server/duel-adapter.mjs";
 const root = path.resolve(import.meta.dirname, "..");
 const scratch = await fs.mkdtemp(path.join(os.tmpdir(), "spellwood-practice-check-"));
@@ -73,7 +75,7 @@ test("cached navigation preserves the actual practice authority and current room
   const lifecycleSource=source.slice(source.indexOf('globalThis.addEventListener?.("pagehide",'),source.indexOf('\nfunction validHandIntent('));
   const handlers=new Map(),views=Array.from({length:3},()=>({hidden:false,disposed:false,setHidden(v){this.hidden=v;},dispose(){this.disposed=true;}}));
   const collection={hidden:false,resetCount:0,visibility(v){this.hidden=v;},reset(){this.resetCount++;}};
-  const sandbox={isPractice:true,identityEpoch:0,identityPanel:null,identityChannel:null,pageSuspended:false,document:{hidden:false},deadlineTimer:null,clearTimeout,SOUND:{visibility(){}},cancelVoice(){},desk:{visibility(){}},collectionView:collection,
+  const sandbox={isPractice:true,identityEpoch:0,identityPanel:null,identityChannel:null,pageSuspended:false,document:{hidden:false},deadlineTimer:null,rewardDayTimer:null,wardrobeView:null,clearTimeout,SOUND:{visibility(){}},cancelVoice(){},desk:{visibility(){}},collectionView:collection,
     handScene:views[0],lobbyScene:views[1],scene:views[2],arenaResizeObserver:null,link:connection,connectionState:'ready',addEventListener(n,h){handlers.set(n,h);},render(){for(const view of views)view.setHidden(false);}};
   vm.createContext(sandbox);vm.runInContext(lifecycleSource,sandbox);
   try{
@@ -85,5 +87,11 @@ test("cached navigation preserves the actual practice authority and current room
     assert.equal(room.roomId,roomId);assert.equal(connection.practiceService.rooms.get(roomId),authority);
     handlers.get('pagehide')({persisted:false});assert.equal(collection.resetCount,1);assert.ok(views.every(v=>v.disposed));assert.equal(connection.practiceService.rooms.size,0);
   }finally{connection.destroy();}
+});
+test("practice cosmetic choice is frozen per room and refreshed only for the next match",async()=>{
+  let room;const journey=freshJourney({ownerId:'local-cosmetic'});journey.test.owned=[HERO_SKINS[0].id];journey.equipped={mode:'test',skinId:HERO_SKINS[0].id};
+  const connection=new runtime.DuelConnection({getJourney:()=>journey,onMessage(message){if(message.type==='room.snapshot')room=message;}});connection.practiceService.config.queueMs=1;
+  try {connection.connect();await until(()=>connection.state==='ready');await connection.command('queue.join',{grade:1,course:'s1',deckId:'grove'});await until(()=>room?.phase==='opening');assert.equal(room.self.skinId,HERO_SKINS[0].id);assert.equal(room.self.skinMode,'test');const first=room.roomId;journey.equipped={mode:'base',skinId:'forest_apprentice'};await connection.command('opening.choose',{indices:[]},{roomId:room.roomId,expectedRevision:room.revision});await until(()=>room.phase==='playing');assert.equal(room.self.skinId,HERO_SKINS[0].id);await connection.command('room.resign',{},{roomId:room.roomId,expectedRevision:room.revision});await until(()=>room.phase==='finished');await connection.command('queue.join',{grade:1,course:'s1',deckId:'grove'});await until(()=>room.roomId!==first);assert.equal(room.self.skinId,'forest_apprentice');assert.equal(room.self.skinMode,'base');}
+  finally{connection.destroy();}
 });
 test.after(() => fs.rm(scratch, { recursive: true, force: true }));

@@ -37,12 +37,12 @@ async function studyCurrentScope(actor) {
   await item.click();
   await expect(action(page, 'desk-answer').first()).toBeVisible();
   await sleep(2100);
+  const participation = page.waitForResponse(response =>
+    new URL(response.url()).pathname === '/api/progress/participation' && response.request().method() === 'POST');
   await action(page, 'desk-answer').first().click();
   await expect(page.locator('.study-desk .feedback')).toBeVisible();
   await expect.poll(() => learned(actor).includes(qid)).toBe(true);
   await sleep(1300);
-  const participation = page.waitForResponse(response =>
-    new URL(response.url()).pathname === '/api/progress/participation' && response.request().method() === 'POST');
   await action(page, 'desk-back').click();
   expect((await participation).ok()).toBe(true);
   await expect(page.locator('.study-desk')).toContainText('已练 1项');

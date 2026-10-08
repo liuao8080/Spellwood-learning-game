@@ -43,3 +43,13 @@ test("the new draw sound respects unlock, hidden state and the existing sound se
   director.settings.sound = true; playSceneSound("draw", director); assert.equal(tones.length, 3);
   playSceneSound("hit", director); assert.deepEqual(other, ["hit"]);
 });
+
+
+test("zero-attack ready partners retain legal target hints including crystal ram bonus attacks",()=>{
+ for(const cardId of ["fox","crystal_ram"]){
+  const state=board();Object.assign(state.players[0].board[0],{cardId,atk:0});
+  assert.deepEqual(targetPreview(state,0,{kind:"unit",uid:"own"}),{source:"own",targets:["guard"]});
+  state.players[1].board.shift();
+  assert.deepEqual(targetPreview(state,0,{kind:"unit",uid:"own"}).targets,["other","hero:1"]);
+ }
+});

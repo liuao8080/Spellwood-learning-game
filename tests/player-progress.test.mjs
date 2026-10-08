@@ -49,10 +49,10 @@ function sqlFor(t, file) {
   return sql;
 }
 
-test("fresh v3 progress keeps the guest's identity and survives registration/restart", async (t) => {
+test("fresh v4 progress keeps the guest's identity and survives registration/restart", async (t) => {
   const file = filename(t);
   const { store, service, guest, playerId, player } = fixture(t, { databasePath: file });
-  assert.equal(player.progress.schema, 3);
+  assert.equal(player.progress.schema, 4);
   assert.equal(player.progress.profileId, playerId);
   assert.equal(player.progress.timeZone, "Asia/Shanghai");
   assert.equal(player.progress.revision, player.revision);
@@ -145,9 +145,11 @@ test("existing participation rules count distinct server receipts, not correctne
   const player = service.ensure(playerId);
   assert.equal(player.progress.collection.totalDays, 1);
   assert.equal(Object.values(player.progress.collection.days)[0].qids.length, 6);
-  assert.deepEqual(player.progress.collection.earned, { cards: {}, dust: 0 });
+  assert.deepEqual(player.progress.collection.earned, { cards: {}, dust: 5 });
   assert.throws(() => service.participation(playerId, "missing-receipt", { questionMs: 2000, feedbackMs: 1200, now: when }), { code: "INVALID_PARTICIPATION" });
-  assert.throws(() => service.participation(playerId, "participation-0", { questionMs: 0, feedbackMs: 1200, now: when }), { code: "INVALID_PARTICIPATION" });
+  assert.equal(service.participation(playerId, "participation-0", { questionMs: 0, feedbackMs: 1200, now: when }).duplicate, true);
+  service.applyLearning(playerId, feedback("participation-too-fast", false, when, questions[0].id));
+  assert.throws(() => service.participation(playerId, "participation-too-fast", { questionMs: 0, feedbackMs: 1200, now: when + 1200 }), { code: "INVALID_PARTICIPATION" });
 });
 
 test("an opening retry fingerprints the stable request, preserving the original random pack", (t) => {

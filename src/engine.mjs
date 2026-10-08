@@ -12,6 +12,7 @@ import {
   validCourse,
   RITUAL_LIMIT,
   hasOpening,
+  isCardAvailable,
 } from "./cards.mjs";
 const copy = (s) => structuredClone(s);
 const note = (s, text) => {
@@ -19,9 +20,11 @@ const note = (s, text) => {
   s.log = s.log.slice(0, 30);
 };
 function damageHero(p, n) {
+  n = Math.max(0, n);
   const blocked = Math.min(p.armor, n);
   p.armor -= blocked;
   p.hp -= n - blocked;
+  return n - blocked;
 }
 function damageUnit(u, n) {
   if (n <= 0) return 0;
@@ -32,6 +35,71 @@ function damageUnit(u, n) {
   u.hp -= n;
   return n;
 }
+// Mutates only an owned state. Callers of public transitions clone first.
+// 2.2/2.1/2.0 saves retain their original shape and combat behavior.
+export function ensureHandIds(s) {
+  if (s.rules !== RULES) return s;
+  const valid = (id) => typeof id === "string" && /^h[1-9][0-9]*$/.test(id);
+  s.handSeq = Math.max(
+    Number.isSafeInteger(s.handSeq) ? s.handSeq : 0,
+    ...s.players.flatMap((p) =>
+      (Array.isArray(p.handIds) ? p.handIds : [])
+        .filter(valid)
+        .map((id) => Number(id.slice(1))),
+    ),
+  );
+  const used = new Set();
+  for (const p of s.players) {
+    if (
+      !Array.isArray(p.handIds) ||
+      p.handIds.length !== p.hand.length ||
+      p.handIds.some((id) => !valid(id) || used.has(id)) ||
+      new Set(p.handIds).size !== p.handIds.length
+    ) {
+      p.handIds = p.hand.map(() => `h${++s.handSeq}`);
+    }
+    for (const id of p.handIds) used.add(id);
+    if (p.handBoosts)
+      for (const id of Object.keys(p.handBoosts))
+        if (!p.handIds.includes(id)) delete p.handBoosts[id];
+  }
+  return s;
+}
+export function effectiveCardCost(s, side, index) {
+  const p = s.players[side],
+    c = CARD[p.hand[index]];
+  if (!c) return Infinity;
+  // Malformed parallel identity arrays cannot turn an unaffordable action
+  // into a legal one before ensureHandIds repairs them on the cloned state.
+  const validIds =
+    Array.isArray(p.handIds) &&
+    p.handIds.length === p.hand.length &&
+    p.handIds.every(
+      (id) => typeof id === "string" && /^h[1-9][0-9]*$/.test(id),
+    ) &&
+    new Set(p.handIds).size === p.handIds.length &&
+    !s.players[1 - side].handIds?.includes(p.handIds[index]);
+  const boost = p.handBoosts?.[p.handIds?.[index]];
+  return s.rules === RULES &&
+    validIds &&
+    s.active === side &&
+    boost?.turn === s.turn &&
+    boost.amount === 1
+    ? Math.max(0, c.cost - 1)
+    : c.cost;
+}
+function addToHand(s, side, cardId) {
+  const p = s.players[side];
+  if (p.hand.length >= 7) {
+    note(s, "手牌已满，一张牌化作星尘");
+    return;
+  }
+  p.hand.push(cardId);
+  if (s.rules === RULES) p.handIds.push(`h${++s.handSeq}`);
+}
+function healUnit(u, n) {
+  if (u && u.hp > 0) u.hp = Math.min(u.maxHp, u.hp + n);
+}
 function draw(s, side, n = 1) {
   const p = s.players[side];
   for (let i = 0; i < n; i++) {
@@ -41,17 +109,26 @@ function draw(s, side, n = 1) {
       note(s, `${side ? "对手" : "你"}受到${p.fatigue}点疲劳伤害`);
     } else {
       const c = p.deck.shift();
-      if (p.hand.length < 7) p.hand.push(c);
-      else note(s, "手牌已满，一张牌化作星尘");
+      addToHand(s, side, c);
     }
   }
 }
 function finish(s) {
   const departed = [];
+  const deaths = [];
   for (const [side, p] of s.players.entries()) {
-    for (const u of p.board.filter((u) => u.hp <= 0))
+    for (const u of p.board.filter((u) => u.hp <= 0)) {
       departed.push(`${side ? "对手的" : "你的"}${CARD[u.cardId].name}`);
+      deaths.push({ side, cardId: u.cardId });
+    }
     p.board = p.board.filter((c) => c.hp > 0);
+  }
+  // Every unit has already received its simultaneous damage and left the board.
+  // Resolve death effects in seat order, then board order, before judging winners.
+  for (const death of deaths) {
+    const c = CARD[death.cardId];
+    if (s.rules === RULES && c.keyword === "deathArmor")
+      s.players[death.side].armor += c.amount;
   }
   if (departed.length) {
     const action = s.log.shift() || "交战结束";
@@ -65,6 +142,12 @@ function finish(s) {
 function startTurn(s, side) {
   s.active = side;
   s.turn++;
+  if (s.rules === RULES)
+    for (const player of s.players)
+      if (player.handBoosts)
+        for (const [id, boost] of Object.entries(player.handBoosts))
+          if (boost.turn !== s.turn || !player.handIds?.includes(id))
+            delete player.handBoosts[id];
   const p = s.players[side];
   p.maxMana = Math.min(6, p.maxMana + 1);
   p.mana = p.maxMana;
@@ -108,6 +191,7 @@ export function createMatch({
       maxMana: 0,
       board: [],
       hand: [],
+      handIds: [],
       deck: shuffle(d.ids, random),
       fatigue: 0,
       ritualUsed: false,
@@ -116,6 +200,7 @@ export function createMatch({
     active: 0,
     turn: 0,
     seq: 0,
+    handSeq: 0,
     phase: "playing",
     winner: null,
     log: [],
@@ -129,6 +214,7 @@ export function createMatch({
     recorded: false,
     opening: { player: offerOpening ? null : [], opponent: [] },
   };
+  ensureHandIds(s);
   draw(s, 0, 3);
   draw(s, 1, 4);
   startTurn(s, 0);
@@ -138,6 +224,8 @@ export function createMatch({
     redeal(s.players[1].hand, s.players[1].deck, openingChoice, s.seed, 1),
   );
   s.opening.opponent = openingChoice;
+  for (const index of openingChoice)
+    s.players[1].handIds[index] = `h${++s.handSeq}`;
   return s;
 }
 /** @param {import("./types.js").Match} state @param {number[]} indices @returns {import("./types.js").Match} */
@@ -145,12 +233,15 @@ export function finishOpening(state, indices) {
   if (state.phase !== "playing" || !openingPending(state)) return state;
   const s = copy(state),
     p = s.players[0];
+  ensureHandIds(s);
   try {
     Object.assign(p, redeal(p.hand, p.deck, indices, s.seed, 0));
   } catch {
     return state;
   }
   s.opening.player = [...indices].sort((a, b) => a - b);
+  if (s.rules === RULES)
+    for (const index of s.opening.player) p.handIds[index] = `h${++s.handSeq}`;
   note(
     s,
     indices.length ? `你调整了${indices.length}张起手` : "你保留了全部起手",
@@ -166,11 +257,39 @@ export function legalActions(s) {
     actions = [];
   p.hand.forEach((id, index) => {
     const c = CARD[id];
-    if (!c || c.cost > p.mana) return;
+    if (
+      !c ||
+      !isCardAvailable(id, s.rules) ||
+      effectiveCardCost(s, side, index) > p.mana
+    )
+      return;
     if (hasFiniteRituals(s.rules) && c.keyword === "restore" && p.hp >= 18)
       return;
-    if (c.type !== "spell") {
-      if (p.board.length < 4) actions.push({ type: "play", index });
+    if (c.type !== "spell" && p.board.length >= 4) return;
+    const friendly = p.board.filter((u) => u.hp > 0);
+    const enemy = e.board.filter((u) => u.hp > 0);
+    const targets =
+      c.target === "enemy-unit"
+        ? enemy
+        : c.target === "friendly-unit"
+          ? friendly
+          : c.target === "friendly-wounded-unit"
+            ? friendly.filter((u) => u.hp < u.maxHp)
+            : c.target === "friendly-unshielded-unit"
+              ? friendly.filter((u) => !u.shield)
+              : null;
+    if (targets) {
+      for (const u of targets)
+        actions.push({ type: "play", index, target: u.uid });
+      if (!targets.length && c.type !== "spell")
+        actions.push({ type: "play", index });
+    } else if (c.target === "all-enemy-units") {
+      if (enemy.length) actions.push({ type: "play", index });
+    } else if (c.target === "all-friendly-wounded-units") {
+      if (friendly.some((u) => u.hp < u.maxHp))
+        actions.push({ type: "play", index });
+    } else if (c.type !== "spell") {
+      actions.push({ type: "play", index });
     } else if (c.keyword === "damage") {
       actions.push({ type: "play", index, target: "hero" });
       for (const u of e.board)
@@ -213,6 +332,7 @@ export function act(state, action) {
     side = s.active,
     p = s.players[side],
     e = s.players[1 - side];
+  ensureHandIds(s);
   s.seq++;
   if (action.type === "end") {
     startTurn(s, 1 - side);
@@ -225,8 +345,12 @@ export function act(state, action) {
   }
   if (action.type === "play") {
     const c = CARD[p.hand[action.index]];
+    const cost = effectiveCardCost(s, side, action.index);
+    const handId = p.handIds?.[action.index];
     p.hand.splice(action.index, 1);
-    p.mana -= c.cost;
+    if (s.rules === RULES) p.handIds.splice(action.index, 1);
+    if (s.rules === RULES && p.handBoosts) delete p.handBoosts[handId];
+    p.mana -= cost;
     note(s, `${side ? "对手" : "你"}使用了${c.name}`);
     if (c.type === "spell") {
       if (c.keyword === "damage") {
@@ -239,6 +363,21 @@ export function act(state, action) {
       }
       if (c.keyword === "restore") p.hp = Math.min(18, p.hp + (c.amount || 5));
       if (c.keyword === "insight") draw(s, side, c.amount || 2);
+      if (c.keyword === "sweep")
+        for (const u of e.board) if (u.hp > 0) damageUnit(u, c.amount);
+      if (c.keyword === "rain") for (const u of p.board) healUnit(u, c.amount);
+      if (c.keyword === "blessing") {
+        const u = p.board.find((u) => u.uid === action.target);
+        u.maxHp += c.amount;
+        healUnit(u, c.amount);
+      }
+      if (c.keyword === "recall") {
+        const index = p.board.findIndex((u) => u.uid === action.target);
+        const [u] = p.board.splice(index, 1);
+        // The spell was consumed first. Only the base ID enters the newly
+        // allocated hand instance; no unit buffs or death effects survive.
+        addToHand(s, side, u.cardId);
+      }
     } else {
       if (c.keyword === "rally") for (const u of p.board) u.atk++;
       p.board.push({
@@ -253,17 +392,39 @@ export function act(state, action) {
       if (c.keyword === "draw") draw(s, side);
       if (c.keyword === "armor") p.armor += 2;
       if (c.keyword === "heal") p.hp = Math.min(18, p.hp + 3);
+      const friend = p.board.find((u) => u.uid === action.target);
+      const enemy = e.board.find((u) => u.uid === action.target);
+      if (c.keyword === "mend") healUnit(friend, c.amount);
+      if (c.keyword === "grantShield" && friend) friend.shield = true;
+      if (c.keyword === "weaken" && enemy)
+        enemy.atk = Math.max(0, enemy.atk - c.amount);
+      if (c.keyword === "arrivalDamage" && enemy) damageUnit(enemy, c.amount);
+      if (c.keyword === "companyArmor")
+        p.armor += Math.min(c.limit, p.board.length - 1) * c.amount;
     }
   }
   if (action.type === "attack") {
     const u = p.board.find((x) => x.uid === action.uid);
     u.ready = false;
     if (action.target === "hero") {
-      damageHero(e, u.atk);
+      const hpDamage = damageHero(e, u.atk);
       note(s, `${CARD[u.cardId].name}造成${u.atk}点伤害`);
+      if (
+        s.rules === RULES &&
+        CARD[u.cardId].keyword === "heroHitDraw" &&
+        hpDamage > 0 &&
+        u.kingfisherDrawTurn !== s.turn
+      ) {
+        u.kingfisherDrawTurn = s.turn;
+        draw(s, side, CARD[u.cardId].amount);
+      }
     } else {
       const v = e.board.find((x) => x.uid === action.target);
-      const attack = u.atk,
+      const attack =
+          u.atk +
+          (s.rules === RULES && CARD[u.cardId].keyword === "unitCharge"
+            ? CARD[u.cardId].amount
+            : 0),
         retaliation = v.atk;
       const dealt = damageUnit(v, attack),
         returned = damageUnit(u, retaliation);
@@ -299,6 +460,7 @@ export function ritual(state, kind, correct, target = "hero") {
   )
     return state;
   const s = copy(state);
+  ensureHandIds(s);
   s.seq++;
   applyRitual(s, 0, kind, correct, target);
   finish(s);
@@ -376,8 +538,10 @@ function decisionView(state) {
   s.log = [];
   for (let i = 0; i < 2; i++) {
     s.players[i].deck = s.players[i].deck.map(() => "_unknown");
-    if (i !== s.active)
+    if (i !== s.active) {
       s.players[i].hand = s.players[i].hand.map(() => "_unknown");
+      delete s.players[i].handBoosts;
+    }
   }
   return s;
 }
@@ -392,7 +556,14 @@ function threatKey(s, side) {
       i === side ? 0 : p.deck.length,
       i === side ? 0 : p.fatigue,
       p.board
-        .map((u) => [u.cardId, u.atk, u.hp, !!u.shield])
+        .map((u) => [
+          u.cardId,
+          u.atk,
+          u.hp,
+          u.maxHp,
+          !!u.shield,
+          u.kingfisherDrawTurn,
+        ])
         .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))),
     ]),
   ]);
@@ -407,7 +578,17 @@ function tacticalKey(s) {
       p.ritualUsed,
       p.ritualsLeft,
       p.hand,
-      p.board.map((u) => [u.uid, u.cardId, u.atk, u.hp, u.ready, !!u.shield]),
+      p.handIds?.map((id) => p.handBoosts?.[id]),
+      p.board.map((u) => [
+        u.uid,
+        u.cardId,
+        u.atk,
+        u.hp,
+        u.maxHp,
+        u.ready,
+        !!u.shield,
+        u.kingfisherDrawTurn,
+      ]),
     ]),
   ]);
 }
@@ -419,8 +600,23 @@ function lethalActions(s) {
       if (a.type === "power") return a.kind === "spark";
       if (a.type === "attack") return true;
       const c = CARD[s.players[s.active].hand[a.index]];
-      if (!["damage", "rush", "rally"].includes(c.keyword)) return false;
-      const k = c.id + ":" + (a.target || "");
+      if (
+        ![
+          "damage",
+          "rush",
+          "rally",
+          "arrivalDamage",
+          "sweep",
+          "recall",
+        ].includes(c.keyword)
+      )
+        return false;
+      const k =
+        c.id +
+        ":" +
+        effectiveCardCost(s, s.active, a.index) +
+        ":" +
+        (a.target || "");
       if (seen.has(k)) return false;
       seen.add(k);
       return true;
@@ -467,7 +663,17 @@ export function findLethal(state, nodeLimit = 1500) {
     // Damage spent breaking guard cannot also hit the hero. This optimistic
     // upper bound cheaply rejects impossible lines without assuming card order.
     const upper = spellDamage + Math.max(0, creatureDamage - guardHealth);
-    if (upper < e.hp + e.armor) return null;
+    // New guard removal and recalling a rush/battlecry unit can open lines that
+    // the old bound did not model. Keep the old fast bound for old-only hands.
+    const flexible =
+      s.rules === RULES &&
+      (p.hand.some((id) =>
+        ["arrivalDamage", "sweep", "recall"].includes(CARD[id]?.keyword),
+      ) ||
+        p.board.some(
+          (u) => u.ready && CARD[u.cardId].keyword === "unitCharge",
+        ));
+    if (upper < e.hp + e.armor && !flexible) return null;
     for (const a of lethalActions(s)) {
       const result = walk(act(s, a), [...path, a]);
       if (result) return result;
@@ -515,10 +721,31 @@ function defensiveActions(s) {
       if (c.keyword === "damage") {
         if (a.target === "hero") return false;
       } else if (
-        !["guard", "armor", "heal", "restore", "rush"].includes(c.keyword)
+        ![
+          "guard",
+          "armor",
+          "heal",
+          "restore",
+          "rush",
+          "mend",
+          "weaken",
+          "grantShield",
+          "companyArmor",
+          "arrivalDamage",
+          "sweep",
+          "rain",
+          "recall",
+          "blessing",
+          "deathArmor",
+        ].includes(c.keyword)
       )
         return false;
-      key = ["play", c.id, a.target || ""].join(":");
+      key = [
+        "play",
+        c.id,
+        effectiveCardCost(s, s.active, a.index),
+        a.target || "",
+      ].join(":");
     } else if (a.type === "power") {
       if (a.kind !== "bloom" && !(a.kind === "spark" && a.target !== "hero"))
         return false;
@@ -589,13 +816,24 @@ function chooseBasic(s, style, plan) {
     return creatures.sort(
       (a, b) =>
         (b.type === "play" ? CARD[p.hand[b.index]].cost : 0) -
-        (a.type === "play" ? CARD[p.hand[a.index]].cost : 0),
+          (a.type === "play" ? CARD[p.hand[a.index]].cost : 0) ||
+        (a.type === "play" &&
+        b.type === "play" &&
+        (CARD[p.hand[a.index]].introducedRules ||
+          CARD[p.hand[b.index]].introducedRules)
+          ? evaluate(act(s, b), side, style) - evaluate(act(s, a), side, style)
+          : 0),
     )[0];
   const safeTrade = actions.find((a) => {
     if (a.type !== "attack" || a.target === "hero") return false;
     const u = p.board.find((u) => u.uid === a.uid),
       v = e.board.find((u) => u.uid === a.target);
-    return !v.shield && u.atk >= v.hp && (u.shield || u.hp > v.atk);
+    const attack =
+      u.atk +
+      (s.rules === RULES && CARD[u.cardId].keyword === "unitCharge"
+        ? CARD[u.cardId].amount
+        : 0);
+    return !v.shield && attack >= v.hp && (u.shield || u.hp > v.atk);
   });
   if (safeTrade) return safeTrade;
   const face = actions.find((a) => a.type === "attack" && a.target === "hero");

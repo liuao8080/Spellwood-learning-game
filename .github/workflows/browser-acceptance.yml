@@ -3,7 +3,7 @@ name: Browser acceptance
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, codex/import-spellwood-v3.2.9, codex/guest-online-v4, codex/teacher-academic-test]
+    branches: [main, codex/import-spellwood-v3.2.9, codex/guest-online-v4, codex/teacher-academic-test, codex/nat-friendly-online]
 
 permissions:
   contents: read
@@ -15,7 +15,7 @@ concurrency:
 jobs:
   chromium:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       SPELLWOOD_BROWSER_CI: '1'
     steps:

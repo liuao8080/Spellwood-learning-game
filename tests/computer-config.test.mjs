@@ -76,11 +76,13 @@ test("server default honestly declares fixed advanced AI, while PVP has no compu
     assert.deepEqual([...p.hand, ...p.deck].sort(), [...DECKS[0].ids].sort());
 });
 test("network version matching rejects old rules and never accepts client difficulty or rating fields", () => {
-  assert.equal(versions.ruleset, "net-1.1");
-  assert.equal(versions.combatRules, "2.2");
+  assert.equal(versions.ruleset, "net-2.3");
+  assert.equal(versions.combatRules, "2.3");
   const options = { grade: 1, course: "all", deckId: "grove" };
   for (const extra of [
     { combatRules: "2.1" },
+    { combatRules: "2.2" },
+    { ruleset: "net-1.1" },
     { ruleset: "net-1.0" },
     { combatRating: 400 },
     { computerDifficulty: "easy" },
