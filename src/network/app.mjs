@@ -65,7 +65,8 @@ function refreshDeadlines() {
   if (room && ["opening", "playing"].includes(room.phase) && !document.hidden && !pageSuspended) deadlineTimer = setTimeout(refreshDeadlines, 1000);
 }
 
-function notice(text) {
+function notice(text, kind = "general") {
+  $("#notice").dataset.kind = kind;
   $("#notice").textContent = text;
   clearTimeout(timer); timer = setTimeout(() => { $("#notice").textContent = ""; }, 4200);
 }
@@ -188,7 +189,7 @@ function acceptSnapshot(next) {
       if (epoch === sceneEpoch && room?.revision === next.revision) { visualBusy = false; render(); }
     });
   }
-  if (next.phase === "playing" && previous?.phase === "opening" && !handIntroductionShown) { handIntroductionShown=true; notice("点选手牌，长按看说明；左右滑动查看更多"); }
+  if (next.phase === "playing" && previous?.phase === "opening" && !handIntroductionShown) { handIntroductionShown=true; notice("点选手牌，长按看说明；左右滑动查看更多", "hand-tip"); }
   if (!displayRoom || !visualBusy && next.revision === displayRoom.revision) displayRoom = next;
   if (next.phase !== "opening") openingSelection = [];
   if (!next.canAct && selected?.kind !== "card") selected = null;
@@ -235,9 +236,8 @@ function courseSelect() {
   return `<label>学习范围<select id="course"><option value="all" ${preferences.course === "all" ? "selected" : ""}>全年级 · 72项</option>${[1, 2].map((s) => `<optgroup label="${s === 1 ? "上册" : "下册"}"><option value="s${s}" ${preferences.course === `s${s}` ? "selected" : ""}>${s === 1 ? "上册" : "下册"} · 36项</option>${[1, 2, 3, 4, 5, 6].map((u) => `<option value="s${s}-u${u}" ${preferences.course === `s${s}-u${u}` ? "selected" : ""}>${s === 1 ? "上册" : "下册"} Unit ${u} · 6项</option>`).join("")}</optgroup>`).join("")}</select></label>`;
 }
 function difficultyControl() {
-  if (!isPractice) return "";
   const plan=selectDifficulty(desk?.data?.combatRating,preferences.combatMode),profile=desk?.data?.combatRating;
-  return `<label>电脑挑战<select id="combat-mode"><option value="adaptive" ${preferences.combatMode === "adaptive" ? "selected" : ""}>跟着我的进步调整</option><option value="easy" ${preferences.combatMode === "easy" ? "selected" : ""}>轻松练习</option><option value="standard" ${preferences.combatMode === "standard" ? "selected" : ""}>标准挑战</option></select></label><p class="difficulty-note">下一局：${esc(plan.name)}${plan.provisional ? ` · 定位中 ${Math.min(5,profile?.games||0)}/5` : ""} <button class="quiet" data-action="difficulty-info">怎么看强度</button></p>${plan.tutorial ? `<p class="first-game-guide">第一次来？先召唤低费伙伴，下回合选伙伴再点敌人。长按手牌可以看完整说明，轻松电脑会给你更多练习空间。</p>` : ""}`;
+  return `<label>${isPractice ? "电脑挑战" : "无人匹配时的电脑挑战"}<select id="combat-mode"><option value="adaptive" ${preferences.combatMode === "adaptive" ? "selected" : ""}>跟着我的进步调整</option><option value="easy" ${preferences.combatMode === "easy" ? "selected" : ""}>轻松练习</option><option value="standard" ${preferences.combatMode === "standard" ? "selected" : ""}>标准挑战</option></select></label><p class="difficulty-note">下一局：${esc(plan.name)}${plan.provisional ? ` · 定位中 ${Math.min(5,profile?.games||0)}/5` : ""} <button class="quiet" data-action="difficulty-info">怎么看强度</button></p>${plan.tutorial ? `<p class="first-game-guide">第一次来？先召唤低费伙伴，下回合选伙伴再点敌人。长按手牌可以看完整说明，轻松电脑会给你更多练习空间。</p>` : ""}`;
 }
 function lobby() {
   const plan = selectDifficulty(desk?.data?.combatRating, preferences.combatMode);
@@ -369,6 +369,7 @@ function render() {
   pictures.connect(modalRoot);
   const modalKey = (connectionState === "replaced" && room ? "connection-replaced" : null) || (panel === "study" ? `study:${desk?.question?.challengeId || "catalogue"}` : panel) || (challenge ? `question:${challenge.challengeId}${feedback ? ":feedback" : ""}` : room?.phase === "opening" ? `opening:${room.roomId}` : room?.phase === "finished" && !visualBusy ? `result:${room.roomId}` : null);
   const dialog = modalRoot.querySelector(".dialog");
+  if(dialog && $("#notice").dataset.kind === "hand-tip"){$("#notice").textContent="";clearTimeout(timer);}
   if (dialog && !previousDialog) modalOpener = {element:focused,action:focusAction,index:focusIndex};
   if (!dialog && previousDialog && modalOpener) { const target=modalOpener.element?.isConnected ? modalOpener.element : [...ui.querySelectorAll("[data-action]")].find(el=>el.dataset.action===modalOpener.action && el.dataset.index===modalOpener.index); target?.focus({preventScroll:true}); modalOpener=null; }
   if (dialog) {

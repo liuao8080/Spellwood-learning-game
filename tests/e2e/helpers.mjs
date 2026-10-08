@@ -435,6 +435,7 @@ export async function canvasAndKeyboard(actor, testInfo) {
   await first.focus();
   await page.keyboard.press('i');
   await expect(page.locator('.card-info-dialog')).toBeVisible();
+  await expect(page.locator('#notice[data-kind="hand-tip"]')).toBeHidden();
   await safeScreenshot(page, testInfo, 'keyboard-card-description');
   await action(page, 'card-info-close').click();
   await first.focus();
@@ -451,6 +452,7 @@ export async function answerRitual(actor, testInfo) {
   if (!await insight.isEnabled()) return false;
   await uiCommand(actor, () => insight.click());
   await expect(action(page, 'answer').first()).toBeVisible();
+  await expect(page.locator('#notice[data-kind="hand-tip"]')).toBeHidden();
   await safeScreenshot(page, testInfo, `${actor.label}-english-question`);
   await sleep(2100);
   await uiCommand(actor, () => action(page, 'answer').first().click());

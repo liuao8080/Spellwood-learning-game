@@ -208,6 +208,11 @@ test('320 and 390 portrait plus 844 by 390 landscape expose readable real UI scr
     await dialog.getByLabel('密码', { exact: true }).fill('forest');
     await expect(dialog.getByLabel('密码', { exact: true })).toHaveAttribute('type', 'password');
     await safeScreenshot(page, testInfo, `${size}-registration-form`);
+    const submit=dialog.getByRole('button',{name:'创建账号',exact:true});
+    await submit.scrollIntoViewIfNeeded();
+    await expect(submit).toBeInViewport();
+    expect((await submit.boundingBox()).height).toBeGreaterThanOrEqual(44);
+    await safeScreenshot(page,testInfo,`${size}-registration-continue`);
     const dialogBox = await dialog.boundingBox();
     expect(dialogBox.x).toBeGreaterThanOrEqual(-1);
     expect(dialogBox.width).toBeLessThanOrEqual(viewport.width + 2);
@@ -226,8 +231,15 @@ test('320 and 390 portrait plus 844 by 390 landscape expose readable real UI scr
     await answer.scrollIntoViewIfNeeded();
     const answerBox = await answer.boundingBox();
     expect(answerBox.width).toBeGreaterThan(150);
-    expect(answerBox.height).toBeGreaterThanOrEqual(32);
+    expect(answerBox.height).toBeGreaterThanOrEqual(44);
     await safeScreenshot(page, testInfo, `${size}-english-choices`);
+    const prompt=page.locator('.study-desk .quiz header h3');
+    await prompt.scrollIntoViewIfNeeded();await expect(prompt).toBeInViewport();
+    await safeScreenshot(page,testInfo,`${size}-english-prompt`);
+    await action(page,'desk-back').scrollIntoViewIfNeeded();
+    await expect(action(page,'desk-back')).toBeInViewport();
+    await action(page,'desk-back').click();
+    await expect(action(page,'desk-study').first()).toBeVisible();
     const layout = await page.evaluate(() => ({ width: innerWidth, scrollWidth: document.documentElement.scrollWidth }));
     expect(layout.scrollWidth).toBeLessThanOrEqual(layout.width + 2);
     expect(actor.observed.pageErrorCount).toBe(0);
