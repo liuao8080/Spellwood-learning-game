@@ -80,7 +80,7 @@ test("lost answer feedback can be recovered by the same seat without a second ef
   const token = a.token;
   a.close();
   await sleep(5);
-  const restored = await new Client(s, token).open();
+  const restored = await new Client(s, token, a.cookie).open();
   const feedback = await restored.wait((m) => m.type === "private.feedback");
   assert.equal(feedback.replayed, true);
   assert.equal(feedback.challengeId, original.challengeId);
@@ -100,7 +100,7 @@ test("one active socket per resume token; old socket is replaced and cannot crea
   const s = await startServer();
   t.after(() => s.close());
   const old = await new Client(s).open();
-  const replacement = await new Client(s, old.token).open();
+  const replacement = await new Client(s, old.token, old.cookie).open();
   const event = await old.wait((m) => m.type === "session.replaced");
   assert(event);
   assert.equal(replacement.session.sessionId, old.session.sessionId);
@@ -171,7 +171,7 @@ test("ready explicitly has no room after an offline peer missed resignation and 
   assert((await b.command("room.resign")).ok);
   await b.wait((m) => m.type === "room.expired");
   assert(!s.service.rooms.has(oldRoom));
-  const restored = await new Client(s, token).open();
+  const restored = await new Client(s, token, a.cookie).open();
   assert(Object.hasOwn(restored.session, "roomId"));
   assert.equal(restored.session.roomId, null);
   await sleep(10);
@@ -198,7 +198,7 @@ test("opponent resignation cancels an open question and reconnect never revives 
   const token = a.token;
   a.close();
   await sleep(5);
-  const restored = await new Client(s, token).open();
+  const restored = await new Client(s, token, a.cookie).open();
   const state = await restored.wait((m) => m.type === "room.snapshot");
   assert.equal(state.phase, "finished");
   await sleep(10);

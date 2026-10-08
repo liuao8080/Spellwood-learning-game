@@ -1083,3 +1083,62 @@ export class ProgressStore {
     return JSON.stringify(this._data.legacy, null, 2);
   }
 }
+
+/** Pure v3 model for the server adapter. No storage, network, locks, or pending
+ * browser mutations are used. Each entry point validates the same intent as
+ * ProgressStore; no generic trusted-operation entry point is exposed. */
+export function createProgressModel({ questions = [] } = {}) {
+  const metadata = new ProgressStore({ questions, storage: null, locks: null });
+  const validate = (input) => validateProgress(input, metadata.questions, metadata.questionIds);
+  const learning = (feedback) => learningEvent(feedback, metadata.questionIds);
+  const result = (snapshot) => resultFromSnapshot(snapshot);
+  const apply = (input, op) => {
+    const data = validate(input);
+    const changed = metadata._apply(data, op);
+    const compacted = compact(data);
+    if (changed || compacted) data.revision = input.revision + 1;
+    return { data, changed: changed || compacted };
+  };
+  return Object.freeze({
+    fresh(playerId, timeZone = "UTC") {
+      if (!token(playerId)) fail("INVALID_PROGRESS");
+      calendar(timeZone);
+      const data = blank(freshSave());
+      data.profileId = playerId;
+      data.timeZone = timeZone;
+      return data;
+    },
+    validate,
+    // Storage keys v1/v2 both hold schema:1. Unknown schema:2 is deliberately
+    // rejected by the existing legacy validator rather than guessed at.
+    importLegacy(input) {
+      if (typeof input === "string" && input.length > PROGRESS_LIMITS.importCharacters)
+        fail("IMPORT_TOO_LARGE");
+      let parsed;
+      try { parsed = typeof input === "string" ? JSON.parse(input) : clone(input); }
+      catch { fail("INVALID_IMPORT"); }
+      if (parsed?.schema !== 1 && parsed?.schema !== 3) fail("INVALID_IMPORT");
+      return parsed.schema === 3 ? validate(parsed) : blank(legacySave(parsed, metadata.questions));
+    },
+    learning,
+    result,
+    preferencePatch,
+    applyLearning(input, feedback) {
+      return apply(input, { kind: "learning", event: learning(feedback) });
+    },
+    addResult(input, snapshot) {
+      return apply(input, { kind: "result", record: result(snapshot) });
+    },
+    preferences(input, patch) {
+      return apply(input, { kind: "preferences", patch: preferencePatch(patch) });
+    },
+    participation(input, challengeId, timing) {
+      if (!token(challengeId)) fail("INVALID_LEARNING");
+      return apply(input, { kind: "participation", challengeId,
+        questionMs: timing?.questionMs, feedbackMs: timing?.feedbackMs, now: timing?.now });
+    },
+    collection(input, action) {
+      return apply(input, { kind: "collection", action: clone(action) });
+    },
+  });
+}

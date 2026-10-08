@@ -18,6 +18,9 @@ import { cardGuide } from '../src/card-guide.mjs';
 import { selectDifficulty } from '../src/combat-rating.mjs';
 import { equippedFinishes, rewardBalance, COLLECTION_TEST_MODE } from '../src/collection.mjs';
 import { ServerClock, durationText } from '../src/network/deadlines.mjs';
+import { IdentityClient } from '../src/network/identity-client.mjs';
+import { IdentityPanel } from '../src/network/identity-view.mjs';
+import { RemoteProgressStore } from '../src/network/remote-progress.mjs';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 async function until(fn, message = 'condition', timeout = 2500) {
@@ -26,19 +29,51 @@ async function until(fn, message = 'condition', timeout = 2500) {
   return fn();
 }
 const options = { grade: 1, course: 's1-u1', deckId: 'grove' };
+const serverCleanups = new WeakMap();
 function memoryStorage(initial) {
   const data = new Map(initial || []);
   return { data, getItem: k => data.get(k) ?? null, setItem: (k,v) => data.set(k,String(v)), removeItem: k => data.delete(k) };
 }
+// Node's fetch and ws do not provide the browser's shared HttpOnly cookie jar.
+// Each fixture is a separate browser unless a test explicitly shares its jar.
+function browserSession(server) {
+  const cookies = new Map();
+  const browser = {
+    get cookie() { return [...cookies].map(([name, value]) => `${name}=${value}`).join('; '); },
+    receive(values = []) {
+      for (const value of values) {
+        const pair = value.split(';')[0], index = pair.indexOf('=');
+        const name = pair.slice(0, index), content = pair.slice(index + 1);
+        if (/Max-Age=0(?:;|$)/i.test(value)) cookies.delete(name);
+        else cookies.set(name, content);
+      }
+    },
+    async fetch(path, init = {}) {
+      const url = new URL(path, server.origin);
+      assert.equal(url.origin, server.origin, 'Fixture credentials stay on the game origin');
+      const headers = new Headers(init.headers);
+      headers.set('Origin', server.origin);
+      if (init.credentials !== 'omit' && browser.cookie) headers.set('Cookie', browser.cookie);
+      const response = await fetch(url, { ...init, headers });
+      if (init.credentials !== 'omit') browser.receive(response.headers.getSetCookie());
+      return response;
+    },
+  };
+  return browser;
+}
 async function serverFor(t, config = {}) {
   const server = createGameServer({ port: 0, config: { queueMs: 20000, openingMs: 10000, turnMs: 20000, questionMs: 10000, commandRate: 1000, ...config }, messageRate: 1000 });
-  await server.listen(); t.after(() => server.close()); return server;
+  const cleanups=[];serverCleanups.set(server,cleanups);
+  await server.listen(); t.after(async () => {for(const cleanup of cleanups)cleanup();await server.close();}); return server;
 }
-function networkOptions(server, storage, capture, faults = {}) {
+function networkOptions(server, storage, capture, faults = {}, browser = browserSession(server)) {
   return { url: server.origin.replace(/^http/,'ws') + '/ws', storage,
     schedule: (fn, ms) => setTimeout(fn, Math.min(ms, 15)),
     socketFactory(url) {
-      const socket = new WebSocket(url, { origin: server.origin }); capture.sockets.push(socket);
+      const socket = new WebSocket(url, { origin: server.origin,
+        ...(browser.cookie ? { headers: { Cookie: browser.cookie } } : {}),
+      }); capture.sockets.push(socket);
+      socket.on('upgrade', response => browser.receive(response.headers['set-cookie']));
       const originalSend = socket.send.bind(socket), originalAdd = socket.addEventListener.bind(socket);
       socket.send = text => { capture.sent.push(JSON.parse(text)); return originalSend(text); };
       socket.addEventListener = (type, fn) => originalAdd(type, event => {
@@ -53,14 +88,15 @@ function networkOptions(server, storage, capture, faults = {}) {
     },
   };
 }
-async function clientFor(t, server, { storage = memoryStorage(), faults = {} } = {}) {
+async function clientFor(t, server, { storage = memoryStorage(), faults = {}, browser = browserSession(server) } = {}) {
   const capture = { sockets: [], sent: [], dropped: [], messages: [], statuses: [] };
-  const client = new DuelConnection({ ...networkOptions(server, storage, capture, faults), onConnection: m => capture.statuses.push(m), onMessage: m => { capture.messages.push(m); if (m.type === 'room.snapshot') capture.room = m; } });
-  client.connect(); t.after(() => client.disconnect()); await until(() => client.state === 'ready', 'session ready');
-  return { client, capture, storage, faults };
+  const client = new DuelConnection({ ...networkOptions(server, storage, capture, faults, browser), onConnection: m => capture.statuses.push(m), onMessage: m => { capture.messages.push(m); if (m.type === 'room.snapshot') capture.room = m; } });
+  client.connect(); serverCleanups.get(server).push(() => client.disconnect()); await until(() => client.state === 'ready', 'session ready');
+  return { client, capture, storage, faults, browser };
 }
 async function paired(t, server) {
   const a = await clientFor(t,server), b = await clientFor(t,server);
+  assert.notEqual(a.client.session.playerId, b.client.session.playerId, 'Paired humans have independent browser identities');
   await a.client.command('queue.join', options); await b.client.command('queue.join', options);
   await until(() => a.capture.room && b.capture.room, 'paired snapshots'); return [a,b];
 }
@@ -83,7 +119,7 @@ test('independent real-network transport: dropped opening ACK retries the same i
 
 test('independent real-network transport: 4001 replacement does not reclaim the seat', async t => {
   const server=await serverFor(t), a=await clientFor(t,server);
-  const replacement=await clientFor(t,server,{storage:memoryStorage(a.storage.data)});
+  const replacement=await clientFor(t,server,{storage:memoryStorage(a.storage.data),browser:a.browser});
   await until(()=>a.client.state==='replaced','replaced'); await sleep(90);
   assert.equal(a.capture.sockets.length,1); assert.equal(a.client.reconnectTimer,null);
   assert.equal(replacement.client.state,'ready'); assert.equal(server.service.sessions.size,1);
@@ -116,10 +152,11 @@ test('independent real-network transport: lost answer and ACK replay feedback wi
 // This is an event/DOM model. It executes the application source and real transport,
 // but it does not establish browser rendering, accessibility or WebGL behavior.
 function appModel(t,server) {
+  const browser=browserSession(server);
   const roots=new Map(), handlers=new Map(), pageHandlers=new Map(), timers=new Set(), capture={sockets:[],sent:[],dropped:[]};
   let doc, sceneInstance, handInstance;
   class Element {
-    constructor(id='',dataset={}) { this.id=id; this.dataset=dataset; this.style={}; this.scrollTop=0; this.html=''; this.classList={toggle(){}}; }
+    constructor(id='',dataset={}) { this.id=id; this.dataset=dataset; this.style={}; this.scrollTop=0; this.html=''; this.children=[]; this.classList={toggle(){},add(){},remove(){}}; }
     set innerHTML(value){this.html=String(value);this.dialog=null;}
     get innerHTML(){return this.html;}
     querySelector(selector){
@@ -139,12 +176,14 @@ function appModel(t,server) {
     focus(){doc.activeElement=this;}
     closest(){return this;}
     scrollIntoView(){}
-    appendChild(){}
+    appendChild(child){this.children.push(child);child.parentElement=this;return child;}
+    remove(){if(this.parentElement)this.parentElement.children=this.parentElement.children.filter(child=>child!==this);}
+    setAttribute(name,value){this[name]=value;}
     addEventListener(){}
     replaceChildren(){this.innerHTML="";}
   }
   for(const id of ['interface','unit-labels','modal-root','notice','renderer-warning','arena','collection-root','lobby-scene','hand-stage','hand-canvas','hand-prev','hand-next','hand-hint','hand-semantics'])roots.set('#'+id,new Element(id));
-  doc={hidden:false,activeElement:null,body:new Element('body'),querySelector:s=>roots.get(s)||null,querySelectorAll:s=>[...roots.values()].flatMap(x=>x.querySelectorAll(s)),addEventListener:(name,fn)=>handlers.set(name,fn)};
+  doc={hidden:false,activeElement:null,body:new Element('body'),createElement:()=>new Element(),querySelector:s=>roots.get(s)||null,querySelectorAll:s=>[...roots.values()].flatMap(x=>x.querySelectorAll(s)),addEventListener:(name,fn)=>handlers.set(name,fn),removeEventListener:(name,fn)=>{if(handlers.get(name)===fn)handlers.delete(name);}};
   class Scene {
     constructor(){sceneInstance=this;this.history=[];this.attackResolvers=[];}
     cancel(){for(const r of this.attackResolvers.splice(0))r();}
@@ -161,11 +200,11 @@ function appModel(t,server) {
     focus(){} scrollBy(){} animateDraw(){}
   }
   let transport;
-  class Connection extends DuelConnection {constructor(config){super({...config,...networkOptions(server,memoryStorage(),capture)});transport=this;}}
-  class Desk extends StudyDesk { constructor(config) { super({ ...config, storage: memoryStorage(), locks: null,
-    fetcher: (path, init = {}) => fetch(server.origin + path, { ...init, headers: { ...(init.headers || {}), Origin: server.origin } }),
-  }); } }
-  const sandbox={HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:fetch,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,CollectionView,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,
+  class Connection extends DuelConnection {constructor(config){super({...config,...networkOptions(server,memoryStorage(),capture,{},browser)});transport=this;}}
+  class Identity extends IdentityClient {constructor(config){super({...config,fetch:browser.fetch});}}
+  class IdentityView extends IdentityPanel {constructor(config){super({...config,document:doc});}}
+  class Desk extends StudyDesk { constructor(config) { super({ ...config, storage: memoryStorage(), locks: null }); } }
+  const sandbox={HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:browser.fetch,IdentityClient:Identity,IdentityPanel:IdentityView,RemoteProgressStore,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,CollectionView,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,queueMicrotask,
     addEventListener(name,handler){pageHandlers.set(name,handler);},
     SOUND:{unlock(){},sync(){},duckSpeech(){},visibility(){},play(){}},
     setTimeout(fn,ms){const id=setTimeout(fn,ms);id.unref?.();timers.add(id);return id;},clearTimeout(id){clearTimeout(id);timers.delete(id);},
@@ -174,9 +213,9 @@ function appModel(t,server) {
   vm.createContext(sandbox);
   const filename=new URL('../src/network/app.mjs',import.meta.url);
   const source=fs.readFileSync(filename,'utf8').replace(/^import .*;\n/gm,'');
-  vm.runInContext(source+'\nglobalThis.review={state:()=>({room,displayRoom,visualBusy,challenge,feedback,connectionState,commandBusy,waiting,sceneRevision,pendingLearning:[...pendingLearning],progress:desk.data,profileReady:desk.canStart}),message:m=>link.onMessage(m),snapshot:acceptSnapshot,link};',sandbox,{filename:filename.pathname});
-  t.after(()=>{transport.disconnect();for(const timer of timers)clearTimeout(timer);});
-  const model={sandbox,capture,transport,roots,scene:()=>sceneInstance,state:()=>sandbox.review.state(),
+  vm.runInContext(source+'\nglobalThis.review={state:()=>({room,displayRoom,visualBusy,challenge,feedback,connectionState,commandBusy,waiting,sceneRevision,identityVerified,pendingLearning:[...pendingLearning],progress:desk.data,profileReady:desk.canStart}),message:m=>link.onMessage(m),snapshot:acceptSnapshot,link};',sandbox,{filename:filename.pathname});
+  serverCleanups.get(server).push(()=>{pageHandlers.get('pagehide')?.({persisted:false});for(const socket of capture.sockets)socket.terminate();for(const timer of timers)clearTimeout(timer);});
+  const model={sandbox,capture,transport,roots,browser,scene:()=>sceneInstance,state:()=>sandbox.review.state(),
     pageEvent(name,event={}){pageHandlers.get(name)?.(event);},
     html:()=>roots.get('#interface').innerHTML+roots.get('#modal-root').innerHTML,
     startMatch(){if(!roots.get('#modal-root').innerHTML.includes('class="dialog match-setup"'))this.click('match-setup');this.click('match');},
@@ -191,7 +230,9 @@ function appModel(t,server) {
 }
 async function pairedApps(t,server) {
   const a=appModel(t,server),b=appModel(t,server);
-  await until(()=>a.transport.state==='ready'&&b.transport.state==='ready'&&a.state().profileReady&&b.state().profileReady,'app sessions and local profiles');
+  await until(()=>a.transport.state==='ready'&&b.transport.state==='ready'&&a.state().profileReady&&b.state().profileReady,'app sessions and server profiles');
+  assert.notEqual(a.transport.session.playerId,b.transport.session.playerId,'App instances represent different humans');
+  for(const app of [a,b])assert.equal(app.state().progress.profileId,app.transport.session.playerId,'Server progress belongs to the authenticated game identity');
   a.startMatch();b.startMatch();
   await until(()=>a.state().room&&b.state().room&&!a.state().commandBusy&&!b.state().commandBusy,'app pair');
   a.click('opening-confirm');b.click('opening-confirm');
@@ -203,6 +244,7 @@ test('app DOM model and real network: expired session offers recovery while a ba
   const server=await serverFor(t,{sessionTtlMs:500}),[a]=await pairedApps(t,server);
   const oldSessionId=a.transport.session.sessionId;
   await until(()=>a.state().connectionState==='expired','app expiry');
+  await until(()=>a.state().identityVerified,'expired connection identity reverified');
   assert.match(a.html(),/data-action="reconnect"/,'An expired in-battle session needs a reachable fresh-session action');
   a.click('reconnect');await until(()=>a.transport.state==='ready','explicit fresh connection');
   assert.notEqual(a.transport.session.sessionId,oldSessionId);assert.equal(a.state().room,null);
@@ -213,14 +255,14 @@ test('cached page hide/show preserves the room and scene without duplicate comma
   const server=await serverFor(t),apps=await pairedApps(t,server),a=apps.find(x=>x.state().room.canAct);
   const roomId=a.state().room.roomId,scene=a.scene(),before=a.capture.sent.length;
   a.pageEvent('pagehide',{persisted:true});assert.notEqual(scene.disposed,true);assert.equal(scene.hidden,true);
-  a.pageEvent('pageshow',{persisted:true});await sleep(0);
+  a.pageEvent('pageshow',{persisted:true});await until(()=>a.state().identityVerified,'cached identity reverified');
   assert.equal(a.scene(),scene);assert.equal(scene.hidden,false);assert.equal(a.state().room.roomId,roomId);assert.equal(a.capture.sent.length,before);
   a.click('end');await until(()=>!a.state().room.canAct&&!a.state().commandBusy,'same room remains playable');
   a.pageEvent('pagehide',{persisted:false});assert.equal(scene.disposed,true);
 });
 test('cached replaced sessions do not automatically take a seat back from another client',async t=>{
   const server=await serverFor(t),[a]=await pairedApps(t,server);a.pageEvent('pagehide',{persisted:true});
-  const replacement=await clientFor(t,server,{storage:memoryStorage(a.transport.storage.data)});
+  const replacement=await clientFor(t,server,{storage:memoryStorage(a.transport.storage.data),browser:a.browser});
   await until(()=>a.state().connectionState==='replaced','cached seat replaced');const sockets=a.capture.sockets.length;
   a.pageEvent('pageshow',{persisted:true});await sleep(60);
   assert.equal(a.capture.sockets.length,sockets);assert.equal(replacement.client.state,'ready');assert.match(a.html(),/data-action="resume-connection"/);
@@ -257,7 +299,7 @@ test('app DOM model and real network: old feedback replay belongs to its challen
   const socketCount=a.capture.sockets.length;a.transport.socket.terminate();
   await until(()=>a.capture.sockets.length>socketCount&&a.transport.state==='ready','real resumed socket');await sleep(20);
   assert.equal(a.state().challenge.challengeId,q2.challengeId);assert.equal(a.state().feedback,null);
-  assert.equal(a.state().pendingLearning.length,0);assert(a.state().progress.learningReceipts[q1.challengeId], 'feedback survives in the local receipt ledger exactly once');
+  assert.equal(a.state().pendingLearning.length,0);assert(a.state().progress.learningReceipts[q1.challengeId], 'feedback survives in the server receipt ledger exactly once');
   assert.doesNotMatch(a.roots.get('#modal-root').innerHTML,/class="feedback"/);
 });
 
@@ -306,7 +348,7 @@ test('app replacement during a question offers explicit takeover without automat
   const server=await serverFor(t),apps=await pairedApps(t,server),a=apps.find(x=>x.state().room.canAct);
   a.click('ritual',{value:'insight'});await until(()=>a.state().challenge&&!a.state().commandBusy,'pending question');
   const id=a.state().challenge.challengeId,roomId=a.state().room.roomId;
-  const replacement=await clientFor(t,server,{storage:memoryStorage(a.transport.storage.data)});
+  const replacement=await clientFor(t,server,{storage:memoryStorage(a.transport.storage.data),browser:a.browser});
   await until(()=>a.state().connectionState==='replaced','app replaced');
   assert.match(a.html(),/data-action="resume-connection"/);assert.equal(a.state().challenge,null);
   const oldCount=a.capture.sockets.length;await sleep(70);assert.equal(a.capture.sockets.length,oldCount);

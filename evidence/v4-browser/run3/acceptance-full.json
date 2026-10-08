@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "suite": "full",
+  "status": "passed",
+  "generatedAt": "2026-10-08T09:21:34.729Z",
+  "commit": "ce4637df1d13a85c12d39b7afefee9f00dd8d0e6",
+  "environment": "GitHub standard Ubuntu runner; official Playwright Chromium",
+  "evidencePolicy": "Explicit safe screenshots and reduced observations only; no trace, HAR, video, cookies, recovery codes, database or raw network bodies",
+  "tests": [
+    {
+      "title": "two isolated browsers finish a human UI match with summons attacks English and reconnect",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 114590,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/acceptance.spec.mjs",
+        "line": 30
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Automated browser UI driven PvP: genuine pointer card selection, keyboard I/Enter, summons, attacks, first visible English choices, short offline/reload recovery, health/draw terminal state with no proxy assistance."
+      ]
+    },
+    {
+      "title": "an unmatched guest waits the real default ten seconds before the declared AI fallback",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 17604,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/acceptance.spec.mjs",
+        "line": 101
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Real default 10-second matchmaking wait and explicitly identified AI fallback; this is not a completed browser game or a timeout-proxy test."
+      ]
+    },
+    {
+      "title": "account and guest progress stay separate across login logout and a real SQLite server restart",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 74429,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/acceptance.spec.mjs",
+        "line": 126
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Visible learning and test collection persist for a registered account across fresh-context login and a real server process restart; original guest progress stays isolated; unfinished room is interrupted rather than fabricated."
+      ]
+    },
+    {
+      "title": "320 and 390 portrait plus 844 by 390 landscape expose readable real UI screenshots",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 21406,
+      "retry": 0,
+      "location": {
+        "file": "tests/e2e/acceptance.spec.mjs",
+        "line": 196
+      },
+      "errorCount": 0,
+      "annotations": [
+        "Chromium viewport emulation: 320x740 and 390x844 portrait; 844x390 landscape. Real UI clicks and bounded layout checks; no claim of physical touch-device, whole-session FPS or pixel-perfect visual approval."
+      ]
+    }
+  ]
+}

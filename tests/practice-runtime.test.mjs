@@ -72,7 +72,7 @@ test("cached navigation preserves the actual practice authority and current room
   const lifecycleSource=source.slice(source.indexOf('globalThis.addEventListener?.("pagehide",'),source.indexOf('\nfunction validHandIntent('));
   const handlers=new Map(),views=Array.from({length:3},()=>({hidden:false,disposed:false,setHidden(v){this.hidden=v;},dispose(){this.disposed=true;}}));
   const collection={hidden:false,resetCount:0,visibility(v){this.hidden=v;},reset(){this.resetCount++;}};
-  const sandbox={pageSuspended:false,document:{hidden:false},deadlineTimer:null,clearTimeout,SOUND:{visibility(){}},cancelVoice(){},desk:{visibility(){}},collectionView:collection,
+  const sandbox={isPractice:true,identityEpoch:0,identityPanel:null,identityChannel:null,pageSuspended:false,document:{hidden:false},deadlineTimer:null,clearTimeout,SOUND:{visibility(){}},cancelVoice(){},desk:{visibility(){}},collectionView:collection,
     handScene:views[0],lobbyScene:views[1],scene:views[2],arenaResizeObserver:null,link:connection,connectionState:'ready',addEventListener(n,h){handlers.set(n,h);},render(){for(const view of views)view.setHidden(false);}};
   vm.createContext(sandbox);vm.runInContext(lifecycleSource,sandbox);
   try{

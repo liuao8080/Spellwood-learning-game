@@ -22,7 +22,7 @@ export async function startServer(config = {}, extra = {}) {
   return s;
 }
 export class Client {
-  constructor(server, token) {
+  constructor(server, token, cookie = '') {
     this.server = server;
     this.messages = [];
     this.waiters = [];
@@ -31,8 +31,19 @@ export class Client {
     this.commandPrefix = randomUUID();
     this.view = null;
     this.token = token;
+    this.cookie = cookie;
     this.ws = new WebSocket(server.origin.replace(/^http/, "ws") + "/ws", {
       origin: server.origin,
+      ...(cookie ? {headers: {Cookie: cookie}} : {}),
+    });
+    this.ws.on('upgrade', response => {
+      const jar = new Map(this.cookie.split(';').filter(Boolean).map(p => p.trim().split(/=(.*)/s).slice(0, 2)));
+      for (const item of response.headers['set-cookie'] || []) {
+        const pair = item.split(';')[0], at = pair.indexOf('=');
+        const name = pair.slice(0, at), value = pair.slice(at + 1);
+        if (/Max-Age=0(?:;|$)/i.test(item)) jar.delete(name); else jar.set(name, value);
+      }
+      this.cookie = [...jar].map(([k,v]) => `${k}=${v}`).join('; ');
     });
     this.ws.on("error", () => {});
     this.ws.on("message", (raw) => {

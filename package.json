@@ -1,6 +1,6 @@
 {
   "name": "spellwood",
-  "version": "3.2.9",
+  "version": "4.0.0-alpha.1",
   "type": "module",
   "private": true,
   "scripts": {
@@ -15,6 +15,7 @@
     "build:practice": "node scripts/build-practice.mjs"
   },
   "devDependencies": {
+    "@playwright/test": "1.64.0",
     "@types/node": "^26.6.4",
     "esbuild": "0.28.2",
     "prettier": "^3.9.9",

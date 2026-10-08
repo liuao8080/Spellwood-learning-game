@@ -33,3 +33,8 @@ __pycache__/
 *.log
 .DS_Store
 Thumbs.db
+/.data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal

@@ -9,8 +9,19 @@ const memory = () => { const values = new Map(); return { values, getItem: (k) =
 async function fixture(t, override) {
   const server = createGameServer({ port: 0 }); await server.listen(); t.after(() => server.close());
   const storage = memory(), preferences = { grade: 1, course: "s1-u1" };
-  const request = (path, init = {}) => fetch(server.origin + path, { ...init, headers: { ...init.headers, Origin: server.origin } });
+  const jar = new Map();
+  const request = async (path, init = {}) => {
+    const response = await fetch(server.origin + path, { ...init, headers: { ...init.headers, Origin: server.origin, Cookie: [...jar].map(([key, value]) => `${key}=${value}`).join("; ") } });
+    for (const item of response.headers.getSetCookie()) {
+      const pair = item.split(";")[0], at = pair.indexOf("="), key = pair.slice(0, at), value = pair.slice(at + 1);
+      if (/Max-Age=0(?:;|$)/i.test(item)) jar.delete(key); else jar.set(key, value);
+    }
+    return response;
+  };
+  const guest = await request("/api/identity/guest", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+  assert.equal(guest.ok, true);
   const desk = new StudyDesk({ storage, locks: null, fetcher: override ? override(request) : request, getPreferences: () => preferences });
+  t.after(() => desk.dispose());
   await desk.initialize(); assert.equal(desk.canStart, true);
   return { desk, storage, preferences, server };
 }

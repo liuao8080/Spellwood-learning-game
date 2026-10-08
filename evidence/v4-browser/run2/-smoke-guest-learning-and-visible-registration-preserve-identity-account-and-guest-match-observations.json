@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "actors": [
+    {
+      "label": "account-A",
+      "playerKind": "account",
+      "learnedQuestions": 1,
+      "collectionCopies": 0,
+      "roomMessages": 1,
+      "sessionReadyMessages": 2,
+      "successfulActions": {
+        "queue.join": 1
+      },
+      "rejectedCommandCodes": [],
+      "duplicateEventRevisions": 0,
+      "feedbackCount": 0,
+      "pageErrorCount": 0,
+      "pageErrors": [],
+      "uiInteractions": {
+        "summons": 0,
+        "attacks": 0,
+        "answers": 0
+      },
+      "queueWaitMs": 32,
+      "result": null,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "visibilityAtSample": "visible",
+      "renderers": [
+        {
+          "id": "lobby-scene",
+          "renderer": "WebGL2",
+          "recentFrameRate": 3,
+          "hidden": true
+        },
+        {
+          "id": "arena",
+          "renderer": "WebGL2",
+          "recentFrameRate": 4,
+          "hidden": false
+        },
+        {
+          "id": "hand-canvas",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        }
+      ],
+      "renderingCaveat": "One sampled renderer/frame-rate diagnostic, not a whole-session performance measurement or physical-device test"
+    },
+    {
+      "label": "guest-B",
+      "playerKind": "guest",
+      "learnedQuestions": 0,
+      "collectionCopies": 0,
+      "roomMessages": 2,
+      "sessionReadyMessages": 1,
+      "successfulActions": {
+        "queue.join": 1
+      },
+      "rejectedCommandCodes": [],
+      "duplicateEventRevisions": 0,
+      "feedbackCount": 0,
+      "pageErrorCount": 0,
+      "pageErrors": [],
+      "uiInteractions": {
+        "summons": 0,
+        "attacks": 0,
+        "answers": 0
+      },
+      "queueWaitMs": 44,
+      "result": null,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "visibilityAtSample": "visible",
+      "renderers": [
+        {
+          "id": "lobby-scene",
+          "renderer": "WebGL2",
+          "recentFrameRate": 5,
+          "hidden": true
+        },
+        {
+          "id": "arena",
+          "renderer": "WebGL2",
+          "recentFrameRate": 4,
+          "hidden": false
+        },
+        {
+          "id": "hand-canvas",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        }
+      ],
+      "renderingCaveat": "One sampled renderer/frame-rate diagnostic, not a whole-session performance measurement or physical-device test"
+    }
+  ]
+}

@@ -13,7 +13,7 @@ const result = await build({
 });
 if (Object.keys(result.metafile.inputs).some(p => /(?:server\/index|node_modules\/ws\/)/.test(p))) throw Error("Network server entered isolated practice");
 let html = fs.readFileSync(resolve("src/network/template.html"), "utf8");
-html = html.replace("/* NETWORK_STYLE */", fs.readFileSync(resolve("src/network/style.css"), "utf8") + "\n" + fs.readFileSync(resolve("src/network/collection.css"), "utf8") + "\n" + fs.readFileSync(resolve("src/network/immersive.css"), "utf8") + "\n" + fs.readFileSync(resolve("src/network/safe-area.css"), "utf8"))
+html = html.replace("/* NETWORK_STYLE */", fs.readFileSync(resolve("src/network/style.css"), "utf8") + "\n" + fs.readFileSync(resolve("src/network/collection.css"), "utf8") + "\n" + fs.readFileSync(resolve("src/network/immersive.css"), "utf8") + "\n" + fs.readFileSync(resolve("src/network/safe-area.css"), "utf8") + "\n" + fs.readFileSync(resolve("src/network/identity.css"), "utf8"))
   .replace('<script>/* NETWORK_SCRIPT */</script>', '<script type="module" src="/app.js"></script>')
   .replace(/<title>.*?<\/title>/, "<title>词灵对决 · 三维森林试玩</title>")
   .replace("</head>", '<meta name="description" content="电脑角色自主决策的三维英语卡牌试玩，学习记录仅保存在本机。"></head>')

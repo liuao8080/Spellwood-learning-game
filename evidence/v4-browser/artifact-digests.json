@@ -1,0 +1,17 @@
+[
+  {
+    "run": 2,
+    "bytes": 8546937,
+    "sha256": "cbe8cbbc0ba1d281b6c9b4832927e3f7fe37bb754130a17798360ff44e4c373a"
+  },
+  {
+    "run": 3,
+    "bytes": 8445849,
+    "sha256": "9b147c5a548119332d9012ed5546b1c3b757fccc8b213c230b8b3862ba81c585"
+  },
+  {
+    "run": 4,
+    "bytes": 9409743,
+    "sha256": "58240365c21bf5f4d552c8314fcff10b8d1bb5d16efa955fe8bf0f179dabe2e4"
+  }
+]

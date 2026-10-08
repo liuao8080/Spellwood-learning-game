@@ -1,0 +1,75 @@
+/* Scoped identity surface: no card, hand or arena selectors. */
+body.identity-open { overflow: auto; }
+.identity-root {
+  position: fixed; inset: 0; z-index: 140; display: flex; align-items: center;
+  justify-content: center; box-sizing: border-box; overflow: auto; overscroll-behavior: contain;
+  padding: max(14px, env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-right, 0px)) max(14px, env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px));
+  background: #041c19df; backdrop-filter: blur(9px); color: #f4e9cd;
+  font-family: "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.identity-root[hidden] { display: none; }
+.identity-panel {
+  box-sizing: border-box; display: flex; flex-direction: column; width: min(100%, 540px);
+  min-width: 0; max-height: calc(100dvh - max(14px, env(safe-area-inset-top, 0px)) - max(14px, env(safe-area-inset-bottom, 0px)));
+  border: 1px solid #b2a374; border-radius: 22px; overflow: hidden;
+  background: radial-gradient(ellipse at top left, #375e42aa, transparent 55%), linear-gradient(145deg, #153e35, #092627);
+  box-shadow: 0 24px 80px #0009, inset 0 1px #fff1;
+}
+.identity-header {
+  display: flex; flex: none; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 20px 22px 16px; border-bottom: 1px solid #c6b87e30; background: #143c32f5;
+}
+.identity-header > div { min-width: 0; }
+.identity-header h2 { margin: 0; color: #efdcad; font: 600 25px/1.35 Georgia, "Songti SC", serif; overflow-wrap: anywhere; }
+.identity-eyebrow { margin: 0 0 6px; color: #c3bb91; font-size: 11px; letter-spacing: 1.7px; }
+.identity-header .identity-button { flex: none; min-width: 58px; padding: 9px 12px; }
+.identity-body { overflow: auto; overscroll-behavior: contain; padding: 20px 22px 24px; min-height: 0; font-size: 17px; line-height: 1.65; }
+.identity-card { display: grid; gap: 5px; padding: 15px 17px; margin-bottom: 18px; border: 1px solid #cad6aa3d; border-radius: 13px; background: #071f2070; }
+.identity-kind { color: #b6d1bc; font-size: 14px; }
+.identity-name { font-size: 24px; font-weight: 650; line-height: 1.4; overflow-wrap: anywhere; }
+.identity-hint, .identity-status, .identity-success, .identity-error { margin: 14px 0; }
+.identity-hint { color: #c7d8c6; }
+.identity-status { padding: 12px; border-radius: 9px; background: #78623745; color: #f0d9a6; }
+.identity-success { color: #bfe7bf; }
+.identity-error { padding: 12px; color: #ffdbcb; border-left: 3px solid #eda18a; background: #692e254a; border-radius: 7px; }
+.identity-actions { display: grid; gap: 11px; margin-top: 20px; }
+.identity-button { box-sizing: border-box; min-height: 46px; max-width: 100%; border: 1px solid #b9b48672; border-radius: 10px;
+  padding: 10px 15px; background: #214e42; color: #efe5c8; font: inherit; font-size: 17px; line-height: 1.45; white-space: normal; cursor: pointer; touch-action: manipulation; }
+.identity-button:hover:not(:disabled) { background: #38664d; border-color: #e0ca8b; }
+.identity-button:disabled { opacity: .58; cursor: wait; }
+.identity-button.identity-primary { background: linear-gradient(#eed49b, #c89e59); color: #22382c; border-color: #f3e1b3; font-weight: 700; }
+.identity-button.identity-primary:hover:not(:disabled) { background: linear-gradient(#fce6ba, #ddb16b); }
+.identity-body > .identity-button { display: block; width: 100%; margin-top: 14px; }
+.identity-field { display: grid; gap: 7px; margin: 18px 0; }
+.identity-field label, .identity-body > label { color: #efe3c2; font-size: 17px; font-weight: 600; }
+.identity-field input, .identity-recovery { box-sizing: border-box; width: 100%; min-width: 0; min-height: 48px;
+  border: 1px solid #93aa858c; border-radius: 9px; background: #092822; padding: 11px 12px; color: #f9efdb;
+  font: inherit; font-size: 18px; line-height: 1.5; }
+.identity-field input:disabled { opacity: .7; }
+.identity-field-hint { margin: 0; color: #b3cbb8; font-size: 14px; line-height: 1.55; }
+.identity-form > .identity-button { width: 100%; margin-top: 7px; }
+.identity-footnote { color: #b4c9b4; font-size: 14px; line-height: 1.7; margin: 18px 0 0; }
+.identity-recovery { display: block; font-family: ui-monospace, monospace; resize: vertical; min-height: 84px; max-height: 180px; margin-top: 8px; overflow-wrap: anywhere; word-break: break-all; user-select: text; }
+.identity-root :is(button, input, textarea):focus-visible { outline: 3px solid #cfedb4; outline-offset: 3px; }
+@media (max-width: 380px) {
+  .identity-root { padding-left: max(8px, env(safe-area-inset-left, 0px)); padding-right: max(8px, env(safe-area-inset-right, 0px)); }
+  .identity-header { padding: 16px 14px 13px; gap: 8px; }
+  .identity-header h2 { font-size: 22px; }
+  .identity-body { padding: 16px 14px 20px; }
+  .identity-eyebrow { font-size: 10px; letter-spacing: 1px; }
+}
+@media (max-height: 480px) {
+  .identity-header { padding-top: 10px; padding-bottom: 10px; }
+  .identity-eyebrow { display: none; }
+  .identity-header h2 { font-size: 22px; }
+  .identity-body { padding-top: 14px; padding-bottom: 18px; }
+}
+.grove-footer .grove-account { display: grid; gap: 1px; min-width: 0; max-width: min(270px,48vw); min-height:44px; flex: 1; }
+.grove-footer .grove-account span { display: block; white-space: nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; font-size:13px; }
+.grove-footer .grove-account small { color:#d8d8b3; font-size:11px; }
+
+body.identity-checking > :not(#interface):not(script):not(style) { visibility:hidden!important; pointer-events:none!important; }
+.identity-check { min-height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:32px; text-align:center; background:radial-gradient(ellipse at center,#173936,#071b20); }
+.identity-check h1 {font-size:26px;color:#f2dfb6;} .identity-check p {font-size:18px;max-width:480px;} .identity-check button {min-height:48px;}
+
+.identity-check button {pointer-events:auto;}
