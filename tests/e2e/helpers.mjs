@@ -9,6 +9,56 @@ export const action = (page, name) => page.locator(`[data-action="${name}"]`);
 const evidenceDirectory = path.resolve('test-results/browser-evidence');
 const slug = text => text.replace(/[^a-zA-Z0-9_-]+/g, '-').slice(0, 100);
 
+const nativeErrorNames = new Set(['Error', 'TypeError', 'ReferenceError', 'SyntaxError', 'RangeError', 'URIError', 'EvalError', 'AggregateError']);
+const safeSourceIdentifiers = new Set([
+  'scene', 'handScene', 'lobbyScene', 'collectionView', 'desk', 'identityClient',
+  'identityPanel', 'activeIdentity', 'identityCheckTask', 'identityVerified',
+  'identityEpoch', 'identityRefreshPending', 'anchorPositions', 'rendererStatus',
+  'handStatus', 'lobbyStatus', 'preferences', 'link', 'ui', 'layer', 'modalRoot',
+  'created', 'current', 'player', 'room', 'displayRoom', 'session',
+]);
+
+/** Error messages and stacks may contain values supplied by an application.
+ * Retain only fixed native-error templates, optional allowlisted source names,
+ * and numeric coordinates in the known runner-local app.js bundle. Never keep
+ * the Error object, raw message, raw stack, URLs, arbitrary properties or causes.
+ */
+function safePageError(error) {
+  const name = nativeErrorNames.has(error?.name) ? error.name : 'UnclassifiedError';
+  const result = { name, code: 'UNCLASSIFIED' };
+  const message = typeof error?.message === 'string' && error.message.length <= 512 ? error.message : '';
+  let match;
+  if (name === 'ReferenceError' && (match = /^Cannot access ['"]([A-Za-z_$][\w$]{0,63})['"] before initialization$/.exec(message))) {
+    result.code = 'REFERENCE_TDZ';
+    result.message = `Cannot access ${safeSourceIdentifiers.has(match[1]) ? match[1] : '<identifier>'} before initialization`;
+  } else if (name === 'ReferenceError' && (match = /^([A-Za-z_$][\w$]{0,63}) is not defined$/.exec(message))) {
+    result.code = 'REFERENCE_UNDEFINED';
+    result.message = `${safeSourceIdentifiers.has(match[1]) ? match[1] : '<identifier>'} is not defined`;
+  } else if (name === 'TypeError' && (match = /^Cannot (read|set) properties of (undefined|null)(?: \((?:reading|setting) ['"][^'"\r\n]{1,64}['"]\))?$/.exec(message))) {
+    result.code = match[1] === 'read' ? 'TYPE_NULLISH_READ' : 'TYPE_NULLISH_WRITE';
+    result.message = `Cannot ${match[1]} properties of ${match[2]}`;
+  } else if (name === 'TypeError' && /^[A-Za-z_$][\w$.[\]() ]{0,120} is not a function$/.test(message)) {
+    result.code = 'TYPE_NOT_CALLABLE'; result.message = 'Target is not a function';
+  } else if (name === 'TypeError' && /^[A-Za-z_$][\w$. ]{0,120} is not iterable$/.test(message)) {
+    result.code = 'TYPE_NOT_ITERABLE'; result.message = 'Target is not iterable';
+  } else if (name === 'RangeError' && message === 'Maximum call stack size exceeded') {
+    result.code = 'RANGE_CALL_STACK'; result.message = 'Maximum call stack size exceeded';
+  } else if (name === 'RangeError' && message === 'Invalid array length') {
+    result.code = 'RANGE_ARRAY_LENGTH'; result.message = 'Invalid array length';
+  }
+  if (typeof error?.stack === 'string') {
+    for (const line of error.stack.slice(0, 16_000).split('\n').slice(1, 20)) {
+      // Stack frame prefixes are ignored; only this exact static asset is kept.
+      const location = /^\s*at\s+[^\r\n]*?http:\/\/127\.0\.0\.1:4173\/app\.js:(\d{1,7}):(\d{1,7})(?:\)|\s|$)/.exec(line);
+      if (location) {
+        result.location = { file: 'app.js', line: Number(location[1]), column: Number(location[2]) };
+        break;
+      }
+    }
+  }
+  return result;
+}
+
 function reducedPlayer(player) {
   return player ? { playerId: player.playerId, kind: player.kind, name: player.name } : null;
 }
@@ -35,9 +85,15 @@ function observe(page) {
     session: null, sessions: 0, commands: [], acknowledgements: new Map(),
     events: new Map(), eventRevisions: new Map(), duplicateEventRevisions: 0,
     feedbackCount: 0, queueStartedAt: null, queueDeadline: null, firstRoomAt: null,
-    errors: [], pageErrorCount: 0,
+    errors: [], pageErrorCount: 0, pageErrors: [],
   };
-  page.on('pageerror', () => { state.pageErrorCount += 1; });
+  page.on('pageerror', error => {
+    state.pageErrorCount += 1;
+    if (state.pageErrors.length < 20) state.pageErrors.push({
+      ...safePageError(error),
+      observedStage: state.sessions ? 'session-ready' : state.progress.size ? 'progress-observed' : state.player ? 'identity-observed' : 'before-identity',
+    });
+  });
   page.on('response', async response => {
     try {
       if (!response.ok()) return;
@@ -143,6 +199,7 @@ export async function diagnostics(actor) {
     rejectedCommandCodes: observed.errors,
     duplicateEventRevisions: observed.duplicateEventRevisions,
     feedbackCount: observed.feedbackCount, pageErrorCount: observed.pageErrorCount,
+    pageErrors: observed.pageErrors,
     uiInteractions: actor.metrics,
     queueWaitMs: observed.firstRoomAt && observed.queueStartedAt ? observed.firstRoomAt - observed.queueStartedAt : null,
     result: observed.room?.result || null,

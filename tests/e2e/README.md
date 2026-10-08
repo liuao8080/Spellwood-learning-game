@@ -61,7 +61,11 @@ Captured screenshots still need human visual review.
 
 Artifacts retain only `test-results/browser-evidence/*.png` and `*.json` for
 three days. JSON contains statuses, timings, safe action counts, result reason,
-and small renderer/visibility samples. No raw network bodies, identity tokens,
+small renderer/visibility samples, and a bounded native-error classification.
+Errors retain only allowlisted generic templates (with arbitrary identifiers and
+property names removed) and numeric line/column coordinates in the known local
+`app.js` bundle. Raw errors, stacks and unknown error messages are discarded.
+No raw network bodies, identity tokens,
 cookies, saved browser profiles, database files, recovery codes, traces, HARs,
 videos, or Playwright error-context files are uploaded. Automated screenshots
 are disabled; explicit screenshots skip the recovery-code screen and mask
