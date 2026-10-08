@@ -6,6 +6,12 @@ import { WebSocketServer } from "ws";
 import { GameService } from "./service.mjs";
 import { createQuestionService } from "./questions.mjs";
 import { versions, plain } from "./protocol.mjs";
+import { createIdentityStore } from "./identity-store.mjs";
+import { createIdentityHttp } from "./identity-http.mjs";
+import { createPlayerProgress } from './player-progress.mjs';
+import { createProgressBridge } from './progress-bridge.mjs';
+import { createProgressHttp } from './progress-http.mjs';
+import { selectDifficulty } from '../src/combat-rating.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -117,7 +123,20 @@ export function createGameServer(options = {}) {
     }
     ws.send(JSON.stringify(data));
   };
-  const service = new GameService({ questions, send, config: options.config });
+  const identityStore = options.identityStore ?? createIdentityStore({databasePath: options.databasePath ?? ':memory:', ...options.identityOptions});
+  const ownsIdentityStore = !options.identityStore;
+  const playerProgress=createPlayerProgress({identityStore,questions:questions.metadata().questions,timeZone:options.timeZone||'Asia/Shanghai'});
+  const progressBridge=createProgressBridge({progress:playerProgress,identityStore,onSaved(playerId){
+    for(const ws of wss.clients)if(ws.player?.playerId===playerId)send(ws,{type:'progress.updated'});
+  }});
+  const service = new GameService({ questions, send, config: options.config,
+    computerFor:session=>{
+      if(Object.hasOwn(options.config||{},'computerDifficulty'))return options.config.computerDifficulty;
+      const player=progressBridge.ensureSynced(session.playerId);
+      return selectDifficulty(player.progress.combatRating,player.progress.combatMode);
+    },
+    beforeCommand(s,c){if(s.playerId&&c.type==='queue.join')progressBridge.ensureSynced(s.playerId);if(s.playerId&&c.type==='ritual.begin')progressBridge.assertCanIssue(s.playerId);},
+    onChallenge:(...args)=>progressBridge.noteChallenge(...args),onLearning:(...args)=>progressBridge.learning(...args),onResult:(...args)=>progressBridge.result(...args)});
   function json(res, status, data) {
     if (res.destroyed || res.writableEnded) return;
     res.writeHead(status, {
@@ -143,6 +162,24 @@ export function createGameServer(options = {}) {
       allowedOrigins.has(req.headers.origin)
     );
   }
+  function validSocketIdentity(ws) {
+    const identity = identityStore.resolveIdentityBrief(ws.identityTokens);
+    return Boolean(identity && identity.player.playerId === ws.player?.playerId && identity.session.type === ws.identityType);
+  }
+  function checkSocketIdentity(ws) {
+    try {
+      if (validSocketIdentity(ws)) return true;
+      ws.close(4003, 'Identity expired');
+    } catch { ws.close(1013, 'Identity temporarily unavailable'); }
+    return false;
+  }
+  function closeInvalidIdentitySockets() {
+    for (const ws of wss.clients) checkSocketIdentity(ws);
+  }
+  const identityHttp = createIdentityHttp({store: identityStore, readJson, json, validOrigin,
+    secure: options.secureCookies ?? Boolean(options.publicOrigin?.startsWith('https://')),
+    onMutation: closeInvalidIdentitySockets});
+  const progressHttp=createProgressHttp({identityStore,progress:playerProgress,bridge:progressBridge,identityHttp,readJson,json,validOrigin});
   function rate(req) {
     const key = req.socket.remoteAddress || "unknown",
       now = Date.now(),
@@ -185,6 +222,8 @@ export function createGameServer(options = {}) {
         json(res, 403, { code: "ORIGIN_REJECTED" });
         return;
       }
+      if (await identityHttp.handle(req, res, pathname)) return;
+      if (await progressHttp.handle(req,res,pathname,new URL(req.url,origin))) return;
       if (pathname === "/api/curriculum" && req.method === "GET") {
         json(res, 200, questions.metadata());
         return;
@@ -195,7 +234,13 @@ export function createGameServer(options = {}) {
       if (route) {
         const qid = route[1];
         try {
+          const {identity} = identityHttp.current(req, true);
+          if (!identity) { json(res, 401, {code: 'IDENTITY_REQUIRED'}); return; }
+          // An old tab must not start or answer study for a newly selected account.
+          const expectedPlayer = req.headers['x-spellwood-player'];
+          if (expectedPlayer !== undefined && expectedPlayer !== identity.player.playerId) { json(res,409,{code:'PROFILE_CHANGED'}); return; }
           if (!route[2] && req.method === "GET") {
+            progressBridge.assertCanIssue(identity.player.playerId);
             const now = Date.now();
             for (const [id, c] of study)
               if (c.expiresAt <= now) study.delete(id);
@@ -207,10 +252,14 @@ export function createGameServer(options = {}) {
             study.set(c.challengeId, {
               challenge: c,
               qid,
+              playerId: identity.player.playerId,
+              issuedAt: now,
+              answeredAt: null,
               expiresAt: c.expiresAt,
               feedback: null,
               optionId: null,
             });
+            progressBridge.noteChallenge(identity.player.playerId,c.challengeId,now);
             json(res, 200, questions.toPublic(c));
             return;
           }
@@ -236,7 +285,7 @@ export function createGameServer(options = {}) {
               return;
             }
             const found = study.get(p.challengeId);
-            if (!found || found.qid !== qid || found.expiresAt <= Date.now()) {
+            if (!found || found.qid !== qid || found.playerId !== identity.player.playerId || found.expiresAt <= Date.now()) {
               json(res, 410, { code: "STUDY_EXPIRED" });
               return;
             }
@@ -245,6 +294,7 @@ export function createGameServer(options = {}) {
                 json(res, 409, { code: "ALREADY_ANSWERED" });
                 return;
               }
+              found.feedback.progressSaved=progressBridge.learning(identity.player.playerId,found.feedback);
               json(res, 200, found.feedback);
               return;
             }
@@ -254,11 +304,13 @@ export function createGameServer(options = {}) {
             };
             found.feedback = feedback;
             found.optionId = p.optionId;
+            found.answeredAt = feedback.learning?.answeredAt ?? Date.now();
+            feedback.progressSaved=progressBridge.learning(identity.player.playerId,feedback);
             json(res, 200, feedback);
             return;
           }
         } catch (e) {
-          json(res, e.code === "QUESTION_NOT_FOUND" ? 404 : 400, {
+          json(res, e.code === "QUESTION_NOT_FOUND" ? 404 : ['PROGRESS_PENDING','PROGRESS_BUSY'].includes(e.code)?503:400, {
             code: e.code || "STUDY_REJECTED",
           });
           return;
@@ -368,6 +420,9 @@ export function createGameServer(options = {}) {
     perMessageDeflate: false,
     clientTracking: true,
   });
+  wss.on('headers', (headers, req) => {
+    for (const value of req.identityCookies || []) headers.push(`Set-Cookie: ${value}`);
+  });
   server.on("upgrade", (req, socket, head) => {
     let pathname;
     try {
@@ -377,15 +432,25 @@ export function createGameServer(options = {}) {
       pathname !== "/ws" ||
       !validHost(req) ||
       !validOrigin(req) ||
+      !rate(req) ||
       wss.clients.size >= 512
     ) {
       socket.write("HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n");
       socket.destroy();
       return;
     }
-    wss.handleUpgrade(req, socket, head, (ws) =>
-      wss.emit("connection", ws, req),
-    );
+    let identity;
+    try { identity = identityHttp.forConnection(req); }
+    catch {
+      socket.write('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n'); socket.destroy(); return;
+    }
+    req.identityCookies = identity.cookies;
+    wss.handleUpgrade(req, socket, head, (ws) => {
+      ws.player = identity.identity.player;
+      ws.identityTokens = identity.tokens;
+      ws.identityType = identity.identity.session.type;
+      wss.emit("connection", ws, req);
+    });
   });
   wss.on("connection", (ws) => {
     ws.isAlive = true;
@@ -399,6 +464,7 @@ export function createGameServer(options = {}) {
     });
     ws.on("error", () => {});
     ws.on("message", (data, binary) => {
+      if (!checkSocketIdentity(ws)) return;
       const frameNow = Date.now();
       ws.frameTimes = ws.frameTimes.filter((t) => frameNow - t < 1000);
       if (ws.frameTimes.length >= (options.messageRate ?? 60)) {
@@ -455,6 +521,7 @@ export function createGameServer(options = {}) {
   });
   const heartbeat = setInterval(() => {
     for (const ws of wss.clients) {
+      if (!checkSocketIdentity(ws)) continue;
       if (!ws.isAlive) {
         ws.terminate();
         continue;
@@ -466,10 +533,15 @@ export function createGameServer(options = {}) {
       if (c.expiresAt <= Date.now()) study.delete(id);
     for (const [key, a] of httpRates)
       if (!a.some((t) => Date.now() - t < 1000)) httpRates.delete(key);
+    try { identityStore.pruneExpiredSessions(); } catch { /* A temporary database fault must not crash the game loop. */ }
+    progressBridge.retryPending();
   }, options.heartbeatMs ?? 10000);
   heartbeat.unref?.();
   return {
     service,
+    identityStore,
+    playerProgress,
+    progressBridge,
     server,
     get origin() {
       return origin;
@@ -506,6 +578,8 @@ export function createGameServer(options = {}) {
       service.close();
       study.clear();
       httpRates.clear();
+      identityHttp.close();
+      progressBridge.close();
       for (const ws of wss.clients) ws.terminate();
       await new Promise((resolve) => wss.close(resolve));
       if (server.listening)
@@ -513,6 +587,7 @@ export function createGameServer(options = {}) {
           server.close(resolve);
           server.closeAllConnections?.();
         });
+      if (ownsIdentityStore) identityStore.close();
     },
   };
 }
@@ -520,12 +595,15 @@ if (
   process.argv[1] &&
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 ) {
+  const databasePath = path.resolve(process.env.SPELLWOOD_DATABASE || path.join(ROOT, '.data', 'spellwood.sqlite'));
+  fs.mkdirSync(path.dirname(databasePath), {recursive: true});
   const server = createGameServer({
     host: process.env.HOST || "127.0.0.1",
     port: Number(process.env.PORT || 4173),
     publicOrigin: process.env.PUBLIC_ORIGIN || undefined,
     allowedOrigins: process.env.ALLOWED_ORIGINS?.split(",").filter(Boolean),
     clientRoot: process.env.CLIENT_DIST || undefined,
+    databasePath,
   });
   try {
     await server.listen();

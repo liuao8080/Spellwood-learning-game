@@ -39,11 +39,12 @@ export const DEFAULTS = Object.freeze({
   receiptLimit: 128,
 });
 export class GameService {
-  constructor({ questions, send, config = {}, now = () => Date.now() } = {}) {
+  constructor({ questions, send, config = {}, now = () => Date.now(), beforeCommand=()=>{}, onChallenge=()=>{}, onLearning=()=>true, onResult=()=>true, computerFor=null } = {}) {
     this.questions = questions;
     this.send = send;
     this.config = { ...DEFAULTS, ...config };
     this.now = now;
+    this.beforeCommand=beforeCommand;this.onChallenge=onChallenge;this.onLearning=onLearning;this.onResult=onResult;this.computerFor=computerFor;
     this.sessions = new Map();
     this.tokenIndex = new Map();
     this.rooms = new Map();
@@ -56,16 +57,30 @@ export class GameService {
     this.sweepTimer.unref?.();
   }
   makeSession(ws) {
+    const playerId = ws.player?.playerId ?? null;
+    if (playerId) {
+      for (const prior of [...this.sessions.values()])
+        if (prior.playerId === playerId && this.now() - prior.createdAt >= this.config.sessionTtlMs) this.expireSession(prior);
+      const existing = [...this.sessions.values()].find(s => s.playerId === playerId && this.now() - s.createdAt < this.config.sessionTtlMs);
+      if (existing) {
+        if(existing.roomId && this.rooms.get(existing.roomId)?.phase==='finished')existing.roomId=null;
+        const token = id(32);
+        this.tokenIndex.delete(existing.tokenHash);
+        existing.tokenHash = hash(token); this.tokenIndex.set(existing.tokenHash, existing.id);
+        return this.resume(token, ws, token);
+      }
+    }
     if (this.sessions.size >= this.config.maxSessions) fail("SERVER_BUSY");
     const token = id(32),
       sessionId = id(),
-      name =
+      name = ws.player?.name?.slice(0, 48) ||
         ["Willow", "Maple", "Clover", "Nova", "River", "Aspen"][randomInt(6)] +
         " " +
         randomInt(4096).toString(16).toUpperCase().padStart(3, "0");
     const s = {
       id: sessionId,
       name,
+      playerId,
       avatar: randomInt(6),
       tokenHash: hash(token),
       createdAt: this.now(),
@@ -87,6 +102,7 @@ export class GameService {
       sessionId,
       roomId: null,
       name,
+      ...(playerId ? {playerId, identityKind: ws.player.kind} : {}),
       resumeToken: token,
       nextClientSeq: s.nextSeq,
       connectionEpoch: s.epoch,
@@ -94,13 +110,15 @@ export class GameService {
     });
     return s;
   }
-  resume(token, ws) {
+  resume(token, ws, rotatedToken) {
     if (typeof token !== "string" || token.length < 32 || token.length > 100)
       fail("INVALID_SESSION");
     const sid = this.tokenIndex.get(hash(token)),
       s = this.sessions.get(sid);
     if (!s || this.now() - s.createdAt >= this.config.sessionTtlMs)
       fail("SESSION_EXPIRED");
+    if ((s.playerId || ws.player?.playerId) && s.playerId !== ws.player?.playerId) fail('INVALID_SESSION');
+    if (ws.player?.name) s.name = ws.player.name.slice(0, 48);
     if (s.roomId && !this.rooms.has(s.roomId)) s.roomId = null;
     this.attach(s, ws);
     this.send(ws, {
@@ -108,6 +126,8 @@ export class GameService {
       sessionId: s.id,
       roomId: s.roomId,
       name: s.name,
+      ...(s.playerId ? {playerId: s.playerId, identityKind: ws.player.kind} : {}),
+      ...(rotatedToken ? {resumeToken: rotatedToken} : {}),
       resumed: true,
       nextClientSeq: s.nextSeq,
       connectionEpoch: s.epoch,
@@ -273,8 +293,9 @@ export class GameService {
     s.nextSeq++;
     let response;
     try {
-      const p = payload(c),
-        r = this.dispatch(s, c, p);
+      const p = payload(c);
+      this.beforeCommand(s,c,p);
+      const r = this.dispatch(s, c, p);
       response = this.ack(s, c, true, null, r ? { revision: r.revision } : {});
     } catch (e) {
       response = this.ack(
@@ -446,6 +467,14 @@ export class GameService {
     );
   }
   join(s, options) {
+    if (this.now() - s.createdAt >= this.config.sessionTtlMs) {
+      this.expireSession(s); fail('SESSION_EXPIRED');
+    }
+    if (s.playerId) for (const other of [...this.sessions.values()]) {
+      if (other.id === s.id || other.playerId !== s.playerId) continue;
+      if (this.now() - other.createdAt >= this.config.sessionTtlMs) { this.expireSession(other); continue; }
+      if (other.queue || other.roomId && this.rooms.get(other.roomId)?.phase !== 'finished') fail('PLAYER_ALREADY_ACTIVE');
+    }
     this.questions.createDeck({ grade: options.grade, course: options.course });
     if (s.roomId) {
       const r = this.rooms.get(s.roomId);
@@ -459,9 +488,11 @@ export class GameService {
     while (list.length) {
       const sid = list.shift(),
         candidate = this.sessions.get(sid);
+      if (candidate && this.now() - candidate.createdAt >= this.config.sessionTtlMs) { this.expireSession(candidate); continue; }
       if (
         candidate &&
         candidate.id !== s.id &&
+        !(s.playerId && candidate.playerId === s.playerId) &&
         candidate.queue?.key === key &&
         candidate.ws?.readyState === 1
       ) {
@@ -528,6 +559,18 @@ export class GameService {
     });
   }
   makeRoom(entries) {
+    const humans = entries.filter(e => e.session).map(e => e.session);
+    const expired = humans.filter(s => this.sessions.get(s.id) !== s || this.now() - s.createdAt >= this.config.sessionTtlMs);
+    const players = humans.map(s => s.playerId).filter(Boolean);
+    const duplicate = new Set(humans.map(s => s.id)).size !== humans.length || new Set(players).size !== players.length;
+    if (expired.length || duplicate) {
+      for (const s of expired) this.expireSession(s);
+      for (const s of humans) if (this.sessions.has(s.id)) {
+        this.removeQueue(s);
+        this.send(s.ws, {type:'queue.status',status:'cancelled',reason:duplicate?'IDENTITY_CONFLICT':'SESSION_EXPIRED'});
+      }
+      return;
+    }
     if (this.rooms.size >= this.config.maxRooms) {
       for (const e of entries)
         if (e.session) {
@@ -542,10 +585,13 @@ export class GameService {
     }
     if (randomInt(2)) entries.reverse();
     const computerSeat = entries.findIndex((e) => e.bot);
-    const computer =
-      computerSeat >= 0
-        ? normalizeDifficulty(this.config.computerDifficulty)
-        : null;
+    let computer=null;
+    try {
+      if(computerSeat>=0)computer=normalizeDifficulty(this.computerFor ? this.computerFor(humans[0]) : this.config.computerDifficulty);
+    } catch {
+      for(const s of humans){this.removeQueue(s);this.send(s.ws,{type:'queue.status',status:'cancelled',reason:'PROGRESS_UNAVAILABLE'});}
+      return;
+    }
     const opts = entries[0].options,
       roomId = id();
     const r = {
@@ -588,6 +634,7 @@ export class GameService {
       wantsHuman: false,
       pending: null,
       feedbacks: new Map(),
+      playerId: e.session?.playerId ?? null,
       questionDeck: this.questions.createDeck({
         grade: r.grade,
         course: r.course,
@@ -645,6 +692,7 @@ export class GameService {
   sendChallenge(r, side) {
     const m = r.seats[side],
       s = this.sessions.get(m.sessionId);
+    if (m.pending && m.playerId) this.onChallenge(m.playerId,m.pending.challengeId,this.now());
     if (s?.ws && m.pending)
       this.send(s.ws, {
         type: "private.challenge",
@@ -691,6 +739,7 @@ export class GameService {
       challengeId: q.challengeId,
       ...(timedOut ? { outcome: "unanswered" } : feedback),
     };
+    if (!timedOut && m.playerId) privateFeedback.progressSaved = this.onLearning(m.playerId,privateFeedback) !== false;
     m.feedbacks.set(q.challengeId, privateFeedback);
     while (m.feedbacks.size > 4)
       m.feedbacks.delete(m.feedbacks.keys().next().value);
@@ -826,6 +875,10 @@ export class GameService {
       }
       this.startDeadline(r);
     }
+    if (r.phase === 'finished') for (let side=0;side<r.seats.length;side++) {
+      const playerId=r.seats[side].playerId;
+      if(playerId)this.onResult(playerId,this.view(r,side));
+    }
     this.broadcast(r, r.event);
     if (r.phase === "finished")
       for (let side = 0; side < 2; side++) {
@@ -869,6 +922,7 @@ export class GameService {
       draw = r.result.reason === "draw";
     return {
       ...r.result,
+      finishedAt: r.finishedAt,
       ...(r.computer ? { computer: { ...r.computer } } : {}),
       ownLearning: { attempts: l.attempts, correct: l.correct },
       ownScore: ["expired", "abandoned", "server_error", "resigned"].includes(

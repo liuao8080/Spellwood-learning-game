@@ -1,6 +1,6 @@
 # 本地权威服务器
 
-这是独立联网入口的内存服务，不修改旧2.7.5离线存档或旧公开站点。协议字段见[PROTOCOL.md](PROTOCOL.md)。
+这是独立联网入口：SQLite持久身份与进度，内存权威房间。不修改旧2.7.5离线存档或旧公开站点。协议字段见[PROTOCOL.md](PROTOCOL.md)。
 
 ## 本机运行
 
@@ -23,6 +23,7 @@ HOST=127.0.0.1 PORT=4173 npm run server
 - PUBLIC_ORIGIN：访问页面的完整origin；默认由监听地址构造
 - ALLOWED_ORIGINS：可选逗号分隔的明确origin列表，不能写通配符
 - CLIENT_DIST：可选前端输出目录
+- SPELLWOOD_DATABASE：持久SQLite路径，命令行默认.data/spellwood.sqlite；数据库及WAL/SHM禁止提交Git。测试createGameServer默认内存库，与命令行不同
 
 `createGameServer({port:0,config:{...}})`用于自动测试；客户端不能在协议里修改时限。默认时限见service.mjs中的DEFAULTS：匹配10秒，起手60秒，回合150秒，开始答题至少再留120秒，断线宽限20秒，双方离线/完成房间保留5分钟，会话和房间绝对上限2小时。
 
@@ -32,11 +33,13 @@ HOST=127.0.0.1 PORT=4173 npm run server
 - 两位真人各有独立答题上下文；不接受客户端correct、任意power、分数或完整状态
 - 私有题库与完整朗读文本索引仅在server/questions.mjs加载，在线静态目录没有源文件接口
 - 完整题库本已在旧离线版和教材中公开；不承诺防查书、查旧题库或外部答题程序
-- 匿名英文代号与重连秘密只保留临时会话；服务端不保存账户、长期学习档案、答案日志或IP历史
+- 游客/账号与学习、设置、收藏、个人成绩持久保存在SQLite；短期对局及学习题上下文留内存，没有真实姓名/年龄/聊天或IP历史库
 - 浏览器只在sessionStorage保存重连秘密，旧save.match不用于联网房间
-- 收到private.feedback时，前端必须按challengeId持久去重学习写入；replayed:true是恢复回执，不能重复增加学习次数
+- private.feedback的学习由服务器按challengeId事务去重写入；客户端仅请求自己的已提交回执。replayed:true不能重复增加学习次数
 - 会话恢复只返回本人的反馈。房间过期时同时清理房间、挑战及该房间的私有反馈回执
-- 服务器重启会失去内存房间；旧令牌返回SESSION_EXPIRED。没有数据库恢复或全服认证排名
+- 服务器重启会失去内存房间；旧房间令牌返回SESSION_EXPIRED。已提交账号进度由SQLite恢复，没有全服认证排名
+- 进度POST要求X-Spellwood-Player等于当前Cookie玩家，核对发生在写入前；跨标签/缓存旧页不能误改新账号
+- 密码、恢复码、登录Cookie与房间秘密均不进入公开素材或客户端存档；完整身份API与边界见../docs/IDENTITY-PROGRESS.md
 
 ## 超时与重连
 
@@ -67,10 +70,11 @@ server/Dockerfile与配套忽略文件是交付模板，尚未在本轮运行Doc
 ```sh
 docker build -f server/Dockerfile -t spellwood-local .
 docker run --rm -p 127.0.0.1:4173:4173 \
+  -v spellwood-data:/app/.data \
   -e PUBLIC_ORIGIN=http://127.0.0.1:4173 spellwood-local
 ```
 
-公开迁移需要另行配置HTTPS/WSS、受信任反向代理与正确PUBLIC_ORIGIN。反代必须保留正确Host和WebSocket Upgrade/Connection语义；不信任任意客户端X-Forwarded-For。当前内存架构只支持一个权威进程，不能随机把同一房间请求分配到多个副本。公开滥用/负载尚未验收，不应仅凭本地测试宣称生产级防作弊或规模能力。
+公开迁移需要另行配置HTTPS/WSS、受信任反向代理与正确PUBLIC_ORIGIN。反代必须保留正确Host和WebSocket Upgrade/Connection语义；不信任任意客户端X-Forwarded-For。当前房间架构只支持一个权威进程，不能随机把同一房间请求分配到多个副本。公开滥用/负载尚未验收，不应仅凭本地测试宣称生产级防作弊或规模能力。
 
 探针调度参数依据[Docker HEALTHCHECK官方说明](https://docs.docker.com/reference/dockerfile/#healthcheck)。目前只验证Node探针与打包运行目录，不能称Docker镜像构建成功。
 

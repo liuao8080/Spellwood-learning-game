@@ -868,6 +868,7 @@ test("app-level Escape from outside collection closes its root and uses the coll
   h.view.open();
   let closes = 0;
   const sandbox = {
+    isPractice: true,
     document: h.document,
     collectionView: h.view,
     panel: "collection",
@@ -902,6 +903,7 @@ test("app-level Escape while a pack transaction is pending cannot desynchronize 
   const h = await harness();
   h.view.open();
   const sandbox = {
+    isPractice: true,
     document: h.document,
     collectionView: h.view,
     panel: "collection",

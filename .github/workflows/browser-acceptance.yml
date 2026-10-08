@@ -1,0 +1,53 @@
+name: Browser acceptance
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main, codex/import-spellwood-v3.2.9]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: browser-acceptance-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      SPELLWOOD_BROWSER_CI: '1'
+    steps:
+      # Full SHAs verified against these releases in the official actions repos.
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '24'
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build the real network client
+        run: npm run build:network
+      - name: Install official Playwright Chromium
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Guest, registration and two-context smoke
+        env:
+          E2E_SUITE: smoke
+        run: npx --no-install playwright test --grep @smoke
+      - name: Full UI match, recovery, persistence and responsive acceptance
+        env:
+          E2E_SUITE: full
+        run: npx --no-install playwright test --grep-invert @smoke
+      - name: Keep only safe evidence for three days
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: browser-acceptance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/browser-evidence/*.json
+            test-results/browser-evidence/*.png
+          retention-days: 3
+          if-no-files-found: warn
+          include-hidden-files: false

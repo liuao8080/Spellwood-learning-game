@@ -238,7 +238,7 @@ test("reconnection restores same seat and pending challenge without history repl
     token = old.token;
   old.close();
   await sleep(10);
-  const resumed = await new Client(server, token).open();
+  const resumed = await new Client(server, token, old.cookie).open();
   const view = await resumed.wait((m) => m.type === "room.snapshot");
   assert.equal(view.roomId, roomId);
   assert.equal(view.youSeat, seat);
@@ -296,14 +296,16 @@ test("HTTP exposes only explicit public assets and answer-free metadata, then on
   assert.equal(meta.questions.length, 432);
   assert(!JSON.stringify(meta).includes('"answer"'));
   assert(!JSON.stringify(meta).includes('"target"'));
+  const guest = await fetch(server.origin + '/api/identity/guest', {method:'POST',headers:{Origin:server.origin,'Content-Type':'application/json'},body:'{}'});
+  const cookie = guest.headers.getSetCookie().map(value=>value.split(';')[0]).join('; ');
   const qid = meta.questions[0].id,
-    q = await (await fetch(server.origin + "/api/study/" + qid)).json();
+    q = await (await fetch(server.origin + "/api/study/" + qid, {headers:{Cookie:cookie}})).json();
   assert(!Object.hasOwn(q.question, "answer"));
   const response = await fetch(
     server.origin + "/api/study/" + qid + "/answer",
     {
       method: "POST",
-      headers: { Origin: server.origin, "Content-Type": "application/json" },
+      headers: { Origin: server.origin, "Content-Type": "application/json", Cookie:cookie },
       body: JSON.stringify({
         challengeId: q.challengeId,
         optionId: q.question.options[0].id,

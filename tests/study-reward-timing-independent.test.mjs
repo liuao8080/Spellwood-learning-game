@@ -238,6 +238,8 @@ async function fixture({ locked = true } = {}) {
     onSound() {},
   });
   Object.assign(sandbox, {
+    // These tests deliberately exercise the local practice receipt/store lifecycle.
+    isPractice: true,
     desk,
     collectionView: view,
     panel: null,
