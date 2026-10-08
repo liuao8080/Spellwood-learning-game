@@ -41,6 +41,8 @@ function safePageError(error) {
     result.code = 'TYPE_NOT_CALLABLE'; result.message = 'Target is not a function';
   } else if (name === 'TypeError' && /^[A-Za-z_$][\w$. ]{0,120} is not iterable$/.test(message)) {
     result.code = 'TYPE_NOT_ITERABLE'; result.message = 'Target is not iterable';
+  } else if (name === 'TypeError' && message === 'Illegal invocation') {
+    result.code = 'TYPE_ILLEGAL_INVOCATION'; result.message = 'Illegal invocation';
   } else if (name === 'RangeError' && message === 'Maximum call stack size exceeded') {
     result.code = 'RANGE_CALL_STACK'; result.message = 'Maximum call stack size exceeded';
   } else if (name === 'RangeError' && message === 'Invalid array length') {
@@ -239,7 +241,7 @@ export const test = base.extend({
       await mkdir(evidenceDirectory, { recursive: true });
       const records = [];
       for (const actor of actors) {
-        if (testInfo.status !== testInfo.expectedStatus)
+        if (testInfo.status !== testInfo.expectedStatus || actor.observed.pageErrorCount)
           await safeScreenshot(actor.page, testInfo, `failure-${actor.label}`).catch(() => {});
         records.push(await diagnostics(actor));
         await actor.context.close();
@@ -247,6 +249,7 @@ export const test = base.extend({
       await writeFile(path.join(evidenceDirectory, `${slug(testInfo.title)}-observations.json`), JSON.stringify({
         schema: 1, actors: records,
       }, null, 2));
+      expect(records.reduce((n, record) => n + record.pageErrorCount, 0), 'Every tested browser flow must finish without unhandled page exceptions').toBe(0);
     }
   },
 });

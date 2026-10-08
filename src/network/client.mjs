@@ -1,6 +1,6 @@
 /** Browser transport for the authoritative server. No combat calculation lives here. */
 export class DuelConnection {
-  constructor({ url, onMessage = () => {}, onConnection = () => {}, socketFactory = (u) => new WebSocket(u), storage = globalThis.sessionStorage, schedule = setTimeout, unschedule = clearTimeout } = {}) {
+  constructor({ url, onMessage = () => {}, onConnection = () => {}, socketFactory = (u) => new WebSocket(u), storage = globalThis.sessionStorage, schedule = (fn, ms) => globalThis.setTimeout(fn, ms), unschedule = (id) => globalThis.clearTimeout(id) } = {}) {
     this.url = url || `${location.protocol === "https:" ? "wss:" : "ws:"}//${location.host}/ws`;
     this.onMessage = onMessage; this.onConnection = onConnection; this.socketFactory = socketFactory;
     this.storage = storage; this.schedule = schedule; this.unschedule = unschedule;
