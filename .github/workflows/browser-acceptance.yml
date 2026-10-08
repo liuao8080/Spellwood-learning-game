@@ -34,6 +34,12 @@ jobs:
         run: node --test --test-concurrency=1 --test-timeout=30000 tests/admission.test.mjs tests/identity-admission.test.mjs tests/nat-startup.test.mjs
       - name: Install official Playwright Chromium
         run: npx --no-install playwright install --with-deps chromium
+      - name: Install the standard Ubuntu combat evidence decoder
+        run: |
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            timeout 90s sudo apt-get update -qq
+            timeout 90s sudo apt-get install -y --no-install-recommends ffmpeg
+          fi
       - name: Guest, registration and two-context smoke
         env:
           E2E_SUITE: smoke
@@ -43,14 +49,17 @@ jobs:
           E2E_SUITE: interaction
         run: npx --no-install playwright test --grep @interaction
       - name: Populated responsive battlefield and hand navigation
+        id: layout
         env:
           E2E_SUITE: layout
         run: npx --no-install playwright test --grep @layout
       - name: Normal-speed melee motion and safe image sequence
+        id: motion
         env:
           E2E_SUITE: motion
         run: npx --no-install playwright test --grep @combat-motion
       - name: Remaining UI match, recovery, persistence and responsive acceptance
+        if: ${{ !cancelled() && steps.layout.outcome == 'success' }}
         env:
           E2E_SUITE: full
         run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout|@combat-motion'
@@ -62,6 +71,7 @@ jobs:
           path: |
             test-results/browser-evidence/*.json
             test-results/browser-evidence/*.png
+            test-results/browser-evidence/*-arena-only.webm
           retention-days: 3
           if-no-files-found: warn
           include-hidden-files: false
