@@ -8,6 +8,7 @@ import { createQuestionService } from "./questions.mjs";
 import { versions, plain } from "./protocol.mjs";
 import { createIdentityStore } from "./identity-store.mjs";
 import { createIdentityHttp } from "./identity-http.mjs";
+import { createTokenBuckets } from './admission.mjs';
 import { createPlayerProgress } from './player-progress.mjs';
 import { createProgressBridge } from './progress-bridge.mjs';
 import { createProgressHttp } from './progress-http.mjs';
@@ -111,7 +112,7 @@ export function createGameServer(options = {}) {
       createQuestionService(options.questionOptions || {}),
     assetFiles = inventory(assetRoot),
     study = new Map(),
-    httpRates = new Map();
+    httpRates = createTokenBuckets({now: options.identityOptions?.now});
   let origin = "",
     allowedOrigins = new Set(options.allowedOrigins || []),
     closed = false;
@@ -177,17 +178,17 @@ export function createGameServer(options = {}) {
     for (const ws of wss.clients) checkSocketIdentity(ws);
   }
   const identityHttp = createIdentityHttp({store: identityStore, readJson, json, validOrigin,
+    now: options.identityOptions?.now,
     secure: options.secureCookies ?? Boolean(options.publicOrigin?.startsWith('https://')),
     onMutation: closeInvalidIdentitySockets});
   const progressHttp=createProgressHttp({identityStore,progress:playerProgress,bridge:progressBridge,identityHttp,readJson,json,validOrigin});
   function rate(req) {
-    const key = req.socket.remoteAddress || "unknown",
-      now = Date.now(),
-      a = (httpRates.get(key) || []).filter((t) => now - t < 1000);
-    if (a.length >= 40) return false;
-    a.push(now);
-    httpRates.set(key, a);
-    return true;
+    // The immediate socket peer is authoritative. Forwarding headers are not.
+    const address = req.socket.remoteAddress || 'unknown';
+    return httpRates.consume([
+      {key: `peer:${address}`, capacity: 400, refillPerSecond: 40},
+      {key: 'global', capacity: 1200, refillPerSecond: 200},
+    ]);
   }
   async function serve(req, res) {
     if (!validHost(req)) {
@@ -214,7 +215,10 @@ export function createGameServer(options = {}) {
       return;
     }
     if (pathname.startsWith("/api/")) {
-      if (!rate(req)) {
+      const admission = rate(req);
+      if (!admission.ok) {
+        if (pathname === '/api/identity/logout' && identityHttp.logoutAtCapacity(req, res)) return;
+        res.setHeader('Retry-After', String(admission.retryAfter));
         json(res, 429, { code: "RATE_LIMIT" });
         return;
       }
@@ -432,17 +436,24 @@ export function createGameServer(options = {}) {
       pathname !== "/ws" ||
       !validHost(req) ||
       !validOrigin(req) ||
-      !rate(req) ||
       wss.clients.size >= 512
     ) {
       socket.write("HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n");
       socket.destroy();
       return;
     }
+    const admission = rate(req);
+    if (!admission.ok) {
+      socket.write(`HTTP/1.1 429 Too Many Requests\r\nRetry-After: ${admission.retryAfter}\r\nConnection: close\r\n\r\n`);
+      socket.destroy();
+      return;
+    }
     let identity;
     try { identity = identityHttp.forConnection(req); }
-    catch {
-      socket.write('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n'); socket.destroy(); return;
+    catch (error) {
+      socket.write(error.code === 'RATE_LIMIT' ?
+        `HTTP/1.1 429 Too Many Requests\r\nRetry-After: ${error.retryAfter || 1}\r\nConnection: close\r\n\r\n` :
+        'HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n'); socket.destroy(); return;
     }
     req.identityCookies = identity.cookies;
     wss.handleUpgrade(req, socket, head, (ws) => {
@@ -531,8 +542,7 @@ export function createGameServer(options = {}) {
     }
     for (const [id, c] of study)
       if (c.expiresAt <= Date.now()) study.delete(id);
-    for (const [key, a] of httpRates)
-      if (!a.some((t) => Date.now() - t < 1000)) httpRates.delete(key);
+    httpRates.prune();
     try { identityStore.pruneExpiredSessions(); } catch { /* A temporary database fault must not crash the game loop. */ }
     progressBridge.retryPending();
   }, options.heartbeatMs ?? 10000);

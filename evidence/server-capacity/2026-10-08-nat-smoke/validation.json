@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-10-08T13:12:00Z",
+  "base": "33fa224b23551086467754bf1b67797867bae444",
+  "nodeTests": {
+    "passed": 720,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "elapsedSeconds": 108.828
+  },
+  "typecheck": "passed",
+  "builds": {
+    "offline": "passed",
+    "network": "passed",
+    "practice": "passed",
+    "offlineSyntaxAssetsVoiceCheck": "passed"
+  },
+  "newAdmissionTests": 24,
+  "coldStartupFlows": 50,
+  "coldStartupRequests": 200,
+  "existingCookieParallelReuses": 100,
+  "publicDeployment": false,
+  "browserAcceptance": "pending exact-commit CI",
+  "sourceSha256": {
+    "server/admission.mjs": "1680b447357d4dd39438cb80fed036c63ae79ce48576c3bb895462df26296ae7",
+    "server/identity-http.mjs": "09cb4f41259a784045d519850f74767ed3575f88de5425eb7fcb3ec17cec7c48",
+    "server/index.mjs": "035a2a919a43fc9cd70bc39dd4ddaaa7324754f912d642d88d3b39f411a87141",
+    "tests/admission.test.mjs": "6b449778ca9fa1cdd5a60ef207e44d84ffda5a04231e498e487b6271314a06ea",
+    "tests/identity-admission.test.mjs": "a3d6f3692baaaeb819af719ba73b4155148b481651b48bdd94347977455de404",
+    "tests/nat-startup.test.mjs": "add46f5d7b7b1f409f7a0e195ce29d389711c881df886452833840569481c5b7"
+  }
+}

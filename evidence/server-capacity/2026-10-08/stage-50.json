@@ -1,0 +1,167 @@
+{
+  "connections": 50,
+  "pairedRooms": 25,
+  "profiles": {
+    "count": 50,
+    "serializedProgressBytes": {
+      "n": 50,
+      "mean": 1684.14,
+      "p50": 1646,
+      "p95": 1910,
+      "max": 2220
+    },
+    "distinctSeenQuestions": {
+      "n": 50,
+      "mean": 3.1,
+      "p50": 3,
+      "p95": 4,
+      "max": 4
+    },
+    "totalLearningAttempts": {
+      "n": 50,
+      "mean": 3.1,
+      "p50": 3,
+      "p95": 4,
+      "max": 4
+    },
+    "onlineMatchRecords": {
+      "n": 50,
+      "mean": 0.04,
+      "p50": 0,
+      "p95": 0,
+      "max": 1
+    }
+  },
+  "elapsedMs": 10234.375095000003,
+  "warmup": {
+    "serverIdleMs": 2000,
+    "commandsPerRoom": 4,
+    "minimumActiveWarmupMs": 1000,
+    "fixtureCreationMeasured": false
+  },
+  "serverIdle": {
+    "elapsedMs": 2003.304548,
+    "cpuUserMs": 14.686,
+    "cpuSystemMs": 0.854,
+    "cpuPercentOfOneCore": 0.7757183008202305,
+    "rssBytes": 57696256,
+    "rssSamples": {
+      "n": 20,
+      "mean": 57696256,
+      "p50": 57696256,
+      "p95": 57696256,
+      "max": 57696256
+    },
+    "heapUsedBytes": 13087576,
+    "eventLoopDelayMs": {
+      "sampleCount": 193,
+      "mean": 10.306406134715026,
+      "p50": 10.133503,
+      "p95": 11.182079,
+      "max": 13.582335,
+      "resolution": 10
+    },
+    "durableCommitCallMs": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    "sessions": 0,
+    "rooms": 0
+  },
+  "server": {
+    "elapsedMs": 10238.765288,
+    "cpuUserMs": 3552.713,
+    "cpuSystemMs": 399.764,
+    "cpuPercentOfOneCore": 38.603062857905016,
+    "rssBytes": 82591744,
+    "rssSamples": {
+      "n": 93,
+      "mean": 78127500.38709678,
+      "p50": 80621568,
+      "p95": 82460672,
+      "max": 82460672
+    },
+    "heapUsedBytes": 14628032,
+    "eventLoopDelayMs": {
+      "sampleCount": 727,
+      "mean": 14.059776352132051,
+      "p50": 10.190847,
+      "p95": 29.753343,
+      "max": 311.427071,
+      "resolution": 10
+    },
+    "durableCommitCallMs": {
+      "n": 382,
+      "mean": 0.6549119188481647,
+      "p50": 0.32988399999885587,
+      "p95": 2.5128329999988637,
+      "max": 8.948913999996876
+    },
+    "sessions": 50,
+    "rooms": 25
+  },
+  "loadGenerator": {
+    "cpuUserMs": 1518.022,
+    "cpuSystemMs": 276.855,
+    "cpuPercentOfOneCore": 17.53772930285588,
+    "rssBytes": 81805312,
+    "sampledRssPeakBytes": 81805312
+  },
+  "actionAckMs": {
+    "n": 991,
+    "mean": 27.078558130171633,
+    "p50": 16.264103999994404,
+    "p95": 92.44469899999967,
+    "max": 329.1108370000002
+  },
+  "httpDurableWriteRoundTripMs": {
+    "n": 250,
+    "mean": 52.188806764000006,
+    "p50": 40.537342000003264,
+    "p95": 144.26291800000035,
+    "max": 175.54393600000185
+  },
+  "snapshotPayloadBytes": {
+    "n": 1982,
+    "mean": 2627.401614530777,
+    "p50": 2629,
+    "p95": 3099,
+    "max": 3451
+  },
+  "webSocketReceivedPayloadBytes": 5484367,
+  "webSocketSentPayloadBytes": 178828,
+  "receivedPayloadBytesPerSecond": 535877.0759417821,
+  "actionPattern": {
+    "play": 264,
+    "end": 193,
+    "attack": 269,
+    "ritual.begin": 135,
+    "ritual.answer": 130
+  },
+  "actionRejections": {},
+  "httpErrors": {},
+  "durableHttpEventsVerified": true,
+  "verifiedHttpEventCount": 250,
+  "unexpectedSocketCloses": 0,
+  "phases": {
+    "playing": 48,
+    "finished": 2
+  },
+  "databaseFiles": [
+    {
+      "name": "temporary.sqlite",
+      "bytes": 323584
+    },
+    {
+      "name": "temporary.sqlite-shm",
+      "bytes": 32768
+    },
+    {
+      "name": "temporary.sqlite-wal",
+      "bytes": 4120032
+    }
+  ]
+}
