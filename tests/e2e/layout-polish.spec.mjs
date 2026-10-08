@@ -98,7 +98,7 @@ async function populatedLayout(actor, testInfo, viewport) {
         const at = document.elementFromPoint(b.x + b.width * x, b.y + b.height * y);
         return element === at || element.contains(at);
       });
-      return { name, ...b, hit };
+      return { name, ...b, layoutWidth:element.offsetWidth, layoutHeight:element.offsetHeight, hit };
     };
     const all = selector => [...document.querySelectorAll(selector)].filter(visible);
     const stats = all('.hero-panel .hero-gem, .hero-panel .mana b').map((element, index) => sample(element, `hero-stat-${index}`));
@@ -128,8 +128,12 @@ async function populatedLayout(actor, testInfo, viewport) {
     expect(box.hit, `${size}: ${box.name} is not occluded`).toBe(true);
   }
   for (const box of [...geometry.actions, ...geometry.labels]) {
-    expect(box.width, `${size}: ${box.name} target width`).toBeGreaterThanOrEqual(44);
-    expect(box.height, `${size}: ${box.name} target height`).toBeGreaterThanOrEqual(44);
+    expect(box.layoutWidth, `${size}: ${box.name} layout target width`).toBeGreaterThanOrEqual(44);
+    expect(box.layoutHeight, `${size}: ${box.name} layout target height`).toBeGreaterThanOrEqual(44);
+    // Translating a 44px box may subtract to43.999984 in DOMRect float32.
+    // Keep44px layout and accept only sub-thousandth-pixel coordinate noise.
+    expect(box.width, `${size}: ${box.name} projected target width`).toBeGreaterThanOrEqual(44-.001);
+    expect(box.height, `${size}: ${box.name} projected target height`).toBeGreaterThanOrEqual(44-.001);
   }
   for (const box of geometry.labels) {
     expect(inside(box, geometry.arena), `${size}: ${box.name} stays inside the field`).toBe(true);

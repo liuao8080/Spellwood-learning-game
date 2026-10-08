@@ -46,10 +46,14 @@ jobs:
         env:
           E2E_SUITE: layout
         run: npx --no-install playwright test --grep @layout
+      - name: Normal-speed melee motion and safe image sequence
+        env:
+          E2E_SUITE: motion
+        run: npx --no-install playwright test --grep @combat-motion
       - name: Remaining UI match, recovery, persistence and responsive acceptance
         env:
           E2E_SUITE: full
-        run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout'
+        run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout|@combat-motion'
       - name: Keep only safe evidence for three days
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
