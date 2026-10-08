@@ -163,6 +163,7 @@ test('simulated unavailable WebGL uses the real CPU wardrobe and responsive live
   expect(actor.metrics.cpuRafSample.intervalsMs.every(value => value > 0 && Number.isFinite(value))).toBe(true);
   await expect(page.locator('.hero-preview canvas')).toHaveAttribute('data-renderer', /CPU/);
   await expect(page.locator('.hero-preview canvas')).toHaveAttribute('data-model-count', '1');
+  await expect(page.locator('.hero-preview canvas')).toHaveAttribute('data-model-quality', 'low');
   await safeScreenshot(page, testInfo, 'cpu-skin-revealed');
   await skin(page, 'finish').click();
   await skin(page, 'close').click();
@@ -319,7 +320,14 @@ test('twenty sequential wardrobe previews and a resumable test ten-pull fit comp
     await expect(canvas).toHaveAttribute('data-skin-id', item.id);
     await expect(canvas).toHaveAttribute('data-model-count', '1');
     await expect(canvas).not.toHaveAttribute('data-renderer', 'unavailable');
-    expect(Number(await canvas.getAttribute('data-triangles'))).toBeGreaterThan(0);
+    const renderer=await canvas.getAttribute('data-renderer');
+    const quality=await canvas.getAttribute('data-model-quality');
+    const triangles=Number(await canvas.getAttribute('data-triangles'));
+    expect(quality).toBe(renderer.startsWith('CPU') ? 'low' : 'medium');
+    expect(triangles).toBeGreaterThan(0);
+    expect(triangles).toBeLessThanOrEqual(quality === 'low' ? 2100 : 5200);
+    (actor.metrics.heroPreviewModels ||= []).push({id:item.id,renderer,quality,triangles,modelCount:Number(await canvas.getAttribute('data-model-count'))});
+    expect(await page.locator('.hero-preview').evaluate(element=>Number(getComputedStyle(element,'::after').opacity))).toBe(0);
     await expect(page.locator('.hero-preview-fallback')).toHaveAttribute('src', `/assets/heroes/${item.id}/portrait.webp`);
     await page.locator('.hero-preview').scrollIntoViewIfNeeded();
     await safeScreenshot(page, testInfo, `catalogue-${String(index + 1).padStart(2, '0')}-${item.id}`);

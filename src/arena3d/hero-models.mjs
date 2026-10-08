@@ -1387,6 +1387,8 @@ function decorate(b, id, p) {
           [side * 0.21, 2.04, 0.24],
           0.1,
           "head",
+          [0, 0, 0],
+          "accent",
         );
       for (const side of [-1, 1])
         b.panel(
@@ -1401,6 +1403,8 @@ function decorate(b, id, p) {
           [side * 0.32, 1.28, 0.01],
           0.27,
           side < 0 ? "upperArmL" : "upperArmR",
+          [0, 0, 0],
+          "accent",
         );
       apron(b, l);
       b.box(a, [-0.36, 0.73, 0.14], [0.25, 0.22, 0.2]);
@@ -1420,6 +1424,8 @@ function decorate(b, id, p) {
         [0.51, 1.57, 0.33],
         0.21,
         "prop",
+        [0, 0, 0],
+        "accent",
       );
       b.panel(
         d,
@@ -1432,6 +1438,8 @@ function decorate(b, id, p) {
         [0.51, 1.62, 0.442],
         0.02,
         "prop",
+        [0, 0, 0],
+        "accent",
       );
       break;
     case "paper_adventurer":
