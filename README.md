@@ -4,7 +4,7 @@
 
 [公开电脑试玩](https://spellwood-3d-grove.hhhappygod.chatgpt.site/) · [版本记录](CHANGELOG.md) · [本轮验证范围](docs/VALIDATION-4.0.md) · [3.2.9检查点](docs/VALIDATION-3.2.9.md) · [服务端说明](server/README.md)
 
-**当前公开 Site 只有电脑试玩，没有接入真人匹配服务器；公开真人匹配的部署与接入尚未完成。** 本分支提供 Node.js + WebSocket 权威服务器、SQLite 游客/账号/进度和同源网页。真实双 WebSocket 协议检查已经完成，双浏览器验收由本分支的 GitHub Actions 执行，具体结果见验证记录。源码功能与公开服务分开交付，CI 测试机不承担长期在线服务。
+**当前公开 Site 只有电脑试玩，没有接入真人匹配服务器；公开真人匹配的部署与接入尚未完成。** 本分支提供 Node.js + WebSocket 权威服务器、SQLite 游客/账号/进度和同源网页。真实双 WebSocket 协议检查已经完成，双浏览器验收由本分支的 GitHub Actions 执行，5组实际浏览器检查已通过并复核零页面异常，具体证据见验证记录。源码功能与公开服务分开交付，CI 测试机不承担长期在线服务。
 
 ## 游戏内容
 
@@ -73,7 +73,7 @@ npm run build:practice
 
 npm test 默认最多同时运行2个测试文件；共享或低内存环境建议使用上面的串行命令。typecheck 主要覆盖旧核心的 JSDoc 接口，不是全工程静态类型证明。场景测试使用真实 Three.js 对象和射线，但模拟 Canvas/renderer，不证明 GPU 像素、触屏或设备帧率。部分离线图像审查脚本另需 @napi-rs/canvas 或 Blender；运行游戏无需这些可选工具。
 
-3.2.9 的既有人工试玩与本分支新增回归是不同证据。当前身份/进度/协议检查和 GitHub 双浏览器验收状态见 [本轮验证记录](docs/VALIDATION-4.0.md)。GitHub 测试只使用虚构账号与临时数据库，产物不含会话、密码、恢复码、HAR 或数据库。
+3.2.9 的既有人工试玩与本分支新增回归是不同证据。当前680项串行代码回归、身份/进度/协议检查和已运行的 GitHub 双浏览器验收状态见 [本轮验证记录](docs/VALIDATION-4.0.md)。GitHub 测试只使用虚构账号与临时数据库，产物不含会话、密码、恢复码、HAR 或数据库。
 
 ## 目录与素材
 

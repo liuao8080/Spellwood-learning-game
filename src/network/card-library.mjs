@@ -17,7 +17,7 @@ export class CardLibrary {
   if(action==='library-empty')this.draft=[];
   if(action==='library-preset')this.draft=[...DECKS[0].ids];
   if(action==='library-save'&&validateCustomDeck(this.draft)){
-   this.busy=true;this.onChange();try{const ok=await this.onSave([...this.draft]);if(ok){this.onNotice('自选20张已保存，下一局就用它');this.onClose();}else this.onNotice('套牌尚未保存，请检查本机存档状态');}finally{this.busy=false;}
+   this.busy=true;this.onChange();try{const ok=await this.onSave([...this.draft]);if(ok){this.onNotice('自选20张已保存，下一局就用它');this.onClose();}else this.onNotice('套牌尚未保存，请检查记录的保存状态');}finally{this.busy=false;}
   }
   this.onChange();
  }

@@ -1,0 +1,152 @@
+{
+  "schema": 1,
+  "actors": [
+    {
+      "label": "registered-account",
+      "playerKind": "account",
+      "learnedQuestions": 1,
+      "collectionCopies": 10,
+      "roomMessages": 3,
+      "sessionReadyMessages": 6,
+      "successfulActions": {
+        "queue.join": 1,
+        "opening.choose": 1
+      },
+      "rejectedCommandCodes": [],
+      "duplicateEventRevisions": 0,
+      "feedbackCount": 0,
+      "pageErrorCount": 0,
+      "pageErrors": [],
+      "uiInteractions": {
+        "summons": 0,
+        "attacks": 0,
+        "answers": 0
+      },
+      "queueWaitMs": 98,
+      "result": null,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "visibilityAtSample": "visible",
+      "renderers": [
+        {
+          "id": "lobby-scene",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        },
+        {
+          "id": "arena",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": true
+        },
+        {
+          "id": "hand-canvas",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        }
+      ],
+      "renderingCaveat": "One sampled renderer/frame-rate diagnostic, not a whole-session performance measurement or physical-device test"
+    },
+    {
+      "label": "independent-guest",
+      "playerKind": "guest",
+      "learnedQuestions": 1,
+      "collectionCopies": 0,
+      "roomMessages": 3,
+      "sessionReadyMessages": 4,
+      "successfulActions": {
+        "queue.join": 1,
+        "opening.choose": 1
+      },
+      "rejectedCommandCodes": [],
+      "duplicateEventRevisions": 0,
+      "feedbackCount": 0,
+      "pageErrorCount": 0,
+      "pageErrors": [],
+      "uiInteractions": {
+        "summons": 0,
+        "attacks": 0,
+        "answers": 0
+      },
+      "queueWaitMs": 72,
+      "result": null,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "visibilityAtSample": "visible",
+      "renderers": [
+        {
+          "id": "lobby-scene",
+          "renderer": "WebGL2",
+          "recentFrameRate": 2,
+          "hidden": false
+        },
+        {
+          "id": "arena",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": true
+        },
+        {
+          "id": "hand-canvas",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        }
+      ],
+      "renderingCaveat": "One sampled renderer/frame-rate diagnostic, not a whole-session performance measurement or physical-device test"
+    },
+    {
+      "label": "fresh-context-after-restart",
+      "playerKind": "account",
+      "learnedQuestions": 1,
+      "collectionCopies": 10,
+      "roomMessages": 0,
+      "sessionReadyMessages": 2,
+      "successfulActions": {},
+      "rejectedCommandCodes": [],
+      "duplicateEventRevisions": 0,
+      "feedbackCount": 0,
+      "pageErrorCount": 0,
+      "pageErrors": [],
+      "uiInteractions": {
+        "summons": 0,
+        "attacks": 0,
+        "answers": 0
+      },
+      "queueWaitMs": null,
+      "result": null,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "visibilityAtSample": "visible",
+      "renderers": [
+        {
+          "id": "lobby-scene",
+          "renderer": "WebGL2",
+          "recentFrameRate": 2,
+          "hidden": false
+        },
+        {
+          "id": "arena",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": true
+        },
+        {
+          "id": "hand-canvas",
+          "renderer": "WebGL2",
+          "recentFrameRate": null,
+          "hidden": false
+        }
+      ],
+      "renderingCaveat": "One sampled renderer/frame-rate diagnostic, not a whole-session performance measurement or physical-device test"
+    }
+  ]
+}
