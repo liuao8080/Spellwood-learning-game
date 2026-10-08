@@ -1,6 +1,6 @@
 # 本地权威服务器
 
-这是独立联网入口：SQLite持久身份与进度，内存权威房间。不修改旧2.7.5离线存档或旧公开站点。协议字段见[PROTOCOL.md](PROTOCOL.md)。
+这是独立联网入口：SQLite持久身份与进度，内存权威房间。不修改旧2.7.5离线存档或旧公开站点。协议字段见[PROTOCOL.md](PROTOCOL.md)。小规模实测、资源边界和可复跑脚本见[容量报告](../docs/SERVER-CAPACITY.md)。
 
 ## 本机运行
 
@@ -40,6 +40,7 @@ HOST=127.0.0.1 PORT=4173 npm run server
 - 服务器重启会失去内存房间；旧房间令牌返回SESSION_EXPIRED。已提交账号进度由SQLite恢复，没有全服认证排名
 - 进度POST要求X-Spellwood-Player等于当前Cookie玩家，核对发生在写入前；跨标签/缓存旧页不能误改新账号
 - 密码、恢复码、登录Cookie与房间秘密均不进入公开素材或客户端存档；完整身份API与边界见../docs/IDENTITY-PROGRESS.md
+- 同一校园NAT支持60位新游客突发、每分钟补充30位，整个服务另有180位突发/每分钟90位的总上限；有效Cookie复用不占创建额度。密码保护、请求总量、退出及代理边界见[同网准入说明](../docs/NAT-ADMISSION.md)
 
 ## 超时与重连
 

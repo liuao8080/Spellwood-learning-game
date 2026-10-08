@@ -1,0 +1,21 @@
+{
+  "node": "v24.19.0",
+  "platform": "linux",
+  "osRelease": "6.18.44",
+  "arch": "x64",
+  "visibleLogicalCPUs": 9,
+  "availableParallelism": 9,
+  "visibleTotalMemoryBytes": 10451460096,
+  "visibleFreeMemoryBytes": 7977791488,
+  "procCgroup": "0::/",
+  "cgroupMounts": [],
+  "cgroupMemoryMax": null,
+  "cgroupCpuMax": null,
+  "cgroupV1MemoryLimit": null,
+  "cgroupV1CpuQuota": null,
+  "cgroupV1CpuPeriod": null,
+  "cgroupV1EffectiveCPUs": null,
+  "resourceCaveat": "Visible host resources are not a reservation or guaranteed capacity. Missing cgroup values mean unavailable, not unlimited.",
+  "head": "53425d2e7b5b5223cad93753ab727631d3a327ed",
+  "sourceStatus": "M  CHANGELOG.md\nM  README.md\nM  docs/VALIDATION-TEACHER.md"
+}

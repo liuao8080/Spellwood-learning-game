@@ -1,0 +1,169 @@
+{
+  "connections": 2,
+  "pairedRooms": 1,
+  "profiles": {
+    "count": 2,
+    "serializedProgressBytes": {
+      "n": 2,
+      "mean": 1121.5,
+      "p50": 860,
+      "p95": 1383,
+      "max": 1383
+    },
+    "distinctSeenQuestions": {
+      "n": 2,
+      "mean": 1,
+      "p50": 0,
+      "p95": 2,
+      "max": 2
+    },
+    "totalLearningAttempts": {
+      "n": 2,
+      "mean": 1,
+      "p50": 0,
+      "p95": 2,
+      "max": 2
+    },
+    "onlineMatchRecords": {
+      "n": 2,
+      "mean": 0,
+      "p50": 0,
+      "p95": 0,
+      "max": 0
+    }
+  },
+  "elapsedMs": 2000.995433,
+  "warmup": {
+    "serverIdleMs": 2000,
+    "commandsPerRoom": 4,
+    "minimumActiveWarmupMs": 1000,
+    "fixtureCreationMeasured": false
+  },
+  "serverIdle": {
+    "elapsedMs": 2003.266843,
+    "cpuUserMs": 24.425,
+    "cpuSystemMs": 1.34,
+    "cpuPercentOfOneCore": 1.2861491762832518,
+    "rssBytes": 57774080,
+    "rssSamples": {
+      "n": 20,
+      "mean": 57893888,
+      "p50": 57774080,
+      "p95": 58040320,
+      "max": 58040320
+    },
+    "heapUsedBytes": 10428168,
+    "eventLoopDelayMs": {
+      "sampleCount": 192,
+      "mean": 10.38144,
+      "p50": 10.133503,
+      "p95": 11.411455,
+      "max": 15.384575,
+      "resolution": 10
+    },
+    "durableCommitCallMs": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    "sessions": 0,
+    "rooms": 0
+  },
+  "server": {
+    "elapsedMs": 2001.4296900000004,
+    "cpuUserMs": 58.318,
+    "cpuSystemMs": 9.554,
+    "cpuPercentOfOneCore": 3.3911758349102925,
+    "rssBytes": 60002304,
+    "rssSamples": {
+      "n": 20,
+      "mean": 59609088,
+      "p50": 59346944,
+      "p95": 60002304,
+      "max": 60002304
+    },
+    "heapUsedBytes": 13135680,
+    "eventLoopDelayMs": {
+      "sampleCount": 192,
+      "mean": 10.371690666666666,
+      "p50": 10.141695,
+      "p95": 11.059199,
+      "max": 24.281087,
+      "resolution": 10
+    },
+    "durableCommitCallMs": {
+      "n": 3,
+      "mean": 1.5506763333335887,
+      "p50": 1.1382750000002488,
+      "p95": 3.1406520000000455,
+      "max": 3.1406520000000455
+    },
+    "sessions": 2,
+    "rooms": 1
+  },
+  "loadGenerator": {
+    "cpuUserMs": 231.458,
+    "cpuSystemMs": 23.524,
+    "cpuPercentOfOneCore": 12.742757719227637,
+    "rssBytes": 58298368,
+    "sampledRssPeakBytes": 58298368
+  },
+  "actionAckMs": {
+    "n": 8,
+    "mean": 4.562581375000036,
+    "p50": 2.9086940000006507,
+    "p95": 8.270221000000674,
+    "max": 8.270221000000674
+  },
+  "httpDurableWriteRoundTripMs": {
+    "n": 2,
+    "mean": 72.37890150000021,
+    "p50": 15.026679999999942,
+    "p95": 129.73112300000048,
+    "max": 129.73112300000048
+  },
+  "snapshotPayloadBytes": {
+    "n": 16,
+    "mean": 2272.75,
+    "p50": 2246,
+    "p95": 2474,
+    "max": 2474
+  },
+  "webSocketReceivedPayloadBytes": 38431,
+  "webSocketSentPayloadBytes": 1391,
+  "receivedPayloadBytesPerSecond": 19205.940886322853,
+  "actionPattern": {
+    "end": 3,
+    "attack": 1,
+    "play": 2,
+    "ritual.begin": 1,
+    "ritual.answer": 1
+  },
+  "actionRejections": {},
+  "httpErrors": {},
+  "durableHttpEventsVerified": true,
+  "verifiedHttpEventCount": 2,
+  "unexpectedSocketCloses": 0,
+  "phases": {
+    "playing": 2
+  },
+  "databaseFiles": [
+    {
+      "name": "temporary.sqlite",
+      "bytes": 4096
+    },
+    {
+      "name": "temporary.sqlite-shm",
+      "bytes": 32768
+    },
+    {
+      "name": "temporary.sqlite-wal",
+      "bytes": 185432
+    }
+  ],
+  "purpose": "Portable script smoke only; not a repeat of the 10/20/50 connection capacity measurement",
+  "sourceBase": "33fa224b23551086467754bf1b67797867bae444",
+  "sourceHadUncommittedNatChanges": true
+}
