@@ -1,0 +1,39 @@
+{
+  "purpose": "Complete local source package under 20,000,000-byte attachment limit",
+  "encoding": "lossy WebP quality 90; not pixel-identical to prior lossless images",
+  "questions_and_audio_unchanged": true,
+  "images": [
+    {
+      "file": "first-words.webp",
+      "original_bytes": 1270612,
+      "current_bytes": 156098,
+      "quality": 90,
+      "dimensions_unchanged": true,
+      "representative_crop_visually_reviewed": true
+    },
+    {
+      "file": "daily-words.webp",
+      "original_bytes": 1235710,
+      "current_bytes": 163960,
+      "quality": 90,
+      "dimensions_unchanged": true,
+      "representative_crop_visually_reviewed": true
+    },
+    {
+      "file": "home-words.webp",
+      "original_bytes": 1093116,
+      "current_bytes": 102810,
+      "quality": 90,
+      "dimensions_unchanged": true,
+      "representative_crop_visually_reviewed": true
+    },
+    {
+      "file": "clothes-words.webp",
+      "original_bytes": 1158820,
+      "current_bytes": 95824,
+      "quality": 90,
+      "dimensions_unchanged": true,
+      "representative_crop_visually_reviewed": true
+    }
+  ]
+}

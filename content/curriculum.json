@@ -1,0 +1,1403 @@
+{
+  "version": "pep1-2026.1",
+  "title": "人教版英语（一年级起点）知识范围自编练习",
+  "note": "参照用户指定版本的已核对单元核心知识自编，不是官方题库，也不声称覆盖每个词语。",
+  "books": [
+    {
+      "id": "g1-s1",
+      "grade": 1,
+      "semester": 1,
+      "title": "义务教育教科书·英语（一年级起点）一年级上册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E4%B8%80%E5%B9%B4%E7%BA%A7%E4%B8%8A%E5%86%8C.pdf",
+      "pdf_pages": 78,
+      "source_blob_sha": "fe6b2e8fe8adafd8ac69a2afcf76c0bff7e57e5e",
+      "source_checked_date": "2026-10-06"
+    },
+    {
+      "id": "g1-s2",
+      "grade": 1,
+      "semester": 2,
+      "title": "义务教育教科书·英语（一年级起点）一年级下册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E4%B8%80%E5%B9%B4%E7%BA%A7%E4%B8%8B%E5%86%8C.pdf",
+      "pdf_pages": 71,
+      "source_blob_sha": "c6eb35795945c940662c907415d8a7342d3b03f3",
+      "source_checked_date": "2026-10-06"
+    },
+    {
+      "id": "g2-s1",
+      "grade": 2,
+      "semester": 1,
+      "title": "义务教育教科书·英语（一年级起点）二年级上册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E4%BA%8C%E5%B9%B4%E7%BA%A7%E4%B8%8A%E5%86%8C.pdf",
+      "pdf_pages": 71,
+      "source_blob_sha": "97643a2a4fac649da4ce884e318fb9256e01de89",
+      "source_checked_date": "2026-10-06"
+    },
+    {
+      "id": "g2-s2",
+      "grade": 2,
+      "semester": 2,
+      "title": "义务教育教科书·英语（一年级起点）二年级下册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E4%BA%8C%E5%B9%B4%E7%BA%A7%E4%B8%8B%E5%86%8C.pdf",
+      "pdf_pages": 72,
+      "source_blob_sha": "75f173b26883d9c1f69a4a438d41c0c8ef16825d",
+      "source_checked_date": "2026-10-06"
+    },
+    {
+      "id": "g3-s1",
+      "grade": 3,
+      "semester": 1,
+      "title": "义务教育教科书·英语（一年级起点）三年级上册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E4%B8%89%E5%B9%B4%E7%BA%A7%E4%B8%8A%E5%86%8C.pdf",
+      "pdf_pages": 94,
+      "source_blob_sha": "9304b6c61d4ec06a238eb13343c38eef738297ba",
+      "source_checked_date": "2026-10-06"
+    },
+    {
+      "id": "g3-s2",
+      "grade": 3,
+      "semester": 2,
+      "title": "义务教育教科书·英语（一年级起点）三年级下册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E4%B8%89%E5%B9%B4%E7%BA%A7%E4%B8%8B%E5%86%8C.pdf",
+      "pdf_pages": 92,
+      "source_blob_sha": "642207b1acf8b12221034a1c6eeda9950f33c501",
+      "source_checked_date": "2026-10-06"
+    },
+    {
+      "id": "g4-s1",
+      "grade": 4,
+      "semester": 1,
+      "title": "义务教育教科书·英语（一年级起点）四年级上册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E5%9B%9B%E5%B9%B4%E7%BA%A7%E4%B8%8A%E5%86%8C.pdf",
+      "pdf_pages": 91,
+      "source_blob_sha": "82b553600f78ba9152c3389c96c5a24c889838b5",
+      "source_checked_date": "2026-10-06"
+    },
+    {
+      "id": "g4-s2",
+      "grade": 4,
+      "semester": 2,
+      "title": "义务教育教科书·英语（一年级起点）四年级下册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E5%9B%9B%E5%B9%B4%E7%BA%A7%E4%B8%8B%E5%86%8C.pdf",
+      "pdf_pages": 89,
+      "source_blob_sha": "2f4b3f11e18fbb257ca0ecb0b0f243c63d9b8fa4",
+      "source_checked_date": "2026-10-06"
+    },
+    {
+      "id": "g5-s1",
+      "grade": 5,
+      "semester": 1,
+      "title": "义务教育教科书·英语（一年级起点）五年级上册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E4%BA%94%E5%B9%B4%E7%BA%A7%E4%B8%8A%E5%86%8C.pdf",
+      "pdf_pages": 99,
+      "source_blob_sha": "189d9c3b9b91a08f3bdf3a61c09bfbf642ed0b03",
+      "source_checked_date": "2026-10-06"
+    },
+    {
+      "id": "g5-s2",
+      "grade": 5,
+      "semester": 2,
+      "title": "义务教育教科书·英语（一年级起点）五年级下册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E4%BA%94%E5%B9%B4%E7%BA%A7%E4%B8%8B%E5%86%8C.pdf",
+      "pdf_pages": 100,
+      "source_blob_sha": "db1540185e158a2335eef6a1af703c83773ce76c",
+      "source_checked_date": "2026-10-06"
+    },
+    {
+      "id": "g6-s1",
+      "grade": 6,
+      "semester": 1,
+      "title": "义务教育教科书·英语（一年级起点）六年级上册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E5%85%AD%E5%B9%B4%E7%BA%A7%E4%B8%8A%E5%86%8C.pdf",
+      "pdf_pages": 102,
+      "source_blob_sha": "9b34b9b346d8677ebd3de8d2c66eb261fa587a79",
+      "source_checked_date": "2026-10-06"
+    },
+    {
+      "id": "g6-s2",
+      "grade": 6,
+      "semester": 2,
+      "title": "义务教育教科书·英语（一年级起点）六年级下册",
+      "source_url": "https://github.com/TapXWorld/ChinaTextbook/blob/master/%E5%B0%8F%E5%AD%A6/%E8%8B%B1%E8%AF%AD/%E4%BA%BA%E6%95%99%E7%89%88%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%EF%BC%88%E4%B8%BB%E7%BC%96%EF%BC%9A%E5%90%B4%E6%AC%A3%EF%BC%89/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E8%8B%B1%E8%AF%AD%EF%BC%88%E4%B8%80%E5%B9%B4%E7%BA%A7%E8%B5%B7%E7%82%B9%EF%BC%89%E5%85%AD%E5%B9%B4%E7%BA%A7%E4%B8%8B%E5%86%8C.pdf",
+      "pdf_pages": 72,
+      "source_blob_sha": "853789930b8911bfb9d4a4b806b987fbf6b9befa",
+      "source_checked_date": "2026-10-06"
+    }
+  ],
+  "units": [
+    {
+      "id": "g1-s1-u1",
+      "book_id": "g1-s1",
+      "grade": 1,
+      "semester": 1,
+      "unit": 1,
+      "unit_title": "School",
+      "pdf_pages": [
+        11,
+        12
+      ],
+      "printed_pages": [
+        6,
+        7
+      ],
+      "unit_title_zh": "校园"
+    },
+    {
+      "id": "g1-s1-u2",
+      "book_id": "g1-s1",
+      "grade": 1,
+      "semester": 1,
+      "unit": 2,
+      "unit_title": "Face",
+      "pdf_pages": [
+        19,
+        20
+      ],
+      "printed_pages": [
+        14,
+        15
+      ],
+      "unit_title_zh": "五官"
+    },
+    {
+      "id": "g1-s1-u3",
+      "book_id": "g1-s1",
+      "grade": 1,
+      "semester": 1,
+      "unit": 3,
+      "unit_title": "Animals",
+      "pdf_pages": [
+        27,
+        28
+      ],
+      "printed_pages": [
+        22,
+        23
+      ],
+      "unit_title_zh": "动物"
+    },
+    {
+      "id": "g1-s1-u4",
+      "book_id": "g1-s1",
+      "grade": 1,
+      "semester": 1,
+      "unit": 4,
+      "unit_title": "Numbers",
+      "pdf_pages": [
+        37,
+        38
+      ],
+      "printed_pages": [
+        32,
+        33
+      ],
+      "unit_title_zh": "数字"
+    },
+    {
+      "id": "g1-s1-u5",
+      "book_id": "g1-s1",
+      "grade": 1,
+      "semester": 1,
+      "unit": 5,
+      "unit_title": "Colours",
+      "pdf_pages": [
+        45,
+        46
+      ],
+      "printed_pages": [
+        40,
+        41
+      ],
+      "unit_title_zh": "颜色"
+    },
+    {
+      "id": "g1-s1-u6",
+      "book_id": "g1-s1",
+      "grade": 1,
+      "semester": 1,
+      "unit": 6,
+      "unit_title": "Fruit",
+      "pdf_pages": [
+        53,
+        54
+      ],
+      "printed_pages": [
+        48,
+        49
+      ],
+      "unit_title_zh": "水果"
+    },
+    {
+      "id": "g1-s2-u1",
+      "book_id": "g1-s2",
+      "grade": 1,
+      "semester": 2,
+      "unit": 1,
+      "unit_title": "Classroom",
+      "pdf_pages": [
+        8,
+        9
+      ],
+      "printed_pages": [
+        4,
+        5
+      ],
+      "unit_title_zh": "教室"
+    },
+    {
+      "id": "g1-s2-u2",
+      "book_id": "g1-s2",
+      "grade": 1,
+      "semester": 2,
+      "unit": 2,
+      "unit_title": "Room",
+      "pdf_pages": [
+        16,
+        17
+      ],
+      "printed_pages": [
+        12,
+        13
+      ],
+      "unit_title_zh": "房间"
+    },
+    {
+      "id": "g1-s2-u3",
+      "book_id": "g1-s2",
+      "grade": 1,
+      "semester": 2,
+      "unit": 3,
+      "unit_title": "Toys",
+      "pdf_pages": [
+        24,
+        25
+      ],
+      "printed_pages": [
+        20,
+        21
+      ],
+      "unit_title_zh": "玩具"
+    },
+    {
+      "id": "g1-s2-u4",
+      "book_id": "g1-s2",
+      "grade": 1,
+      "semester": 2,
+      "unit": 4,
+      "unit_title": "Food",
+      "pdf_pages": [
+        34,
+        35
+      ],
+      "printed_pages": [
+        30,
+        31
+      ],
+      "unit_title_zh": "食物"
+    },
+    {
+      "id": "g1-s2-u5",
+      "book_id": "g1-s2",
+      "grade": 1,
+      "semester": 2,
+      "unit": 5,
+      "unit_title": "Drinks",
+      "pdf_pages": [
+        42,
+        43
+      ],
+      "printed_pages": [
+        38,
+        39
+      ],
+      "unit_title_zh": "饮品"
+    },
+    {
+      "id": "g1-s2-u6",
+      "book_id": "g1-s2",
+      "grade": 1,
+      "semester": 2,
+      "unit": 6,
+      "unit_title": "Clothes",
+      "pdf_pages": [
+        50,
+        51
+      ],
+      "printed_pages": [
+        46,
+        47
+      ],
+      "unit_title_zh": "衣物"
+    },
+    {
+      "id": "g2-s1-u1",
+      "book_id": "g2-s1",
+      "grade": 2,
+      "semester": 1,
+      "unit": 1,
+      "unit_title": "My Family",
+      "pdf_pages": [
+        9,
+        10
+      ],
+      "printed_pages": [
+        4,
+        5
+      ],
+      "unit_title_zh": "我的家人"
+    },
+    {
+      "id": "g2-s1-u2",
+      "book_id": "g2-s1",
+      "grade": 2,
+      "semester": 1,
+      "unit": 2,
+      "unit_title": "Boys and Girls",
+      "pdf_pages": [
+        17,
+        18
+      ],
+      "printed_pages": [
+        12,
+        13
+      ],
+      "unit_title_zh": "男孩女孩"
+    },
+    {
+      "id": "g2-s1-u3",
+      "book_id": "g2-s1",
+      "grade": 2,
+      "semester": 1,
+      "unit": 3,
+      "unit_title": "My Friends",
+      "pdf_pages": [
+        25,
+        26
+      ],
+      "printed_pages": [
+        20,
+        21
+      ],
+      "unit_title_zh": "我的朋友"
+    },
+    {
+      "id": "g2-s1-u4",
+      "book_id": "g2-s1",
+      "grade": 2,
+      "semester": 1,
+      "unit": 4,
+      "unit_title": "In the Community",
+      "pdf_pages": [
+        35,
+        36
+      ],
+      "printed_pages": [
+        30,
+        31
+      ],
+      "unit_title_zh": "社区"
+    },
+    {
+      "id": "g2-s1-u5",
+      "book_id": "g2-s1",
+      "grade": 2,
+      "semester": 1,
+      "unit": 5,
+      "unit_title": "In the Park",
+      "pdf_pages": [
+        43,
+        44
+      ],
+      "printed_pages": [
+        38,
+        39
+      ],
+      "unit_title_zh": "公园"
+    },
+    {
+      "id": "g2-s1-u6",
+      "book_id": "g2-s1",
+      "grade": 2,
+      "semester": 1,
+      "unit": 6,
+      "unit_title": "Happy Holidays",
+      "pdf_pages": [
+        51,
+        52
+      ],
+      "printed_pages": [
+        46,
+        47
+      ],
+      "unit_title_zh": "节日问候"
+    },
+    {
+      "id": "g2-s2-u1",
+      "book_id": "g2-s2",
+      "grade": 2,
+      "semester": 2,
+      "unit": 1,
+      "unit_title": "Playtime",
+      "pdf_pages": [
+        8,
+        9
+      ],
+      "printed_pages": [
+        4,
+        5
+      ],
+      "unit_title_zh": "一起玩"
+    },
+    {
+      "id": "g2-s2-u2",
+      "book_id": "g2-s2",
+      "grade": 2,
+      "semester": 2,
+      "unit": 2,
+      "unit_title": "Weather",
+      "pdf_pages": [
+        16,
+        17
+      ],
+      "printed_pages": [
+        12,
+        13
+      ],
+      "unit_title_zh": "天气"
+    },
+    {
+      "id": "g2-s2-u3",
+      "book_id": "g2-s2",
+      "grade": 2,
+      "semester": 2,
+      "unit": 3,
+      "unit_title": "Seasons",
+      "pdf_pages": [
+        24,
+        25
+      ],
+      "printed_pages": [
+        20,
+        21
+      ],
+      "unit_title_zh": "四季"
+    },
+    {
+      "id": "g2-s2-u4",
+      "book_id": "g2-s2",
+      "grade": 2,
+      "semester": 2,
+      "unit": 4,
+      "unit_title": "Time",
+      "pdf_pages": [
+        34,
+        35
+      ],
+      "printed_pages": [
+        30,
+        31
+      ],
+      "unit_title_zh": "时间"
+    },
+    {
+      "id": "g2-s2-u5",
+      "book_id": "g2-s2",
+      "grade": 2,
+      "semester": 2,
+      "unit": 5,
+      "unit_title": "My Day",
+      "pdf_pages": [
+        42,
+        43
+      ],
+      "printed_pages": [
+        38,
+        39
+      ],
+      "unit_title_zh": "我的一天"
+    },
+    {
+      "id": "g2-s2-u6",
+      "book_id": "g2-s2",
+      "grade": 2,
+      "semester": 2,
+      "unit": 6,
+      "unit_title": "My Week",
+      "pdf_pages": [
+        50,
+        51
+      ],
+      "printed_pages": [
+        46,
+        47
+      ],
+      "unit_title_zh": "我的一周"
+    },
+    {
+      "id": "g3-s1-u1",
+      "book_id": "g3-s1",
+      "grade": 3,
+      "semester": 1,
+      "unit": 1,
+      "unit_title": "Myself",
+      "pdf_pages": [
+        9,
+        10
+      ],
+      "printed_pages": [
+        4,
+        5
+      ],
+      "unit_title_zh": "介绍自己"
+    },
+    {
+      "id": "g3-s1-u2",
+      "book_id": "g3-s1",
+      "grade": 3,
+      "semester": 1,
+      "unit": 2,
+      "unit_title": "My Body",
+      "pdf_pages": [
+        19,
+        20
+      ],
+      "printed_pages": [
+        14,
+        15
+      ],
+      "unit_title_zh": "身体"
+    },
+    {
+      "id": "g3-s1-u3",
+      "book_id": "g3-s1",
+      "grade": 3,
+      "semester": 1,
+      "unit": 3,
+      "unit_title": "Food",
+      "pdf_pages": [
+        29,
+        30
+      ],
+      "printed_pages": [
+        24,
+        25
+      ],
+      "unit_title_zh": "食物"
+    },
+    {
+      "id": "g3-s1-u4",
+      "book_id": "g3-s1",
+      "grade": 3,
+      "semester": 1,
+      "unit": 4,
+      "unit_title": "Pets",
+      "pdf_pages": [
+        45,
+        46
+      ],
+      "printed_pages": [
+        40,
+        41
+      ],
+      "unit_title_zh": "宠物"
+    },
+    {
+      "id": "g3-s1-u5",
+      "book_id": "g3-s1",
+      "grade": 3,
+      "semester": 1,
+      "unit": 5,
+      "unit_title": "Clothes",
+      "pdf_pages": [
+        55,
+        56
+      ],
+      "printed_pages": [
+        50,
+        51
+      ],
+      "unit_title_zh": "衣物"
+    },
+    {
+      "id": "g3-s1-u6",
+      "book_id": "g3-s1",
+      "grade": 3,
+      "semester": 1,
+      "unit": 6,
+      "unit_title": "Birthdays",
+      "pdf_pages": [
+        65,
+        66
+      ],
+      "printed_pages": [
+        60,
+        61
+      ],
+      "unit_title_zh": "生日"
+    },
+    {
+      "id": "g3-s2-u1",
+      "book_id": "g3-s2",
+      "grade": 3,
+      "semester": 2,
+      "unit": 1,
+      "unit_title": "School Subjects",
+      "pdf_pages": [
+        8,
+        9
+      ],
+      "printed_pages": [
+        4,
+        5
+      ],
+      "unit_title_zh": "学校课程"
+    },
+    {
+      "id": "g3-s2-u2",
+      "book_id": "g3-s2",
+      "grade": 3,
+      "semester": 2,
+      "unit": 2,
+      "unit_title": "My School",
+      "pdf_pages": [
+        18,
+        19
+      ],
+      "printed_pages": [
+        14,
+        15
+      ],
+      "unit_title_zh": "我的学校"
+    },
+    {
+      "id": "g3-s2-u3",
+      "book_id": "g3-s2",
+      "grade": 3,
+      "semester": 2,
+      "unit": 3,
+      "unit_title": "After School Activities",
+      "pdf_pages": [
+        28,
+        29
+      ],
+      "printed_pages": [
+        24,
+        25
+      ],
+      "unit_title_zh": "课后活动"
+    },
+    {
+      "id": "g3-s2-u4",
+      "book_id": "g3-s2",
+      "grade": 3,
+      "semester": 2,
+      "unit": 4,
+      "unit_title": "My Family",
+      "pdf_pages": [
+        44,
+        45
+      ],
+      "printed_pages": [
+        40,
+        41
+      ],
+      "unit_title_zh": "我的家人"
+    },
+    {
+      "id": "g3-s2-u5",
+      "book_id": "g3-s2",
+      "grade": 3,
+      "semester": 2,
+      "unit": 5,
+      "unit_title": "Family Activities",
+      "pdf_pages": [
+        54,
+        55
+      ],
+      "printed_pages": [
+        50,
+        51
+      ],
+      "unit_title_zh": "家庭活动"
+    },
+    {
+      "id": "g3-s2-u6",
+      "book_id": "g3-s2",
+      "grade": 3,
+      "semester": 2,
+      "unit": 6,
+      "unit_title": "My Home",
+      "pdf_pages": [
+        64,
+        65
+      ],
+      "printed_pages": [
+        60,
+        61
+      ],
+      "unit_title_zh": "我的家"
+    },
+    {
+      "id": "g4-s1-u1",
+      "book_id": "g4-s1",
+      "grade": 4,
+      "semester": 1,
+      "unit": 1,
+      "unit_title": "Sports and Games",
+      "pdf_pages": [
+        9,
+        10
+      ],
+      "printed_pages": [
+        4,
+        5
+      ],
+      "unit_title_zh": "运动与游戏"
+    },
+    {
+      "id": "g4-s1-u2",
+      "book_id": "g4-s1",
+      "grade": 4,
+      "semester": 1,
+      "unit": 2,
+      "unit_title": "On the Weekend",
+      "pdf_pages": [
+        19,
+        20
+      ],
+      "printed_pages": [
+        14,
+        15
+      ],
+      "unit_title_zh": "周末"
+    },
+    {
+      "id": "g4-s1-u3",
+      "book_id": "g4-s1",
+      "grade": 4,
+      "semester": 1,
+      "unit": 3,
+      "unit_title": "Transportation",
+      "pdf_pages": [
+        29,
+        30
+      ],
+      "printed_pages": [
+        24,
+        25
+      ],
+      "unit_title_zh": "交通方式"
+    },
+    {
+      "id": "g4-s1-u4",
+      "book_id": "g4-s1",
+      "grade": 4,
+      "semester": 1,
+      "unit": 4,
+      "unit_title": "Asking for Help",
+      "pdf_pages": [
+        45,
+        46
+      ],
+      "printed_pages": [
+        40,
+        41
+      ],
+      "unit_title_zh": "寻求帮助"
+    },
+    {
+      "id": "g4-s1-u5",
+      "book_id": "g4-s1",
+      "grade": 4,
+      "semester": 1,
+      "unit": 5,
+      "unit_title": "Safety",
+      "pdf_pages": [
+        55,
+        56
+      ],
+      "printed_pages": [
+        50,
+        51
+      ],
+      "unit_title_zh": "安全"
+    },
+    {
+      "id": "g4-s1-u6",
+      "book_id": "g4-s1",
+      "grade": 4,
+      "semester": 1,
+      "unit": 6,
+      "unit_title": "Jobs",
+      "pdf_pages": [
+        65,
+        66
+      ],
+      "printed_pages": [
+        60,
+        61
+      ],
+      "unit_title_zh": "职业"
+    },
+    {
+      "id": "g4-s2-u1",
+      "book_id": "g4-s2",
+      "grade": 4,
+      "semester": 2,
+      "unit": 1,
+      "unit_title": "My Neighbourhood",
+      "pdf_pages": [
+        8,
+        9
+      ],
+      "printed_pages": [
+        4,
+        5
+      ],
+      "unit_title_zh": "街坊邻里"
+    },
+    {
+      "id": "g4-s2-u2",
+      "book_id": "g4-s2",
+      "grade": 4,
+      "semester": 2,
+      "unit": 2,
+      "unit_title": "Cities",
+      "pdf_pages": [
+        18,
+        19
+      ],
+      "printed_pages": [
+        14,
+        15
+      ],
+      "unit_title_zh": "城市"
+    },
+    {
+      "id": "g4-s2-u3",
+      "book_id": "g4-s2",
+      "grade": 4,
+      "semester": 2,
+      "unit": 3,
+      "unit_title": "Travel Plans",
+      "pdf_pages": [
+        28,
+        29
+      ],
+      "printed_pages": [
+        24,
+        25
+      ],
+      "unit_title_zh": "旅行计划"
+    },
+    {
+      "id": "g4-s2-u4",
+      "book_id": "g4-s2",
+      "grade": 4,
+      "semester": 2,
+      "unit": 4,
+      "unit_title": "Hobbies",
+      "pdf_pages": [
+        44,
+        45
+      ],
+      "printed_pages": [
+        40,
+        41
+      ],
+      "unit_title_zh": "爱好"
+    },
+    {
+      "id": "g4-s2-u5",
+      "book_id": "g4-s2",
+      "grade": 4,
+      "semester": 2,
+      "unit": 5,
+      "unit_title": "Free Time",
+      "pdf_pages": [
+        54,
+        55
+      ],
+      "printed_pages": [
+        50,
+        51
+      ],
+      "unit_title_zh": "课余时间"
+    },
+    {
+      "id": "g4-s2-u6",
+      "book_id": "g4-s2",
+      "grade": 4,
+      "semester": 2,
+      "unit": 6,
+      "unit_title": "Countries",
+      "pdf_pages": [
+        64,
+        65
+      ],
+      "printed_pages": [
+        60,
+        61
+      ],
+      "unit_title_zh": "国家"
+    },
+    {
+      "id": "g5-s1-u1",
+      "book_id": "g5-s1",
+      "grade": 5,
+      "semester": 1,
+      "unit": 1,
+      "unit_title": "Classmates",
+      "pdf_pages": [
+        7,
+        9
+      ],
+      "printed_pages": [
+        2,
+        4
+      ],
+      "unit_title_zh": "同学"
+    },
+    {
+      "id": "g5-s1-u2",
+      "book_id": "g5-s1",
+      "grade": 5,
+      "semester": 1,
+      "unit": 2,
+      "unit_title": "Teachers",
+      "pdf_pages": [
+        19,
+        21
+      ],
+      "printed_pages": [
+        14,
+        16
+      ],
+      "unit_title_zh": "老师"
+    },
+    {
+      "id": "g5-s1-u3",
+      "book_id": "g5-s1",
+      "grade": 5,
+      "semester": 1,
+      "unit": 3,
+      "unit_title": "Animals",
+      "pdf_pages": [
+        31,
+        33
+      ],
+      "printed_pages": [
+        26,
+        28
+      ],
+      "unit_title_zh": "动物"
+    },
+    {
+      "id": "g5-s1-u4",
+      "book_id": "g5-s1",
+      "grade": 5,
+      "semester": 1,
+      "unit": 4,
+      "unit_title": "Shopping Day",
+      "pdf_pages": [
+        49,
+        51
+      ],
+      "printed_pages": [
+        44,
+        46
+      ],
+      "unit_title_zh": "购物"
+    },
+    {
+      "id": "g5-s1-u5",
+      "book_id": "g5-s1",
+      "grade": 5,
+      "semester": 1,
+      "unit": 5,
+      "unit_title": "TV Shows",
+      "pdf_pages": [
+        61,
+        63
+      ],
+      "printed_pages": [
+        56,
+        58
+      ],
+      "unit_title_zh": "电视节目"
+    },
+    {
+      "id": "g5-s1-u6",
+      "book_id": "g5-s1",
+      "grade": 5,
+      "semester": 1,
+      "unit": 6,
+      "unit_title": "Chores",
+      "pdf_pages": [
+        73,
+        75
+      ],
+      "printed_pages": [
+        68,
+        70
+      ],
+      "unit_title_zh": "家务"
+    },
+    {
+      "id": "g5-s2-u1",
+      "book_id": "g5-s2",
+      "grade": 5,
+      "semester": 2,
+      "unit": 1,
+      "unit_title": "Keeping Healthy",
+      "pdf_pages": [
+        6,
+        8,
+        9
+      ],
+      "printed_pages": [
+        2,
+        4,
+        5
+      ],
+      "unit_title_zh": "健康生活"
+    },
+    {
+      "id": "g5-s2-u2",
+      "book_id": "g5-s2",
+      "grade": 5,
+      "semester": 2,
+      "unit": 2,
+      "unit_title": "Special Days",
+      "pdf_pages": [
+        18,
+        20
+      ],
+      "printed_pages": [
+        14,
+        16
+      ],
+      "unit_title_zh": "特别的日子"
+    },
+    {
+      "id": "g5-s2-u3",
+      "book_id": "g5-s2",
+      "grade": 5,
+      "semester": 2,
+      "unit": 3,
+      "unit_title": "Making Contact",
+      "pdf_pages": [
+        30,
+        32
+      ],
+      "printed_pages": [
+        26,
+        28
+      ],
+      "unit_title_zh": "保持联系"
+    },
+    {
+      "id": "g5-s2-u4",
+      "book_id": "g5-s2",
+      "grade": 5,
+      "semester": 2,
+      "unit": 4,
+      "unit_title": "Last Weekend",
+      "pdf_pages": [
+        48,
+        50
+      ],
+      "printed_pages": [
+        44,
+        46
+      ],
+      "unit_title_zh": "上个周末"
+    },
+    {
+      "id": "g5-s2-u5",
+      "book_id": "g5-s2",
+      "grade": 5,
+      "semester": 2,
+      "unit": 5,
+      "unit_title": "Have a Great Trip",
+      "pdf_pages": [
+        60,
+        62
+      ],
+      "printed_pages": [
+        56,
+        58
+      ],
+      "unit_title_zh": "愉快的旅行"
+    },
+    {
+      "id": "g5-s2-u6",
+      "book_id": "g5-s2",
+      "grade": 5,
+      "semester": 2,
+      "unit": 6,
+      "unit_title": "Growing Up",
+      "pdf_pages": [
+        72,
+        74
+      ],
+      "printed_pages": [
+        68,
+        70
+      ],
+      "unit_title_zh": "成长"
+    },
+    {
+      "id": "g6-s1-u1",
+      "book_id": "g6-s1",
+      "grade": 6,
+      "semester": 1,
+      "unit": 1,
+      "unit_title": "In China",
+      "pdf_pages": [
+        7,
+        9
+      ],
+      "printed_pages": [
+        2,
+        4
+      ],
+      "unit_title_zh": "在中国"
+    },
+    {
+      "id": "g6-s1-u2",
+      "book_id": "g6-s1",
+      "grade": 6,
+      "semester": 1,
+      "unit": 2,
+      "unit_title": "Around the World",
+      "pdf_pages": [
+        19,
+        21
+      ],
+      "printed_pages": [
+        14,
+        16
+      ],
+      "unit_title_zh": "环游世界"
+    },
+    {
+      "id": "g6-s1-u3",
+      "book_id": "g6-s1",
+      "grade": 6,
+      "semester": 1,
+      "unit": 3,
+      "unit_title": "Animal World",
+      "pdf_pages": [
+        31,
+        33
+      ],
+      "printed_pages": [
+        26,
+        28
+      ],
+      "unit_title_zh": "动物世界"
+    },
+    {
+      "id": "g6-s1-u4",
+      "book_id": "g6-s1",
+      "grade": 6,
+      "semester": 1,
+      "unit": 4,
+      "unit_title": "Feelings",
+      "pdf_pages": [
+        49,
+        51
+      ],
+      "printed_pages": [
+        44,
+        46
+      ],
+      "unit_title_zh": "心情"
+    },
+    {
+      "id": "g6-s1-u5",
+      "book_id": "g6-s1",
+      "grade": 6,
+      "semester": 1,
+      "unit": 5,
+      "unit_title": "Famous People",
+      "pdf_pages": [
+        61,
+        63
+      ],
+      "printed_pages": [
+        56,
+        58
+      ],
+      "unit_title_zh": "名人"
+    },
+    {
+      "id": "g6-s1-u6",
+      "book_id": "g6-s1",
+      "grade": 6,
+      "semester": 1,
+      "unit": 6,
+      "unit_title": "Winter Vacation",
+      "pdf_pages": [
+        73,
+        75
+      ],
+      "printed_pages": [
+        68,
+        70
+      ],
+      "unit_title_zh": "寒假"
+    },
+    {
+      "id": "g6-s2-u1",
+      "book_id": "g6-s2",
+      "grade": 6,
+      "semester": 2,
+      "unit": 1,
+      "unit_title": "Visiting Canada",
+      "pdf_pages": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "printed_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "unit_title_zh": "探访加拿大"
+    },
+    {
+      "id": "g6-s2-u2",
+      "book_id": "g6-s2",
+      "grade": 6,
+      "semester": 2,
+      "unit": 2,
+      "unit_title": "All Around Me",
+      "pdf_pages": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "printed_pages": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "unit_title_zh": "身边的世界"
+    },
+    {
+      "id": "g6-s2-u3",
+      "book_id": "g6-s2",
+      "grade": 6,
+      "semester": 2,
+      "unit": 3,
+      "unit_title": "Daily Life",
+      "pdf_pages": [
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "printed_pages": [
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "unit_title_zh": "日常生活"
+    },
+    {
+      "id": "g6-s2-u4",
+      "book_id": "g6-s2",
+      "grade": 6,
+      "semester": 2,
+      "unit": 4,
+      "unit_title": "Free Time",
+      "pdf_pages": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "printed_pages": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "unit_title_zh": "课余时间"
+    },
+    {
+      "id": "g6-s2-u5",
+      "book_id": "g6-s2",
+      "grade": 6,
+      "semester": 2,
+      "unit": 5,
+      "unit_title": "Nature and Culture",
+      "pdf_pages": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        51
+      ],
+      "printed_pages": [
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "unit_title_zh": "自然与文化"
+    },
+    {
+      "id": "g6-s2-u6",
+      "book_id": "g6-s2",
+      "grade": 6,
+      "semester": 2,
+      "unit": 6,
+      "unit_title": "Summer Vacation",
+      "pdf_pages": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ],
+      "printed_pages": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "unit_title_zh": "暑假"
+    }
+  ]
+}
