@@ -55,14 +55,22 @@ test('external hand removes the old perspective cards and routes only owner draw
 test('short immersive fields leave separate hit badges for all four allied and enemy slots',t=>{
  const h=harness(t,{externalHand:true});const next=state();
  for(const [seat,player]of next.players.entries())player.board=Array.from({length:4},(_,i)=>({uid:`${seat}:${i}`,cardId:'fox',atk:2,hp:2,maxHp:2,ready:true}));
- for(const [w,hgt]of[[320,138],[320,160],[390,292],[708,184],[604,154]]){
+ for(const [w,hgt]of[[320,138],[320,160],[320,198],[390,292],[708,208],[604,178],[708,184],[604,154]]){
   h.canvas.getBoundingClientRect=()=>({width:w,height:hgt,left:0,top:0});h.scene.resize();h.scene.setBattle(next,0);h.scene.camera.updateMatrixWorld(true);
   for(const seat of[0,1]){const labels=next.players[seat].board.map(u=>h.scene.labelPoint(h.scene.units.get(u.uid)));const points=labels.map(point=>point.x);
    for(let i=1;i<4;i++)assert.ok(points[i]-points[i-1]>=56,`${w}x${hgt}, seat${seat}, spacing${points[i]-points[i-1]}`);
    assert.ok(points[0]>=28&&points[3]<=w-28,`${w}x${hgt}: four label centers fit`);
-   assert.ok(labels.every(point=>point.y>=2&&point.y+44<=hgt),`${w}x${hgt}: near-row state fits inside the field`);
+   assert.ok(labels.every(point=>point.y>=2&&point.y+44<=hgt-12),`${w}x${hgt}: full controls clear the overlapping hand canvas`);
   }
+  const near=next.players[0].board.map(u=>h.scene.labelPoint(h.scene.units.get(u.uid)));
+  const far=next.players[1].board.map(u=>h.scene.labelPoint(h.scene.units.get(u.uid)));
+  for(const a of near)for(const b of far)if(Math.abs(a.x-b.x)<56)
+   assert.ok(a.y-b.y>=50-1e-6,`${w}x${hgt}: opposing touch rows have a 6px gutter`);
  }
+ const before=h.scene.heroes.map(hero=>hero.root.position.toArray());
+ h.scene.setHeroSkins({self:'butterfly_scholar',opponent:'aurora_storyteller'});
+ assert.equal(h.scene.heroes[1].root.position.z,before[1][2],'cosmetic replacement preserves the compact hero seat');
+ assert.ok(h.scene.heroes[1].root.position.x>0,'opposing compact hero remains beside its side of the field');
 });
 
 test("elemental cast commits impact once and cancelled casts never commit", async t => {

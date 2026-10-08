@@ -256,8 +256,14 @@ test('@layout populated compact field keeps eight units separate and a natural s
   }
   expect(a.observed.room.players.map(player => player.board.length), 'coverage gap: both fields must genuinely contain four units within 14 UI turns').toEqual([4, 4]);
   expect(Boolean(reviewer), 'coverage gap: an active player must naturally hold seven cards within 14 UI turns').toBe(true);
-  for (const viewport of viewports) await populatedLayout(reviewer, testInfo, viewport);
+  const layoutErrors=[];
+  for (const viewport of viewports) {
+    try { await populatedLayout(reviewer, testInfo, viewport); }
+    catch(error) { layoutErrors.push({viewport,message:String(error.message)}); }
+  }
+  reviewer.metrics.layoutErrors=layoutErrors;
   await compactHandGestures(reviewer, testInfo);
+  expect(layoutErrors,'all five viewports must pass; screenshots are retained even after an earlier size fails').toEqual([]);
   for (const actor of [a, b]) {
     expect(actor.observed.room.assisted).toBe(false);
     expect(actor.observed.errors).toEqual([]);

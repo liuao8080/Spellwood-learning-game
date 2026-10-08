@@ -1557,7 +1557,7 @@ function forestEdgeDetail(builder, body, random) {
   }
 }
 
-function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4 } = {}) {
+function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4, rowDepth = 2.12 } = {}) {
   builder.add(body, roundedSlab(18, 12, 0.66, 1.05, 0.07), "bark", {
     position: [0, -0.47, 0],
     rotation: [-HALF_PI, 0, 0],
@@ -1590,7 +1590,7 @@ function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4 } = {}) {
   for (let side = 0; side < 2; side++)
     for (let i = 0; i < slotCount; i++) {
       const x = (i - (slotCount - 1) / 2) * 3.15,
-        z = side === 0 ? 2.12 : -2.12;
+        z = (side === 0 ? 1 : -1) * clamp(rowDepth, 1.5, 3.2);
       slotPositions[side].push([x, 0.026, z]);
       builder.add(
         body,

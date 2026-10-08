@@ -47,8 +47,8 @@ body.immersive #renderer-warning { top: calc(76px + var(--safe-top)); right: cal
   /* The action rail owns its column. Card size stays readable; swipe for more. */
   body.immersive #hand-stage { left: var(--safe-left); right: calc(136px + var(--safe-right)); }
   body.immersive.has-room #arena, body.immersive.has-room #unit-labels {
-    inset: calc(48px + var(--safe-top)) calc(136px + var(--safe-right)) calc(158px + var(--safe-bottom)) var(--safe-left);
-    width: calc(var(--safe-width) - 136px); height: calc(var(--safe-height) - 206px);
+    inset: calc(24px + var(--safe-top)) calc(136px + var(--safe-right)) calc(158px + var(--safe-bottom)) var(--safe-left);
+    width: calc(var(--safe-width) - 136px); height: calc(var(--safe-height) - 182px);
   }
   body.immersive #notice { bottom: calc(174px + var(--safe-bottom)); left: calc((100% - 136px + var(--safe-left) - var(--safe-right)) / 2); max-width: calc(var(--safe-width) - 160px); }
   body.immersive.has-room #renderer-warning { top: calc(100px + var(--safe-top)); left: calc(8px + var(--safe-left)); right: calc(144px + var(--safe-right)); }
@@ -131,6 +131,13 @@ body.immersive .pack-exit-confirm section { max-height: calc(var(--safe-height) 
 }
 .immersive .card-info-dialog .card-info-english{font:600 19px/1.35 Georgia,serif;color:#cce6d4;margin:5px 0 12px}
 .compact-turn,.compact-hand-hint{display:none}
+@media(max-width:960px) and (max-height:500px) and (orientation:landscape){
+ body.immersive.has-room .top{pointer-events:none}
+ body.immersive.has-room .top button{pointer-events:auto}
+ body.immersive.has-room .battle-context{top:2px;height:20px;gap:8px}
+ body.immersive.has-room .battle-context>b,body.immersive.has-room .turn-banner{display:none}
+ body.immersive.has-room .compact-turn{display:inline;color:#e9d7a6}
+}
 .unit-inspection-state{background:#1c4439;border:1px solid #88aa7655;border-radius:12px;padding:10px 13px;margin:14px 0}
 .immersive .unit-inspection-state p{margin:3px 0;font-size:16px}
 .immersive .unit-inspection-state .subtle{font-size:14px}

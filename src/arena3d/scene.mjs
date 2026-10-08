@@ -140,6 +140,8 @@ export class ArenaScene {
 
   fitHeroSeats() {
     if (!this.width || !this.height) return;
+    this.heroes[0].root.position.set(SELF_HERO_X*(this.boardWidthScale||1),.1,4.5);
+    this.heroes[1].root.position.set(this.compactLandscape?-SELF_HERO_X*(this.boardWidthScale||1):0,.1,this.compactLandscape?4.5:-4.25);
     this.camera.updateMatrixWorld(true);
     for (const hero of this.heroes) for (let attempt = 0; attempt < 2; attempt++) {
       hero.root.updateMatrixWorld(true);
@@ -243,6 +245,16 @@ export class ArenaScene {
     this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, this.quality === "low" ? 1 : 1.5));
     const scale = this.renderer.isSoftwareRenderer ? Math.min(1, Math.sqrt(720000 / (w * h))) : 1;
     this.renderer.setSize(Math.round(w * scale), Math.round(h * scale), false); this.camera.aspect = w / h;
+    const compactLandscape=this.externalHand && w/h>2.2 && h<240;
+    this.compactLandscape=compactLandscape;
+    const rowDepth=compactLandscape?2.8:2;
+    if(this.rowDepth!==rowDepth){
+      this.rowDepth=rowDepth;
+      this.arena.root.removeFromParent();this.arena.dispose();
+      this.arena=this.library.createArena({seed:27,slotsPerSide:4,rowDepth:rowDepth+.12});
+      this.arena.root.traverse(object=>{object.userData.cpuStatic=true;});
+      this.scene.add(this.arena.root);
+    }
     const narrow = w < 600, portrait = !narrow && this.camera.aspect < 1.1;
     this.boardWidthScale = narrow ? .72 : portrait ? .9 : 1;
     if(this.externalHand && h < 270) this.boardWidthScale = narrow ? 1.2 : 1.35;
@@ -253,6 +265,10 @@ export class ArenaScene {
     const fit = Math.max(1, (narrow ? .76 : portrait ? 1.22 : 1.48) / this.camera.aspect);
     const closeBoard = this.externalHand ? h < 270 ? .76 : .91 : 1;
     this.cameraBase = new Vector3(0, (this.externalHand ? 13.8 : 16.4) * fit * closeBoard, (this.externalHand ? 15.8 : 18.6) * fit * closeBoard);
+    // A taller overhead view separates complete figures from the next row's
+    // hit badges. Large hand cards keep their existing readable pixel size.
+    this.cameraLook.set(0,0,compactLandscape?1.1:.2);
+    if(compactLandscape)this.cameraBase.set(0,14,9);
     this.camera.position.copy(this.cameraBase); this.camera.lookAt(this.cameraLook); this.camera.updateProjectionMatrix();
     if(this.externalHand){
       this.camera.updateMatrixWorld(true);
@@ -304,7 +320,7 @@ export class ArenaScene {
         item.unit = unit; item.seat = seat;
         this.restoreFade(item);
         const slot = state.phase === "gallery" && this.width > 900 ? (relative ? 3.2 : 1.6 + i * 3.2) : slots[i];
-        item.base.set(slot * (this.boardWidthScale || 1), .08, relative ? -2.0 : 2.0);
+        item.base.set(slot * (this.boardWidthScale || 1), .08, (relative ? -1 : 1)*(this.rowDepth||2));
         if (!item.animating) item.model.root.position.copy(item.base);
         if (!item.animating) item.model.root.scale.setScalar(this.scaleFor(unit.cardId));
         item.model.setVisualState?.({ selected: this.selected?.uid === unit.uid, exhausted: !unit.ready, guarded: CARD[unit.cardId]?.keyword === "guard", damaged: unit.hp < (unit.maxHp || CARD[unit.cardId]?.hp || 1) });
@@ -504,7 +520,20 @@ export class ArenaScene {
 
   labelPoint(item) {
     const point=this.project(item.model.root.position.clone().add(new Vector3(0,.15,.63)));
-    if(this.externalHand){point.x=MathUtils.clamp(point.x,30,Math.max(30,this.width-30));point.y=MathUtils.clamp(point.y,3,Math.max(3,this.height-46));}
+    if(this.externalHand){
+      point.x=MathUtils.clamp(point.x,30,Math.max(30,this.width-30));
+      // The transparent hand canvas overlaps the field by 10px in landscape.
+      // Keep the complete 44px control above it, with a small touch gutter.
+      const nearLimit=Math.max(3,this.height-58);
+      point.y=MathUtils.clamp(point.y,3,nearLimit);
+      if(item.seat!==this.viewerSeat){
+        // Reserve two full touch rows even when perspective compresses depth.
+        // Use the stable near-row plane, not a moving/attacking neighbour.
+        const near=this.project(new Vector3(item.base.x,.23,(this.rowDepth||2)+.63));
+        const nearY=MathUtils.clamp(near.y,3,nearLimit);
+        point.y=Math.max(3,Math.min(point.y,nearY-50));
+      }
+    }
     return point;
   }
 
