@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>词灵对决 · 响应式视口检查</title>
+<style>
+:root { color-scheme: dark; font: 16px/1.4 system-ui, sans-serif; background: #112421; color: #f3ead1; }
+body { margin: 0; padding: 12px; }
+header { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+label { display: flex; gap: 8px; align-items: center; }
+select, button { min-height: 44px; padding: 8px 12px; color: inherit; background: #173d34; border: 1px solid #afaa83; border-radius: 8px; font: inherit; }
+p { margin: 8px 0 12px; color: #b9cec3; font-size: 14px; }
+.viewport { width: max-content; padding: 0; border: 2px solid #d5bc86; }
+iframe { display: block; border: 0; background: #071b20; }
+output { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<header><label>CSS视口<select id="size"><option value="320,568">320 × 568 竖屏</option><option value="360,640">360 × 640 竖屏</option><option value="390,700" selected>390 × 700 竖屏</option><option value="430,740">430 × 740 竖屏</option><option value="740,360">740 × 360 横屏</option><option value="844,390">844 × 390 横屏</option></select></label><button id="reload" type="button">重新载入试玩</button><button id="inspect" type="button">布局检查</button><output id="measurement">等待页面…</output></header>
+<p>桌面浏览器中的同源 CSS 视口检查；不代表物理手机触控或设备仿真。切换尺寸保留当前页面，重新载入会结束未完的试玩。</p>
+<pre id="report" hidden style="white-space:pre-wrap;font-size:13px;background:#071b20;padding:12px"></pre>
+<div class="viewport"><iframe id="game" title="词灵对决响应式试玩" src="/" width="390" height="700"></iframe></div>
+<script>
+const sizes = new Set(['320,568','360,640','390,700','430,740','740,360','844,390']);
+const frame = document.querySelector('#game');
+const picker = document.querySelector('#size');
+const output = document.querySelector('#measurement');
+function measure() {
+  try { output.value = `实际 CSS 视口：${frame.contentWindow.innerWidth} × ${frame.contentWindow.innerHeight}`; }
+  catch { output.value = '无法读取同源视口'; }
+}
+function resize() {
+  if (!sizes.has(picker.value)) return;
+  const [width, height] = picker.value.split(',').map(Number);
+  frame.width = width; frame.height = height;
+  requestAnimationFrame(measure);
+}
+picker.addEventListener('change', resize);
+frame.addEventListener('load', measure);
+document.querySelector('#reload').addEventListener('click', () => { frame.src = '/'; });
+document.querySelector('#inspect').addEventListener('click', () => {
+  const priorReport = document.querySelector('#report');
+  if (!priorReport.hidden) { priorReport.hidden = true; return; }
+  const doc = frame.contentDocument, win = frame.contentWindow;
+  const visible = el => { const s = win.getComputedStyle(el), r = el.getBoundingClientRect(); return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0; };
+  const bounds = el => { const r = el.getBoundingClientRect(); return { x: Math.round(r.x), y: Math.round(r.y), width: Math.round(r.width), height: Math.round(r.height), right: Math.round(r.right), bottom: Math.round(r.bottom) }; };
+  const regions = ['#arena', '#unit-labels', '.hero-panel.mine', '.hero-panel.theirs', '.rituals', '.command-bar', '.hand-access'];
+  const found = regions.map(selector => [selector, doc.querySelector(selector)]).filter(([,el]) => el && visible(el));
+  const small = [...doc.querySelectorAll('button, select, summary')].filter(visible).map(el => [el.textContent.trim().replace(/\s+/g, ' ').slice(0,30), bounds(el)]).filter(([,r]) => r.width < 44 || r.height < 44);
+  const collisions = [];
+  for(let i=0;i<found.length;i++) for(let j=i+1;j<found.length;j++) {
+    if(found[i][0] === '#unit-labels' || found[j][0] === '#unit-labels') continue;
+    const a = bounds(found[i][1]), b = bounds(found[j][1]);
+    if(Math.min(a.right,b.right) > Math.max(a.x,b.x) && Math.min(a.bottom,b.bottom) > Math.max(a.y,b.y)) collisions.push(`${found[i][0]} / ${found[j][0]}`);
+  }
+  const labels = [...doc.querySelectorAll('.unit-label')].filter(visible);
+  const labelCollisions = [];
+  for(let i=0;i<labels.length;i++) for(let j=i+1;j<labels.length;j++) {
+    const a = bounds(labels[i]), b = bounds(labels[j]);
+    if(Math.min(a.right,b.right) > Math.max(a.x,b.x) && Math.min(a.bottom,b.bottom) > Math.max(a.y,b.y)) labelCollisions.push(`${labels[i].getAttribute('aria-label')} / ${labels[j].getAttribute('aria-label')}`);
+  }
+  const report = document.querySelector('#report');
+  report.textContent = [
+    `实际CSS视口 ${win.innerWidth}×${win.innerHeight}`,
+    ...found.map(([name,el]) => { const r=bounds(el); return `${name}: x=${r.x}, y=${r.y}, ${r.width}×${r.height}`; }),
+    `小于44px控件: ${small.length ? JSON.stringify(small) : '无'}`,
+    `主要区域相交: ${collisions.length ? collisions.join('; ') : '无'}`,
+    `单位点击区相交: ${labelCollisions.length ? labelCollisions.join('; ') : '无'}`,
+  ].join('\n');
+  report.hidden = false;
+});
+resize();
+</script>
+</body>
+</html>

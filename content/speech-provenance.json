@@ -1,0 +1,20 @@
+{
+  "engine": "Kokoro v0.19 via sherpa-onnx 1.13.8",
+  "voice": "af (speaker 0), synthetic English",
+  "speed": 0.85,
+  "sample_rate": 24000,
+  "encoded": "48 kbps mono MP3",
+  "clip_count": 778,
+  "duration_seconds": 1936.97,
+  "total_bytes": 12085928,
+  "source_text": "Original question listen/speak fields, content pep1-2026.1",
+  "question_count": 432,
+  "model_source": "https://huggingface.co/hexgrad/Kokoro-82M",
+  "runtime_documentation": "https://k2-fsa.github.io/sherpa/onnx/tts/pretrained_models/kokoro.html",
+  "model_license": "Apache-2.0",
+  "model_sha256": "10ff414106a038ce7e9e0126c6461e4dc8a86efaa89dc91d2009d69fe635e339",
+  "generated_utc": "2026-10-06",
+  "validation": "All clips nonempty, duration and waveform checks; no claim of human auditory review",
+  "options_pause_seconds": 0.4,
+  "blank_pause_seconds": 0.65
+}

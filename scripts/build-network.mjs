@@ -1,0 +1,14 @@
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { build } from "esbuild";
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const read = (p) => fs.readFileSync(path.join(root, p), "utf8");
+const result = await build({ entryPoints: [path.join(root, "src/network/app.mjs")], bundle: true, write: false, format: "iife", target: ["es2020"], minify: false, legalComments: "inline", loader: { ".json": "json" }, metafile: true });
+const inputs = Object.keys(result.metafile.inputs);
+if (inputs.some((p) => /(?:questions\.json|speech-assets\.json|server\/)/.test(p))) throw Error("Private question material entered the network client bundle");
+const html = read("src/network/template.html").replace("/* NETWORK_STYLE */", read("src/network/style.css") + "\n" + read("src/network/collection.css") + "\n" + read("src/network/immersive.css") + "\n" + read("src/network/safe-area.css")).replace('<script>/* NETWORK_SCRIPT */</script>', '<script src="/app.js" defer></script>');
+fs.mkdirSync(path.join(root, "client-dist"), { recursive: true });
+fs.writeFileSync(path.join(root, "client-dist/index.html"), html);
+fs.writeFileSync(path.join(root, "client-dist/app.js"), result.outputFiles[0].text);
+console.log(`Built local network client: ${Buffer.byteLength(html)} byte HTML + ${result.outputFiles[0].contents.length} byte JS; private question/answer/voice-index inputs excluded.`);

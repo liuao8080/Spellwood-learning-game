@@ -1,0 +1,99 @@
+/* One usable screen rectangle for the scene and its controls. Browser insets
+   remain automatic; the dedicated QA page may override these four variables. */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-width: calc(100vw - var(--safe-left) - var(--safe-right));
+  --safe-height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
+}
+body.immersive { background: #071b20; }
+body.immersive #interface, body.immersive #lobby-scene {
+  inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+  width: var(--safe-width); height: var(--safe-height);
+}
+body.immersive .leave { position: absolute; }
+body.immersive .grove-footer { bottom: 8px; }
+body.immersive #hand-stage { left: calc(190px + var(--safe-left)); right: calc(184px + var(--safe-right)); bottom: var(--safe-bottom); }
+body.immersive.has-room #arena, body.immersive.has-room #unit-labels {
+  inset: calc(58px + var(--safe-top)) var(--safe-right) calc(196px + var(--safe-bottom)) var(--safe-left);
+  width: var(--safe-width); height: calc(var(--safe-height) - 254px);
+}
+body.immersive #notice { left: calc(50% + (var(--safe-left) - var(--safe-right)) / 2); bottom: calc(244px + var(--safe-bottom)); }
+body.immersive #renderer-warning { top: calc(76px + var(--safe-top)); right: calc(14px + var(--safe-right)); }
+@media (max-width: 960px) {
+  body.immersive #hand-stage { left: calc(140px + var(--safe-left)); right: calc(150px + var(--safe-right)); }
+}
+@media (max-width: 600px) {
+  body.immersive .grove-nav { bottom: max(172px, 26%); }
+  body.immersive .grove-start { bottom: 69px; }
+  body.immersive .rituals, body.immersive .command-bar { bottom: 194px; }
+  body.immersive #hand-stage { left: var(--safe-left); right: var(--safe-right); }
+  body.immersive.has-room #arena, body.immersive.has-room #unit-labels {
+    inset: calc(128px + var(--safe-top)) var(--safe-right) calc(280px + var(--safe-bottom)) var(--safe-left);
+    height: calc(var(--safe-height) - 408px);
+  }
+  body.immersive #notice { bottom: calc(286px + var(--safe-bottom)); max-width: calc(var(--safe-width) - 24px); }
+  body.immersive #renderer-warning { top: calc(63px + var(--safe-top)); left: calc(10px + var(--safe-left)); right: calc(10px + var(--safe-right)); }
+  body.immersive.has-room #renderer-warning { top: calc(128px + var(--safe-top)); left: calc(8px + var(--safe-left)); right: calc(8px + var(--safe-right)); }
+}
+@media (max-width: 960px) and (max-height: 500px) and (orientation: landscape) {
+  body.immersive .grove-nav { bottom: auto; }
+  body.immersive .grove-start { bottom: 47px; }
+  body.immersive .grove-footer { bottom: 3px; }
+  body.immersive .rituals, body.immersive .command-bar { bottom: auto; }
+  body.immersive .command-bar { height: calc(var(--safe-height) - 228px); }
+  /* The action rail owns its column. Card size stays readable; swipe for more. */
+  body.immersive #hand-stage { left: var(--safe-left); right: calc(136px + var(--safe-right)); }
+  body.immersive.has-room #arena, body.immersive.has-room #unit-labels {
+    inset: calc(48px + var(--safe-top)) calc(136px + var(--safe-right)) calc(158px + var(--safe-bottom)) var(--safe-left);
+    width: calc(var(--safe-width) - 136px); height: calc(var(--safe-height) - 206px);
+  }
+  body.immersive #notice { bottom: calc(174px + var(--safe-bottom)); left: calc((100% - 136px + var(--safe-left) - var(--safe-right)) / 2); max-width: calc(var(--safe-width) - 160px); }
+  body.immersive.has-room #renderer-warning { top: calc(100px + var(--safe-top)); left: calc(8px + var(--safe-left)); right: calc(144px + var(--safe-right)); }
+}
+/* Collection screens scroll inside the usable rectangle, not into cutouts. */
+body.immersive .collection-shade { padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
+body.immersive .collection-panel { width: min(1140px, var(--safe-width)); height: min(980px, var(--safe-height)); }
+@media (max-width: 700px) {
+  body.immersive .collection-panel { width: var(--safe-width); height: var(--safe-height); }
+}
+/* Opening bands share the same origin. Never add the bottom inset twice. */
+body.immersive .opening-immersive .collection-panel {
+  inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+  width: var(--safe-width); height: var(--safe-height);
+}
+body.immersive .opening-immersive .collection-heading { top: 14px; left: 24px; right: 24px; }
+body.immersive .opening-immersive #pack-controls { bottom: 50px; }
+body.immersive .opening-immersive #pack-results { bottom: 2px; max-width: calc(100% - 28px); }
+body.immersive .opening-immersive #pack-results.summary-expanded { width: min(1000px, calc(100% - 24px)); max-height: calc(var(--safe-height) - 88px); }
+@media (max-width: 600px) {
+  body.immersive .opening-immersive .collection-heading { top: 10px; left: 12px; right: 12px; }
+  body.immersive .opening-immersive #pack-results.summary-expanded { max-height: calc(var(--safe-height) - 80px); }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  body.immersive .opening-immersive .collection-heading { top: 8px; left: 16px; right: 16px; }
+  body.immersive .opening-immersive #pack-controls { bottom: 44px; }
+  body.immersive .opening-immersive #pack-results.summary-expanded { max-height: calc(var(--safe-height) - 60px); }
+}
+body.immersive .modal-shade { padding: calc(24px + var(--safe-top)) calc(24px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(24px + var(--safe-left)); }
+body.immersive .modal-shade:not(.battle-recap-layer) .dialog { max-height: calc(var(--safe-height) - 48px); }
+body.immersive .card-library { width: min(1060px, calc(94vw - var(--safe-left) - var(--safe-right))); }
+body.immersive .modal-shade.battle-recap-layer { padding: calc(22px + var(--safe-top)) calc(22px + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(22px + var(--safe-left)); }
+body.immersive .battle-recap-layer.own-effect-recap { padding-top: calc(92px + var(--safe-top)); }
+body.immersive .battle-recap:not(.cue-only) { max-height: calc(var(--safe-height) - 120px); }
+@media (max-width: 600px), (max-width: 960px) and (max-height: 500px) and (orientation: landscape) {
+  body.immersive .modal-shade, body.immersive .modal-shade.battle-recap-layer, body.immersive .battle-recap-layer.own-effect-recap { padding: calc(8px + var(--safe-top)) calc(8px + var(--safe-right)) calc(8px + var(--safe-bottom)) calc(8px + var(--safe-left)); }
+  body.immersive .modal-shade:not(.battle-recap-layer) .dialog { max-height: calc(var(--safe-height) - 16px); }
+  body.immersive .battle-recap:not(.cue-only), body.immersive .own-effect-recap .battle-recap { max-height: min(calc(var(--safe-height) * .65), 440px); }
+}
+@media (max-width: 960px) and (max-height: 500px) and (orientation: landscape) {
+  body.immersive .battle-recap:not(.cue-only), body.immersive .own-effect-recap .battle-recap { max-height: calc(var(--safe-height) - 16px); }
+}
+@media (max-width: 700px) {
+  body.immersive .card-library { width: calc(var(--safe-width) - 20px); }
+  body.immersive .modal-shade:not(.battle-recap-layer) .card-library { max-height: calc(var(--safe-height) - 20px); }
+}
+body.immersive .pack-exit-confirm { padding: calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left)); }
+body.immersive .pack-exit-confirm section { max-height: calc(var(--safe-height) - 32px); overflow: auto; overscroll-behavior: contain; }

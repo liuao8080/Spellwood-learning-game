@@ -1,0 +1,105 @@
+{
+  "version": "3.1",
+  "date": "2026-10-07",
+  "images": [
+    {
+      "card": "bear",
+      "runtime": "dist/assets/cards/bear.webp",
+      "bytes": 179410,
+      "sha256": "7290ce0330b135ff9943bcf93fffba4152c8a88762b4a139d3109f44a4685b47",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    },
+    {
+      "card": "boar",
+      "runtime": "dist/assets/cards/boar.webp",
+      "bytes": 154282,
+      "sha256": "27b779fefde159ee1e95484d45532c6db803faf4bbe444a18e566bcbff4df7ce",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    },
+    {
+      "card": "crane",
+      "runtime": "dist/assets/cards/crane.webp",
+      "bytes": 152074,
+      "sha256": "d1f3197defdb2ae852eca8238acbbd83eb89ed60c1052edd78e2cddbb004e8d3",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    },
+    {
+      "card": "dew",
+      "runtime": "dist/assets/cards/dew.webp",
+      "bytes": 148952,
+      "sha256": "4d3693f4a4f3c796fe3ea9888a56f5c0cf9c55f8d6c6d6d9ca330fa8f977cd40",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    },
+    {
+      "card": "firefly",
+      "runtime": "dist/assets/cards/firefly.webp",
+      "bytes": 123788,
+      "sha256": "ca7427dbb40495dc07679a5809e8d0f23eb6d6e8479068bd6ea8127a27a77505",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    },
+    {
+      "card": "frost",
+      "runtime": "dist/assets/cards/frost.webp",
+      "bytes": 167110,
+      "sha256": "c94f6979dbff8aef3a2b3dbe64a425a6bb7909553f19634e1a73b580abc9a73e",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    },
+    {
+      "card": "hedgehog",
+      "runtime": "dist/assets/cards/hedgehog.webp",
+      "bytes": 160532,
+      "sha256": "f861e1cbfbddc80376d8383c3ece897108ea4e1f6c3deaa8d9bd50af974ebd23",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    },
+    {
+      "card": "lantern",
+      "runtime": "dist/assets/cards/lantern.webp",
+      "bytes": 149596,
+      "sha256": "e43187f915a8d5656d8d337370c46bc2736b0a8572de666337439b7dc1df26de",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    },
+    {
+      "card": "otter",
+      "runtime": "dist/assets/cards/otter.webp",
+      "bytes": 171676,
+      "sha256": "5460ce252e7ea495af6ed164ddc718663f0874095e122dee8c3e527dfea65053",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    },
+    {
+      "card": "phoenix",
+      "runtime": "dist/assets/cards/phoenix.webp",
+      "bytes": 165150,
+      "sha256": "5c6d9c1d51bfd43bdec98d0db18892efa161a56d99623ff7e975aaaf5e7b90e3",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    },
+    {
+      "card": "unicorn",
+      "runtime": "dist/assets/cards/unicorn.webp",
+      "bytes": 190330,
+      "sha256": "c23ed98d9499ebe37e2bd9171c7416df3aff7838ed70d23632cd91a2804fbac9",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    },
+    {
+      "card": "wolf",
+      "runtime": "dist/assets/cards/wolf.webp",
+      "bytes": 148636,
+      "sha256": "c6cbae976f12a3337264eb5a3abb95247d4be1013c66fbbeea31aa445f0fcfd5",
+      "origin": "Original image generation for Spellwood 3.1",
+      "reference": "Original forest storybook direction; no third-party game artwork"
+    }
+  ],
+  "models": "Original procedural geometry in src/arena3d/creature-expansion.mjs",
+  "pack": "Original geometry in src/arena3d/pack-scene.mjs",
+  "reference_media_included": false
+}

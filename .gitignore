@@ -1,0 +1,35 @@
+# Dependencies and generated application bundles
+node_modules/
+/client-dist/
+/practice-dist/
+/dist/*
+!/dist/assets/
+/deliverables/
+/test-results/
+/coverage/
+
+# Local environments, credentials and personal exports
+.env
+.env.*
+!.env.example
+.openai/
+.codex/
+.agents/
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*.json
+*token*.json
+*backup*.json
+*备份*.json
+/local-saves/
+/browser-profiles/
+
+# Temporary files and generated package inventory
+PACKAGE-MANIFEST.json
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+Thumbs.db

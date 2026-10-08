@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>词灵对决 · 响应式视口检查</title>
+<style>
+:root { color-scheme: dark; font: 16px/1.4 system-ui, sans-serif; background: #112421; color: #f3ead1; }
+body { margin: 0; padding: 12px; }
+header { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+label { display: flex; gap: 8px; align-items: center; }
+select, button { min-height: 44px; padding: 8px 12px; color: inherit; background: #173d34; border: 1px solid #afaa83; border-radius: 8px; font: inherit; }
+p { margin: 8px 0 12px; color: #b9cec3; font-size: 14px; }
+.viewport { width: max-content; padding: 0; border: 2px solid #d5bc86; }
+iframe { display: block; border: 0; background: #071b20; }
+output { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<header><label>CSS视口<select id="size"><option value="320,568">320 × 568 竖屏</option><option value="360,640">360 × 640 竖屏</option><option value="390,700" selected>390 × 700 竖屏</option><option value="430,740">430 × 740 竖屏</option><option value="390,844">390 × 844 长屏</option><option value="430,932">430 × 932 长屏</option><option value="740,360">740 × 360 横屏</option><option value="844,390">844 × 390 横屏</option><option value="1024,768">1024 × 768 平板</option><option value="1180,757">1180 × 757 桌面</option></select></label><label>边缘留白模拟<select id="insets"><option value="none">无额外留白</option><option value="portrait">竖屏 顶47 / 底34</option><option value="portrait-large">竖屏 顶59 / 底34</option><option value="landscape">横屏 左右47 / 底21</option><option value="left">横屏 左47 / 底21</option><option value="right">横屏 右47 / 底21</option></select></label><button id="reload" type="button">重新载入试玩</button><button id="inspect" type="button">布局检查</button><button id="standalone" type="button">独立尺寸窗口</button><output id="measurement">等待页面…</output></header>
+<p>桌面浏览器中的同源 CSS 视口检查；留白模拟仅改变游戏的CSS变量，不代表物理手机触控或设备仿真。独立窗口用于对照嵌入页的动画调度，以实际返回的视口为准。切换尺寸保留当前页面，重新载入会结束未完的试玩。</p>
+<pre id="report" hidden style="white-space:pre-wrap;font-size:13px;background:#071b20;padding:12px"></pre>
+<div class="viewport"><iframe id="game" title="词灵对决响应式试玩" src="/" width="390" height="700"></iframe></div>
+<script>
+const sizes = new Set(['320,568','360,640','390,700','430,740','390,844','430,932','740,360','844,390','1024,768','1180,757']);
+const frame = document.querySelector('#game');
+const picker = document.querySelector('#size');
+const output = document.querySelector('#measurement');
+const insetPicker = document.querySelector('#insets');
+const insetPresets = {none:[0,0,0,0],portrait:[47,0,34,0],'portrait-large':[59,0,34,0],landscape:[0,47,21,47],left:[0,0,21,47],right:[0,47,21,0]};
+function applyInsets() {
+  const doc=frame.contentDocument, values=insetPresets[insetPicker.value]; if(!doc||!values)return;
+  ['top','right','bottom','left'].forEach((side,i)=>doc.documentElement.style.setProperty('--safe-'+side,values[i]+'px'));
+  requestAnimationFrame(measure);
+}
+insetPicker.addEventListener('change',applyInsets);
+function measure() {
+  try { output.value = `实际 CSS 视口：${frame.contentWindow.innerWidth} × ${frame.contentWindow.innerHeight}`; }
+  catch { output.value = '无法读取同源视口'; }
+}
+function resize() {
+  if (!sizes.has(picker.value)) return;
+  const [width, height] = picker.value.split(',').map(Number);
+  frame.width = width; frame.height = height;
+  requestAnimationFrame(measure);
+}
+picker.addEventListener('change', resize);
+document.querySelector('#standalone').addEventListener('click', () => {
+  if (frame.contentDocument?.body?.classList.contains('has-room')) { output.value='请先正常结束嵌入页里的对局，再打开独立窗口'; return; }
+  const [width,height]=picker.value.split(',').map(Number);
+  if (!sizes.has(picker.value)) return;
+  const opened=window.open('/', '_blank', `popup,width=${width},height=${height}`);
+  if(opened){frame.src='about:blank';output.value='已请求独立窗口；以新页实际 CSS 视口为准，重新载入可恢复这里的试玩';}
+  else output.value='浏览器没有打开独立窗口，当前试玩仍保留';
+});
+frame.addEventListener('load', applyInsets);
+document.querySelector('#reload').addEventListener('click', () => { frame.src = '/'; });
+document.querySelector('#inspect').addEventListener('click', () => {
+  const priorReport = document.querySelector('#report');
+  if (!priorReport.hidden) { priorReport.hidden = true; return; }
+  const doc = frame.contentDocument, win = frame.contentWindow;
+  const visible = el => { const s = win.getComputedStyle(el), r = el.getBoundingClientRect(); return !el.closest('[hidden]') && !el.closest('[inert]') && s.clipPath !== 'inset(50%)' && !el.closest('#hand-semantics') && !el.closest('.pack-index:not(.pack-index-fallback)') && s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0; };
+  const bounds = el => { const r = el.getBoundingClientRect(); return { x: Math.round(r.x), y: Math.round(r.y), width: Math.round(r.width), height: Math.round(r.height), right: Math.round(r.right), bottom: Math.round(r.bottom) }; };
+  const regions = ['#arena', '#unit-labels', '.hero-panel.mine', '.hero-panel.theirs', '.rituals', '.command-bar', '#hand-stage', '#lobby-scene', '.grove-title', '.grove-start', '.grove-nav-left', '.grove-nav-right', '.collection-panel', '.collection-heading', '.opening-heading', '.pack-stage', '#pack-controls', '#pack-results', '.pack-exit-confirm section', '.card-info-heading', '.card-info-portrait'];
+  const found = regions.map(selector => [selector, doc.querySelector(selector)]).filter(([,el]) => el && visible(el));
+  const small = [...doc.querySelectorAll('button, select, summary')].filter(visible).map(el => [el.textContent.trim().replace(/\s+/g, ' ').slice(0,30), bounds(el)]).filter(([,r]) => r.width < 44 || r.height < 44);
+  const collisions = [];
+  for(let i=0;i<found.length;i++) for(let j=i+1;j<found.length;j++) {
+    if(found[i][0] === '#unit-labels' || found[j][0] === '#unit-labels') continue;
+    const a = bounds(found[i][1]), b = bounds(found[j][1]);
+    if(Math.min(a.right,b.right) > Math.max(a.x,b.x) && Math.min(a.bottom,b.bottom) > Math.max(a.y,b.y)) collisions.push(`${found[i][0]} / ${found[j][0]}`);
+  }
+  const labels = [...doc.querySelectorAll('.unit-label')].filter(visible);
+  const labelCollisions = [];
+  for(let i=0;i<labels.length;i++) for(let j=i+1;j<labels.length;j++) {
+    const a = bounds(labels[i]), b = bounds(labels[j]);
+    if(Math.min(a.right,b.right) > Math.max(a.x,b.x) && Math.min(a.bottom,b.bottom) > Math.max(a.y,b.y)) labelCollisions.push(`${labels[i].getAttribute('aria-label')} / ${labels[j].getAttribute('aria-label')}`);
+  }
+  const report = document.querySelector('#report');
+  report.textContent = [
+    `实际CSS视口 ${win.innerWidth}×${win.innerHeight}`,
+    `留白模拟（上右下左）${insetPresets[insetPicker.value].join('/')}px`,
+    `应用版本 ${doc.querySelector('meta[name="application-version"]')?.content || '未知'}`,
+    `详情标题布局 ${doc.querySelector('.card-info-heading') ? win.getComputedStyle(doc.querySelector('.card-info-heading')).display : '未打开'}`,
+    `选牌操作轨道 ${doc.querySelector('.command-bar') ? win.getComputedStyle(doc.querySelector('.command-bar')).gridTemplateRows : '未选择'}`,
+    ...found.map(([name,el]) => { const r=bounds(el); return `${name}: x=${r.x}, y=${r.y}, ${r.width}×${r.height}`; }),
+    `小于44px控件: ${small.length ? JSON.stringify(small) : '无'}`,
+    `区域相交（背景重叠需按画面判断）: ${collisions.length ? collisions.join('; ') : '无'}`,
+    `单位点击区相交: ${labelCollisions.length ? labelCollisions.join('; ') : '无'}`,
+  ].join('\n');
+  report.hidden = false;
+});
+resize();
+</script>
+</body>
+</html>

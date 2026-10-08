@@ -1,0 +1,28 @@
+{
+  "name": "spellwood",
+  "version": "3.2.9",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test --test-concurrency=2 --test-timeout=30000 tests/*.test.mjs",
+    "check": "node scripts/check.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "server": "node server/index.mjs",
+    "test:network": "node --test tests/network-*.test.mjs",
+    "build:network": "node scripts/build-network.mjs",
+    "test:scene": "node --test --test-timeout=30000 tests/model-library.test.mjs tests/arena-scene-behavior.test.mjs",
+    "build:practice": "node scripts/build-practice.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "esbuild": "0.28.2",
+    "prettier": "^3.9.9",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@noble/hashes": "2.4.0",
+    "three": "0.186.1",
+    "ws": "8.22.0"
+  }
+}

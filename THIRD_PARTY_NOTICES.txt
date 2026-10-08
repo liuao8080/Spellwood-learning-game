@@ -1,0 +1,39 @@
+Spellwood 词灵对决素材与依赖
+
+运行时：HTML/CSS/JavaScript与本地打包的Three.js，无需联网加载运行库；无远程字体、广告、数据上报或付费API。
+美术：arena.webp 与 creatures.webp 为本项目通过 OpenAI image generation 生成的原创游戏素材，不是第三方游戏资产。
+提示音：Web Audio API 原创振荡器合成音色。
+英语朗读：预制合成音频；浏览器SpeechSynthesis仅为素材失效时的后备。
+
+开发依赖：TypeScript（Microsoft，Apache-2.0）；@types/node（DefinitelyTyped，MIT）；相关类型依赖按各自node_modules包的许可证。源码包保留package-lock.json，安装后可在相应包目录找到完整许可证。它们不被打包进浏览器成品。
+
+公开机制研究参考：boardgame.io（MIT）、OpenDuelyst（CC0-1.0）、ts-fsrs（MIT）。本项目未复制其代码或资源，不宣称采用FSRS算法；使用自主实现的轻量状态转换与简化复习间隔。
+
+本项目并非学而思或暴雪官方产品，也无合作关系。Hearthstone只作为资源管理和随从战术的产品参考，不使用该产品名称作为游戏品牌。
+
+Prettier（MIT）仅用于源码格式化，不打包进游戏。
+
+第二版视听重构
+Three.js：MIT，运行时仅用于本地WebGL粒子、几何弹道和光环。完整许可随dist/assets/licenses/three-MIT.txt提供。
+esbuild：MIT，开发构建使用，不作为远程服务调用。
+forest-score.ogg / forest-score.m4a：本项目原创60秒循环配乐，使用独立编写的加法合成、竖琴式音型、柔和长音与节奏算法生成；没有外部采样或商业游戏音乐。
+新增战斗音效：Web Audio原创合成，无第三方音效素材。
+暴雪官方公开视频只用于观察卡牌布局和动作时序，未将其视频、角色、卡背、字体或音轨打包进游戏。
+
+Spellwood 2.2 additional original art
+Six individually generated card illustrations: Sprout, Mossling, Ancient Golem, Spark, Bloom, Moonlight. Generated with the built-in image tool for this project using the project's original creature artwork as a style reference. No Blizzard images, music or videos are packaged. WebP resizing is for web delivery; card artwork is raster illustration, not an interactive 3D character model.
+The procedural crystal and hexagonal shield mesh in src/av/geometry.mjs is original project code.
+
+一年级教学图集：dist/assets/learning/first-words.png，由本项目内置图像生成工具原创生成，12格为学校用品、五官与动物。未复制教材或商业游戏图片。数量与颜色提示是简单语义图示。
+
+第三版英语语音
+778段英语音频来自本项目原创题干、选项与答案，使用本地Kokoro v0.19（Apache-2.0）af声音、sherpa-onnx 1.13.8（Apache-2.0）合成，非真人朗读或特定人物声线克隆。模型与推理库不打包进浏览器，仅交付生成的MP3和可复现脚本。模型来源：https://huggingface.co/hexgrad/Kokoro-82M；正式用法：https://k2-fsa.github.io/sherpa/onnx/tts/pretrained_models/kokoro.html。模型许可保存在dist/assets/licenses/kokoro-Apache-2.0.txt，生成记录见content/speech-provenance.json。
+
+2.5教学图集扩展：另生成水果/课堂/房间、玩具/熟食/饮品、衣物三张原创图集，总计40幅词义插画。dist/assets/learning内4张WebP采用无损格式转码，解码像素与生成PNG一致；原始PNG保留于制作资产中。
+
+@noble/hashes 2.4.0（MIT）：仅公开电脑练习的浏览器SHA-256适配。官方源码 https://github.com/paulmillr/noble-hashes ，完整许可证见 src/practice/NOBLE-HASHES-LICENSE.txt；Node服务器仍使用内置crypto。
+
+3.1卡牌收藏与实体模型
+新增12张独立原创图：hedgehog、otter、firefly、wolf、crane、boar、bear、unicorn、phoenix、frost、dew、lantern，由本项目内置图像生成工具生成，WebP交付。18种伙伴实体、木与纸礼盒、铜叶封印、厚卡、四元素空间效果和开包光效均为原创程序几何，不使用商业游戏资产。Three.js现同时用于完整三维战场、模型、射线和开包场景；无WebGL时应用使用自有CPU兼容渲染器。
+3.1为控制完整源码包大小，把原4张教学WebP重新编码为质量90的WebP，保留原尺寸、图块位置与画面内容；这次为有损编码，不再声称与生成PNG逐像素相同。四张代表图块已与原图并排检查，未改题目、答案或语音；旧2.7.5已交付离线文件保持原有字节。
+礼盒合成音由本项目Web Audio振荡器和噪声包络生成。参考暴雪官方mass pack opening动图的动作节奏，研究动图、YouTube页截图与任何第三方视频不打包进游戏或源码交付。

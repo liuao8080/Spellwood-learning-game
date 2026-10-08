@@ -1,0 +1,1658 @@
+{
+  "kind": "Implementation-author policy pilot; not independent acceptance or human playtesting",
+  "startedAt": "2026-10-07T12:16:47.700Z",
+  "finishedAt": "2026-10-07T12:16:49.374Z",
+  "totalGames": 144,
+  "gamesPerCell": 36,
+  "presets": {
+    "baseline": {
+      "level": "standard",
+      "name": "标准",
+      "opponentRating": 950,
+      "deckPolicy": "full",
+      "ritualLimit": 4,
+      "ritualStartRound": 1,
+      "ritualInterval": 1,
+      "description": "完整套牌 · 单步择优 · 最多4次仪式"
+    },
+    "candidate": {
+      "level": "standard",
+      "name": "标准",
+      "opponentRating": 950,
+      "deckPolicy": "full",
+      "ritualLimit": 3,
+      "ritualStartRound": 2,
+      "ritualInterval": 2,
+      "description": "完整套牌 · 单步择优 · 第2轮起隔轮使用仪式，最多3次"
+    }
+  },
+  "manifest": {
+    "preparedAt": "2026-10-07T11:45:00Z",
+    "sourceRoot": ".",
+    "purpose": "Unexecuted isolated single-process 144-game standard policy pilot",
+    "gamesPerCell": 36,
+    "policies": [
+      "intermediate"
+    ],
+    "ritualAccuracy": [
+      0.5,
+      0.75
+    ],
+    "levels": [
+      "standard"
+    ],
+    "seeds": "difficulty-v1-0 through difficulty-v1-35",
+    "pairing": "Both presets use identical seed, human seat, player deck and opponent ID for each pair",
+    "baseline": {
+      "ritualLimit": 4,
+      "ritualStartRound": 1,
+      "ritualInterval": 1
+    },
+    "candidate": {
+      "ritualLimit": 3,
+      "ritualStartRound": 2,
+      "ritualInterval": 2
+    },
+    "unchanged": "Card pool, decks, AI evaluator, hand hiding, ritual success, player policy, rating anchor and all other rules",
+    "sourceSHA256": {
+      "src/cards.mjs": "917463b0a8575c3564270a645c04121eb7c36fbc911270560b5d1fc45b427533",
+      "src/combat-rating.mjs": "f3896dd65ff4ec126774e33594c8e26df26b4e222421f98f36a00126f1c0ec31",
+      "src/engine.mjs": "42b692ea7f43d650edbb10bd0475e233295fbed5cacfdca7fbb54d34c55b9be9",
+      "src/opening.mjs": "9a9e0f455823ff5bb3f5665d1bb710740726428e238d32c0b29d656366fca6d5",
+      "src/random.mjs": "80bc636faa90bee79d33ca38643661414ae98aecf9b95830f9464bfe0836cb24",
+      "server/duel-adapter.mjs": "53b3c700ffbc073b66c1bcea3806c1d560d5d32f6c5ecb3d648b30f637637afa",
+      "scripts/simulate-difficulty.mjs": "f3dbb0c18f60ab05d3d11730bfd30d27e978030ad5dc7d1dacd499745fd5f8db"
+    },
+    "variantSHA256": {
+      "baseline": {
+        "src/cards.mjs": "917463b0a8575c3564270a645c04121eb7c36fbc911270560b5d1fc45b427533",
+        "src/combat-rating.mjs": "f3896dd65ff4ec126774e33594c8e26df26b4e222421f98f36a00126f1c0ec31",
+        "src/engine.mjs": "42b692ea7f43d650edbb10bd0475e233295fbed5cacfdca7fbb54d34c55b9be9",
+        "src/opening.mjs": "9a9e0f455823ff5bb3f5665d1bb710740726428e238d32c0b29d656366fca6d5",
+        "src/random.mjs": "80bc636faa90bee79d33ca38643661414ae98aecf9b95830f9464bfe0836cb24",
+        "server/duel-adapter.mjs": "53b3c700ffbc073b66c1bcea3806c1d560d5d32f6c5ecb3d648b30f637637afa",
+        "scripts/simulate-difficulty.mjs": "f3dbb0c18f60ab05d3d11730bfd30d27e978030ad5dc7d1dacd499745fd5f8db"
+      },
+      "candidate": {
+        "src/cards.mjs": "917463b0a8575c3564270a645c04121eb7c36fbc911270560b5d1fc45b427533",
+        "src/combat-rating.mjs": "2a6b8b729933364fe2ab3aef34d5cc6ea16c9e4d1504c784dad425d3a3049105",
+        "src/engine.mjs": "42b692ea7f43d650edbb10bd0475e233295fbed5cacfdca7fbb54d34c55b9be9",
+        "src/opening.mjs": "9a9e0f455823ff5bb3f5665d1bb710740726428e238d32c0b29d656366fca6d5",
+        "src/random.mjs": "80bc636faa90bee79d33ca38643661414ae98aecf9b95830f9464bfe0836cb24",
+        "server/duel-adapter.mjs": "53b3c700ffbc073b66c1bcea3806c1d560d5d32f6c5ecb3d648b30f637637afa",
+        "scripts/simulate-difficulty.mjs": "f3dbb0c18f60ab05d3d11730bfd30d27e978030ad5dc7d1dacd499745fd5f8db"
+      }
+    },
+    "executionStatus": "NOT_RUN; wait for parent explicit resource clearance after 12:07 UTC"
+  },
+  "cells": [
+    {
+      "accuracy": 0.5,
+      "baseline": {
+        "games": 36,
+        "wins": 10,
+        "losses": 26,
+        "draws": 0,
+        "winRate": 0.2777777777777778,
+        "meanRounds": 10,
+        "maxRounds": 15
+      },
+      "candidate": {
+        "games": 36,
+        "wins": 11,
+        "losses": 25,
+        "draws": 0,
+        "winRate": 0.3055555555555556,
+        "meanRounds": 10.194444444444445,
+        "maxRounds": 18
+      },
+      "paired": {
+        "gains": 1,
+        "reversals": 0,
+        "bothWins": 10
+      },
+      "bySeat": [
+        {
+          "humanSide": 0,
+          "baseline": {
+            "games": 18,
+            "wins": 7,
+            "losses": 11,
+            "draws": 0,
+            "winRate": 0.3888888888888889,
+            "meanRounds": 10.5,
+            "maxRounds": 15
+          },
+          "candidate": {
+            "games": 18,
+            "wins": 8,
+            "losses": 10,
+            "draws": 0,
+            "winRate": 0.4444444444444444,
+            "meanRounds": 10.777777777777779,
+            "maxRounds": 18
+          }
+        },
+        {
+          "humanSide": 1,
+          "baseline": {
+            "games": 18,
+            "wins": 3,
+            "losses": 15,
+            "draws": 0,
+            "winRate": 0.16666666666666666,
+            "meanRounds": 9.5,
+            "maxRounds": 14
+          },
+          "candidate": {
+            "games": 18,
+            "wins": 3,
+            "losses": 15,
+            "draws": 0,
+            "winRate": 0.16666666666666666,
+            "meanRounds": 9.61111111111111,
+            "maxRounds": 14
+          }
+        }
+      ],
+      "byDeck": [
+        {
+          "deckId": "grove",
+          "baseline": {
+            "games": 12,
+            "wins": 3,
+            "losses": 9,
+            "draws": 0,
+            "winRate": 0.25,
+            "meanRounds": 11.083333333333334,
+            "maxRounds": 15
+          },
+          "candidate": {
+            "games": 12,
+            "wins": 3,
+            "losses": 9,
+            "draws": 0,
+            "winRate": 0.25,
+            "meanRounds": 11.416666666666666,
+            "maxRounds": 18
+          }
+        },
+        {
+          "deckId": "ember",
+          "baseline": {
+            "games": 12,
+            "wins": 4,
+            "losses": 8,
+            "draws": 0,
+            "winRate": 0.3333333333333333,
+            "meanRounds": 8.833333333333334,
+            "maxRounds": 14
+          },
+          "candidate": {
+            "games": 12,
+            "wins": 5,
+            "losses": 7,
+            "draws": 0,
+            "winRate": 0.4166666666666667,
+            "meanRounds": 9,
+            "maxRounds": 14
+          }
+        },
+        {
+          "deckId": "moon",
+          "baseline": {
+            "games": 12,
+            "wins": 3,
+            "losses": 9,
+            "draws": 0,
+            "winRate": 0.25,
+            "meanRounds": 10.083333333333334,
+            "maxRounds": 15
+          },
+          "candidate": {
+            "games": 12,
+            "wins": 3,
+            "losses": 9,
+            "draws": 0,
+            "winRate": 0.25,
+            "meanRounds": 10.166666666666666,
+            "maxRounds": 15
+          }
+        }
+      ]
+    },
+    {
+      "accuracy": 0.75,
+      "baseline": {
+        "games": 36,
+        "wins": 16,
+        "losses": 20,
+        "draws": 0,
+        "winRate": 0.4444444444444444,
+        "meanRounds": 10.194444444444445,
+        "maxRounds": 17
+      },
+      "candidate": {
+        "games": 36,
+        "wins": 21,
+        "losses": 15,
+        "draws": 0,
+        "winRate": 0.5833333333333334,
+        "meanRounds": 10,
+        "maxRounds": 18
+      },
+      "paired": {
+        "gains": 6,
+        "reversals": 1,
+        "bothWins": 15
+      },
+      "bySeat": [
+        {
+          "humanSide": 0,
+          "baseline": {
+            "games": 18,
+            "wins": 10,
+            "losses": 8,
+            "draws": 0,
+            "winRate": 0.5555555555555556,
+            "meanRounds": 10.833333333333334,
+            "maxRounds": 17
+          },
+          "candidate": {
+            "games": 18,
+            "wins": 12,
+            "losses": 6,
+            "draws": 0,
+            "winRate": 0.6666666666666666,
+            "meanRounds": 10.666666666666666,
+            "maxRounds": 18
+          }
+        },
+        {
+          "humanSide": 1,
+          "baseline": {
+            "games": 18,
+            "wins": 6,
+            "losses": 12,
+            "draws": 0,
+            "winRate": 0.3333333333333333,
+            "meanRounds": 9.555555555555555,
+            "maxRounds": 14
+          },
+          "candidate": {
+            "games": 18,
+            "wins": 9,
+            "losses": 9,
+            "draws": 0,
+            "winRate": 0.5,
+            "meanRounds": 9.333333333333334,
+            "maxRounds": 16
+          }
+        }
+      ],
+      "byDeck": [
+        {
+          "deckId": "grove",
+          "baseline": {
+            "games": 12,
+            "wins": 4,
+            "losses": 8,
+            "draws": 0,
+            "winRate": 0.3333333333333333,
+            "meanRounds": 11.583333333333334,
+            "maxRounds": 17
+          },
+          "candidate": {
+            "games": 12,
+            "wins": 6,
+            "losses": 6,
+            "draws": 0,
+            "winRate": 0.5,
+            "meanRounds": 12.333333333333334,
+            "maxRounds": 18
+          }
+        },
+        {
+          "deckId": "ember",
+          "baseline": {
+            "games": 12,
+            "wins": 7,
+            "losses": 5,
+            "draws": 0,
+            "winRate": 0.5833333333333334,
+            "meanRounds": 8.916666666666666,
+            "maxRounds": 13
+          },
+          "candidate": {
+            "games": 12,
+            "wins": 10,
+            "losses": 2,
+            "draws": 0,
+            "winRate": 0.8333333333333334,
+            "meanRounds": 7.416666666666667,
+            "maxRounds": 10
+          }
+        },
+        {
+          "deckId": "moon",
+          "baseline": {
+            "games": 12,
+            "wins": 5,
+            "losses": 7,
+            "draws": 0,
+            "winRate": 0.4166666666666667,
+            "meanRounds": 10.083333333333334,
+            "maxRounds": 14
+          },
+          "candidate": {
+            "games": 12,
+            "wins": 5,
+            "losses": 7,
+            "draws": 0,
+            "winRate": 0.4166666666666667,
+            "meanRounds": 10.25,
+            "maxRounds": 15
+          }
+        }
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "index": 0,
+      "seed": "difficulty-v1-0",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "win",
+        "rounds": 8
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 6
+      }
+    },
+    {
+      "index": 1,
+      "seed": "difficulty-v1-1",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 10
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 8
+      }
+    },
+    {
+      "index": 2,
+      "seed": "difficulty-v1-2",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "win",
+        "rounds": 6
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 5
+      }
+    },
+    {
+      "index": 3,
+      "seed": "difficulty-v1-3",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 6
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 6
+      }
+    },
+    {
+      "index": 4,
+      "seed": "difficulty-v1-4",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 4
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 5
+      }
+    },
+    {
+      "index": 5,
+      "seed": "difficulty-v1-5",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 5
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 5
+      }
+    },
+    {
+      "index": 6,
+      "seed": "difficulty-v1-6",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 15
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 16
+      }
+    },
+    {
+      "index": 7,
+      "seed": "difficulty-v1-7",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 11
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 11
+      }
+    },
+    {
+      "index": 8,
+      "seed": "difficulty-v1-8",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "win",
+        "rounds": 11
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 12
+      }
+    },
+    {
+      "index": 9,
+      "seed": "difficulty-v1-9",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 8
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 10
+      }
+    },
+    {
+      "index": 10,
+      "seed": "difficulty-v1-10",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "win",
+        "rounds": 12
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 12
+      }
+    },
+    {
+      "index": 11,
+      "seed": "difficulty-v1-11",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 10
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 10
+      }
+    },
+    {
+      "index": 12,
+      "seed": "difficulty-v1-12",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 15
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 14
+      }
+    },
+    {
+      "index": 13,
+      "seed": "difficulty-v1-13",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 7
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 7
+      }
+    },
+    {
+      "index": 14,
+      "seed": "difficulty-v1-14",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 10
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 8
+      }
+    },
+    {
+      "index": 15,
+      "seed": "difficulty-v1-15",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 8
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 7
+      }
+    },
+    {
+      "index": 16,
+      "seed": "difficulty-v1-16",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 12
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 12
+      }
+    },
+    {
+      "index": 17,
+      "seed": "difficulty-v1-17",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "win",
+        "rounds": 14
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 12
+      }
+    },
+    {
+      "index": 18,
+      "seed": "difficulty-v1-18",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "win",
+        "rounds": 7
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 8
+      }
+    },
+    {
+      "index": 19,
+      "seed": "difficulty-v1-19",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "win",
+        "rounds": 10
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 11
+      }
+    },
+    {
+      "index": 20,
+      "seed": "difficulty-v1-20",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "win",
+        "rounds": 6
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 6
+      }
+    },
+    {
+      "index": 21,
+      "seed": "difficulty-v1-21",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 6
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 6
+      }
+    },
+    {
+      "index": 22,
+      "seed": "difficulty-v1-22",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 7
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 7
+      }
+    },
+    {
+      "index": 23,
+      "seed": "difficulty-v1-23",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 5
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 5
+      }
+    },
+    {
+      "index": 24,
+      "seed": "difficulty-v1-24",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 11
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 18
+      }
+    },
+    {
+      "index": 25,
+      "seed": "difficulty-v1-25",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 14
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 14
+      }
+    },
+    {
+      "index": 26,
+      "seed": "difficulty-v1-26",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "win",
+        "rounds": 14
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 13
+      }
+    },
+    {
+      "index": 27,
+      "seed": "difficulty-v1-27",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 12
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 14
+      }
+    },
+    {
+      "index": 28,
+      "seed": "difficulty-v1-28",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 14
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 15
+      }
+    },
+    {
+      "index": 29,
+      "seed": "difficulty-v1-29",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 10
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 12
+      }
+    },
+    {
+      "index": 30,
+      "seed": "difficulty-v1-30",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 12
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 13
+      }
+    },
+    {
+      "index": 31,
+      "seed": "difficulty-v1-31",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 13
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 11
+      }
+    },
+    {
+      "index": 32,
+      "seed": "difficulty-v1-32",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 10
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 10
+      }
+    },
+    {
+      "index": 33,
+      "seed": "difficulty-v1-33",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 9
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 11
+      }
+    },
+    {
+      "index": 34,
+      "seed": "difficulty-v1-34",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 15
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 14
+      }
+    },
+    {
+      "index": 35,
+      "seed": "difficulty-v1-35",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.5,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "win",
+        "rounds": 13
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 13
+      }
+    },
+    {
+      "index": 0,
+      "seed": "difficulty-v1-0",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "win",
+        "rounds": 8
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 8
+      }
+    },
+    {
+      "index": 1,
+      "seed": "difficulty-v1-1",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 11
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 9
+      }
+    },
+    {
+      "index": 2,
+      "seed": "difficulty-v1-2",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "win",
+        "rounds": 6
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 5
+      }
+    },
+    {
+      "index": 3,
+      "seed": "difficulty-v1-3",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "win",
+        "rounds": 6
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 5
+      }
+    },
+    {
+      "index": 4,
+      "seed": "difficulty-v1-4",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 5
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 10
+      }
+    },
+    {
+      "index": 5,
+      "seed": "difficulty-v1-5",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 6
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 6
+      }
+    },
+    {
+      "index": 6,
+      "seed": "difficulty-v1-6",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 17
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 18
+      }
+    },
+    {
+      "index": 7,
+      "seed": "difficulty-v1-7",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 11
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 11
+      }
+    },
+    {
+      "index": 8,
+      "seed": "difficulty-v1-8",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "win",
+        "rounds": 12
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 7
+      }
+    },
+    {
+      "index": 9,
+      "seed": "difficulty-v1-9",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 10
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 10
+      }
+    },
+    {
+      "index": 10,
+      "seed": "difficulty-v1-10",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "win",
+        "rounds": 12
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 12
+      }
+    },
+    {
+      "index": 11,
+      "seed": "difficulty-v1-11",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 10
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 10
+      }
+    },
+    {
+      "index": 12,
+      "seed": "difficulty-v1-12",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 15
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 14
+      }
+    },
+    {
+      "index": 13,
+      "seed": "difficulty-v1-13",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 7
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 7
+      }
+    },
+    {
+      "index": 14,
+      "seed": "difficulty-v1-14",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 10
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 8
+      }
+    },
+    {
+      "index": 15,
+      "seed": "difficulty-v1-15",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 7
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 8
+      }
+    },
+    {
+      "index": 16,
+      "seed": "difficulty-v1-16",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "win",
+        "rounds": 14
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 9
+      }
+    },
+    {
+      "index": 17,
+      "seed": "difficulty-v1-17",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "win",
+        "rounds": 14
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 12
+      }
+    },
+    {
+      "index": 18,
+      "seed": "difficulty-v1-18",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "win",
+        "rounds": 7
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 8
+      }
+    },
+    {
+      "index": 19,
+      "seed": "difficulty-v1-19",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "win",
+        "rounds": 9
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 11
+      }
+    },
+    {
+      "index": 20,
+      "seed": "difficulty-v1-20",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "win",
+        "rounds": 6
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 6
+      }
+    },
+    {
+      "index": 21,
+      "seed": "difficulty-v1-21",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 6
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 7
+      }
+    },
+    {
+      "index": 22,
+      "seed": "difficulty-v1-22",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 6
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 7
+      }
+    },
+    {
+      "index": 23,
+      "seed": "difficulty-v1-23",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "ember",
+      "baseline": {
+        "result": "loss",
+        "rounds": 5
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 5
+      }
+    },
+    {
+      "index": 24,
+      "seed": "difficulty-v1-24",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 11
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 18
+      }
+    },
+    {
+      "index": 25,
+      "seed": "difficulty-v1-25",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 14
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 13
+      }
+    },
+    {
+      "index": 26,
+      "seed": "difficulty-v1-26",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "win",
+        "rounds": 13
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 9
+      }
+    },
+    {
+      "index": 27,
+      "seed": "difficulty-v1-27",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "win",
+        "rounds": 10
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 7
+      }
+    },
+    {
+      "index": 28,
+      "seed": "difficulty-v1-28",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 14
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 15
+      }
+    },
+    {
+      "index": 29,
+      "seed": "difficulty-v1-29",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "moss",
+      "baseline": {
+        "result": "loss",
+        "rounds": 9
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 10
+      }
+    },
+    {
+      "index": 30,
+      "seed": "difficulty-v1-30",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "grove",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "win",
+        "rounds": 16
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 15
+      }
+    },
+    {
+      "index": 31,
+      "seed": "difficulty-v1-31",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "grove",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 13
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 16
+      }
+    },
+    {
+      "index": 32,
+      "seed": "difficulty-v1-32",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "ember",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "loss",
+        "rounds": 10
+      },
+      "candidate": {
+        "result": "loss",
+        "rounds": 9
+      }
+    },
+    {
+      "index": 33,
+      "seed": "difficulty-v1-33",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "ember",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "win",
+        "rounds": 11
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 8
+      }
+    },
+    {
+      "index": 34,
+      "seed": "difficulty-v1-34",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 0,
+      "deckId": "moon",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "win",
+        "rounds": 13
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 14
+      }
+    },
+    {
+      "index": 35,
+      "seed": "difficulty-v1-35",
+      "level": "standard",
+      "policy": "intermediate",
+      "accuracy": 0.75,
+      "humanSide": 1,
+      "deckId": "moon",
+      "opponentId": "luna",
+      "baseline": {
+        "result": "win",
+        "rounds": 13
+      },
+      "candidate": {
+        "result": "win",
+        "rounds": 13
+      }
+    }
+  ]
+}
