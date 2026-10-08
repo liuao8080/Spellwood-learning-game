@@ -5,6 +5,7 @@ import path from "node:path";
 import { fork, execFileSync } from "node:child_process";
 import { performance, monitorEventLoopDelay } from "node:perf_hooks";
 import { fileURLToPath } from "node:url";
+import { PROTOCOL } from "../server/protocol.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.resolve(
   process.env.SPELLWOOD_BENCH_OUTPUT ||
@@ -361,7 +362,7 @@ if (process.argv[2] === "--server") {
             reject(e);
           });
         });
-      this.ws.send(JSON.stringify({ type: "session.open", protocol: 1 }));
+      this.ws.send(JSON.stringify({ type: "session.open", protocol: PROTOCOL }));
       await until(() => this.ready, "session.ready");
     }
     async command(type, payload = {}) {

@@ -6,7 +6,7 @@ import vm from "node:vm";
 import { performance } from "node:perf_hooks";
 import { StudyDesk } from "../src/network/study-desk.mjs";
 import { LearningAttention } from "../src/network/learning-attention.mjs";
-import { PROGRESS_KEY } from "../src/network/progress.mjs";
+import { PROGRESS_KEY, ProgressStore } from "../src/network/progress.mjs";
 import { CARDS, CARD } from "../src/cards.mjs";
 import {
   FINISHES,
@@ -64,6 +64,7 @@ const count = (data) =>
   );
 
 async function fixture({ locked = true } = {}) {
+  const wallBase = Date.now();
   let now = 0,
     desk,
     view,
@@ -157,6 +158,7 @@ async function fixture({ locked = true } = {}) {
   vm.runInContext(viewSource, sandbox);
   desk = new StudyDesk({
     storage,
+    storeFactory: options => new ProgressStore({...options, now: () => wallBase + now}),
     locks: locked ? locks : null,
     getPreferences: () => ({ grade: 1, course: "s1" }),
     fetcher: async (path, options = {}) => {
@@ -171,7 +173,7 @@ async function fixture({ locked = true } = {}) {
           ok: true,
           json: async () => ({
             challengeId,
-            learning: { qid, answeredAt: Date.now(), correct: true },
+            learning: { qid, answeredAt: wallBase + now, correct: true },
             outcome: "correct",
             correctOptionId: "answer-a",
             explanation: "A complete explanation",
@@ -184,6 +186,7 @@ async function fixture({ locked = true } = {}) {
         ok: true,
         json: async () => ({
           challengeId,
+          issuedAt: wallBase + now,
           question: {
             prompt: "How ___ are you?",
             options: [
@@ -338,7 +341,7 @@ async function fixture({ locked = true } = {}) {
           challengeId: id,
           learning: {
             qid: questions[i].id,
-            answeredAt: Date.now(),
+            answeredAt: wallBase + now,
             correct: false,
           },
         });

@@ -13,6 +13,7 @@ import {
   ritual,
   chooseAI,
   legalActions,
+  ensureHandIds,
 } from "../src/engine.mjs";
 
 export const id = (bytes = 16) => randomBytes(bytes).toString("base64url");
@@ -65,6 +66,8 @@ export function createDuel(
       ritualsLeft: RITUAL_LIMIT,
     };
   });
+  s.handSeq = 0;
+  ensureHandIds(s);
   return s;
 }
 export function changeOpening(state, side, indices) {
@@ -77,11 +80,17 @@ export function changeOpening(state, side, indices) {
     throw Error("INVALID_OPENING");
   const s = structuredClone(state),
     p = s.players[side];
+  ensureHandIds(s);
   if (p.hand.length !== 4) throw Error("INVALID_OPENING");
   const chosen = [...indices].sort((a, b) => a - b);
   if (!chosen.length) return s;
   const returned = chosen.map((i) => p.hand[i]);
-  for (const index of chosen) p.hand[index] = p.deck.shift();
+  for (const index of chosen) {
+    const oldId = p.handIds?.[index];
+    p.hand[index] = p.deck.shift();
+    if (s.rules === RULES) p.handIds[index] = `h${++s.handSeq}`;
+    if (p.handBoosts) delete p.handBoosts[oldId];
+  }
   p.deck = secureShuffle([...p.deck, ...returned]);
   return s;
 }
@@ -161,19 +170,25 @@ export function publicEvent(before, after, action, seat) {
       });
     for (const u of p.board) {
       const next = n.board.find((v) => v.uid === u.uid);
+      const returned = !next && side === seat && action.type === "play" &&
+        CARD[before.players[seat].hand[action.index]]?.keyword === "recall" && action.target === u.uid;
       if (
         !next ||
         next.hp !== u.hp ||
         next.atk !== u.atk ||
+        next.maxHp !== u.maxHp ||
         !!next.shield !== !!u.shield
       )
         e.changes.push({
           seat: side,
           uid: u.uid,
-          hpDelta: (next?.hp || 0) - u.hp,
-          atkDelta: (next?.atk ?? u.atk) - u.atk,
-          removed: !next,
-          ...(u.shield && !next?.shield ? { shieldLost: true } : {}),
+          hpDelta: returned ? 0 : (next?.hp || 0) - u.hp,
+          atkDelta: returned ? 0 : (next?.atk ?? u.atk) - u.atk,
+          maxHpDelta: returned ? 0 : (next?.maxHp ?? u.maxHp) - u.maxHp,
+          removed: !next && !returned,
+          ...(returned ? { returned: true } : {}),
+          ...(!returned && u.shield && !next?.shield ? { shieldLost: true } : {}),
+          ...(!u.shield && next?.shield ? { shieldGained: true } : {}),
         });
     }
   }

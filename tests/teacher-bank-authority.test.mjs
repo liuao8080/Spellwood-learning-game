@@ -188,7 +188,7 @@ test("teacher preferences, question mastery, receipts, and result survive save r
   const destination = new ProgressStore({ questions, storage: memoryStorage(), locks: null });
   assert((await destination.load()).ok);
   const prepared = destination.prepareImport(exported.json);
-  assert.equal(prepared.sourceSchema, 3);
+  assert.equal(prepared.sourceSchema, 4);
   assert((await destination.restore(prepared, destination.revision)).ok);
   assert.deepEqual(destination.data.legacy.mastery, next.data.legacy.mastery);
   assert.equal(destination.data.onlineRecords[0].bank, TEACHER_BANK);
@@ -204,7 +204,9 @@ test("old v3 without bank migrates as school and rejects invented bank/result sc
   delete data.legacy.bank;
   delete data.legacy.teacherCourse;
   delete data.onlineRecords[0].bank;
-  const old = new ProgressStore({ questions, storage: memoryStorage({ [PROGRESS_KEY]: JSON.stringify(data) }), locks: null });
+  data.schema = 3;
+  delete data.journey;
+  const old = new ProgressStore({ questions, storage: memoryStorage({ "spellwood.save.v3": JSON.stringify(data) }), locks: null });
   assert((await old.load()).ok);
   assert.equal(old.data.legacy.bank, SCHOOL_BANK);
   assert.equal(old.data.legacy.teacherCourse, "all");

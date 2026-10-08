@@ -1,0 +1,443 @@
+[
+  {
+    "skinId": "forest_apprentice",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "forest_apprentice",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "forest_apprentice/thumb.webp",
+      "bytes": 4888,
+      "sha256": "6067dd090eb6f0fb6ae3ad3bc04cb39f7fa1a10f6f673e8776e6e17a84f3d47e"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "forest_apprentice/portrait.webp",
+      "bytes": 10180,
+      "sha256": "168b093339e4a8c905d55e29ad72ae35b701ed4c6289193bec47da85975f0371"
+    }
+  },
+  {
+    "skinId": "leaf_ranger",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "leaf_ranger",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "leaf_ranger/thumb.webp",
+      "bytes": 5122,
+      "sha256": "43416943c2faccdf81f1f86d7e065d90b02311af8d960982dedea665c14044a0"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "leaf_ranger/portrait.webp",
+      "bytes": 11042,
+      "sha256": "3d2791ef33a6e2de140a23b4327e2e438361f99906f72bf4e212b8ee4f8d7eec"
+    }
+  },
+  {
+    "skinId": "mushroom_keeper",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "mushroom_keeper",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "mushroom_keeper/thumb.webp",
+      "bytes": 5456,
+      "sha256": "2dbea5059f27d593aa3c2781222f3cfae9f5b30f5ff3f85da7693c0238f9a643"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "mushroom_keeper/portrait.webp",
+      "bytes": 11460,
+      "sha256": "efcd36ce0ddc4ab95485fac021dadd2cdc0da1e999f658fcb5a86400eecf8f07"
+    }
+  },
+  {
+    "skinId": "acorn_captain",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "acorn_captain",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "acorn_captain/thumb.webp",
+      "bytes": 5186,
+      "sha256": "5c76dfb6f755a89fb4d6f7afbd30be2a3a1e06b8a70b5d4dfb6e9d51f249b6b1"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "acorn_captain/portrait.webp",
+      "bytes": 11268,
+      "sha256": "e2dcc592e869e1147aba726801d87a8b533d795527118d550446dcfe6d3d73ee"
+    }
+  },
+  {
+    "skinId": "butterfly_scholar",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "butterfly_scholar",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "butterfly_scholar/thumb.webp",
+      "bytes": 5168,
+      "sha256": "1af24ff9a048967dae9a69c9a9fc126b314d8d54ea1f0dd26efd3b6e8c0dfaae"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "butterfly_scholar/portrait.webp",
+      "bytes": 11168,
+      "sha256": "53b592aafdd31347d4e753422d0ff0c52a27011f64b1f23c51a2a6b7d0aee76b"
+    }
+  },
+  {
+    "skinId": "rain_traveler",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "rain_traveler",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "rain_traveler/thumb.webp",
+      "bytes": 4820,
+      "sha256": "7f75c616ec3a8848249a0588223d4600611aa04f5b201e0d991902733d91c1fc"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "rain_traveler/portrait.webp",
+      "bytes": 10394,
+      "sha256": "6abc017c866bda2c3de46fc5b86a4275bf5e18da3ffdbd5d9a52c1c3aa589ddf"
+    }
+  },
+  {
+    "skinId": "coral_listener",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "coral_listener",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "coral_listener/thumb.webp",
+      "bytes": 5688,
+      "sha256": "2278e589890d1567ab02486c25e7d9e31c67751934dd07133490034b13472e32"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "coral_listener/portrait.webp",
+      "bytes": 12862,
+      "sha256": "8702eaf7d3b587a994dc92288b3e253032a3355e894cf129ca91618db6cc3287"
+    }
+  },
+  {
+    "skinId": "river_boatkeeper",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "river_boatkeeper",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "river_boatkeeper/thumb.webp",
+      "bytes": 5384,
+      "sha256": "63767bc08bc5e030066ee8884bfe25bb8c2bde3cf4b668e52e894c3c7d2d1991"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "river_boatkeeper/portrait.webp",
+      "bytes": 11070,
+      "sha256": "9b19ffe2a5fa3c4b588db89edfb4522bb542b781672c5e3a271d59169ad1b120"
+    }
+  },
+  {
+    "skinId": "snow_postkeeper",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "snow_postkeeper",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "snow_postkeeper/thumb.webp",
+      "bytes": 5784,
+      "sha256": "194ca098921a4475742887ab93ea032c0c39a08d6262e0d32ac69fe7f7ff0d17"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "snow_postkeeper/portrait.webp",
+      "bytes": 12328,
+      "sha256": "b5217a479e5feac01e75a0cd38bf072bd1a97ce7ee700941f946e2384daa01d1"
+    }
+  },
+  {
+    "skinId": "ember_apprentice",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "ember_apprentice",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "ember_apprentice/thumb.webp",
+      "bytes": 5368,
+      "sha256": "abc8020ac7c79bb5f9dfdcc522b03f882ca9e841d3f24b8393342b7bc05208bd"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "ember_apprentice/portrait.webp",
+      "bytes": 11716,
+      "sha256": "fcc8050d9e1e321e86e0c94ee6a324d45307f97a3ec9764be122161e4a4fa25f"
+    }
+  },
+  {
+    "skinId": "lantern_festival",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "lantern_festival",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "lantern_festival/thumb.webp",
+      "bytes": 5644,
+      "sha256": "8b32c8c505a9f4d8cc99440b9f9795522c06d4c9d11d5151950d67296c57fda1"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "lantern_festival/portrait.webp",
+      "bytes": 11800,
+      "sha256": "642c50f5fa53072e5093a6739384dcfb1042a83f4455b02e55f050aed07a2cdf"
+    }
+  },
+  {
+    "skinId": "sun_clockmaker",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "sun_clockmaker",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "sun_clockmaker/thumb.webp",
+      "bytes": 5422,
+      "sha256": "568ef8897efa3efc9b6eab068747c6398666433e5128ad53b47a4afe5e9d046d"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "sun_clockmaker/portrait.webp",
+      "bytes": 12194,
+      "sha256": "2594aacc088c0ebf0eeb69c1d01385b4fece158a3bafb56945f6926d583d309a"
+    }
+  },
+  {
+    "skinId": "phoenix_courier",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "phoenix_courier",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "phoenix_courier/thumb.webp",
+      "bytes": 5590,
+      "sha256": "525b803693bfcb3564b0519734e69ac90dac765810d07430000f8ed6a2620274"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "phoenix_courier/portrait.webp",
+      "bytes": 12178,
+      "sha256": "a642c026aa4bd9641b70ada2b5c16e36d75f65d1f36313fbef7b3fb719eccbab"
+    }
+  },
+  {
+    "skinId": "moon_librarian",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "moon_librarian",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "moon_librarian/thumb.webp",
+      "bytes": 5514,
+      "sha256": "716e69b2b1b4b5053ecd1423354280f36d89c2d84cc7d0db1ec51fcdc14b594b"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "moon_librarian/portrait.webp",
+      "bytes": 11758,
+      "sha256": "bd74de3c39208af1bc7b26a90e7b793403e093113f2e35e182b446ebbebffd8a"
+    }
+  },
+  {
+    "skinId": "star_cartographer",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "star_cartographer",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "star_cartographer/thumb.webp",
+      "bytes": 5262,
+      "sha256": "a41ffb503f256c98d0e27d53f9405358ef5849307b5b9263adaa547f1e3ef64b"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "star_cartographer/portrait.webp",
+      "bytes": 10902,
+      "sha256": "5b6402bce1c1bc3f72d93f4af56ed13917fa6f526c93789c072376c2cd55a06c"
+    }
+  },
+  {
+    "skinId": "cloud_pilot",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "cloud_pilot",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "cloud_pilot/thumb.webp",
+      "bytes": 5310,
+      "sha256": "5f3d30b74b01ad84ddd2f61f19f1dab936d01250189b2bb5fb5edf6cd455a465"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "cloud_pilot/portrait.webp",
+      "bytes": 11416,
+      "sha256": "fec08913dbe4f8e20f38db31b4a9aaea27403df24b015a69819959b8d3e7ad40"
+    }
+  },
+  {
+    "skinId": "crystal_mason",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "crystal_mason",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "crystal_mason/thumb.webp",
+      "bytes": 5262,
+      "sha256": "33b02878036c3e1eec3ddf997f55d0ab815aecfbb8b47eac87251bb18cc4d147"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "crystal_mason/portrait.webp",
+      "bytes": 10432,
+      "sha256": "778c4329ce276cfde4df5f88fc2dfb13eb18eaa58808a5e0800ed949f6a36cdc"
+    }
+  },
+  {
+    "skinId": "paper_adventurer",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "paper_adventurer",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "paper_adventurer/thumb.webp",
+      "bytes": 5574,
+      "sha256": "85c6e4ea923939a126161ad6262644617d1762951ccb083af7bf9825e3ee0316"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "paper_adventurer/portrait.webp",
+      "bytes": 11858,
+      "sha256": "3e797cc8b16c3dae2a4090c2c55791585eadd113ec57bb83fb4b3da22af5b1c3"
+    }
+  },
+  {
+    "skinId": "tea_alchemist",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "tea_alchemist",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "tea_alchemist/thumb.webp",
+      "bytes": 5296,
+      "sha256": "54548e1e3728bb8f6df1a786ebd9bc7792788d97b92e00225a27a048e47ddeed"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "tea_alchemist/portrait.webp",
+      "bytes": 11474,
+      "sha256": "e26c8cd941f1f7aebec91bc643e45cb60707fdf23b3a5cbad79405db3a8ea3f7"
+    }
+  },
+  {
+    "skinId": "copper_gardener",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "copper_gardener",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "copper_gardener/thumb.webp",
+      "bytes": 4962,
+      "sha256": "bb9bae0a7e30e113723a6b58f5e32a325d1a168b22169bc085af59658c023e0d"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "copper_gardener/portrait.webp",
+      "bytes": 10482,
+      "sha256": "d6c3200d345468bacdd78acadd8de5efa00c7552495f780d524d6f5353f2ee06"
+    }
+  },
+  {
+    "skinId": "aurora_storyteller",
+    "assetVersion": "hero-2026-10-08-v1",
+    "source": "original-authored-3d-model-offline-application-cpu-render",
+    "modelKey": "aurora_storyteller",
+    "quality": "high",
+    "thumb": {
+      "width": 192,
+      "height": 256,
+      "file": "aurora_storyteller/thumb.webp",
+      "bytes": 5174,
+      "sha256": "fe17b04ae4377a3ac063378c0fa09c43907151d6bb334d95f40700bcdf70eee9"
+    },
+    "portrait": {
+      "width": 384,
+      "height": 480,
+      "file": "aurora_storyteller/portrait.webp",
+      "bytes": 11202,
+      "sha256": "29782aef90aceff6799a2913e5a929922a488a358001f9207233f18170b4b537"
+    }
+  }
+]

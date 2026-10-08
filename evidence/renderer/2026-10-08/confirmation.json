@@ -1,0 +1,2763 @@
+{
+  "kind": "same-process-paired-application-cpu-renderer-ab",
+  "viewport": [
+    960,
+    600
+  ],
+  "warmupFramesPerRenderer": 15,
+  "sampledFramesPerRenderer": 24,
+  "browserVerified": false,
+  "webglVerified": false,
+  "sourceSha256": {
+    "benchmark": "0c9d98db7ba031165bbdd7082de558d66d51ca9c3964c88c492f021ed9a23974",
+    "beforeRenderer": "de9002d36e116bb4bbd6a9d622bda06ce9adb98db437601bca27caa646c3a89a",
+    "instrumentedBefore": "93fba9e903c0d9033db5d2e525f29cf124fffd66b92014167c41721da7ba22f6",
+    "currentRenderer": "b28d2f603067b2828b7db20a27f6ba6ba1625db6065ccb6d827e4e235f5f6d5e",
+    "expansionModels": "6fd8f1e6c246098cad8fbfc343364dba396bcdf88a419a8b84b0de875be11deb",
+    "scene": "dc3bf4ab957c521ffa49567699e927f2ac26bc209c7605a633d9bed362621fd6",
+    "heroModels": "64101a35ed54033d712bce649fbc2602d5596f8fd427ad494e61cd56d8e89575"
+  },
+  "unitIds": [
+    "acorn_squirrel",
+    "mushroom_medic",
+    "reed_frog",
+    "glass_snail",
+    "storm_kingfisher",
+    "sun_badger",
+    "crystal_ram",
+    "ember_salamander"
+  ],
+  "unitTriangles": 13338,
+  "heroTriangles": 3200,
+  "cases": [
+    {
+      "mode": "idle",
+      "summary": {
+        "before": {
+          "totalMs": {
+            "median": 27.548309000000017,
+            "p95": 52.46112399999993,
+            "min": 22.618574999999964,
+            "max": 61.79595900000004
+          },
+          "cpuMs": {
+            "median": 27.637999999999998,
+            "p95": 54.037,
+            "min": 22.72,
+            "max": 61.829
+          },
+          "geometryMs": {
+            "median": 9.01910150000026,
+            "p95": 23.51470900000004,
+            "min": 6.072299999999814,
+            "max": 28.875234999999975
+          },
+          "staticMs": {
+            "median": 0.0004220000000714208,
+            "p95": 0.0011469999999462743,
+            "min": 0.0002289999997628911,
+            "max": 0.0052249999998821295
+          },
+          "dynamicRasterMs": {
+            "median": 17.751803999999765,
+            "p95": 26.413172999999915,
+            "min": 13.129052000000229,
+            "max": 32.20087199999989
+          },
+          "presentMs": {
+            "median": 0.7007614999999987,
+            "p95": 5.098852999999963,
+            "min": 0.4853760000000875,
+            "max": 6.231962000000294
+          }
+        },
+        "current": {
+          "totalMs": {
+            "median": 24.27865850000012,
+            "p95": 51.06688600000007,
+            "min": 17.943856000000324,
+            "max": 65.21339099999977
+          },
+          "cpuMs": {
+            "median": 25.6795,
+            "p95": 56.378,
+            "min": 17.961,
+            "max": 65.403
+          },
+          "geometryMs": {
+            "median": 7.350450000000137,
+            "p95": 15.373940999999832,
+            "min": 4.532717000000048,
+            "max": 38.99801200000002
+          },
+          "staticMs": {
+            "median": 0.000339500000109183,
+            "p95": 0.004494999999678839,
+            "min": 0.00023399999963658047,
+            "max": 0.007043000000066968
+          },
+          "dynamicRasterMs": {
+            "median": 15.366381499999989,
+            "p95": 23.076782000000094,
+            "min": 12.035894999999982,
+            "max": 43.28262300000006
+          },
+          "presentMs": {
+            "median": 0.6645479999999679,
+            "p95": 3.1341019999999844,
+            "min": 0.5019520000000739,
+            "max": 7.803589999999986
+          }
+        }
+      },
+      "pairedTotalDifferenceMs": {
+        "median": -2.131110499999977,
+        "p95": 11.608153999999558,
+        "min": -28.931352999999945,
+        "max": 23.229311999999936
+      },
+      "pairedCpuDifferenceMs": {
+        "median": -2.0165000000000006,
+        "p95": 11.614999999999998,
+        "min": -30.487,
+        "max": 28.701
+      },
+      "poseMs": {
+        "median": 1.7281024999999772,
+        "p95": 4.898052000000007,
+        "min": 1.0096789999997782,
+        "max": 5.774870000000192
+      },
+      "allComparedPixelsEqual": true,
+      "allComparedDepthsEqual": true,
+      "warmups": [
+        {
+          "frame": 0,
+          "poseMs": 4.235266000000138,
+          "first": "current",
+          "current": {
+            "totalMs": 275.7180310000001,
+            "cpuMs": 541.886,
+            "geometryMs": 131.50497400000017,
+            "staticMs": 92.50879899999995,
+            "dynamicRasterMs": 49.28851800000007,
+            "presentMs": 2.4157399999999143,
+            "renderCounts": {
+              "triangles": 17949,
+              "calls": 17985,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 217.10773799999993,
+            "cpuMs": 500.584,
+            "geometryMs": 123.84656599999994,
+            "staticMs": 56.17832999999996,
+            "dynamicRasterMs": 34.11735999999996,
+            "presentMs": 2.9654820000000655,
+            "renderCounts": {
+              "triangles": 17949,
+              "calls": 17985,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 1,
+          "poseMs": 5.171334999999999,
+          "first": "before",
+          "before": {
+            "totalMs": 76.17185399999994,
+            "cpuMs": 134.868,
+            "geometryMs": 44.76725499999998,
+            "staticMs": 0.2675360000000637,
+            "dynamicRasterMs": 30.526464999999916,
+            "presentMs": 0.6105979999999818,
+            "renderCounts": {
+              "triangles": 12891,
+              "calls": 12927,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 65.70072199999981,
+            "cpuMs": 133.153,
+            "geometryMs": 24.218146999999817,
+            "staticMs": 0.298095000000103,
+            "dynamicRasterMs": 40.231943,
+            "presentMs": 0.9525369999998929,
+            "renderCounts": {
+              "triangles": 12891,
+              "calls": 12927,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 2,
+          "poseMs": 2.3603539999999157,
+          "first": "current",
+          "current": {
+            "totalMs": 43.17113100000006,
+            "cpuMs": 127.213,
+            "geometryMs": 21.217441000000235,
+            "staticMs": 0.002415999999811902,
+            "dynamicRasterMs": 20.63316799999984,
+            "presentMs": 1.3181060000001708,
+            "renderCounts": {
+              "triangles": 12886,
+              "calls": 12922,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 51.97935499999994,
+            "cpuMs": 177.382,
+            "geometryMs": 36.408476000000064,
+            "staticMs": 0.0026779999998325366,
+            "dynamicRasterMs": 14.756291000000147,
+            "presentMs": 0.811909999999898,
+            "renderCounts": {
+              "triangles": 12886,
+              "calls": 12922,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 3,
+          "poseMs": 2.6882089999999152,
+          "first": "before",
+          "before": {
+            "totalMs": 45.06980999999996,
+            "cpuMs": 109.629,
+            "geometryMs": 19.29128700000001,
+            "staticMs": 0.0008370000000468281,
+            "dynamicRasterMs": 24.86775899999975,
+            "presentMs": 0.9099270000001525,
+            "renderCounts": {
+              "triangles": 12885,
+              "calls": 12921,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 33.03030399999989,
+            "cpuMs": 69.303,
+            "geometryMs": 9.896522999999888,
+            "staticMs": 0.0013420000000223808,
+            "dynamicRasterMs": 21.646612000000005,
+            "presentMs": 1.485826999999972,
+            "renderCounts": {
+              "triangles": 12885,
+              "calls": 12921,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 4,
+          "poseMs": 4.298056000000088,
+          "first": "current",
+          "current": {
+            "totalMs": 27.342869999999948,
+            "cpuMs": 46.699,
+            "geometryMs": 10.085623999999825,
+            "staticMs": 0.0015820000003259338,
+            "dynamicRasterMs": 16.727496999999858,
+            "presentMs": 0.5281669999999394,
+            "renderCounts": {
+              "triangles": 12887,
+              "calls": 12923,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 22.97006599999986,
+            "cpuMs": 23.608,
+            "geometryMs": 7.433984000000237,
+            "staticMs": 0.0005999999998493877,
+            "dynamicRasterMs": 14.785538999999972,
+            "presentMs": 0.7499429999998029,
+            "renderCounts": {
+              "triangles": 12887,
+              "calls": 12923,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 5,
+          "poseMs": 1.4423109999997905,
+          "first": "before",
+          "before": {
+            "totalMs": 27.116848000000118,
+            "cpuMs": 28.516,
+            "geometryMs": 11.379926000000069,
+            "staticMs": 0.0006170000001475273,
+            "dynamicRasterMs": 15.073081000000002,
+            "presentMs": 0.6632239999999001,
+            "renderCounts": {
+              "triangles": 12888,
+              "calls": 12924,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 24.74965199999997,
+            "cpuMs": 25.281,
+            "geometryMs": 7.005615000000034,
+            "staticMs": 0.0010120000001734297,
+            "dynamicRasterMs": 17.185733999999684,
+            "presentMs": 0.5572910000000775,
+            "renderCounts": {
+              "triangles": 12888,
+              "calls": 12924,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 6,
+          "poseMs": 1.0794989999999416,
+          "first": "current",
+          "current": {
+            "totalMs": 21.27539999999999,
+            "cpuMs": 24.654,
+            "geometryMs": 5.965794000000187,
+            "staticMs": 0.0010569999999461288,
+            "dynamicRasterMs": 14.808051999999861,
+            "presentMs": 0.5004969999999958,
+            "renderCounts": {
+              "triangles": 12888,
+              "calls": 12924,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 21.431186000000253,
+            "cpuMs": 22.236,
+            "geometryMs": 6.60541000000012,
+            "staticMs": 0.0005879999998796848,
+            "dynamicRasterMs": 14.003118000000086,
+            "presentMs": 0.8220700000001671,
+            "renderCounts": {
+              "triangles": 12888,
+              "calls": 12924,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 7,
+          "poseMs": 1.1945389999996223,
+          "first": "before",
+          "before": {
+            "totalMs": 26.314992000000075,
+            "cpuMs": 28.207,
+            "geometryMs": 8.490046999999777,
+            "staticMs": 0.0005919999998695857,
+            "dynamicRasterMs": 16.64894400000003,
+            "presentMs": 1.1754090000003998,
+            "renderCounts": {
+              "triangles": 12886,
+              "calls": 12922,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 26.50972499999989,
+            "cpuMs": 27.649,
+            "geometryMs": 7.28926599999977,
+            "staticMs": 0.0010860000002139714,
+            "dynamicRasterMs": 18.546598999999787,
+            "presentMs": 0.6727740000001177,
+            "renderCounts": {
+              "triangles": 12886,
+              "calls": 12922,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 8,
+          "poseMs": 2.117747000000236,
+          "first": "current",
+          "current": {
+            "totalMs": 17.971293999999943,
+            "cpuMs": 18,
+            "geometryMs": 5.508335999999872,
+            "staticMs": 0.0009340000001429871,
+            "dynamicRasterMs": 11.505321999999978,
+            "presentMs": 0.9567019999999502,
+            "renderCounts": {
+              "triangles": 12892,
+              "calls": 12928,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 21.688842000000022,
+            "cpuMs": 21.813,
+            "geometryMs": 7.116555000000062,
+            "staticMs": 0.0006579999999303254,
+            "dynamicRasterMs": 13.994446000000153,
+            "presentMs": 0.5771829999998772,
+            "renderCounts": {
+              "triangles": 12892,
+              "calls": 12928,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 9,
+          "poseMs": 1.2771269999998367,
+          "first": "before",
+          "before": {
+            "totalMs": 20.90449099999978,
+            "cpuMs": 20.918,
+            "geometryMs": 6.182760000000144,
+            "staticMs": 0.0006059999996068655,
+            "dynamicRasterMs": 14.27428000000009,
+            "presentMs": 0.4468449999999393,
+            "renderCounts": {
+              "triangles": 12894,
+              "calls": 12930,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 21.73729800000001,
+            "cpuMs": 21.784,
+            "geometryMs": 6.799992999999631,
+            "staticMs": 0.0010520000000724394,
+            "dynamicRasterMs": 13.77576100000033,
+            "presentMs": 1.1604919999999765,
+            "renderCounts": {
+              "triangles": 12894,
+              "calls": 12930,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 10,
+          "poseMs": 2.4934659999998985,
+          "first": "current",
+          "current": {
+            "totalMs": 20.901974999999766,
+            "cpuMs": 25.901,
+            "geometryMs": 6.632674999999836,
+            "staticMs": 0.0008609999999862339,
+            "dynamicRasterMs": 13.749659999999949,
+            "presentMs": 0.518778999999995,
+            "renderCounts": {
+              "triangles": 12895,
+              "calls": 12931,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 23.85542600000008,
+            "cpuMs": 24.166,
+            "geometryMs": 6.433837999999923,
+            "staticMs": 0.0005869999999958964,
+            "dynamicRasterMs": 15.899294000000282,
+            "presentMs": 1.5217069999998785,
+            "renderCounts": {
+              "triangles": 12895,
+              "calls": 12931,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 11,
+          "poseMs": 1.0162030000001323,
+          "first": "before",
+          "before": {
+            "totalMs": 27.48475399999961,
+            "cpuMs": 27.496,
+            "geometryMs": 8.334427999999662,
+            "staticMs": 0.0006620000003749738,
+            "dynamicRasterMs": 18.370421999999962,
+            "presentMs": 0.7792419999996127,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 27.254419999999755,
+            "cpuMs": 28.774,
+            "geometryMs": 6.081209999999828,
+            "staticMs": 0.0010489999999663269,
+            "dynamicRasterMs": 19.69291599999997,
+            "presentMs": 1.4792449999999917,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 12,
+          "poseMs": 1.4276079999999638,
+          "first": "current",
+          "current": {
+            "totalMs": 26.959440000000086,
+            "cpuMs": 28.897,
+            "geometryMs": 7.0807810000001155,
+            "staticMs": 0.001119999999900756,
+            "dynamicRasterMs": 18.338496000000305,
+            "presentMs": 1.539042999999765,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 25.664610000000266,
+            "cpuMs": 25.688,
+            "geometryMs": 9.637662999999975,
+            "staticMs": 0.0006730000000061409,
+            "dynamicRasterMs": 15.440161999999873,
+            "presentMs": 0.5861120000004121,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 13,
+          "poseMs": 1.3779749999998785,
+          "first": "before",
+          "before": {
+            "totalMs": 24.430143000000044,
+            "cpuMs": 24.45,
+            "geometryMs": 8.214022000000114,
+            "staticMs": 0.0006059999996068655,
+            "dynamicRasterMs": 15.686048000000028,
+            "presentMs": 0.5294670000002952,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 22.68459699999994,
+            "cpuMs": 22.706,
+            "geometryMs": 6.197646000000077,
+            "staticMs": 0.0012520000000222353,
+            "dynamicRasterMs": 15.93695200000002,
+            "presentMs": 0.5487469999998211,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 14,
+          "poseMs": 1.4471889999999803,
+          "first": "current",
+          "current": {
+            "totalMs": 19.8713130000001,
+            "cpuMs": 27.839,
+            "geometryMs": 6.4781590000002325,
+            "staticMs": 0.0011540000000422879,
+            "dynamicRasterMs": 12.734512999999879,
+            "presentMs": 0.6574869999999464,
+            "renderCounts": {
+              "triangles": 12901,
+              "calls": 12937,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 23.656296999999995,
+            "cpuMs": 23.672,
+            "geometryMs": 7.117237999999816,
+            "staticMs": 0.0006120000002738379,
+            "dynamicRasterMs": 15.64185899999984,
+            "presentMs": 0.8965880000000652,
+            "renderCounts": {
+              "triangles": 12901,
+              "calls": 12937,
+              "cachedTriangles": 5055
+            }
+          }
+        }
+      ],
+      "samples": [
+        {
+          "frame": 15,
+          "poseMs": 1.1828150000001187,
+          "first": "before",
+          "before": {
+            "totalMs": 27.360689999999977,
+            "cpuMs": 27.38,
+            "geometryMs": 6.072299999999814,
+            "staticMs": 0.0005750000000261934,
+            "dynamicRasterMs": 20.741303000000244,
+            "presentMs": 0.5465119999998933,
+            "renderCounts": {
+              "triangles": 12899,
+              "calls": 12935,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 27.992729000000054,
+            "cpuMs": 28.014,
+            "geometryMs": 13.03812999999991,
+            "staticMs": 0.0012040000001434237,
+            "dynamicRasterMs": 14.022008999999798,
+            "presentMs": 0.9313860000002023,
+            "renderCounts": {
+              "triangles": 12899,
+              "calls": 12935,
+              "cachedTriangles": 5055
+            }
+          },
+          "canvasHashes": {
+            "before": "8a8da8cf0474db314bf2fe8a1af060af54ae29eb3a076fa8b4c82f50b86f11fb",
+            "current": "8a8da8cf0474db314bf2fe8a1af060af54ae29eb3a076fa8b4c82f50b86f11fb"
+          },
+          "pixelsEqual": true,
+          "depthHashes": {
+            "before": "ae22fe8535e47a29a03bcfca2b56546bf59241b8c7afc6c5f083f4a460b068c4",
+            "current": "ae22fe8535e47a29a03bcfca2b56546bf59241b8c7afc6c5f083f4a460b068c4"
+          },
+          "depthsEqual": true
+        },
+        {
+          "frame": 16,
+          "poseMs": 1.3962259999998423,
+          "first": "current",
+          "current": {
+            "totalMs": 18.702294999999594,
+            "cpuMs": 18.721,
+            "geometryMs": 5.570947999999589,
+            "staticMs": 0.0010610000003907771,
+            "dynamicRasterMs": 12.035894999999982,
+            "presentMs": 1.0943909999996322,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 31.234759000000395,
+            "cpuMs": 31.211,
+            "geometryMs": 8.514024000000063,
+            "staticMs": 0.00091999999995096,
+            "dynamicRasterMs": 19.420137000000068,
+            "presentMs": 3.2996780000003127,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 17,
+          "poseMs": 3.553502999999637,
+          "first": "before",
+          "before": {
+            "totalMs": 37.40121699999963,
+            "cpuMs": 37.929,
+            "geometryMs": 14.061905000000024,
+            "staticMs": 0.0011469999999462743,
+            "dynamicRasterMs": 22.739270999999917,
+            "presentMs": 0.5988939999997456,
+            "renderCounts": {
+              "triangles": 12897,
+              "calls": 12933,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 22.09629199999972,
+            "cpuMs": 22.546,
+            "geometryMs": 6.388212999999723,
+            "staticMs": 0.0009970000000976142,
+            "dynamicRasterMs": 15.17585999999983,
+            "presentMs": 0.5312220000000707,
+            "renderCounts": {
+              "triangles": 12897,
+              "calls": 12933,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 18,
+          "poseMs": 1.7708450000000084,
+          "first": "current",
+          "current": {
+            "totalMs": 18.722486000000117,
+            "cpuMs": 20.194,
+            "geometryMs": 5.095890000000054,
+            "staticMs": 0.0009089999998650455,
+            "dynamicRasterMs": 12.973092000000179,
+            "presentMs": 0.6525950000000194,
+            "renderCounts": {
+              "triangles": 12897,
+              "calls": 12933,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 40.98361300000033,
+            "cpuMs": 42.043,
+            "geometryMs": 8.337828000000172,
+            "staticMs": 0.0006499999999505235,
+            "dynamicRasterMs": 26.413172999999915,
+            "presentMs": 6.231962000000294,
+            "renderCounts": {
+              "triangles": 12897,
+              "calls": 12933,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 19,
+          "poseMs": 5.774870000000192,
+          "first": "before",
+          "before": {
+            "totalMs": 22.71878599999991,
+            "cpuMs": 22.72,
+            "geometryMs": 8.547899999999572,
+            "staticMs": 0.0006950000001779699,
+            "dynamicRasterMs": 13.364802000000054,
+            "presentMs": 0.8053890000001047,
+            "renderCounts": {
+              "triangles": 12895,
+              "calls": 12931,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 21.04567300000008,
+            "cpuMs": 21.317,
+            "geometryMs": 7.126342000000022,
+            "staticMs": 0.007043000000066968,
+            "dynamicRasterMs": 13.300111000000015,
+            "presentMs": 0.6121769999999742,
+            "renderCounts": {
+              "triangles": 12895,
+              "calls": 12931,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 20,
+          "poseMs": 2.6071029999998245,
+          "first": "current",
+          "current": {
+            "totalMs": 27.46458799999982,
+            "cpuMs": 27.485,
+            "geometryMs": 6.3380309999997735,
+            "staticMs": 0.0010320000001229346,
+            "dynamicRasterMs": 20.17292499999985,
+            "presentMs": 0.9526000000000749,
+            "renderCounts": {
+              "triangles": 12895,
+              "calls": 12931,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 24.4165780000003,
+            "cpuMs": 24.435,
+            "geometryMs": 9.617375000000266,
+            "staticMs": 0.0006479999997281993,
+            "dynamicRasterMs": 14.252956000000268,
+            "presentMs": 0.5455990000000384,
+            "renderCounts": {
+              "triangles": 12895,
+              "calls": 12931,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 21,
+          "poseMs": 1.0096789999997782,
+          "first": "before",
+          "before": {
+            "totalMs": 24.38655699999981,
+            "cpuMs": 24.404,
+            "geometryMs": 7.1450519999998505,
+            "staticMs": 0.0006730000000061409,
+            "dynamicRasterMs": 16.713145000000168,
+            "presentMs": 0.5276869999997871,
+            "renderCounts": {
+              "triangles": 12895,
+              "calls": 12931,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 21.797448999999688,
+            "cpuMs": 21.828,
+            "geometryMs": 8.27647799999977,
+            "staticMs": 0.000653000000056636,
+            "dynamicRasterMs": 12.760757999999896,
+            "presentMs": 0.7595599999999649,
+            "renderCounts": {
+              "triangles": 12895,
+              "calls": 12931,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 22,
+          "poseMs": 2.1796839999997246,
+          "first": "current",
+          "current": {
+            "totalMs": 19.520956000000297,
+            "cpuMs": 19.542,
+            "geometryMs": 5.8515220000003865,
+            "staticMs": 0.001510000000052969,
+            "dynamicRasterMs": 12.928165999999692,
+            "presentMs": 0.7397580000001653,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 26.765945999999985,
+            "cpuMs": 26.779,
+            "geometryMs": 10.028752000000168,
+            "staticMs": 0.0009799999997994746,
+            "dynamicRasterMs": 16.16785200000004,
+            "presentMs": 0.5683619999999792,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          },
+          "canvasHashes": {
+            "before": "49b0c7628bf30f6311f4cbd0e66efd60c2979671361c5def9047bdedb7729cd0",
+            "current": "49b0c7628bf30f6311f4cbd0e66efd60c2979671361c5def9047bdedb7729cd0"
+          },
+          "pixelsEqual": true,
+          "depthHashes": {
+            "before": "e2fbd522e04222238762b941f5499898e48fdc348f444de4786aaa02c5a2b059",
+            "current": "e2fbd522e04222238762b941f5499898e48fdc348f444de4786aaa02c5a2b059"
+          },
+          "depthsEqual": true
+        },
+        {
+          "frame": 23,
+          "poseMs": 1.1659610000001521,
+          "first": "before",
+          "before": {
+            "totalMs": 22.618574999999964,
+            "cpuMs": 42.845,
+            "geometryMs": 8.166601999999784,
+            "staticMs": 0.0006480000001829467,
+            "dynamicRasterMs": 13.96594899999991,
+            "presentMs": 0.4853760000000875,
+            "renderCounts": {
+              "triangles": 12897,
+              "calls": 12933,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 23.009464000000207,
+            "cpuMs": 49.311,
+            "geometryMs": 6.935508000000027,
+            "staticMs": 0.0011209999997845443,
+            "dynamicRasterMs": 15.556903000000148,
+            "presentMs": 0.5159320000002481,
+            "renderCounts": {
+              "triangles": 12897,
+              "calls": 12933,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 24,
+          "poseMs": 1.098982999999862,
+          "first": "current",
+          "current": {
+            "totalMs": 51.06688600000007,
+            "cpuMs": 56.378,
+            "geometryMs": 7.10664399999996,
+            "staticMs": 0.0011180000001331791,
+            "dynamicRasterMs": 43.28262300000006,
+            "presentMs": 0.6765009999999165,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 27.83757400000013,
+            "cpuMs": 27.677,
+            "geometryMs": 9.657156000000214,
+            "staticMs": 0.0003000000001520675,
+            "dynamicRasterMs": 17.646598999999696,
+            "presentMs": 0.5335190000000694,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 25,
+          "poseMs": 3.3278150000001006,
+          "first": "before",
+          "before": {
+            "totalMs": 32.822771999999986,
+            "cpuMs": 32.844,
+            "geometryMs": 9.185377000000244,
+            "staticMs": 0.0002799999997478153,
+            "dynamicRasterMs": 22.931368999999904,
+            "presentMs": 0.7057460000000901,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 27.79426199999989,
+            "cpuMs": 27.818,
+            "geometryMs": 5.9519179999997505,
+            "staticMs": 0.0002710000003389723,
+            "dynamicRasterMs": 21.332658999999694,
+            "presentMs": 0.5094140000001062,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 26,
+          "poseMs": 1.084013000000141,
+          "first": "current",
+          "current": {
+            "totalMs": 17.943856000000324,
+            "cpuMs": 17.961,
+            "geometryMs": 4.532717000000048,
+            "staticMs": 0.0003000000001520675,
+            "dynamicRasterMs": 12.843823000000157,
+            "presentMs": 0.5670159999999669,
+            "renderCounts": {
+              "triangles": 12902,
+              "calls": 12938,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 22.93536800000038,
+            "cpuMs": 22.954,
+            "geometryMs": 7.084535000000415,
+            "staticMs": 0.0002289999997628911,
+            "dynamicRasterMs": 15.03658200000018,
+            "presentMs": 0.8140220000000227,
+            "renderCounts": {
+              "triangles": 12902,
+              "calls": 12938,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 27,
+          "poseMs": 1.3582750000000487,
+          "first": "before",
+          "before": {
+            "totalMs": 23.67558800000006,
+            "cpuMs": 23.681,
+            "geometryMs": 9.240854000000127,
+            "staticMs": 0.00043199999981879955,
+            "dynamicRasterMs": 13.129052000000229,
+            "presentMs": 1.3052499999998872,
+            "renderCounts": {
+              "triangles": 12902,
+              "calls": 12938,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 20.613068999999996,
+            "cpuMs": 20.629,
+            "geometryMs": 7.497460000000046,
+            "staticMs": 0.00028699999984382885,
+            "dynamicRasterMs": 12.556950000000143,
+            "presentMs": 0.558371999999963,
+            "renderCounts": {
+              "triangles": 12902,
+              "calls": 12938,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 28,
+          "poseMs": 1.685359999999946,
+          "first": "current",
+          "current": {
+            "totalMs": 26.955721000000267,
+            "cpuMs": 26.978,
+            "geometryMs": 12.171771000000263,
+            "staticMs": 0.0002799999997478153,
+            "dynamicRasterMs": 14.156525000000329,
+            "presentMs": 0.6271449999999277,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 27.48124800000005,
+            "cpuMs": 27.503,
+            "geometryMs": 9.155892000000222,
+            "staticMs": 0.0006459999999606225,
+            "dynamicRasterMs": 16.94338999999991,
+            "presentMs": 1.3813199999999597,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 29,
+          "poseMs": 1.2944139999999607,
+          "first": "before",
+          "before": {
+            "totalMs": 24.679029999999784,
+            "cpuMs": 24.678,
+            "geometryMs": 6.746365999999853,
+            "staticMs": 0.00023400000009132782,
+            "dynamicRasterMs": 17.36442500000021,
+            "presentMs": 0.56800499999963,
+            "renderCounts": {
+              "triangles": 12899,
+              "calls": 12935,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 21.53500299999996,
+            "cpuMs": 21.554,
+            "geometryMs": 7.98844599999984,
+            "staticMs": 0.00029600000016216654,
+            "dynamicRasterMs": 12.409485000000132,
+            "presentMs": 1.136775999999827,
+            "renderCounts": {
+              "triangles": 12899,
+              "calls": 12935,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 30,
+          "poseMs": 2.2475439999998343,
+          "first": "current",
+          "current": {
+            "totalMs": 21.968842000000222,
+            "cpuMs": 21.989,
+            "geometryMs": 7.921155999999883,
+            "staticMs": 0.0002750000003288733,
+            "dynamicRasterMs": 13.545458999999937,
+            "presentMs": 0.5019520000000739,
+            "renderCounts": {
+              "triangles": 12894,
+              "calls": 12930,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 27.615369999999984,
+            "cpuMs": 27.634,
+            "geometryMs": 8.162620999999945,
+            "staticMs": 0.0002770000000964501,
+            "dynamicRasterMs": 18.934060000000045,
+            "presentMs": 0.5184119999998984,
+            "renderCounts": {
+              "triangles": 12894,
+              "calls": 12930,
+              "cachedTriangles": 5055
+            }
+          },
+          "canvasHashes": {
+            "before": "f5454a224c3f94c0a4265a5e6f695795fb76aba3aee7a6cdc53c597a37c4aad3",
+            "current": "f5454a224c3f94c0a4265a5e6f695795fb76aba3aee7a6cdc53c597a37c4aad3"
+          },
+          "pixelsEqual": true,
+          "depthHashes": {
+            "before": "3a0f2f589697b3e668fbd763c31b0dcee252d7d6beb88203b119299f6e293a2e",
+            "current": "3a0f2f589697b3e668fbd763c31b0dcee252d7d6beb88203b119299f6e293a2e"
+          },
+          "depthsEqual": true
+        },
+        {
+          "frame": 31,
+          "poseMs": 4.51797600000009,
+          "first": "before",
+          "before": {
+            "totalMs": 27.62286600000016,
+            "cpuMs": 27.642,
+            "geometryMs": 8.564534000000094,
+            "staticMs": 0.0002610000001368462,
+            "dynamicRasterMs": 17.713678999999956,
+            "presentMs": 1.3443919999999707,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 39.23101999999972,
+            "cpuMs": 39.257,
+            "geometryMs": 15.373940999999832,
+            "staticMs": 0.0002899999999499414,
+            "dynamicRasterMs": 23.025596999999834,
+            "presentMs": 0.831192000000101,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 32,
+          "poseMs": 1.567674000000352,
+          "first": "current",
+          "current": {
+            "totalMs": 23.529770999999982,
+            "cpuMs": 23.55,
+            "geometryMs": 5.7354300000001786,
+            "staticMs": 0.00023399999963658047,
+            "dynamicRasterMs": 16.889262000000144,
+            "presentMs": 0.904845000000023,
+            "renderCounts": {
+              "triangles": 12899,
+              "calls": 12935,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 52.46112399999993,
+            "cpuMs": 54.037,
+            "geometryMs": 23.51470900000004,
+            "staticMs": 0.0052249999998821295,
+            "dynamicRasterMs": 23.842337000000043,
+            "presentMs": 5.098852999999963,
+            "renderCounts": {
+              "triangles": 12899,
+              "calls": 12935,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 33,
+          "poseMs": 4.464566999999988,
+          "first": "before",
+          "before": {
+            "totalMs": 61.79595900000004,
+            "cpuMs": 61.829,
+            "geometryMs": 28.875234999999975,
+            "staticMs": 0.0003420000002734014,
+            "dynamicRasterMs": 32.20087199999989,
+            "presentMs": 0.7195099999999002,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 65.21339099999977,
+            "cpuMs": 65.403,
+            "geometryMs": 38.99801200000002,
+            "staticMs": 0.004494999999678839,
+            "dynamicRasterMs": 23.076782000000094,
+            "presentMs": 3.1341019999999844,
+            "renderCounts": {
+              "triangles": 12896,
+              "calls": 12932,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 34,
+          "poseMs": 4.898052000000007,
+          "first": "current",
+          "current": {
+            "totalMs": 42.05542600000035,
+            "cpuMs": 42.458,
+            "geometryMs": 15.370198000000073,
+            "staticMs": 0.0003790000000662985,
+            "dynamicRasterMs": 18.881259000000227,
+            "presentMs": 7.803589999999986,
+            "renderCounts": {
+              "triangles": 12893,
+              "calls": 12929,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 37.97261800000024,
+            "cpuMs": 38.038,
+            "geometryMs": 18.73644800000011,
+            "staticMs": 0.0003950000000259024,
+            "dynamicRasterMs": 18.418644999999742,
+            "presentMs": 0.8171300000003612,
+            "renderCounts": {
+              "triangles": 12893,
+              "calls": 12929,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 35,
+          "poseMs": 2.106038000000808,
+          "first": "before",
+          "before": {
+            "totalMs": 27.11283700000058,
+            "cpuMs": 27.182,
+            "geometryMs": 8.8823110000003,
+            "staticMs": 0.00028000000020256266,
+            "dynamicRasterMs": 17.453929000000244,
+            "presentMs": 0.7763169999998354,
+            "renderCounts": {
+              "triangles": 12893,
+              "calls": 12929,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 29.891671000000315,
+            "cpuMs": 29.817,
+            "geometryMs": 8.348657999999887,
+            "staticMs": 0.00026700000034907134,
+            "dynamicRasterMs": 20.992221999999856,
+            "presentMs": 0.5505240000002232,
+            "renderCounts": {
+              "triangles": 12893,
+              "calls": 12929,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 36,
+          "poseMs": 2.251991999999518,
+          "first": "current",
+          "current": {
+            "totalMs": 26.28465799999958,
+            "cpuMs": 26.309,
+            "geometryMs": 7.563407999999981,
+            "staticMs": 0.00027799999952549115,
+            "dynamicRasterMs": 18.174205999999685,
+            "presentMs": 0.5467660000003889,
+            "renderCounts": {
+              "triangles": 12891,
+              "calls": 12927,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 33.60085000000072,
+            "cpuMs": 33.622,
+            "geometryMs": 11.80761800000073,
+            "staticMs": 0.00030699999933858635,
+            "dynamicRasterMs": 21.228800000000774,
+            "presentMs": 0.5641249999998763,
+            "renderCounts": {
+              "triangles": 12891,
+              "calls": 12927,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 37,
+          "poseMs": 1.4370039999994333,
+          "first": "before",
+          "before": {
+            "totalMs": 26.485005999999885,
+            "cpuMs": 26.507,
+            "geometryMs": 6.846508999999969,
+            "staticMs": 0.00025400000049558,
+            "dynamicRasterMs": 19.127669999999853,
+            "presentMs": 0.5105729999995674,
+            "renderCounts": {
+              "triangles": 12892,
+              "calls": 12928,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 25.027546000000257,
+            "cpuMs": 25.05,
+            "geometryMs": 7.203440000000228,
+            "staticMs": 0.00025400000049558,
+            "dynamicRasterMs": 17.249447999999575,
+            "presentMs": 0.5744039999999586,
+            "renderCounts": {
+              "triangles": 12892,
+              "calls": 12928,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 38,
+          "poseMs": 1.278892999999698,
+          "first": "current",
+          "current": {
+            "totalMs": 28.852482999999665,
+            "cpuMs": 29.541,
+            "geometryMs": 9.469629999999597,
+            "staticMs": 0.00023500000042986358,
+            "dynamicRasterMs": 18.112339999999676,
+            "presentMs": 1.270277999999962,
+            "renderCounts": {
+              "triangles": 12890,
+              "calls": 12926,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 29.16569199999958,
+            "cpuMs": 29.186,
+            "geometryMs": 10.679573999999775,
+            "staticMs": 0.00041200000032404205,
+            "dynamicRasterMs": 17.789928999999574,
+            "presentMs": 0.6957769999999073,
+            "renderCounts": {
+              "triangles": 12890,
+              "calls": 12926,
+              "cachedTriangles": 5055
+            }
+          },
+          "canvasHashes": {
+            "before": "02ba70438be999eee746eb4c56828f8c9a7ee2e876d45df81ba78c4edf284db8",
+            "current": "02ba70438be999eee746eb4c56828f8c9a7ee2e876d45df81ba78c4edf284db8"
+          },
+          "pixelsEqual": true,
+          "depthHashes": {
+            "before": "fafdaad083f925c1a080ed8e4f9fab02d3863e552862ade6cbc315f9e6e786f3",
+            "current": "fafdaad083f925c1a080ed8e4f9fab02d3863e552862ade6cbc315f9e6e786f3"
+          },
+          "depthsEqual": true
+        }
+      ]
+    },
+    {
+      "mode": "cast",
+      "summary": {
+        "before": {
+          "totalMs": {
+            "median": 26.595785999999862,
+            "p95": 39.66971299999932,
+            "min": 20.136441999999988,
+            "max": 43.548885999999584
+          },
+          "cpuMs": {
+            "median": 26.628999999999998,
+            "p95": 39.865,
+            "min": 20.153,
+            "max": 62.516
+          },
+          "geometryMs": {
+            "median": 8.42116249999981,
+            "p95": 13.455584000000272,
+            "min": 5.465657000000647,
+            "max": 19.410796999999548
+          },
+          "staticMs": {
+            "median": 0.00029450000010911026,
+            "p95": 0.003552000000127009,
+            "min": 0.00020900000072288094,
+            "max": 0.05061299999943003
+          },
+          "dynamicRasterMs": {
+            "median": 17.08786450000025,
+            "p95": 24.50215399999979,
+            "min": 12.506494000000203,
+            "max": 25.80049500000041
+          },
+          "presentMs": {
+            "median": 0.7175944999999047,
+            "p95": 3.302324999999655,
+            "min": 0.42475800000011077,
+            "max": 3.419093999999859
+          }
+        },
+        "current": {
+          "totalMs": {
+            "median": 21.301109500000166,
+            "p95": 77.78417600000012,
+            "min": 17.19676900000013,
+            "max": 263.2353490000005
+          },
+          "cpuMs": {
+            "median": 22.1815,
+            "p95": 77.818,
+            "min": 17.214,
+            "max": 263.243
+          },
+          "geometryMs": {
+            "median": 6.338016499999867,
+            "p95": 12.699840999999651,
+            "min": 4.464661999999407,
+            "max": 23.678909999999632
+          },
+          "staticMs": {
+            "median": 0.0002875000000130967,
+            "p95": 0.003917000000001281,
+            "min": 0.00022199999966687756,
+            "max": 0.029884999999922
+          },
+          "dynamicRasterMs": {
+            "median": 13.600736500000039,
+            "p95": 64.70459199999914,
+            "min": 11.356915999999728,
+            "max": 254.53639999999996
+          },
+          "presentMs": {
+            "median": 0.6696610000003602,
+            "p95": 2.259023999999954,
+            "min": 0.470089000000371,
+            "max": 2.9525030000004335
+          }
+        }
+      },
+      "pairedTotalDifferenceMs": {
+        "median": -3.7739545000004,
+        "p95": 51.003515000000334,
+        "min": -17.7157959999995,
+        "max": 243.0989070000005
+      },
+      "pairedCpuDifferenceMs": {
+        "median": -4.4030000000000005,
+        "p95": 51.016,
+        "min": -33.058,
+        "max": 243.09
+      },
+      "poseMs": {
+        "median": 1.3515610000004017,
+        "p95": 4.69034400000055,
+        "min": 1.0435960000004343,
+        "max": 36.9611560000003
+      },
+      "allComparedPixelsEqual": true,
+      "allComparedDepthsEqual": true,
+      "warmups": [
+        {
+          "frame": 0,
+          "poseMs": 2.8810629999998127,
+          "first": "current",
+          "current": {
+            "totalMs": 37.19888499999979,
+            "cpuMs": 58.153,
+            "geometryMs": 18.36187400000017,
+            "staticMs": 0.0004040000003442401,
+            "dynamicRasterMs": 17.881583999999748,
+            "presentMs": 0.9550229999995281,
+            "renderCounts": {
+              "triangles": 12986,
+              "calls": 13022,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 51.88612000000012,
+            "cpuMs": 155.661,
+            "geometryMs": 19.878657000000203,
+            "staticMs": 0.0005160000000614673,
+            "dynamicRasterMs": 24.791877999999997,
+            "presentMs": 7.215068999999858,
+            "renderCounts": {
+              "triangles": 12986,
+              "calls": 13022,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 1,
+          "poseMs": 4.698540000000321,
+          "first": "before",
+          "before": {
+            "totalMs": 112.76030400000036,
+            "cpuMs": 335.86,
+            "geometryMs": 69.16404500000044,
+            "staticMs": 0.0005279999995764229,
+            "dynamicRasterMs": 42.19491500000004,
+            "presentMs": 1.4008160000003045,
+            "renderCounts": {
+              "triangles": 12993,
+              "calls": 13029,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 56.00296199999957,
+            "cpuMs": 148.638,
+            "geometryMs": 17.63986399999976,
+            "staticMs": 0.000622000000475964,
+            "dynamicRasterMs": 35.76324499999919,
+            "presentMs": 2.5992310000001453,
+            "renderCounts": {
+              "triangles": 12993,
+              "calls": 13029,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 2,
+          "poseMs": 5.075898000000052,
+          "first": "current",
+          "current": {
+            "totalMs": 26.08766199999991,
+            "cpuMs": 49.997,
+            "geometryMs": 6.756914000000506,
+            "staticMs": 0.00040699999954085797,
+            "dynamicRasterMs": 18.792895999999928,
+            "presentMs": 0.5374449999999342,
+            "renderCounts": {
+              "triangles": 12988,
+              "calls": 13024,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 26.47588799999994,
+            "cpuMs": 54.509,
+            "geometryMs": 7.105471999999281,
+            "staticMs": 0.00035400000069785165,
+            "dynamicRasterMs": 18.754337999999734,
+            "presentMs": 0.6157240000002275,
+            "renderCounts": {
+              "triangles": 12988,
+              "calls": 13024,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 3,
+          "poseMs": 3.888898999999583,
+          "first": "before",
+          "before": {
+            "totalMs": 100.62397600000077,
+            "cpuMs": 246.857,
+            "geometryMs": 68.77353700000003,
+            "staticMs": 0.01767100000051869,
+            "dynamicRasterMs": 29.745358999999553,
+            "presentMs": 2.0874090000006618,
+            "renderCounts": {
+              "triangles": 13098,
+              "calls": 13134,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 134.81656900000053,
+            "cpuMs": 358.737,
+            "geometryMs": 84.24050500000067,
+            "staticMs": 0.002682999999706226,
+            "dynamicRasterMs": 46.466121999999814,
+            "presentMs": 4.10725900000034,
+            "renderCounts": {
+              "triangles": 13098,
+              "calls": 13134,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 4,
+          "poseMs": 1.9038570000002437,
+          "first": "current",
+          "current": {
+            "totalMs": 28.059664999999768,
+            "cpuMs": 28.086,
+            "geometryMs": 10.485292999999729,
+            "staticMs": 0.0005140000002938905,
+            "dynamicRasterMs": 17.000927000000047,
+            "presentMs": 0.5729309999996985,
+            "renderCounts": {
+              "triangles": 13231,
+              "calls": 13267,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 50.222334999999475,
+            "cpuMs": 88.397,
+            "geometryMs": 35.54510200000004,
+            "staticMs": 0.0003099999994446989,
+            "dynamicRasterMs": 13.99434199999996,
+            "presentMs": 0.6825810000000274,
+            "renderCounts": {
+              "triangles": 13231,
+              "calls": 13267,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 5,
+          "poseMs": 1.8966720000007626,
+          "first": "before",
+          "before": {
+            "totalMs": 61.219342000000324,
+            "cpuMs": 120.627,
+            "geometryMs": 38.582220000000234,
+            "staticMs": 0.0007940000004964531,
+            "dynamicRasterMs": 16.170900000000074,
+            "presentMs": 6.46542799999952,
+            "renderCounts": {
+              "triangles": 13214,
+              "calls": 13250,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 34.55291100000068,
+            "cpuMs": 38.748,
+            "geometryMs": 9.559235000000626,
+            "staticMs": 0.0004760000001624576,
+            "dynamicRasterMs": 20.137565999999424,
+            "presentMs": 4.855634000000464,
+            "renderCounts": {
+              "triangles": 13214,
+              "calls": 13250,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 6,
+          "poseMs": 5.956669000000147,
+          "first": "current",
+          "current": {
+            "totalMs": 37.998961999999665,
+            "cpuMs": 38.535,
+            "geometryMs": 14.279743000000053,
+            "staticMs": 0.00046599999950558413,
+            "dynamicRasterMs": 23.12067500000012,
+            "presentMs": 0.5980779999999868,
+            "renderCounts": {
+              "triangles": 13220,
+              "calls": 13256,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 24.252838000000338,
+            "cpuMs": 26.678,
+            "geometryMs": 7.50449800000024,
+            "staticMs": 0.0005929999997533741,
+            "dynamicRasterMs": 16.028329000000667,
+            "presentMs": 0.7194179999996777,
+            "renderCounts": {
+              "triangles": 13220,
+              "calls": 13256,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 7,
+          "poseMs": 1.2878160000000207,
+          "first": "before",
+          "before": {
+            "totalMs": 33.32236699999976,
+            "cpuMs": 33.345,
+            "geometryMs": 7.375750999999582,
+            "staticMs": 0.00020800000038434519,
+            "dynamicRasterMs": 25.435703999999532,
+            "presentMs": 0.5107040000002598,
+            "renderCounts": {
+              "triangles": 13225,
+              "calls": 13261,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 32.060685999999805,
+            "cpuMs": 32.345,
+            "geometryMs": 13.27929099999983,
+            "staticMs": 0.0002899999999499414,
+            "dynamicRasterMs": 18.177176000000145,
+            "presentMs": 0.60392899999988,
+            "renderCounts": {
+              "triangles": 13225,
+              "calls": 13261,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 8,
+          "poseMs": 1.1954939999995986,
+          "first": "current",
+          "current": {
+            "totalMs": 200.3358560000006,
+            "cpuMs": 270.195,
+            "geometryMs": 5.1480740000006335,
+            "staticMs": 0.0017549999993207166,
+            "dynamicRasterMs": 194.38882000000012,
+            "presentMs": 0.797207000000526,
+            "renderCounts": {
+              "triangles": 13140,
+              "calls": 13176,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 182.82064699999955,
+            "cpuMs": 334.833,
+            "geometryMs": 10.768364999999903,
+            "staticMs": 0.003018000000338361,
+            "dynamicRasterMs": 171.25491299999976,
+            "presentMs": 0.7943509999995513,
+            "renderCounts": {
+              "triangles": 13140,
+              "calls": 13176,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 9,
+          "poseMs": 1.405467999999928,
+          "first": "before",
+          "before": {
+            "totalMs": 21.296346000000085,
+            "cpuMs": 29.719,
+            "geometryMs": 7.6702720000002955,
+            "staticMs": 0.00019499999962135917,
+            "dynamicRasterMs": 13.030829000000267,
+            "presentMs": 0.595049999999901,
+            "renderCounts": {
+              "triangles": 13142,
+              "calls": 13178,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 18.377902999999606,
+            "cpuMs": 18.396,
+            "geometryMs": 5.9275219999999536,
+            "staticMs": 0.0002479999993738602,
+            "dynamicRasterMs": 11.590584999999919,
+            "presentMs": 0.859548000000359,
+            "renderCounts": {
+              "triangles": 13142,
+              "calls": 13178,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 10,
+          "poseMs": 1.1069310000002588,
+          "first": "current",
+          "current": {
+            "totalMs": 25.810976999999184,
+            "cpuMs": 25.83,
+            "geometryMs": 6.312477999999828,
+            "staticMs": 0.00046999999995023245,
+            "dynamicRasterMs": 18.933513999999377,
+            "presentMs": 0.5645150000000285,
+            "renderCounts": {
+              "triangles": 13115,
+              "calls": 13151,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 22.69057199999952,
+            "cpuMs": 22.711,
+            "geometryMs": 6.954169999999976,
+            "staticMs": 0.0006939999993846868,
+            "dynamicRasterMs": 14.629267000000254,
+            "presentMs": 1.1064409999999043,
+            "renderCounts": {
+              "triangles": 13115,
+              "calls": 13151,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 11,
+          "poseMs": 2.0838229999999385,
+          "first": "before",
+          "before": {
+            "totalMs": 23.920516000000134,
+            "cpuMs": 23.94,
+            "geometryMs": 8.503974999999627,
+            "staticMs": 0.00031100000069272937,
+            "dynamicRasterMs": 14.892420999999558,
+            "presentMs": 0.5238090000002558,
+            "renderCounts": {
+              "triangles": 13113,
+              "calls": 13149,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 50.64260899999954,
+            "cpuMs": 50.902,
+            "geometryMs": 28.970478999999614,
+            "staticMs": 0.0071470000002591405,
+            "dynamicRasterMs": 19.14426900000035,
+            "presentMs": 2.520713999999316,
+            "renderCounts": {
+              "triangles": 13113,
+              "calls": 13149,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 12,
+          "poseMs": 2.2031699999997727,
+          "first": "current",
+          "current": {
+            "totalMs": 36.22052600000006,
+            "cpuMs": 36.248,
+            "geometryMs": 9.794890000000123,
+            "staticMs": 0.0037320000001273,
+            "dynamicRasterMs": 23.10115599999972,
+            "presentMs": 3.320748000000094,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 76.80457099999967,
+            "cpuMs": 120.726,
+            "geometryMs": 50.02355499999976,
+            "staticMs": 0.02077000000008411,
+            "dynamicRasterMs": 25.979225000000042,
+            "presentMs": 0.7810209999997824,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 13,
+          "poseMs": 4.4107020000001285,
+          "first": "before",
+          "before": {
+            "totalMs": 132.77916200000072,
+            "cpuMs": 261.488,
+            "geometryMs": 76.48837600000024,
+            "staticMs": 0.0037320000001273,
+            "dynamicRasterMs": 52.90470399999958,
+            "presentMs": 3.38235000000077,
+            "renderCounts": {
+              "triangles": 12992,
+              "calls": 13028,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 122.76186700000017,
+            "cpuMs": 184.246,
+            "geometryMs": 90.5989239999999,
+            "staticMs": 0.004582999999911408,
+            "dynamicRasterMs": 23.743082000000868,
+            "presentMs": 8.415277999999489,
+            "renderCounts": {
+              "triangles": 12992,
+              "calls": 13028,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 14,
+          "poseMs": 10.021037999999862,
+          "first": "current",
+          "current": {
+            "totalMs": 45.190168000000085,
+            "cpuMs": 45.221,
+            "geometryMs": 20.022729999999683,
+            "staticMs": 0.00023600000076839933,
+            "dynamicRasterMs": 24.595487999999932,
+            "presentMs": 0.5717139999997016,
+            "renderCounts": {
+              "triangles": 13000,
+              "calls": 13036,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 57.01575000000048,
+            "cpuMs": 57.217,
+            "geometryMs": 19.376655000000028,
+            "staticMs": 0.00026000000070780516,
+            "dynamicRasterMs": 35.50660699999935,
+            "presentMs": 2.1322280000003957,
+            "renderCounts": {
+              "triangles": 13000,
+              "calls": 13036,
+              "cachedTriangles": 5055
+            }
+          }
+        }
+      ],
+      "samples": [
+        {
+          "frame": 15,
+          "poseMs": 2.617943999999625,
+          "first": "before",
+          "before": {
+            "totalMs": 24.38485800000035,
+            "cpuMs": 24.502,
+            "geometryMs": 9.292794000000868,
+            "staticMs": 0.000262999999904423,
+            "dynamicRasterMs": 14.586463999999978,
+            "presentMs": 0.5053369999995994,
+            "renderCounts": {
+              "triangles": 13000,
+              "calls": 13036,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 24.836194000000432,
+            "cpuMs": 31.022,
+            "geometryMs": 9.06472500000018,
+            "staticMs": 0.0002720000002227607,
+            "dynamicRasterMs": 15.191984999999477,
+            "presentMs": 0.5792120000005525,
+            "renderCounts": {
+              "triangles": 13000,
+              "calls": 13036,
+              "cachedTriangles": 5055
+            }
+          },
+          "canvasHashes": {
+            "before": "e60bb5beb2283d6bfa9f66c6cc8dcbc46b3163b7da9a7a0039f92ab277da740c",
+            "current": "e60bb5beb2283d6bfa9f66c6cc8dcbc46b3163b7da9a7a0039f92ab277da740c"
+          },
+          "pixelsEqual": true,
+          "depthHashes": {
+            "before": "c60d2f8f16596391e71add669faaf5eaa5e585164f230f4d34054c2a00c32316",
+            "current": "c60d2f8f16596391e71add669faaf5eaa5e585164f230f4d34054c2a00c32316"
+          },
+          "depthsEqual": true
+        },
+        {
+          "frame": 16,
+          "poseMs": 1.1642590000001292,
+          "first": "current",
+          "current": {
+            "totalMs": 62.89300600000024,
+            "cpuMs": 63.491,
+            "geometryMs": 12.547276000000238,
+            "staticMs": 0.00027399999999033753,
+            "dynamicRasterMs": 48.836191999999755,
+            "presentMs": 1.5092640000002575,
+            "renderCounts": {
+              "triangles": 13108,
+              "calls": 13144,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 32.368327000000136,
+            "cpuMs": 32.36,
+            "geometryMs": 7.380949000000328,
+            "staticMs": 0.00025300000015704427,
+            "dynamicRasterMs": 21.56803099999979,
+            "presentMs": 3.419093999999859,
+            "renderCounts": {
+              "triangles": 13108,
+              "calls": 13144,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 17,
+          "poseMs": 1.2923000000000684,
+          "first": "before",
+          "before": {
+            "totalMs": 24.280988000000434,
+            "cpuMs": 24.299,
+            "geometryMs": 8.285945999999967,
+            "staticMs": 0.0002700000004551839,
+            "dynamicRasterMs": 14.943975999999566,
+            "presentMs": 1.050796000000446,
+            "renderCounts": {
+              "triangles": 13237,
+              "calls": 13273,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 18.369635000000017,
+            "cpuMs": 18.388,
+            "geometryMs": 5.5737920000001395,
+            "staticMs": 0.0002519999998185085,
+            "dynamicRasterMs": 12.112889999999425,
+            "presentMs": 0.6827010000006339,
+            "renderCounts": {
+              "triangles": 13237,
+              "calls": 13273,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 18,
+          "poseMs": 2.030266999999185,
+          "first": "current",
+          "current": {
+            "totalMs": 20.79583299999922,
+            "cpuMs": 20.858,
+            "geometryMs": 6.3950449999993,
+            "staticMs": 0.00040100000023812754,
+            "dynamicRasterMs": 13.469129000000066,
+            "presentMs": 0.931257999999616,
+            "renderCounts": {
+              "triangles": 13219,
+              "calls": 13255,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 29.70216100000016,
+            "cpuMs": 29.717,
+            "geometryMs": 7.80873900000006,
+            "staticMs": 0.0004550000003291643,
+            "dynamicRasterMs": 18.6524959999997,
+            "presentMs": 3.2404710000000705,
+            "renderCounts": {
+              "triangles": 13219,
+              "calls": 13255,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 19,
+          "poseMs": 1.5127860000002329,
+          "first": "before",
+          "before": {
+            "totalMs": 24.682990999999674,
+            "cpuMs": 24.7,
+            "geometryMs": 6.8937519999999495,
+            "staticMs": 0.00027599999975791434,
+            "dynamicRasterMs": 17.195536000000175,
+            "presentMs": 0.5934269999997923,
+            "renderCounts": {
+              "triangles": 13227,
+              "calls": 13263,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 21.34624100000019,
+            "cpuMs": 21.364,
+            "geometryMs": 5.70331299999998,
+            "staticMs": 0.00022199999966687756,
+            "dynamicRasterMs": 14.876580000000104,
+            "presentMs": 0.7661260000004404,
+            "renderCounts": {
+              "triangles": 13227,
+              "calls": 13263,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 20,
+          "poseMs": 1.7563929999996617,
+          "first": "current",
+          "current": {
+            "totalMs": 19.56879200000003,
+            "cpuMs": 19.586,
+            "geometryMs": 6.482286000000386,
+            "staticMs": 0.0002949999998236308,
+            "dynamicRasterMs": 12.54341899999963,
+            "presentMs": 0.5427920000001905,
+            "renderCounts": {
+              "triangles": 13233,
+              "calls": 13269,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 32.19681700000001,
+            "cpuMs": 32.213,
+            "geometryMs": 7.234655000000203,
+            "staticMs": 0.0002660000000105356,
+            "dynamicRasterMs": 24.50215399999979,
+            "presentMs": 0.45974200000000565,
+            "renderCounts": {
+              "triangles": 13233,
+              "calls": 13269,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 21,
+          "poseMs": 1.2292500000003201,
+          "first": "before",
+          "before": {
+            "totalMs": 24.956076000000394,
+            "cpuMs": 24.972,
+            "geometryMs": 5.465657000000647,
+            "staticMs": 0.00166099999933067,
+            "dynamicRasterMs": 17.85219000000052,
+            "presentMs": 1.6365679999998974,
+            "renderCounts": {
+              "triangles": 13140,
+              "calls": 13176,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 23.438600999999835,
+            "cpuMs": 23.454,
+            "geometryMs": 8.00738100000035,
+            "staticMs": 0.0015610000000378932,
+            "dynamicRasterMs": 14.729010999999446,
+            "presentMs": 0.700648000000001,
+            "renderCounts": {
+              "triangles": 13140,
+              "calls": 13176,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 22,
+          "poseMs": 1.044181999999637,
+          "first": "current",
+          "current": {
+            "totalMs": 17.485546999999315,
+            "cpuMs": 17.502,
+            "geometryMs": 4.464661999999407,
+            "staticMs": 0.00025400000049558,
+            "dynamicRasterMs": 12.500639999999294,
+            "presentMs": 0.5199910000001182,
+            "renderCounts": {
+              "triangles": 13143,
+              "calls": 13179,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 20.880474999999933,
+            "cpuMs": 20.898,
+            "geometryMs": 5.797666999999819,
+            "staticMs": 0.00023700000019744039,
+            "dynamicRasterMs": 14.50854899999922,
+            "presentMs": 0.5740220000006957,
+            "renderCounts": {
+              "triangles": 13143,
+              "calls": 13179,
+              "cachedTriangles": 5055
+            }
+          },
+          "canvasHashes": {
+            "before": "89e66999cf9313399686db05324e7e84ec0ffeaebf6d972479ab0558554e72a5",
+            "current": "89e66999cf9313399686db05324e7e84ec0ffeaebf6d972479ab0558554e72a5"
+          },
+          "pixelsEqual": true,
+          "depthHashes": {
+            "before": "c997bbb4efa09e23a66deacefcc88ec9a33a048eb2e48e6b0bfffce20035e406",
+            "current": "c997bbb4efa09e23a66deacefcc88ec9a33a048eb2e48e6b0bfffce20035e406"
+          },
+          "depthsEqual": true
+        },
+        {
+          "frame": 23,
+          "poseMs": 1.1507650000003196,
+          "first": "before",
+          "before": {
+            "totalMs": 21.24610600000051,
+            "cpuMs": 21.674,
+            "geometryMs": 7.768162000000302,
+            "staticMs": 0.0006510000002890592,
+            "dynamicRasterMs": 13.008216000000175,
+            "presentMs": 0.46907699999974284,
+            "renderCounts": {
+              "triangles": 13114,
+              "calls": 13150,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 19.256365999999616,
+            "cpuMs": 19.274,
+            "geometryMs": 4.80739100000028,
+            "staticMs": 0.0005750000000261934,
+            "dynamicRasterMs": 13.954982999999629,
+            "presentMs": 0.49341699999968114,
+            "renderCounts": {
+              "triangles": 13114,
+              "calls": 13150,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 24,
+          "poseMs": 1.3772070000004533,
+          "first": "current",
+          "current": {
+            "totalMs": 20.826313000000482,
+            "cpuMs": 22.999,
+            "geometryMs": 6.928544000000329,
+            "staticMs": 0.0002880000001823646,
+            "dynamicRasterMs": 13.378240999999434,
+            "presentMs": 0.5192400000005364,
+            "renderCounts": {
+              "triangles": 13111,
+              "calls": 13147,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 22.321987999999692,
+            "cpuMs": 22.338,
+            "geometryMs": 5.909515000000283,
+            "staticMs": 0.00026699999943957664,
+            "dynamicRasterMs": 15.987447999999858,
+            "presentMs": 0.42475800000011077,
+            "renderCounts": {
+              "triangles": 13111,
+              "calls": 13147,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 25,
+          "poseMs": 1.1696320000000924,
+          "first": "before",
+          "before": {
+            "totalMs": 39.66971299999932,
+            "cpuMs": 39.865,
+            "geometryMs": 13.266700000000128,
+            "staticMs": 0.05061299999943003,
+            "dynamicRasterMs": 23.050075000000106,
+            "presentMs": 3.302324999999655,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 38.562071999999716,
+            "cpuMs": 38.587,
+            "geometryMs": 23.678909999999632,
+            "staticMs": 0.029884999999922,
+            "dynamicRasterMs": 12.594253000000208,
+            "presentMs": 2.259023999999954,
+            "renderCounts": {
+              "triangles": 12900,
+              "calls": 12936,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 26,
+          "poseMs": 4.69034400000055,
+          "first": "current",
+          "current": {
+            "totalMs": 21.25597800000014,
+            "cpuMs": 21.274,
+            "geometryMs": 6.502056000000266,
+            "staticMs": 0.00028699999984382885,
+            "dynamicRasterMs": 13.732344000000012,
+            "presentMs": 1.0212910000000193,
+            "renderCounts": {
+              "triangles": 12994,
+              "calls": 13030,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 30.874328999999307,
+            "cpuMs": 30.893,
+            "geometryMs": 13.15935300000001,
+            "staticMs": 0.00022199999966687756,
+            "dynamicRasterMs": 16.83070399999997,
+            "presentMs": 0.8840499999996609,
+            "renderCounts": {
+              "triangles": 12994,
+              "calls": 13030,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 27,
+          "poseMs": 1.278653999999733,
+          "first": "before",
+          "before": {
+            "totalMs": 20.136441999999988,
+            "cpuMs": 20.153,
+            "geometryMs": 6.617964000000029,
+            "staticMs": 0.00026900000011664815,
+            "dynamicRasterMs": 12.791280999999799,
+            "presentMs": 0.7269280000000435,
+            "renderCounts": {
+              "triangles": 13003,
+              "calls": 13039,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 263.2353490000005,
+            "cpuMs": 263.243,
+            "geometryMs": 5.746201000000838,
+            "staticMs": 0.0002449999992677476,
+            "dynamicRasterMs": 254.53639999999996,
+            "presentMs": 2.9525030000004335,
+            "renderCounts": {
+              "triangles": 13003,
+              "calls": 13039,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 28,
+          "poseMs": 2.166019999999662,
+          "first": "current",
+          "current": {
+            "totalMs": 23.61587200000031,
+            "cpuMs": 23.644,
+            "geometryMs": 10.348100000000159,
+            "staticMs": 0.00026700000034907134,
+            "dynamicRasterMs": 12.638246999999865,
+            "presentMs": 0.6292579999999361,
+            "renderCounts": {
+              "triangles": 13001,
+              "calls": 13037,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 27.76885300000049,
+            "cpuMs": 29.054,
+            "geometryMs": 9.269057999999859,
+            "staticMs": 0.0003600000000005821,
+            "dynamicRasterMs": 17.57528900000034,
+            "presentMs": 0.9241460000002917,
+            "renderCounts": {
+              "triangles": 13001,
+              "calls": 13037,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 29,
+          "poseMs": 1.4375879999997778,
+          "first": "before",
+          "before": {
+            "totalMs": 29.170061000000715,
+            "cpuMs": 29.188,
+            "geometryMs": 13.455584000000272,
+            "staticMs": 0.0003210000004401081,
+            "dynamicRasterMs": 14.595227999999224,
+            "presentMs": 1.1189280000007784,
+            "renderCounts": {
+              "triangles": 13111,
+              "calls": 13147,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 23.307700999999724,
+            "cpuMs": 23.325,
+            "geometryMs": 5.736536000000342,
+            "staticMs": 0.00031399999988934724,
+            "dynamicRasterMs": 17.03544099999999,
+            "presentMs": 0.5354099999995015,
+            "renderCounts": {
+              "triangles": 13111,
+              "calls": 13147,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 30,
+          "poseMs": 3.6642749999991793,
+          "first": "current",
+          "current": {
+            "totalMs": 19.35972099999981,
+            "cpuMs": 19.401,
+            "geometryMs": 5.587149999999383,
+            "staticMs": 0.000262999999904423,
+            "dynamicRasterMs": 13.127385000000686,
+            "presentMs": 0.6449229999998352,
+            "renderCounts": {
+              "triangles": 13234,
+              "calls": 13270,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 30.758832999999868,
+            "cpuMs": 28.997,
+            "geometryMs": 10.369729000000007,
+            "staticMs": 0.000210000000151922,
+            "dynamicRasterMs": 19.50709899999947,
+            "presentMs": 0.8817950000002384,
+            "renderCounts": {
+              "triangles": 13234,
+              "calls": 13270,
+              "cachedTriangles": 5055
+            }
+          },
+          "canvasHashes": {
+            "before": "47305425ac1b0e882fd602446141ed0a5f8cb2a8cf8e5a4df4b7271f47e73641",
+            "current": "47305425ac1b0e882fd602446141ed0a5f8cb2a8cf8e5a4df4b7271f47e73641"
+          },
+          "pixelsEqual": true,
+          "depthHashes": {
+            "before": "a26ba49d84cd7af0e7b3875d27d920255e629d3de1127486501c659b835ed8d6",
+            "current": "a26ba49d84cd7af0e7b3875d27d920255e629d3de1127486501c659b835ed8d6"
+          },
+          "depthsEqual": true
+        },
+        {
+          "frame": 31,
+          "poseMs": 1.3259150000003501,
+          "first": "before",
+          "before": {
+            "totalMs": 24.15365500000007,
+            "cpuMs": 24.597,
+            "geometryMs": 9.16429799999969,
+            "staticMs": 0.00038300000051094685,
+            "dynamicRasterMs": 14.00421599999936,
+            "presentMs": 0.984758000000511,
+            "renderCounts": {
+              "triangles": 13218,
+              "calls": 13254,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 25.270324000000073,
+            "cpuMs": 25.291,
+            "geometryMs": 11.765058999999383,
+            "staticMs": 0.0004710000002887682,
+            "dynamicRasterMs": 13.008514999999534,
+            "presentMs": 0.4962790000008681,
+            "renderCounts": {
+              "triangles": 13218,
+              "calls": 13254,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 32,
+          "poseMs": 1.065034000000196,
+          "first": "current",
+          "current": {
+            "totalMs": 19.4574819999998,
+            "cpuMs": 19.474,
+            "geometryMs": 4.827398000000358,
+            "staticMs": 0.0003059999999095453,
+            "dynamicRasterMs": 13.917378999999528,
+            "presentMs": 0.7123990000000049,
+            "renderCounts": {
+              "triangles": 13231,
+              "calls": 13267,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 26.410910999999942,
+            "cpuMs": 26.456,
+            "geometryMs": 11.181908999999905,
+            "staticMs": 0.00020900000072288094,
+            "dynamicRasterMs": 14.741782000000057,
+            "presentMs": 0.48701099999925646,
+            "renderCounts": {
+              "triangles": 13231,
+              "calls": 13267,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 33,
+          "poseMs": 1.1111039999996137,
+          "first": "before",
+          "before": {
+            "totalMs": 23.90867200000048,
+            "cpuMs": 23.928,
+            "geometryMs": 5.8993710000004285,
+            "staticMs": 0.00021099999958096305,
+            "dynamicRasterMs": 17.516892999999982,
+            "presentMs": 0.4921970000004876,
+            "renderCounts": {
+              "triangles": 13233,
+              "calls": 13269,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 54.60320299999967,
+            "cpuMs": 54.627,
+            "geometryMs": 5.11369299999933,
+            "staticMs": 0.0002790000007735216,
+            "dynamicRasterMs": 48.684291999999914,
+            "presentMs": 0.8049389999996492,
+            "renderCounts": {
+              "triangles": 13233,
+              "calls": 13269,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 34,
+          "poseMs": 36.9611560000003,
+          "first": "current",
+          "current": {
+            "totalMs": 77.78417600000012,
+            "cpuMs": 77.818,
+            "geometryMs": 12.416474999999991,
+            "staticMs": 0.0019280000005892362,
+            "dynamicRasterMs": 64.70459199999914,
+            "presentMs": 0.661181000000397,
+            "renderCounts": {
+              "triangles": 13139,
+              "calls": 13175,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 26.780660999999782,
+            "cpuMs": 26.802,
+            "geometryMs": 9.090065999999752,
+            "staticMs": 0.002140999999937776,
+            "dynamicRasterMs": 16.980193000000327,
+            "presentMs": 0.7082609999997658,
+            "renderCounts": {
+              "triangles": 13139,
+              "calls": 13175,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 35,
+          "poseMs": 3.6054599999997663,
+          "first": "before",
+          "before": {
+            "totalMs": 43.548885999999584,
+            "cpuMs": 62.516,
+            "geometryMs": 19.410796999999548,
+            "staticMs": 0.00034300000061193714,
+            "dynamicRasterMs": 22.932166999999936,
+            "presentMs": 1.2055789999994886,
+            "renderCounts": {
+              "triangles": 13141,
+              "calls": 13177,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 29.435547000000042,
+            "cpuMs": 29.458,
+            "geometryMs": 12.699840999999651,
+            "staticMs": 0.00028199999997013947,
+            "dynamicRasterMs": 16.21386799999982,
+            "presentMs": 0.5215560000006008,
+            "renderCounts": {
+              "triangles": 13141,
+              "calls": 13177,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 36,
+          "poseMs": 1.0901360000007116,
+          "first": "current",
+          "current": {
+            "totalMs": 17.19676900000013,
+            "cpuMs": 17.214,
+            "geometryMs": 4.87360499999977,
+            "staticMs": 0.0006419999999707215,
+            "dynamicRasterMs": 11.852433000000019,
+            "presentMs": 0.470089000000371,
+            "renderCounts": {
+              "triangles": 13109,
+              "calls": 13145,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 34.91256499999963,
+            "cpuMs": 34.93,
+            "geometryMs": 8.556378999999652,
+            "staticMs": 0.0008219999999710126,
+            "dynamicRasterMs": 25.80049500000041,
+            "presentMs": 0.5548689999995986,
+            "renderCounts": {
+              "triangles": 13109,
+              "calls": 13145,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 37,
+          "poseMs": 1.649515000000065,
+          "first": "before",
+          "before": {
+            "totalMs": 27.868507000000136,
+            "cpuMs": 28.173,
+            "geometryMs": 8.168297000000166,
+            "staticMs": 0.0003130000004603062,
+            "dynamicRasterMs": 19.16481599999952,
+            "presentMs": 0.535080999999991,
+            "renderCounts": {
+              "triangles": 13108,
+              "calls": 13144,
+              "cachedTriangles": 5055
+            }
+          },
+          "current": {
+            "totalMs": 18.31632400000035,
+            "cpuMs": 18.33,
+            "geometryMs": 6.280988000000434,
+            "staticMs": 0.0002789999998640269,
+            "dynamicRasterMs": 11.356915999999728,
+            "presentMs": 0.6781410000003234,
+            "renderCounts": {
+              "triangles": 13108,
+              "calls": 13144,
+              "cachedTriangles": 5055
+            }
+          }
+        },
+        {
+          "frame": 38,
+          "poseMs": 1.0435960000004343,
+          "first": "current",
+          "current": {
+            "totalMs": 17.888401000000158,
+            "cpuMs": 17.907,
+            "geometryMs": 4.990005999999994,
+            "staticMs": 0.003917000000001281,
+            "dynamicRasterMs": 11.988239000000249,
+            "presentMs": 0.9062389999999141,
+            "renderCounts": {
+              "triangles": 12890,
+              "calls": 12926,
+              "cachedTriangles": 5055
+            }
+          },
+          "before": {
+            "totalMs": 23.952604000000065,
+            "cpuMs": 23.969,
+            "geometryMs": 10.968831000000137,
+            "staticMs": 0.003552000000127009,
+            "dynamicRasterMs": 12.506494000000203,
+            "presentMs": 0.4737269999995988,
+            "renderCounts": {
+              "triangles": 12890,
+              "calls": 12926,
+              "cachedTriangles": 5055
+            }
+          },
+          "canvasHashes": {
+            "before": "02ba70438be999eee746eb4c56828f8c9a7ee2e876d45df81ba78c4edf284db8",
+            "current": "02ba70438be999eee746eb4c56828f8c9a7ee2e876d45df81ba78c4edf284db8"
+          },
+          "pixelsEqual": true,
+          "depthHashes": {
+            "before": "fafdaad083f925c1a080ed8e4f9fab02d3863e552862ade6cbc315f9e6e786f3",
+            "current": "fafdaad083f925c1a080ed8e4f9fab02d3863e552862ade6cbc315f9e6e786f3"
+          },
+          "depthsEqual": true
+        }
+      ]
+    }
+  ],
+  "canvasModulePath": "@napi-rs/canvas/index.js",
+  "beforeRendererPath": "evidence/renderer/2026-10-08/pooled-baseline.mjs",
+  "nodeExecArgv": [],
+  "rawSamplesFile": "samples-1791473360437.jsonl",
+  "method": "One complete scene reused by both renderers. Pose applied once before each pair. Alternating before/current first gives 12 sampled first positions each. Same camera, eight units, two heroes, card backs, deck stacks, shadows, fireflies. Old source gets matching performance-clock markers only when not already instrumented. Canvas contexts reset before each complete opaque frame, outside timing, to release the offline Skia display-list history. Sampled canvas hashes include overlays; complete float32 depth hashes are also compared outside render timing. Process CPU usage includes the process and its native threads; it supplements wall time and is not browser frame time. Median averages middle pair; p95 nearest-rank. No browser, DOM, compositor, RAF or device FPS claim.",
+  "cleanup": {
+    "before": {
+      "frameReleased": true,
+      "staticFrameReleased": true,
+      "trianglePoolReleased": true
+    },
+    "current": {
+      "frameReleased": true,
+      "staticFrameReleased": true,
+      "trianglePoolReleased": true
+    }
+  },
+  "allComparedRenderCountsEqual": true,
+  "complete": true,
+  "portableCopyNote": "Only executor-specific path strings were replaced by package/repository paths; measurements and source hashes remain unchanged.",
+  "canvasModuleVersion": "0.1.100"
+}

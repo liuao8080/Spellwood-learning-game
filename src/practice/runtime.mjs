@@ -2,6 +2,7 @@
 // No WebSocket, network matchmaking, accounts, or remote progress storage.
 import { DuelConnection as Transport } from "../network/client.mjs";
 import { GameService } from "../../server/service.mjs";
+import { versions } from "../../server/protocol.mjs";
 import { createQuestionService } from "../../server/questions.mjs";
 import questions from "../questions.json";
 import teacherQuestions from "../teacher-questions.json";
@@ -21,9 +22,10 @@ export async function studyFetch(url, options = {}) {
     for (const [id, item] of study) if (item.challenge.expiresAt <= Date.now()) study.delete(id);
     if (!route[2]) {
       if (study.size >= 512) return response(429, { code: "STUDY_BUSY" });
-      const challenge = bank.issueStudy({ qid: route[1], expiresAt: Date.now() + 300000 });
-      study.set(challenge.challengeId, { qid: route[1], challenge });
-      return response(200, bank.toPublic(challenge));
+      const issuedAt = Date.now();
+      const challenge = bank.issueStudy({ qid: route[1], expiresAt: issuedAt + 300000 });
+      study.set(challenge.challengeId, { qid: route[1], challenge, issuedAt });
+      return response(200, { ...bank.toPublic(challenge), issuedAt });
     }
     const payload = JSON.parse(options.body);
     const item = study.get(payload.challengeId);
@@ -48,7 +50,9 @@ class PracticeSocket {
     queueMicrotask(() => {
       if (this.readyState !== 1) return;
       try {
-        if (value.type === "session.open") this.service.makeSession(this);
+        if (["session.open", "session.resume"].includes(value.type) && value.protocol !== versions.protocol)
+          this.deliver({ type: "session.error", code: "VERSION_MISMATCH" });
+        else if (value.type === "session.open") this.service.makeSession(this);
         else if (value.type === "session.resume") this.service.resume(value.resumeToken, this);
         else this.service.command(this, value);
       } catch (error) { this.deliver({ type: "session.error", code: error.code || "PRACTICE_ERROR" }); }
@@ -59,7 +63,9 @@ class PracticeSocket {
 }
 export class DuelConnection extends Transport {
   constructor(options = {}) {
-    const service = new GameService({ questions: bank, send: (socket, value) => socket?.deliver(value), config: { queueMs: 250, aiDelayMs: 850, maxSessions: 1 } });
+    const service = new GameService({ questions: bank, send: (socket, value) => socket?.deliver(value),
+      cosmeticFor: () => options.getJourney?.(),
+      config: { queueMs: 250, aiDelayMs: 850, maxSessions: 1 } });
     super({ ...options, url: "practice:local", storage: null, socketFactory: () => new PracticeSocket(service) });
     this.practiceService = service;
   }

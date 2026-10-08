@@ -102,3 +102,33 @@ test('leaving an answered question too quickly keeps learning and does not lock 
   assert.equal((await store.exportLatest()).ok,true);
   const next=await a.fetcher('/api/study/'+meta.questions[0].id);assert.equal(next.ok,true);
 });
+
+test('authenticated HTTP returns a server-only display clock across reads, writes and Shanghai midnight',async t=>{
+  let serverNow=Date.UTC(2026,9,8,4),monotonic=100;
+  t.mock.method(Date,'now',()=>serverNow);
+  const s=await setup(t),a=browser(s);await a.identity.bootstrap();
+  const metadata=await(await a.fetcher('/api/curriculum')).json();
+  const store=new RemoteProgressStore({playerId:a.identity.player.playerId,questions:metadata.questions,fetcher:a.fetcher,monotonicNow:()=>monotonic});
+  assert.equal((await store.load()).ok,true);assert.equal(store.serverNow,serverNow);assert.equal(store.rewardNow(),serverNow);
+  const before=s.playerProgress.ensure(store.playerId).progress;
+  const get=await(await a.fetcher('/api/progress')).json();assert.equal(get.serverNow,serverNow);assert.equal(get.data.serverNow,undefined);
+  serverNow=Date.UTC(2026,9,8,15,59,59);assert.equal((await store.refresh()).ok,true);
+  const {dailySummary}=await import('../src/reward-journey.mjs');
+  assert.equal(dailySummary(store.data.journey,store.rewardNow()).rewardDay,'2026-10-08');
+  monotonic+=1000;assert.equal(dailySummary(store.data.journey,store.rewardNow()).rewardDay,'2026-10-09');
+  assert.deepEqual(s.playerProgress.ensure(store.playerId).progress,before);
+  const forged=await a.fetcher('/api/progress/preferences',{method:'POST',headers:{'Content-Type':'application/json','X-Spellwood-Player':store.playerId},body:JSON.stringify({requestId:'forged-clock-request',patch:{sound:false},serverNow:Date.UTC(2050,0,1)})});
+  assert.equal(forged.status,400);assert.deepEqual(s.playerProgress.ensure(store.playerId).progress,before);
+  const updated=await store.updatePreferences({sound:false});assert.equal(updated.ok,true);assert.equal(store.serverNow,serverNow);
+  assert.equal(store.data.serverNow,undefined);assert.equal((await store.exportLatest()).json.includes('serverNow'),false);
+});
+
+test('progress response clock can be injected without adding it to account state or allowing extra fields to override it',async()=>{
+  const {createProgressHttp}=await import('../server/progress-http.mjs');
+  let serverNow=123456;
+  const http=createProgressHttp({now:()=>serverNow});
+  const player={playerId:'clock-owner-001',progress:{revision:3}};
+  assert.deepEqual(http.envelope(player,{serverNow:999999}),{data:player.progress,playerId:player.playerId,revision:3,serverNow:123456});
+  assert.deepEqual(player.progress,{revision:3});
+  serverNow=NaN;assert.throws(()=>http.envelope(player),{code:'PROGRESS_UNAVAILABLE'});
+});

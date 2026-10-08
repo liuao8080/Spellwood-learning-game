@@ -13,9 +13,15 @@ import { targetPreview } from '../src/arena3d/targeting.mjs';
 import { createGameServer } from '../server/index.mjs';
 import { CARD, CARDS, DECKS, GRADES, validateCustomDeck } from '../src/cards.mjs';
 import { lobbyView } from '../src/network/lobby-view.mjs';
-import { CardLibrary, artThumb } from '../src/network/card-library.mjs';
+import { CardLibrary, artThumb, cardArtUrl } from '../src/network/card-library.mjs';
 import { CollectionView } from '../src/network/collection-view.mjs';
+import { WardrobeView } from '../src/network/wardrobe-view.mjs';
+import { rewardView, savedDailySummary } from '../src/network/reward-view.mjs';
+import { getHeroSkin } from '../src/hero-skins.mjs';
+import { selectedCardOption, cardTargetAllowed, selectedTargetIds, answerCommand, drawFeedbackText } from '../src/network/battle-options.mjs';
 import { cardGuide } from '../src/card-guide.mjs';
+import { BoardInput } from '../src/arena3d/board-input.mjs';
+import { boardCardInspection, isInspectionKey } from '../src/network/card-inspection.mjs';
 import { selectDifficulty } from '../src/combat-rating.mjs';
 import { equippedFinishes, rewardBalance, COLLECTION_TEST_MODE } from '../src/collection.mjs';
 import { ServerClock, durationText } from '../src/network/deadlines.mjs';
@@ -183,8 +189,11 @@ function appModel(t,server) {
     addEventListener(){}
     replaceChildren(){this.innerHTML="";}
   }
-  for(const id of ['interface','unit-labels','modal-root','notice','renderer-warning','arena','collection-root','lobby-scene','hand-stage','hand-canvas','hand-prev','hand-next','hand-hint','hand-semantics'])roots.set('#'+id,new Element(id));
-  doc={hidden:false,activeElement:null,body:new Element('body'),createElement:()=>new Element(),querySelector:s=>roots.get(s)||null,querySelectorAll:s=>[...roots.values()].flatMap(x=>x.querySelectorAll(s)),addEventListener:(name,fn)=>handlers.set(name,fn),removeEventListener:(name,fn)=>{if(handlers.get(name)===fn)handlers.delete(name);}};
+  for(const id of ['interface','unit-labels','modal-root','notice','renderer-warning','arena','collection-root','wardrobe-root','lobby-scene','hand-stage','hand-canvas','hand-prev','hand-next','hand-hint','hand-semantics'])roots.set('#'+id,new Element(id));
+  const documentListeners=new Map();
+  doc={hidden:false,activeElement:null,body:new Element('body'),createElement:()=>new Element(),querySelector:s=>roots.get(s)||null,querySelectorAll:s=>[...roots.values()].flatMap(x=>x.querySelectorAll(s)),
+    addEventListener(name,fn,capture=false){const list=documentListeners.get(name)||[];list.push({fn,capture});documentListeners.set(name,list);handlers.set(name,event=>{for(const item of [...list].sort((a,b)=>Number(b.capture)-Number(a.capture))){if(event.cancelBubble)break;item.fn(event);}});},
+    removeEventListener(name,fn){const list=documentListeners.get(name)||[];const i=list.findIndex(item=>item.fn===fn);if(i>=0)list.splice(i,1);}};
   class Scene {
     constructor(){sceneInstance=this;this.history=[];this.attackResolvers=[];}
     cancel(){for(const r of this.attackResolvers.splice(0))r();}
@@ -205,7 +214,7 @@ function appModel(t,server) {
   class Identity extends IdentityClient {constructor(config){super({...config,fetch:browser.fetch});}}
   class IdentityView extends IdentityPanel {constructor(config){super({...config,document:doc});}}
   class Desk extends StudyDesk { constructor(config) { super({ ...config, storage: memoryStorage(), locks: null }); } }
-  const sandbox={TEACHER_CATEGORIES,HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:browser.fetch,IdentityClient:Identity,IdentityPanel:IdentityView,RemoteProgressStore,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,CollectionView,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,queueMicrotask,
+  const sandbox={BoardInput,boardCardInspection,isInspectionKey,TEACHER_CATEGORIES,HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:browser.fetch,IdentityClient:Identity,IdentityPanel:IdentityView,RemoteProgressStore,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,cardArtUrl,CollectionView,WardrobeView,rewardView,savedDailySummary,getHeroSkin,selectedCardOption,cardTargetAllowed,selectedTargetIds,answerCommand,drawFeedbackText,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,queueMicrotask,
     addEventListener(name,handler){pageHandlers.set(name,handler);},
     SOUND:{unlock(){},sync(){},duckSpeech(){},visibility(){},play(){}},
     setTimeout(fn,ms){const id=setTimeout(fn,ms);id.unref?.();timers.add(id);return id;},clearTimeout(id){clearTimeout(id);timers.delete(id);},
@@ -225,7 +234,7 @@ function appModel(t,server) {
     click(action,extra={}){
       const scope=roots.get('#modal-root').querySelector('.dialog')?roots.get('#modal-root'):roots.get('#interface');
       const el=scope.querySelectorAll('[data-action]').find(x=>x.dataset.action===action&&Object.entries(extra).every(([k,v])=>x.dataset[k]===String(v))&&!x.disabled);
-      assert(el,'Rendered enabled action missing: '+action);handlers.get('click')({target:el,preventDefault(){}});
+      assert(el,'Rendered enabled action missing: '+action);handlers.get('click')({target:el,detail:0,preventDefault(){this.defaultPrevented=true;},stopPropagation(){this.cancelBubble=true;}});
     },
   };return model;
 }

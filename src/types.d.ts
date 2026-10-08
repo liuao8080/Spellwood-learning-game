@@ -6,6 +6,7 @@ export interface Unit {
   maxHp: number;
   ready: boolean;
   shield?: boolean;
+  kingfisherDrawTurn?: number;
 }
 export interface Player {
   hp: number;
@@ -14,6 +15,8 @@ export interface Player {
   maxMana: number;
   board: Unit[];
   hand: string[];
+  handIds?: string[];
+  handBoosts?: Record<string, { turn: number; amount: number }>;
   deck: string[];
   fatigue: number;
   ritualUsed: boolean;
@@ -33,6 +36,7 @@ export interface Match {
   active: number;
   turn: number;
   seq: number;
+  handSeq?: number;
   phase: string;
   winner: number | string | null;
   log: string[];
@@ -51,9 +55,14 @@ export type Action =
   | { type: "play"; index: number; target?: string }
   | { type: "attack"; uid: string; target: string }
   | { type: "power"; kind: "insight" | "spark" | "bloom"; target?: string };
+export type QuestionBank = "school" | "teacher-academic";
+export type TeacherCategory = "vocabulary" | "grammar" | "syntax" | "reading";
 export interface Question {
   id: string;
-  grade: number;
+  bank?: QuestionBank;
+  grade: number | null;
+  category?: TeacherCategory;
+  passage?: string;
   type: string;
   topic: string;
   prompt: string;
@@ -63,7 +72,7 @@ export interface Question {
   explanation: string;
   speak: string;
   target: string;
-  semester?: number;
+  semester?: number | null;
   unitId?: string;
   contentVersion?: string;
   listen?: string;
@@ -96,8 +105,8 @@ export interface ScoreRecord {
 export interface SaveData {
   schema: number;
   nickname: string;
-  bank?: "school" | "teacher-academic";
-  teacherCourse?: string;
+  bank?: QuestionBank;
+  teacherCourse?: "all" | TeacherCategory;
   grade: number;
   course: string;
   deckId: string;

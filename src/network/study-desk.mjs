@@ -1,5 +1,6 @@
 import { ProgressStore } from "./progress.mjs";
 import { inCourse } from "../learning.mjs";
+import { rewardDay } from "../reward-journey.mjs";
 import { LearningAttention } from "./learning-attention.mjs";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -29,15 +30,16 @@ const remoteIssueText = {
 /** Learning records and private server-issued study challenges. The injected
  * store owns persistence; the default store keeps the original local archive. */
 export class StudyDesk {
-  constructor({ onChange = () => {}, onPreferences = () => {}, onNotice = () => {}, onRestore = () => {}, getPreferences = () => ({}), fetcher = (...args) => fetch(...args), storeFactory = (options) => new ProgressStore(options), storage, locks, visualCue = () => "", listen = () => {}, cancelVoice = () => {} } = {}) {
-    Object.assign(this, { onChange, onPreferences, onNotice, onRestore, getPreferences, fetcher, storeFactory, storage, locks, visualCue, listen, cancelVoice });
+  constructor({ onChange = () => {}, onPreferences = () => {}, onNotice = () => {}, onRestore = () => {}, getPreferences = () => ({}), fetcher = (...args) => fetch(...args), storeFactory = (options) => new ProgressStore(options), storage, locks, visualCue = () => "", listen = () => {}, cancelVoice = () => {}, canReadBattleFeedback = () => false } = {}) {
+    Object.assign(this, { onChange, onPreferences, onNotice, onRestore, getPreferences, fetcher, storeFactory, storage, locks, visualCue, listen, cancelVoice, canReadBattleFeedback });
     this.status = "loading"; this.catalogue = null; this.store = null; this.data = null; this.issue = null;
     this.view = null; this.filter = "due"; this.page = 0; this.question = null; this.answer = null; this.studyId = null;
     this.round = null; this.initializeEpoch = 0;
     this.busy = false; this.requestEpoch = 0; this.profileEpoch = 0; this.networkEpoch = 0; this.pending = new Map(); this.results = new Map(); this.flushing = false;
     this.prepared = null; this.importName = ""; this.message = "";
-    this.ruleset = "net-1.1"; this.recordRules = null;
+    this.ruleset = "net-2.3"; this.recordRules = null;
     this.disposed = false; this.controllers = new Set(); this.flushRun = null;
+    this.attentionTimers = new Map(); this.attentionResults = new Map();
     this.attention = new LearningAttention({visible:!globalThis.document?.hidden});
   }
   get remote() { return !!this.store?.remote; }
@@ -69,7 +71,7 @@ export class StudyDesk {
     if (this.disposed || !data) return;
     this.profileEpoch++; this.requestEpoch++;
     for (const controller of this.controllers) controller.abort();
-    this.abort = null; this.cancelVoice(); this.attention.clear();
+    this.abort = null; this.cancelVoice(); this.clearAttention();
     this.pending.clear(); this.results.clear(); this.question = this.answer = null; this.round = null; this.studyId = null; this.prepared = null;
     // Old drains still resolve their own waiters, but cannot own a new drain.
     this.flushing = false; this.flushRun = null; this.flushDone = undefined;
@@ -82,7 +84,7 @@ export class StudyDesk {
     if (this.disposed) return;
     this.disposed = true; this.initializeEpoch++; this.profileEpoch++; this.requestEpoch++; this.networkEpoch = -1;
     for (const controller of this.controllers) controller.abort();
-    this.controllers.clear(); this.abort = null; this.cancelVoice(); this.attention.clear();
+    this.controllers.clear(); this.abort = null; this.cancelVoice(); this.clearAttention();
     this.pending.clear(); this.results.clear(); this.question = this.answer = null; this.round = null; this.view = null; this.prepared = null;
     this.busy = this.restoring = this.flushing = false; this.flushRun = null;
     this.store?.dispose?.();
@@ -127,20 +129,63 @@ export class StudyDesk {
     if (source === "network" && this.networkEpoch !== this.profileEpoch) return;
     if (!value?.learning || !value.challengeId) return;
     this.attention.feedback(value.challengeId);
+    this.attention.pause(value.challengeId,true);
+    this.watchAttention(value.challengeId);
     this.pending.set(value.challengeId, value); void this.flush();
   }
-  beginAttention(id) { if (!this.disposed) this.attention.begin(id); }
+  beginAttention(id, source="match", issuedAt=Date.now()) { if (!this.disposed) { this.attention.begin(id); if(!this.remote)this.store?.noteChallenge?.(id,{source,issuedAt}); } }
   visibility(value) { if (!this.disposed) this.attention.visibility(value); }
+  clearAttention() { for(const timer of this.attentionTimers.values())clearTimeout(timer);this.attentionTimers.clear();this.attentionResults.clear();this.attention.clear(); }
+  attentionHint(id) {
+    const item=this.attention.entries.get(id), result=this.attentionResults.get(id);
+    if(result==='saved')return '<p class="participation-state" role="status">参与已保存，答错也能推进今日任务</p>';
+    if(result==='saving')return '<p class="participation-state" role="status">正在保存这次参与…</p>';
+    if(result==='failed')return '<p class="participation-state" role="status">参与尚未确认，可在记录与备份中重试同步</p>';
+    return item?.phase==='feedbackMs'?'<p class="participation-state" role="status">继续读一会讲解，参与会自动保存。答得快不用重答；也可以随时离开。</p>':'';
+  }
+  syncAttention() { for(const [id,item] of this.attention.entries)if(item.phase==='feedbackMs'){const displayed=this.question?.challengeId===id&&!!this.answer&&this.view==='study'||this.canReadBattleFeedback(id);this.attention.pause(id,!displayed);} }
+  watchAttention(id) {
+    if(this.disposed||this.attentionTimers.has(id))return;
+    const tick=()=>{
+      this.attentionTimers.delete(id);if(this.disposed)return;
+      const item=this.attention.entries.get(id);if(!item||item.phase!=='feedbackMs')return;
+      const displayed=this.question?.challengeId===id&&!!this.answer&&this.view==='study'||this.canReadBattleFeedback(id);
+      this.syncAttention();this.attention.accrue();
+      if(displayed&&this.attention.visible&&item.questionMs+item.feedbackMs>=3250&&item.feedbackMs>=1250){void this.finishAttention(id);return;}
+      this.attentionTimers.set(id,setTimeout(tick,200));
+    };
+    this.attentionTimers.set(id,setTimeout(tick,200));
+  }
+  dailyChoices() {
+    const now=this.remote?this.store.rewardNow?.():this.store?.now?.()??Date.now();
+    const used=Number.isFinite(now)?this.data?.journey?.days?.[rewardDay(now)]?.qids||[]:[];
+    return this.scope().sort((a,b)=>Number(used.includes(a.id))-Number(used.includes(b.id)));
+  }
+  async startDailyPractice() { if(!this.canStart)return;const ids=this.dailyChoices().map(q=>q.id).slice(0,6);if(!ids.length)return;this.round={ids,index:0,results:{},finished:false};await this.study(ids[0]); }
+  async startUnitPractice() {
+    if(!this.canStart)return;const groups=new Map();
+    for(const q of this.dailyChoices()){const key=[q.bank||'school',q.grade,q.semester??q.bookId??q.book,q.unitId??q.unit??q.category].join(':');if(!groups.has(key))groups.set(key,[]);groups.get(key).push(q.id);}
+    const ids=[...groups.values()].find(ids=>ids.length>=2);if(!ids)return;
+    this.round={ids:ids.slice(0,2),index:0,results:{},finished:false};await this.study(ids[0]);
+  }
   async finishAttention(id) {
     if (this.disposed) return;
+    clearTimeout(this.attentionTimers.get(id));this.attentionTimers.delete(id);
     const timing=this.attention.finish(id), current=this.currentGuard(), store=this.store;
     if (!timing || !this.store) return;
+    const qualified=timing.questionMs+timing.feedbackMs>=3200&&timing.feedbackMs>=1200;
+    if(!qualified)return;
+    this.attentionResults.set(id,"saving");this.notify();
     await this.flush(); if (!current()) return;
-    const before=this.data?.collection?.totalDays||0;
-    const result=await store.qualifyLearning(id,timing);
+    const before=this.data?.collection?.totalDays||0, ticketsBefore=this.data?.journey?.skinTickets||0;
+    let result;try{result=await store.qualifyLearning(id,timing);}catch{result={ok:false};}
     if (!current()) return;
+    this.attentionResults.set(id,result.ok?"saved":"failed");
+    if(this.attentionResults.size>32)this.attentionResults.delete(this.attentionResults.keys().next().value);
     const after=result.data?.collection?.totalDays||0;
-    if (result.ok && after>before) this.onNotice(after%5===0 ? "今天的学习完成了！已获得一份免费十连礼盒" : `今日学习完成，已经累计${after}个学习日`);
+    const earnedTickets=(result.data?.journey?.skinTickets||0)-ticketsBefore;
+    this.notify();
+    if(result.ok){const messages=[];if(after>before)messages.push(after%5===0 ? "今天的学习完成了！已获得一份免费十连礼盒" : `今日学习完成，已经累计${after}个学习日`);if(earnedTickets>0)messages.push(`${earnedTickets}张免费造型券已收好`);if(messages.length)this.onNotice(messages.join("；"));}
   }
   receiveResult(value) {
     if (this.disposed || value?.phase !== "finished" || this.networkEpoch !== this.profileEpoch) return;
@@ -201,7 +246,7 @@ export class StudyDesk {
     this.notify();
   }
   open(view) { if (this.disposed) return; this.close(); this.view = view; this.message = ""; if (this.store && !this.flushing) void this.store.retry(); this.notify(); }
-  close() { if (this.disposed) return; if(this.answer&&this.question?.challengeId) void this.finishAttention(this.question.challengeId); this.requestEpoch++; this.abort?.abort(); this.abort = null; this.cancelVoice(); this.view = null; this.question = this.answer = null; this.round = null; if (!this.restoring) this.busy = false; this.studyId = null; this.prepared = null; }
+  close() { if (this.disposed) return; if(this.question?.challengeId) void this.finishAttention(this.question.challengeId); this.requestEpoch++; this.abort?.abort(); this.abort = null; this.cancelVoice(); this.view = null; this.question = this.answer = null; this.round = null; if (!this.restoring) this.busy = false; this.studyId = null; this.prepared = null; }
   scope() {
     const p = this.getPreferences();
     return (this.catalogue?.questions || []).filter(q => p.bank === "teacher-academic" ? q.bank === "teacher-academic" && ((p.teacherCourse || "all") === "all" || q.category === p.teacherCourse) : (q.bank || "school") === "school" && q.grade === p.grade && inCourse(q, p.course));
@@ -239,7 +284,7 @@ export class StudyDesk {
     }
     if (this.question) {
       const q = this.question.question, answer = this.answer;
-      return `<div class="quiz ${q.bank === "teacher-academic" ? "teacher-quiz" : ""}"><p class="subtle">${esc(q.unitLabel)} · 本轮 ${this.round ? this.round.index + 1 : 1}/${this.round?.ids.length || 1}</p><header><h3>${esc(q.prompt)}</h3><button data-action="desk-listen" ${!(answer?.audioUrl || q.listenAudioUrls?.length || q.listenAudioUrl) ? "disabled" : ""}>♫ 听英语</button></header>${q.bank === "teacher-academic" ? `<p class="teacher-audio-note">学术英语内测 · 新增题暂不提供录制朗读</p>` : ""}${this.visualCue(q.visual)}${q.passage ? `<section class="academic-passage" aria-label="阅读材料"><p>${esc(q.passage)}</p></section>` : ""}${q.text ? `<p class="english">${esc(q.text)}</p>` : ""}<div class="answers">${q.options.map((o, i) => `<button data-action="desk-answer" data-option="${esc(o.id)}" ${this.busy || answer ? "disabled" : ""} class="${answer?.correctOptionId === o.id ? "correct" : ""}"><span>${String.fromCharCode(65 + i)}</span>${esc(o.text)}</button>`).join("")}</div>${answer ? `<div class="feedback"><b>${answer.outcome === "correct" ? "记住这次回响" : "一起再看一遍"}</b><p>${esc(answer.explanation)}</p><p class="save-state">${esc(this.warning())}</p></div>` : ""}${this.message ? `<p role="status">${esc(this.message)}</p>` : ""}<div class="desk-actions"><button data-action="desk-back">返回目录</button>${answer ? `<button data-action="desk-next" class="primary" ${!this.canStart ? "disabled" : ""}>${this.round && this.round.index + 1 >= this.round.ids.length ? "完成这一轮" : "下一项"}</button>` : ""}</div></div>`;
+      return `<div class="quiz ${q.bank === "teacher-academic" ? "teacher-quiz" : ""}"><p class="subtle">${esc(q.unitLabel)} · 本轮 ${this.round ? this.round.index + 1 : 1}/${this.round?.ids.length || 1}</p><header><h3>${esc(q.prompt)}</h3><button data-action="desk-listen" ${!(answer?.audioUrl || q.listenAudioUrls?.length || q.listenAudioUrl) ? "disabled" : ""}>♫ 听英语</button></header>${q.bank === "teacher-academic" ? `<p class="teacher-audio-note">学术英语内测 · 新增题暂不提供录制朗读</p>` : ""}${this.visualCue(q.visual)}${q.passage ? `<section class="academic-passage" aria-label="阅读材料"><p>${esc(q.passage)}</p></section>` : ""}${q.text ? `<p class="english">${esc(q.text)}</p>` : ""}<div class="answers">${q.options.map((o, i) => `<button data-action="desk-answer" data-option="${esc(o.id)}" ${this.busy || answer ? "disabled" : ""} class="${answer?.correctOptionId === o.id ? "correct" : ""}"><span>${String.fromCharCode(65 + i)}</span>${esc(o.text)}</button>`).join("")}</div>${answer ? `<div class="feedback"><b>${answer.outcome === "correct" ? "记住这次回响" : "一起再看一遍"}</b><p>${esc(answer.explanation)}</p><p class="save-state">${esc(this.warning())}</p>${this.attentionHint(this.question.challengeId)}</div>` : ""}${this.message ? `<p role="status">${esc(this.message)}</p>` : ""}<div class="desk-actions"><button data-action="desk-back">返回目录</button>${answer ? `<button data-action="desk-next" class="primary" ${!this.canStart ? "disabled" : ""}>${this.round && this.round.index + 1 >= this.round.ids.length ? "完成这一轮" : "下一项"}</button>` : ""}</div></div>`;
     }
     const s = this.summary(), list = this.filtered(), last = Math.max(0, Math.ceil(list.length / 6) - 1); this.page = Math.min(this.page, last);
     return `<p>${this.getPreferences().bank === "teacher-academic" ? "教师内测 · 学术英语" : `${this.getPreferences().grade}年级`} · 当前范围 ${s.total}项，已练 ${s.learned}项，待复习 ${s.due}项</p><p class="subtle">从任意一项开始，每轮最多6项，练完就休息一下。</p><div class="desk-filters">${[["due", "今天复习"], ["new", "还没练过"], ["all", "全部"]].map(([id, text]) => `<button data-action="desk-filter" data-value="${id}" class="${this.filter === id ? "chosen" : ""}">${text}</button>`).join("")}</div><div class="study-list">${list.slice(this.page * 6, this.page * 6 + 6).map((q) => `<button data-action="desk-study" data-value="${esc(q.id)}" ${this.busy ? "disabled" : ""}><span>${esc(q.displayLabel)}</span><small>${this.label(q)}</small></button>`).join("") || `<p>这一组暂时没有待练项目。可以选择“全部”继续认识。</p>`}</div><div class="desk-actions"><button data-action="desk-page" data-value="-1" ${this.page === 0 ? "disabled" : ""}>上一页</button><span>${this.page + 1}/${last + 1}</span><button data-action="desk-page" data-value="1" ${this.page >= last ? "disabled" : ""}>下一页</button></div>${this.message ? `<p role="status">${esc(this.message)}</p>` : ""}<p class="subtle">当天多练会记录次数；掌握阶段需要隔天再次答对。</p>`;
@@ -268,7 +313,7 @@ export class StudyDesk {
     try {
       const value = await this.fetchJson(`/api/study/${encodeURIComponent(qid)}`, { cache: "no-store" }, this.abort);
       if (this.disposed || epoch !== this.requestEpoch || this.view !== "study") return;
-      this.studyId = qid; this.question = value; this.beginAttention(value.challengeId); this.answer = null;
+      this.studyId = qid; this.question = value; this.beginAttention(value.challengeId,"study",value.issuedAt); this.answer = null;
       this.round.index = this.round.ids.indexOf(qid);
     } catch (e) { if (epoch === this.requestEpoch) this.message = this.issueMessage(e, "题目暂未载入，请再试一次。"); }
     finally { if (epoch === this.requestEpoch) { this.busy = false; this.notify(); } }
@@ -282,7 +327,7 @@ export class StudyDesk {
       if (this.disposed) return;
       // A successfully received answer is a learning event even if its panel was closed.
       if (profileEpoch === this.profileEpoch) this.receiveFeedback(value, "study");
-      if (epoch === this.requestEpoch && this.view === "study") { this.answer = value; if (this.round && value.learning?.qid === qid) this.round.results[qid] = value.learning.correct; }
+      if (epoch === this.requestEpoch && this.view === "study") { this.answer = value; if (this.round && value.learning?.qid === qid) this.round.results[qid] = value.learning.correct; this.syncAttention(); }
     } catch (e) { if (epoch === this.requestEpoch) this.message = e.message === "expired" ? "这道题已过期，请返回目录重新打开。没有记为答错。" : this.issueMessage(e, "答案尚未确认，可重试原选项。"); }
     finally { if (epoch === this.requestEpoch) { this.busy = false; this.notify(); } }
   }
@@ -298,7 +343,7 @@ export class StudyDesk {
     if (action === "desk-page") this.page = Math.max(0, this.page + Number(value));
     if (action === "desk-study") await this.study(value);
     if (action === "desk-answer") await this.answerStudy(option);
-    if (action === "desk-back") { if(this.answer&&this.question?.challengeId) void this.finishAttention(this.question.challengeId); this.requestEpoch++; this.abort?.abort(); this.cancelVoice(); this.question = this.answer = null; this.round = null; this.busy = false; this.message = ""; }
+    if (action === "desk-back") { if(this.question?.challengeId) void this.finishAttention(this.question.challengeId); this.requestEpoch++; this.abort?.abort(); this.cancelVoice(); this.question = this.answer = null; this.round = null; this.busy = false; this.message = ""; }
     if (action === "desk-next" && this.answer && this.canStart) {
       if(this.question?.challengeId) void this.finishAttention(this.question.challengeId);
       const next = this.round?.ids[this.round.index + 1];

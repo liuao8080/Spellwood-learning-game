@@ -76,7 +76,7 @@ test("same seed produces same decks and question sequence", () => {
   assert.notEqual(questionFor(a, Q).id, questionFor(b, Q).id);
 });
 test("all decks contain exactly 20 valid cards", () => {
-  assert.equal(CARDS.length, 24);
+  assert.equal(CARDS.length, 36);
   for (const d of DECKS) {
     assert.equal(d.ids.length, 20);
     assert.ok(d.ids.every((id) => CARD[id]));
@@ -269,6 +269,7 @@ test("120 rule-only simulations terminate legally (player rituals intentionally 
 test("unsafe and duplicate imported unit IDs are rejected", () => {
   const save = freshSave();
   save.match = state();
+  for (const player of save.match.players) player.handIds = [];
   save.match.seq = 2;
   save.match.players[0].board = [unit("fox", "u2")];
   assert.ok(validateSave(save, Q));
@@ -355,8 +356,8 @@ test("curriculum metadata covers each question and six original tasks per unit",
     assert.ok(!/[\u3400-\u9fff]/.test(q.speak));
   }
 });
-test("twenty-four cards have distinct illustration slots without changing old combat attributes", () => {
-  assert.equal(new Set(CARDS.map((c) => c.art)).size, 24);
+test("thirty-six cards have distinct illustration slots without changing old combat attributes", () => {
+  assert.equal(new Set(CARDS.map((c) => c.art)).size, 36);
   assert.equal(CARD.golem.atk, 4);
   assert.equal(CARD.golem.hp, 7);
 });
@@ -391,6 +392,8 @@ test("full health and full hand cannot waste a new player ritual", () => {
 test("legacy battles retain their resource rules and original score calculation", () => {
   const s = createMatch();
   s.rules = "1.0";
+  delete s.handSeq;
+  for (const player of s.players) delete player.handIds;
   delete s.players[0].ritualsLeft;
   delete s.players[1].ritualsLeft;
   let n = s;

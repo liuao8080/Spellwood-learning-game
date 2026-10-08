@@ -41,9 +41,9 @@ function state() {
     });
   return s;
 }
-test("24 cards use four explicit elements, at most one keyword and all three decks introduce new roles", () => {
-  assert.equal(CARDS.length, 24);
-  assert.equal(new Set(CARDS.map((c) => c.id)).size, 24);
+test("36 cards use four explicit elements, at most one keyword and all three legacy decks remain valid", () => {
+  assert.equal(CARDS.length, 36);
+  assert.equal(new Set(CARDS.map((c) => c.id)).size, 36);
   assert.ok(
     CARDS.every((c) =>
       ["fire", "water", "nature", "arcane"].includes(c.element),
@@ -165,7 +165,7 @@ test("all difficulty levels ignore hidden hands and deck order and choose legal 
   }
 });
 test("2.1 saved opening and subsequent old-card transitions/AI retain their exact behavior", () => {
-  assert.equal(RULES, "2.2");
+  assert.equal(RULES, "2.3");
   const pending = old.createMatch({ offerOpening: true });
   assert.equal(openingPending(pending), true);
   assert.ok(validateMatch(pending));

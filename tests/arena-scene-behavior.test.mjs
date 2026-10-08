@@ -28,6 +28,20 @@ function state() { return { active: 0, phase: "playing", players: [
 ] }; }
 const tick = () => new Promise((r) => setImmediate(r));
 
+test('bound arena handlers inspect on right click and discard a press across an authoritative revision', t => {
+ const picked=[],inspected=[];let revision=7;
+ const {scene,handlers}=harness(t,{onPick:value=>picked.push(value),onInspect:value=>inspected.push(value),getInputRevision:()=>revision});
+ scene.setBattle(state(),0);scene.pick=()=>({kind:'unit',uid:'defender',seat:1});
+ const pointer={pointerId:4,isPrimary:true,clientX:20,clientY:20,pointerType:'mouse'};
+ handlers.get('pointerdown')({...pointer,button:2,buttons:2});
+ handlers.get('pointerup')({...pointer,button:2,buttons:0});
+ handlers.get('contextmenu')({...pointer,button:2,preventDefault(){},stopPropagation(){}});
+ assert.equal(picked.length,0);assert.equal(inspected.length,1);assert.equal(inspected[0].revision,7);
+ handlers.get('pointerdown')({...pointer,button:0,buttons:1});revision++;
+ handlers.get('pointerup')({...pointer,button:0,buttons:0});
+ assert.equal(picked.length,0);
+});
+
 test('external hand removes the old perspective cards and routes only owner draws to the new window',async t=>{
  const arrivals=[];const {scene}=harness(t,{externalHand:true,onHandDraw:detail=>arrivals.push(detail)});
  const next=state();scene.setBattle(next,0);
@@ -41,7 +55,7 @@ test('external hand removes the old perspective cards and routes only owner draw
 test('short immersive fields leave separate hit badges for all four allied and enemy slots',t=>{
  const h=harness(t,{externalHand:true});const next=state();
  for(const [seat,player]of next.players.entries())player.board=Array.from({length:4},(_,i)=>({uid:`${seat}:${i}`,cardId:'fox',atk:2,hp:2,maxHp:2,ready:true}));
- for(const [w,hgt]of[[320,160],[390,292],[708,184],[604,154]]){
+ for(const [w,hgt]of[[320,138],[320,160],[390,292],[708,184],[604,154]]){
   h.canvas.getBoundingClientRect=()=>({width:w,height:hgt,left:0,top:0});h.scene.resize();h.scene.setBattle(next,0);h.scene.camera.updateMatrixWorld(true);
   for(const seat of[0,1]){const labels=next.players[seat].board.map(u=>h.scene.labelPoint(h.scene.units.get(u.uid)));const points=labels.map(point=>point.x);
    for(let i=1;i<4;i++)assert.ok(points[i]-points[i-1]>=56,`${w}x${hgt}, seat${seat}, spacing${points[i]-points[i-1]}`);
@@ -309,15 +323,134 @@ test('accepted damage deforms the actual figure briefly and returns its rig to r
   frame(start + 321); await motion; assert.equal(body.scale.y, 1); assert.equal(body.rotation.x, 0);
 });
 
-test('overlapping hero hits share a stable resting crystal and cancellation restores it', async t => {
+test('overlapping hero hits deform the actual hero and cancellation restores exact baseline', async t => {
   const { scene, frame } = harness(t); scene.setBattle(state(), 0);
-  const hero = scene.heroes[1], scale = hero.crystal.scale.clone(), emission = hero.crystal.material.emissiveIntensity;
+  const hero = scene.heroes[1]; hero.model.reset();
+  const mesh = hero.root.children.find(node => node.isMesh && !node.userData.pickProxy);
+  const baseline = [...mesh.geometry.attributes.position.array], rootPosition = hero.root.position.clone();
   const first = scene.recoil('hero:1'), start = [...scene.jobs][0].start; frame(start + 160);
-  assert(hero.crystal.scale.y > scale.y); assert(hero.crystal.material.emissiveIntensity > emission);
+  assert.notDeepEqual([...mesh.geometry.attributes.position.array], baseline);
+  assert(hero.poses.hitProgress > .4); assert(hero.root.position.equals(rootPosition));
   const second = scene.recoil('hero:1'); scene.cancel(); await Promise.all([first, second]);
-  assert(hero.crystal.scale.equals(scale)); assert.equal(hero.crystal.material.emissiveIntensity, emission);
-  assert.equal(hero.hitToken, null); assert.equal(hero.recoilBase, null);
+  assert.deepEqual([...mesh.geometry.attributes.position.array], baseline);
+  assert.deepEqual(hero.poses, {}); assert.deepEqual(hero.poseTokens, {});
   scene.setReduced(true); await scene.recoil('hero:1'); assert.equal(scene.jobs.size, 0);
+});
+
+test('hero skins replace only cosmetic models, preserve targeting and dispose once', t => {
+  const { scene } = harness(t); const next = state(); scene.setBattle(next, 1);
+  const before = structuredClone(next), old = scene.heroes[0], counts = new Map();
+  old.root.traverse(node => { for (const resource of [node.geometry, node.material].filter(Boolean)) { counts.set(resource, 0); resource.addEventListener('dispose', () => counts.set(resource, counts.get(resource) + 1)); } });
+  assert(scene.heroes.every(hero => hero.skinId === 'forest_apprentice' && hero.model.quality === 'low'));
+  scene.setHeroSkins({ self: 'butterfly_scholar', opponent: 'aurora_storyteller' });
+  assert.equal(old.model.disposed, true); assert([...counts.values()].every(count => count === 1));
+  assert.equal(scene.heroFor('hero:1').skinId, 'butterfly_scholar');
+  assert.equal(scene.heroFor('hero:0').skinId, 'aurora_storyteller');
+  assert.deepEqual(next, before); assert.equal(scene.heroes.length, 2);
+  assert.equal(scene.pickables.includes(old.root), false);
+  assert.equal(scene.heroFor('hero:2'), null);
+  const hero = scene.heroes[0], root = hero.root;
+  scene.setHeroSkins({ self: 'butterfly_scholar' }); assert.equal(scene.heroes[0].root, root);
+  const point = scene.project(hero.model.anchors.impact.getWorldPosition(new Vector3()));
+  assert.deepEqual(scene.pick({ clientX: point.x, clientY: point.y }), { kind: 'hero', relativeSeat: 0 });
+  assert(scene.aimAnchor('hero:1', false).equals(hero.model.anchors.projectile.getWorldPosition(new Vector3())));
+  scene.setHeroSkins({ self: 'toString' }); assert.equal(scene.heroes[0].skinId, 'forest_apprentice');
+  assert.equal(scene.heroes[1].skinId, 'aurora_storyteller');
+  assert(scene.heroes.reduce((n, h) => n + h.model.metrics.triangles, 0) <= 3664);
+});
+
+test('hero cast, heal and victory poses are owned by the scene and interrupted safely', async t => {
+  const { scene, frame } = harness(t); scene.setBattle(state(), 0);
+  const hero = scene.heroes[0], anchor = hero.model.anchors.impact.position.clone();
+  const motions = [scene.projectile('hero:0', 'hero:1'), scene.pulse('hero:0', 'heal'), scene.celebrate(true)];
+  frame([...scene.jobs][0].start + 220);
+  assert(hero.poses.castProgress > 0); assert(hero.poses.healProgress > 0); assert(hero.poses.winProgress > 0);
+  assert(hero.model.anchors.impact.position.equals(anchor));
+  scene.setHeroSkins({ self: 'leaf_ranger' }); assert(hero.model.disposed);
+  scene.cancel(); await Promise.all(motions);
+  assert.equal(scene.jobs.size, 0); assert.equal(scene.temporary.children.length, 0);
+  assert(scene.heroes.every(h => Object.keys(h.poses).length === 0));
+});
+
+test('neutral draw celebration never invents a hero winner', async t => {
+  const { scene, frame } = harness(t); scene.setBattle(state(), 0);
+  const motion = scene.celebrate(null); frame([...scene.jobs][0].start + 250);
+  assert(scene.heroes.every(hero => Object.keys(hero.poses).length === 0));
+  scene.cancel(); await motion;
+});
+
+test('real hero silhouettes remain inside the immersive battlefield viewport', t => {
+  const { scene, canvas } = harness(t, { externalHand: true });
+  scene.setHeroSkins({ self: 'forest_apprentice', opponent: 'butterfly_scholar' });
+  for (const [width, height] of [[960, 600], [390, 292], [708, 184], [320, 160]]) {
+    canvas.getBoundingClientRect = () => ({ width, height, left: 0, top: 0 }); scene.resize();
+    scene.scene.updateMatrixWorld(true); scene.camera.updateMatrixWorld(true);
+    for (const hero of scene.heroes) {
+      const bounds = hero.model.bounds;
+      for (const x of [bounds.min.x, bounds.max.x]) for (const y of [bounds.min.y, bounds.max.y]) for (const z of [bounds.min.z, bounds.max.z]) {
+        const p = scene.project(new Vector3(x, y, z).applyMatrix4(hero.root.matrixWorld));
+        assert(p.x >= 2 && p.x <= width - 2 && p.y >= 2 && p.y <= height - 2, `${width}x${height} hero${hero.relativeSeat} ${p.x},${p.y}`);
+      }
+    }
+  }
+});
+
+test('authoritative recall returns toward its own hero without damage or death and cancels cleanly', async t => {
+  const { scene, frame, sounds } = harness(t); scene.setBattle(state(), 0);
+  const item = scene.units.get('attacker'), base = item.base.clone(), destination = scene.anchor('hero:0', .9);
+  const motion = scene.impacts([{ seat: 0, uid: 'attacker', returned: true, removed: false, hpDelta: 0, atkDelta: 0 }], 'water');
+  frame([...scene.jobs][0].start + 200);
+  assert(item.model.root.position.distanceTo(destination) < base.distanceTo(destination));
+  assert(item.model.root.scale.x < scene.scaleFor('fox')); assert.equal(item.fadeMaterials, undefined);
+  assert.equal(sounds.includes('death'), false); assert.equal(sounds.includes('hit'), false);
+  scene.cancel(); await motion;
+  assert(item.model.root.position.equals(base)); assert.equal(item.model.root.scale.x, scene.scaleFor('fox'));
+  const next = state(); next.players[0].board = []; scene.setBattle(next, 0);
+  assert(item.model.disposed); assert.equal(scene.units.has('attacker'), false);
+});
+
+test('authoritative shield gain and max-health growth remain visible with reduced motion', async t => {
+  const { scene, frame } = harness(t, { reduced: true }); scene.setBattle(state(), 0);
+  const labels = [], floatText = scene.floatText.bind(scene); scene.floatText = (key, value, ...args) => { labels.push(value); return floatText(key, value, ...args); };
+  const motion = scene.impacts([{ seat: 0, uid: 'attacker', shieldGained: true, maxHpDelta: 2, hpDelta: 2 }], 'nature');
+  assert(scene.barriers.has('attacker')); assert(labels.includes('获得护盾')); assert(labels.includes('+2生命上限')); assert(labels.includes('+2'));
+  assert.equal(scene.units.get('attacker').animating, undefined);
+  frame([...scene.jobs][0].start + 800); await motion;
+  const next = state(); Object.assign(next.players[0].board[0], { shield: true, maxHp: 4, hp: 4 }); scene.setBattle(next, 0);
+  assert(scene.barriers.has('attacker'));
+  scene.setBattle(state(), 0); assert.equal(scene.barriers.has('attacker'), false);
+});
+
+test('recall never presents the returned card as a draw from the deck', async t => {
+  const { scene, frame } = harness(t, { reduced: true }); const before = state(); before.players[0].hand = ['tidal_recall', 'spark']; scene.setBattle(before, 0);
+  const next = structuredClone(before); next.players[0].board = []; next.players[0].hand = ['spark', 'fox'];
+  const draws = []; scene.drawCards = async (_next, seat, count) => draws.push({ seat, count });
+  const event = { kind: 'play', actorSeat: 0, cardId: 'tidal_recall', targetUid: 'attacker', changes: [{ seat: 0, uid: 'attacker', returned: true, removed: false, hpDelta: 0, atkDelta: 0 }] };
+  const motion = scene.present(next, event); await tick();
+  frame([...scene.jobs][0].start + 501); await motion;
+  assert.deepEqual(draws, [{ seat: 0, count: 0 }, { seat: 1, count: 0 }]);
+});
+
+test('authoritative legal card targets override legacy cost and enemy-only hints', t => {
+  const { scene } = harness(t); const next = state();
+  next.players[0].hand = ['mushroom_medic', 'spark']; next.players[0].mana = 0;
+  next.players[0].legalCardTargets = [{ index: 0, targets: [{ target: 'attacker', seat: 0 }], untargeted: false }, { index: 1, targets: [{ target: 'hero', seat: 1 }], untargeted: false }];
+  scene.setBattle(next, 0); scene.select({ kind: 'card', index: 0 }); scene.updateTargets();
+  assert.deepEqual([...scene.targetRings.keys()], ['attacker']);
+  scene.select({ kind: 'card', index: 1 }); scene.updateTargets(); assert.deepEqual([...scene.targetRings.keys()], ['hero:1']);
+  next.players[0].legalCardTargets = []; scene.setBattle(next, 0); scene.updateTargets(); assert.equal(scene.targetRings.size, 0);
+});
+
+test('lethal arrival keeps its target until the salamander projectile lands', async t => {
+  const { scene, frame } = harness(t); const before = state(); before.players[0].hand = ['ember_salamander']; scene.setBattle(before, 0);
+  const next = structuredClone(before); next.players[0].hand = []; next.players[0].board.push({ uid: 'new-salamander', cardId: 'ember_salamander', atk: 3, hp: 5, maxHp: 5, ready: false }); next.players[1].board.shift();
+  let impacts = 0;
+  const motion = scene.present(next, { kind: 'play', actorSeat: 0, cardId: 'ember_salamander', newUnitUid: 'new-salamander', targetUid: 'defender', changes: [{ seat: 1, uid: 'defender', hpDelta: -2, removed: true }] }, () => impacts++);
+  const target = scene.units.get('defender'); assert(target && !target.model.disposed); assert.equal(impacts, 0);
+  frame(Math.max(...[...scene.jobs].map(job => job.start)) + 681); await tick();
+  assert.equal(impacts, 0); assert(scene.temporary.children.some(root => root.name.includes('cast')));
+  frame(Math.max(...[...scene.jobs].map(job => job.start)) + 1000); await motion;
+  assert.equal(impacts, 1); scene.setBattle(next, 0); assert(target.model.disposed);
 });
 
 

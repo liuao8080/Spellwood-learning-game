@@ -11,7 +11,7 @@ const slug = text => text.replace(/[^a-zA-Z0-9_-]+/g, '-').slice(0, 100);
 
 const nativeErrorNames = new Set(['Error', 'TypeError', 'ReferenceError', 'SyntaxError', 'RangeError', 'URIError', 'EvalError', 'AggregateError']);
 const safeSourceIdentifiers = new Set([
-  'scene', 'handScene', 'lobbyScene', 'collectionView', 'desk', 'identityClient',
+  'scene', 'handScene', 'lobbyScene', 'collectionView', 'wardrobeView', 'desk', 'identityClient',
   'identityPanel', 'activeIdentity', 'identityCheckTask', 'identityVerified',
   'identityEpoch', 'identityRefreshPending', 'anchorPositions', 'rendererStatus',
   'handStatus', 'lobbyStatus', 'preferences', 'link', 'ui', 'layer', 'modalRoot',
@@ -71,7 +71,7 @@ function boardPlayer(player) {
     handCount: player.handCount, deckCount: player.deckCount,
     controller: player.controller,
     board: player.board.map(unit => ({
-      uid: unit.uid, cardId: unit.cardId, atk: unit.atk, hp: unit.hp,
+      uid: unit.uid, cardId: unit.cardId, atk: unit.atk, hp: unit.hp, maxHp: unit.maxHp,
       ready: unit.ready, shield: Boolean(unit.shield),
     })),
   };
@@ -88,6 +88,7 @@ function observe(page) {
     events: new Map(), eventRevisions: new Map(), duplicateEventRevisions: 0,
     feedbackCount: 0, queueStartedAt: null, queueDeadline: null, firstRoomAt: null,
     catalogueCounts: null, queueScope: null, challengeScopes: [],
+    privateChallenge: null, privateFeedback: null, skinWrites: [],
     errors: [], pageErrorCount: 0, pageErrors: [],
   };
   page.on('pageerror', error => {
@@ -105,6 +106,10 @@ function observe(page) {
         const { player } = await response.json();
         state.player = reducedPlayer(player);
       } else if (pathname === '/api/progress' || pathname.startsWith('/api/progress/')) {
+        if (pathname === '/api/progress/skins' && response.request().method() === 'POST') {
+          const intent = response.request().postDataJSON()?.action;
+          state.skinWrites.push({ kind: intent?.kind, mode: intent?.mode, count: intent?.count });
+        }
         const { playerId, revision, data } = await response.json();
         if (data && revision >= (state.progress.get(playerId)?.revision ?? -1))
           state.progress.set(playerId, { revision, data });
@@ -145,7 +150,15 @@ function observe(page) {
           state.queueDeadline = message.matchBy;
         } else if (message.type === 'private.feedback') {
           state.feedbackCount += 1;
+          state.privateFeedback = {
+            purpose: message.purpose, outcome: message.outcome,
+            handId: message.handId, discountGranted: message.discountGranted,
+          };
         } else if (message.type === 'private.challenge') {
+          state.privateChallenge = {
+            purpose: message.purpose, handId: message.handId,
+            challengeId: message.challengeId, expiresAt: message.expiresAt,
+          };
           // Public scope metadata only; do not retain question text or options.
           state.challengeScopes.push({
             bank: message.question.bank || 'school', grade: message.question.grade,
@@ -160,6 +173,13 @@ function observe(page) {
             bank: message.bank || 'school', grade: message.grade, course: message.course, turn: message.turn,
             mode: message.mode, assisted: message.assisted,
             selfController: message.self.controller, opponentController: message.opponent.controller,
+            // Owner-only visible state is kept in memory for UI assertions, not
+            // emitted in reduced artifact observations.
+            selfHandIds: message.self.handIds, selfHandCosts: message.self.handCosts,
+            selfHandCards: message.self.hand, selfDrawEnglish: message.self.drawEnglish,
+            selfLegalCardTargets: message.self.legalCardTargets,
+            selfRitualsLeft: message.self.ritualsLeft,
+            selfSkinId: message.self.skinId, opponentSkinId: message.opponent.skinId,
             opponentConnected: message.opponent.connected,
             players: message.state.players.map(boardPlayer),
             result: message.result ? {
@@ -241,11 +261,22 @@ export const test = base.extend({
     async function make(label, options = {}) {
       // Each actor has a wholly separate cookie jar and web storage. No storage
       // state file, shared profile, or identity seeding is used.
+      const { simulateMissingWebGL = false, ...contextOptions } = options;
       const context = await browser.newContext({
-        viewport: { width: 1280, height: 800 }, locale: 'zh-CN', ...options,
+        viewport: { width: 1280, height: 800 }, locale: 'zh-CN', ...contextOptions,
+      });
+      if (simulateMissingWebGL) await context.addInitScript(() => {
+        // Isolated compatibility simulation. Only capability discovery changes;
+        // native 2D contexts, game state, network and browser security are intact.
+        const nativeGetContext = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.getContext = function (type, ...args) {
+          if (['webgl', 'webgl2', 'experimental-webgl'].includes(String(type).toLowerCase())) return null;
+          return nativeGetContext.call(this, type, ...args);
+        };
       });
       const page = await context.newPage();
       const actor = { label, context, page, observed: observe(page), metrics: { summons: 0, attacks: 0, answers: 0 } };
+      if (simulateMissingWebGL) actor.metrics.compatibilitySimulation = 'This isolated context reports unavailable WebGL contexts; native 2D and the real application fallback are unchanged. This does not establish real GPU absence.';
       actors.push(actor);
       await page.goto(server.origin);
       await expect(action(page, 'identity')).toContainText('游客');
@@ -298,11 +329,11 @@ export async function studyOne(actor, { except } = {}) {
   await page.locator(`[data-action="desk-study"][data-value="${qid}"]`).click();
   await expect(action(page, 'desk-answer').first()).toBeVisible();
   await sleep(2100); // Real visible reading time; no clock or answer manipulation.
+  const participation = page.waitForResponse(response => new URL(response.url()).pathname === '/api/progress/participation' && response.request().method() === 'POST');
   await action(page, 'desk-answer').first().click();
   await expect(page.locator('.study-desk .feedback')).toBeVisible();
   await expect.poll(() => learned(actor).includes(qid)).toBe(true);
   await sleep(1300);
-  const participation = page.waitForResponse(response => new URL(response.url()).pathname === '/api/progress/participation' && response.request().method() === 'POST');
   await action(page, 'desk-back').click();
   expect((await participation).ok(), 'visible reading and feedback participation saved').toBe(true);
   await expect(page.locator('.study-desk')).toContainText(`已练 ${learnedBefore + 1}项`);
@@ -312,6 +343,7 @@ export async function studyOne(actor, { except } = {}) {
 
 export async function openTestGift(actor, testInfo) {
   const page = actor.page;
+  await action(page, 'camp-more').click();
   await action(page, 'collection').click();
   await page.locator('[data-action="collection-open"][data-value="test"]').click();
   await expect(page.locator('#pack-canvas')).toBeVisible();
@@ -484,7 +516,7 @@ export async function answerRitual(actor, testInfo) {
   return true;
 }
 
-async function playOneVisibleCard(actor) {
+export async function playOneVisibleCard(actor) {
   const page = actor.page;
   const labels = await page.locator('#hand-semantics [data-hand-index]').evaluateAll(elements =>
     elements.map(element => ({ index: Number(element.dataset.handIndex), label: element.getAttribute('aria-label') })));
@@ -503,8 +535,15 @@ async function playOneVisibleCard(actor) {
       if (summon) actor.metrics.summons += 1;
       return true;
     }
-    if (await page.locator('.card-reason').filter({ hasText: '点击亮起的敌人来施放' }).count()) {
-      await uiCommand(actor, () => action(page, 'enemy-hero').click());
+    const option = actor.observed.room.selfLegalCardTargets?.find(item =>
+      item.index === card.index && item.handId === actor.observed.room.selfHandIds[card.index]);
+    const target = option?.targets?.[0];
+    if (target) {
+      const control = target.target === 'hero'
+        ? action(page, target.seat === actor.observed.room.youSeat ? 'my-info' : 'enemy-hero')
+        : page.locator(`.unit-label.targetable[data-seat="${target.seat}"][data-uid="${target.target}"]`);
+      await expect(control).toBeVisible();
+      await uiCommand(actor, () => control.click());
       return true;
     }
     await action(page, 'clear').click();

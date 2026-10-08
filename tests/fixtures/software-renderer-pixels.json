@@ -1,0 +1,33 @@
+{
+  "source": "pre-optimization renderer 33fa224; exact unchanged rasterization reference",
+  "frames": [
+    {
+      "label": "mixed-depth-texture-smooth-flat",
+      "sha256": "c88d3c965c473fc1cd68284ea521f4bbd1afb3727df3c957ba88a4e4569abddf"
+    },
+    {
+      "label": "static-cache-reuse",
+      "sha256": "c88d3c965c473fc1cd68284ea521f4bbd1afb3727df3c957ba88a4e4569abddf"
+    },
+    {
+      "label": "material-and-pose-change",
+      "sha256": "ebd49baf418121a6a0dd37238c296beb7f04db0bdbe9014764b7638099043e83"
+    },
+    {
+      "label": "flat-transparent-cutout",
+      "sha256": "921ed990cdf84079251dce150c429076979977ddcb386412200cb5c346c21544"
+    },
+    {
+      "label": "smaller-frame-releases-texture",
+      "sha256": "80f6b75977f920a82ad97d5ab12a638062d99b0d8e5e3a0b29f728295ee2bbd5"
+    },
+    {
+      "label": "camera-and-size-change",
+      "sha256": "86b43f311bf4c367754ee44d1249a9f33d08f6c6dd9a00f24a8ee2dc3c805bc6"
+    },
+    {
+      "label": "retained-pool-reuse",
+      "sha256": "86b43f311bf4c367754ee44d1249a9f33d08f6c6dd9a00f24a8ee2dc3c805bc6"
+    }
+  ]
+}

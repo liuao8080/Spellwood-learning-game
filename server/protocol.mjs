@@ -7,8 +7,8 @@ import {
   validCourse,
   validateCustomDeck,
 } from "../src/cards.mjs";
-export const PROTOCOL = 1,
-  RULESET = "net-1.1";
+export const PROTOCOL = 2,
+  RULESET = "net-2.3";
 export const versions = {
   protocol: PROTOCOL,
   ruleset: RULESET,
@@ -166,6 +166,15 @@ export function payload(command) {
         kind: p.kind,
         target: p.target === undefined ? "hero" : target(p.target),
       };
+    case "draw.begin":
+      exact(p, ["handId"], ["handId"]);
+      if (typeof p.handId !== "string" || !/^c[a-f0-9]{32}$/.test(p.handId)) fail("INVALID_HAND_INSTANCE");
+      return { handId: p.handId };
+    case "draw.cancel":
+      exact(p, ["challengeId"], ["challengeId"]);
+      if (typeof p.challengeId !== "string" || !p.challengeId || p.challengeId.length > 100) fail("BAD_ANSWER");
+      return { challengeId: p.challengeId };
+    case "draw.answer":
     case "ritual.answer":
       exact(p, ["challengeId", "optionId"], ["challengeId", "optionId"]);
       if (

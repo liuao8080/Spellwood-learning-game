@@ -22,3 +22,11 @@ test('probe rejects invalid network configuration before making requests', async
   await assert.rejects(() => checkHealth({ port: 0 }), /Invalid local port/);
   await assert.rejects(() => checkHealth({ publicOrigin: 'file:///tmp/example' }), /Invalid public origin/);
 });
+
+
+test('health probe rejects an old protocol even when HTTP and frontend respond normally',async()=>{
+ const {createServer}=await import('node:http');
+ const server=createServer((req,res)=>{if(req.url==='/health'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({status:'ok',protocol:1,ruleset:'net-1.1',combatRules:'2.2'}));}else{res.setHeader('Content-Length','4');res.end(req.method==='HEAD'?undefined:'test');}});
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+ try{await assert.rejects(checkHealth({port:server.address().port}),/healthy protocol/);}finally{await new Promise(resolve=>server.close(resolve));}
+});

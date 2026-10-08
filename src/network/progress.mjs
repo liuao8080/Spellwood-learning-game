@@ -2,17 +2,19 @@ import { freshSave, validateSave, recordLearning } from "../learning.mjs";
 import { TEACHER_BANK, bankFor, validBank, validTeacherCourse } from "../question-banks.mjs";
 import { DECKS, OPPONENTS, validCourse, validateCustomDeck } from "../cards.mjs";
 import { freshCollection, validateCollection, qualifyDay, applyCollectionOperation, generatePack } from "../collection.mjs";
+import { HERO_SKINS, DEFAULT_HERO_SKIN } from "../hero-skins.mjs";
+import { freshJourney, normalizeJourney, applyQualifiedLearning, applyQualifiedMatch, openSkinPack as reduceOpenSkinPack, revealSkinPack as reduceRevealSkinPack, closeSkinPack as reduceCloseSkinPack, redeemSkin as reduceRedeemSkin, equipSkin as reduceEquipSkin } from "../reward-journey.mjs";
 import { freshCombatRating, normalizeCombatRating, normalizeDifficulty, recordCombatResult, COMBAT_MODES, DIFFICULTIES } from "../combat-rating.mjs";
 
-export const PROGRESS_KEY = "spellwood.save.v3";
-export const PROGRESS_LOCK = "spellwood.save.v3.transaction";
+export const PROGRESS_KEY = "spellwood.save.v4";
+export const PROGRESS_LOCK = "spellwood.save.v4.transaction";
 export const PROGRESS_LIMITS = Object.freeze({
   learningEvents: 8192,
   resultIds: 65536,
   replayMs: 2 * 60 * 60 * 1000,
   importCharacters: 8 * 1024 * 1024,
 });
-const OLD_KEYS = ["spellwood.save.v2", "spellwood.save.v1"];
+const OLD_KEYS = ["spellwood.save.v3", "spellwood.save.v2", "spellwood.save.v1"];
 const plain = (x) => !!x && typeof x === "object" && !Array.isArray(x);
 const integer = (x, min, max) =>
   Number.isSafeInteger(x) && x >= min && x <= max;
@@ -146,6 +148,7 @@ const MATCH_FIELDS = [
   "active",
   "turn",
   "seq",
+  "handSeq",
   "phase",
   "winner",
   "log",
@@ -166,12 +169,44 @@ const PLAYER_FIELDS = [
   "maxMana",
   "board",
   "hand",
+  "handIds",
+  "handBoosts",
   "deck",
   "fatigue",
   "ritualUsed",
   "ritualsLeft",
 ];
-const UNIT_FIELDS = ["uid", "cardId", "atk", "hp", "maxHp", "ready", "shield"];
+const UNIT_FIELDS = ["uid", "cardId", "atk", "hp", "maxHp", "ready", "shield", "kingfisherDrawTurn"];
+
+function localRewardUnit(question) {
+  if (!question || typeof question.unitId !== "string" || !/^[A-Za-z0-9_.-]{1,80}$/.test(question.unitId))
+    fail("INVALID_PARTICIPATION");
+  if (question.bank === TEACHER_BANK) {
+    if (question.grade !== null || question.semester !== null || question.category === "all" || !validTeacherCourse(question.category))
+      fail("INVALID_PARTICIPATION");
+    return `${TEACHER_BANK}:${question.category}:${question.unitId}`;
+  }
+  const book = question.bookId ?? question.semester;
+  if (question.bank !== "school" || !integer(question.grade, 1, 6) ||
+      !["string", "number"].includes(typeof book) || !/^[A-Za-z0-9_.-]{1,24}$/.test(String(book))) fail("INVALID_PARTICIPATION");
+  return `g${question.grade}:b${book}:${question.unitId}`;
+}
+function applyLocalReward(data, reward) {
+  const balance = data.collection.earned.dust + reward.officialDustDelta;
+  if (!integer(balance, 0, 100000000)) fail("REWARD_BALANCE_LIMIT");
+  data.journey = reward.state;
+  data.collection.earned.dust = balance;
+  return reward.changed;
+}
+function localMatch(record, participation) {
+  if (participation === undefined) return undefined;
+  if (!plain(participation) || !date(participation.startedAt) || participation.startedAt > record.date ||
+      !integer(participation.ownTurns, 0, 100000) || !integer(participation.ownActions, 0, 100000)) fail("INVALID_QUALIFIED_MATCH");
+  return { eventId: `local-match:${originId(resultKey(record))}`, matchId: record.id, mode: record.mode,
+    termination: ["health", "draw"].includes(record.reason) ? "normal" :
+      record.reason === "surrender" ? "surrender" : record.reason === "expired" ? "expired" : "quit",
+    issuedAt: participation.startedAt, finishedAt: record.date, ownTurns: participation.ownTurns, ownActions: participation.ownActions };
+}
 
 function mastery(value) {
   if (
@@ -350,11 +385,12 @@ function resultFromSnapshot(s) {
   });
 }
 
-function blank(legacy) {
+function blank(legacy, profileId = newId()) {
   return {
-    schema: 3,
+    schema: 4,
     revision: 0,
-    profileId: newId(),
+    profileId,
+    journey: freshJourney({ ownerId: profileId }),
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
     legacy,
     combatRating: freshCombatRating(),
@@ -398,14 +434,18 @@ function rebuildQuestion(data, qid) {
 function validateProgress(input, questions, questionIds) {
   if (
     !plain(input) ||
-    input.schema !== 3 ||
+    ![3, 4].includes(input.schema) ||
     !integer(input.revision, 0, Number.MAX_SAFE_INTEGER - 1) ||
     !token(input.profileId)
   )
     fail("INVALID_PROGRESS");
-  const data = blank(legacySave(input.legacy, questions));
+  const data = blank(legacySave(input.legacy, questions), input.profileId);
   data.revision = input.revision;
   data.profileId = input.profileId;
+  // Only a genuine old schema may initialize missing rewards. A truncated v4
+  // snapshot must fail, never recreate newcomer rights.
+  if (input.schema === 4 && input.journey === undefined) fail("INVALID_REWARD_STATE");
+  data.journey = normalizeJourney(input.journey, { ownerId: data.profileId });
   data.timeZone = input.timeZone ?? data.timeZone;
   calendar(data.timeZone);
   data.combatRating = normalizeCombatRating(input.combatRating);
@@ -422,7 +462,7 @@ function validateProgress(input, questions, questionIds) {
   if (input.recoveryKey !== undefined) {
     if (
       typeof input.recoveryKey !== "string" ||
-      !/^spellwood\.save\.v3\.recovery\.[A-Za-z0-9_.-]{8,160}$/.test(
+      !/^spellwood\.save\.v[34]\.recovery\.[A-Za-z0-9_.-]{8,160}$/.test(
         input.recoveryKey,
       )
     )
@@ -561,6 +601,8 @@ export class ProgressStore {
     questions = [],
     onChange = () => {},
     onIssue = () => {},
+    now = () => Date.now(),
+    random = () => Math.random(),
   } = {}) {
     if (storage === undefined) {
       try {
@@ -569,6 +611,9 @@ export class ProgressStore {
         storage = null;
       }
     }
+    if (typeof now !== "function" || typeof random !== "function") throw new TypeError("Invalid local clock or random source");
+    this.now = now; this.random = random;
+    this._challengeContext = new Map(); this._skinInflight = new Map();
     this.storage = storage;
     this.locks = locks === undefined ? globalThis.navigator?.locks : locks;
     this.singlePage = typeof this.locks?.request !== "function";
@@ -581,6 +626,7 @@ export class ProgressStore {
       ...(q.bank === TEACHER_BANK ? { category: q.category, semester: q.semester } : {}),
       ...(q.semester ? { semester: q.semester } : {}),
       ...(q.unitId ? { unitId: q.unitId } : {}),
+      ...(q.bookId !== undefined ? { bookId: q.bookId } : {}),
     }));
     if (
       !this.questions.length ||
@@ -703,17 +749,15 @@ export class ProgressStore {
       const data = this._bootstrap
         ? clone(this._bootstrap)
         : blank(freshSave());
-      data.profileId = "initial-v3-progress";
+      data.profileId = "initial-v4-progress";
+      data.journey.ownerId = data.profileId;
       return { key: PROGRESS_KEY, raw: null, data, initial: true };
     }
     try {
       const input = JSON.parse(raw);
-      const data =
-        key === PROGRESS_KEY
-          ? this._decode(input)
-          : blank(legacySave(input, this.questions));
-      if (key !== PROGRESS_KEY) data.profileId = originId(raw);
-      return { key, raw, data, initial: key !== PROGRESS_KEY };
+      const modern = key === PROGRESS_KEY || key === "spellwood.save.v3";
+      const data = modern ? this._decode(input) : blank(legacySave(input, this.questions), originId(raw));
+      return { key, raw, data, initial: key !== PROGRESS_KEY || input.schema === 3 };
     } catch {
       this.recoveryRaw = raw;
       fail("CORRUPT_SAVE");
@@ -722,9 +766,39 @@ export class ProgressStore {
   _apply(data, op) {
     if (op.kind === "participation") {
       const receipt=data.learningReceipts[op.challengeId];
-      return qualifyDay(data.collection,receipt,{...op,timeZone:data.timeZone});
+      // Local replay is bounded by journey history/cutoff. A repeated or old
+      // receipt must never be reassigned to another reward day after reload.
+      if (op.localReward && (data.journey.events.some(event => event.id === op.challengeId) ||
+          receipt && receipt.answeredAt <= data.journey.eventCutoff)) return false;
+      // Trusted adapters may pin the original challenge's Shanghai day. Keep
+      // mastery/answer timestamps untouched; only the legacy reward reducer
+      // sees this calendar anchor.
+      if (op.localReward?.context && !op.localReward.event) return false;
+      const rewardReceipt = receipt && op.issuedAt !== undefined ? { ...receipt, answeredAt: op.issuedAt } : receipt;
+      // Foreground-only local observations follow the same cumulative budget
+      // as server study: a quick answer may finish reading on feedback. Adapt
+      // that validated budget to the unchanged original card-day reducer.
+      const questionMs = integer(op.questionMs, 0, 7200000) && integer(op.feedbackMs, 1200, 7200000) &&
+        op.questionMs + op.feedbackMs >= 3200 ? Math.max(2000, op.questionMs) : op.questionMs;
+      const changed = qualifyDay(data.collection,rewardReceipt,{...op,questionMs,timeZone:op.issuedAt !== undefined ? "Asia/Shanghai" : data.timeZone});
+      if (!op.localReward?.event) return changed;
+      const event = op.localReward.event;
+      if (!receipt || event.answeredAt !== receipt.answeredAt || event.qid !== receipt.qid) fail("INVALID_PARTICIPATION");
+      return applyLocalReward(data, applyQualifiedLearning(data.journey, { ...event, ownerId: data.profileId })) || changed;
     }
     if (op.kind === "collection") return applyCollectionOperation(data.collection,op.action);
+    if (op.kind === "skin") {
+      const reducers = { open: reduceOpenSkinPack, reveal: reduceRevealSkinPack, close: reduceCloseSkinPack,
+        redeem: reduceRedeemSkin, equip: reduceEquipSkin };
+      const intent = op.intent;
+      const opening = intent.kind === "open" ? data.journey.openings[intent.mode] : null;
+      // Another page may have completed the same opening while this page was
+      // saving. Keep its durable results and never debit a second time.
+      if (opening && opening.id !== op.operationId && opening.count === intent.count) return false;
+      return applyLocalReward(data, reducers[intent.kind](data.journey,
+        { ...intent, ownerId: data.profileId, operationId: op.operationId, issuedAt: op.issuedAt },
+        { officialDustBalance: data.collection.earned.dust, ...(op.randomValues ? { randomValues: op.randomValues } : {}) }));
+    }
     if (op.kind === "preferences") {
       const { combatMode, customDeck, deckId, ...legacyPatch } = op.patch;
       const nextDeck = deckId === undefined ? data.chosenDeckId : deckId;
@@ -789,6 +863,7 @@ export class ProgressStore {
       } else {
         data.onlineRecords.push(clone(op.record));
         data.combatRating = recordCombatResult(data.combatRating, op.record);
+        if (op.localMatch) applyLocalReward(data, applyQualifiedMatch(data.journey, { ...op.localMatch, ownerId: data.profileId }));
       }
       data.resultIds.push(key);
       data.onlineRecords.sort(
@@ -834,8 +909,9 @@ export class ProgressStore {
             // commits. Drop only that failed intent, without poisoning future
             // saves or discarding unrelated learning and result operations.
             const businessConflict = ["INVALID_CUSTOM_DECK", "OPENING_PENDING", "NO_REWARD_PACK",
-              "NOT_ENOUGH_DUST", "FINISH_NOT_COLLECTED", "PACK_NOT_REVEALED"];
-            if (["preferences", "collection"].includes(op.kind) && businessConflict.includes(error.code))
+              "NOT_ENOUGH_DUST", "FINISH_NOT_COLLECTED", "PACK_NOT_REVEALED", "SKIN_PACK_PENDING", "SKIN_PACK_NOT_FOUND",
+              "SKIN_NOT_OWNED", "INSUFFICIENT_SKIN_TICKETS", "INSUFFICIENT_OFFICIAL_DUST", "REWARD_HISTORY_EXPIRED"];
+            if (["preferences", "collection", "skin"].includes(op.kind) && businessConflict.includes(error.code))
               rejected.set(op, error.code);
             else throw error;
           }
@@ -905,6 +981,8 @@ export class ProgressStore {
   }
   _mutation(op) {
     return this._enqueue(async () => {
+      if (op.ownerId !== undefined && op.ownerId !== this._data?.profileId)
+        return this._result(false, { code: "PROFILE_CHANGED" });
       if (
         !this.loaded ||
         !this._data ||
@@ -942,10 +1020,8 @@ export class ProgressStore {
   }
   addResult(snapshot) {
     try {
-      return this._mutation({
-        kind: "result",
-        record: resultFromSnapshot(snapshot),
-      });
+      const record = resultFromSnapshot(snapshot);
+      return this._mutation({ kind: "result", record, ownerId: this._data?.profileId, localMatch: localMatch(record, snapshot.participation) });
     } catch (error) {
       return Promise.resolve(this._result(false, { code: error.code }));
     }
@@ -960,10 +1036,65 @@ export class ProgressStore {
       return Promise.resolve(this._result(false, { code: error.code }));
     }
   }
+  noteChallenge(challengeId, { source, issuedAt = this.now() } = {}) {
+    if (!token(challengeId) || !["study", "match"].includes(source) || !date(issuedAt)) fail("INVALID_PARTICIPATION");
+    if (!this.loaded || !this._data) return false;
+    if (this._challengeContext.has(challengeId)) return true;
+    for (const [id, entry] of this._challengeContext)
+      if (entry.ownerId !== this._data.profileId || entry.qualifiedAt === null && this.now() - entry.issuedAt > 7200000)
+        this._challengeContext.delete(id);
+    if (this._challengeContext.size >= 512) fail("STUDY_BUSY");
+    this._challengeContext.set(challengeId, { source, issuedAt, ownerId: this._data.profileId, qualifiedAt: null });
+    return true;
+  }
   qualifyLearning(challengeId, timing) {
     if (!token(challengeId)) return Promise.resolve(this._result(false,{code:"INVALID_LEARNING"}));
-    return this._mutation({kind:"participation",challengeId,questionMs:timing?.questionMs,feedbackMs:timing?.feedbackMs,now:Date.now()});
+    const now = this.now(), receipt = this._data?.learningReceipts[challengeId], context = this._challengeContext.get(challengeId);
+    const op = { kind: "participation", challengeId, ownerId: this._data?.profileId, questionMs: timing?.questionMs, feedbackMs: timing?.feedbackMs, now,
+      localReward: { context: !!context && context.ownerId === this._data?.profileId } };
+    try {
+      if (receipt && context?.ownerId === this._data.profileId &&
+          integer(timing?.questionMs, 0, 7200000) && integer(timing?.feedbackMs, 1200, 7200000) &&
+          timing.questionMs + timing.feedbackMs >= 3200 && date(now) && receipt.answeredAt >= context.issuedAt &&
+          now >= receipt.answeredAt + 1200 && now >= context.issuedAt + 3200 &&
+          (context.qualifiedAt !== null || now - context.issuedAt <= 7200000)) {
+        context.qualifiedAt ??= now;
+        op.issuedAt = context.issuedAt; op.now = context.qualifiedAt;
+        op.localReward.event = { eventId: challengeId, qid: receipt.qid,
+          unitId: localRewardUnit(this.questions.find(question => question.id === receipt.qid)), source: context.source,
+          issuedAt: context.issuedAt, answeredAt: receipt.answeredAt, qualifiedAt: context.qualifiedAt };
+      }
+      return this._mutation(op).then(result => {
+        if (result.ok && op.localReward.event) this._challengeContext.delete(challengeId);
+        return result;
+      });
+    } catch (error) { return Promise.resolve(this._result(false, { code: error.code || "INVALID_PARTICIPATION" })); }
   }
+  skinAction(action) {
+    let intent;
+    try { intent = skinIntent(action); }
+    catch (error) { return Promise.resolve(this._result(false, { code: error.code || "INVALID_SKIN_ACTION" })); }
+    const key = JSON.stringify(intent);
+    if (this._skinInflight.has(key)) return this._skinInflight.get(key);
+    const pending = this._pending.find(op => op.kind === "skin" && JSON.stringify(op.intent) === key);
+    if (this.dirty && !pending) return Promise.resolve(this._result(false, { code: "PROGRESS_UNSYNCED" }));
+    let promise;
+    try {
+      const op = pending ?? { kind: "skin", intent, ownerId: this._data?.profileId, operationId: newId(), issuedAt: this.now(),
+        ...(intent.kind === "open" ? { randomValues: Array.from({ length: intent.count }, () => this.random()) } : {}) };
+      promise = pending ? this.retry() : this._mutation(op);
+    } catch (error) { return Promise.resolve(this._result(false, { code: error.code || "INVALID_SKIN_ACTION" })); }
+    this._skinInflight.set(key, promise);
+    const release = () => { if (this._skinInflight.get(key) === promise) this._skinInflight.delete(key); };
+    promise.then(release, release);
+    return promise;
+  }
+  openSkinPack(mode = "test", count = 1) { return this.skinAction({ kind: "open", mode, count }); }
+  revealSkinPack(mode, batchId, index = "all") { return this.skinAction({ kind: "reveal", mode, batchId, index }); }
+  closeSkinPack(mode, batchId) { return this.skinAction({ kind: "close", mode, batchId }); }
+  redeemSkin(mode, skinId) { return this.skinAction({ kind: "redeem", mode, skinId }); }
+  equipSkin(mode, skinId) { return this.skinAction({ kind: "equip", mode, skinId }); }
+
   openPack(mode="test") {
     try { return this._mutation({kind:"collection",action:{kind:"open-pack",id:newId(),mode,createdAt:Date.now(),cards:generatePack()}}); }
     catch(error){return Promise.resolve(this._result(false,{code:error.code||"PACK_UNAVAILABLE"}));}
@@ -983,7 +1114,7 @@ export class ProgressStore {
       fail("INVALID_IMPORT");
     }
     const data =
-      parsed?.schema === 3
+      [3, 4].includes(parsed?.schema)
         ? this._decode(parsed)
         : blank(legacySave(parsed, this.questions));
     const prepared = Object.freeze({
@@ -1041,6 +1172,7 @@ export class ProgressStore {
           return this._problem("STALE_REVISION");
         const candidate = clone(entry.data);
         candidate.profileId = newId();
+        candidate.journey.ownerId = candidate.profileId;
         candidate.revision = (base?.data.revision ?? this.revision) + 1;
         try {
           compact(candidate);
@@ -1063,6 +1195,7 @@ export class ProgressStore {
         }
         this._data = candidate;
         this._pending = [];
+        this._challengeContext.clear();
         this._bootstrap = null;
         this.loaded = true;
         this._hadPrimary = true;
@@ -1100,7 +1233,28 @@ export class ProgressStore {
   }
 }
 
-/** Pure v3 model for the server adapter. No storage, network, locks, or pending
+/** Safe public skin intents, shared by the HTTP boundary and its client.
+ * Authority-bearing balances, result arrays, clocks and random draws are never
+ * accepted in this shape. */
+export function skinIntent(action) {
+  const fields = {
+    open: ["kind", "mode", "count"], reveal: ["kind", "mode", "batchId", "index"],
+    close: ["kind", "mode", "batchId"], redeem: ["kind", "mode", "skinId"],
+    equip: ["kind", "mode", "skinId"],
+  };
+  if (!plain(action) || !Object.hasOwn(fields, action.kind) ||
+      Object.keys(action).some(key => !fields[action.kind].includes(key)) ||
+      fields[action.kind].some(key => !Object.hasOwn(action, key))) fail("INVALID_SKIN_ACTION");
+  const base = action.kind === "equip" && action.skinId === DEFAULT_HERO_SKIN;
+  if (!(base ? action.mode === "base" : ["official", "test"].includes(action.mode))) fail("INVALID_SKIN_MODE");
+  if (action.kind === "open" && ![1, 10].includes(action.count)) fail("INVALID_SKIN_PACK");
+  if (["reveal", "close"].includes(action.kind) && !token(action.batchId)) fail("INVALID_SKIN_ACTION");
+  if (action.kind === "reveal" && action.index !== "all" && !integer(action.index, 0, 9)) fail("INVALID_SKIN_REVEAL");
+  if (["redeem", "equip"].includes(action.kind) && !base && !HERO_SKINS.some(skin => skin.id === action.skinId)) fail("INVALID_SKIN_ID");
+  return select(action, fields[action.kind]);
+}
+
+/** Pure v4 model for the server adapter. No storage, network, locks, or pending
  * browser mutations are used. Each entry point validates the same intent as
  * ProgressStore; no generic trusted-operation entry point is exposed. */
 export function createProgressModel({ questions = [] } = {}) {
@@ -1119,8 +1273,7 @@ export function createProgressModel({ questions = [] } = {}) {
     fresh(playerId, timeZone = "UTC") {
       if (!token(playerId)) fail("INVALID_PROGRESS");
       calendar(timeZone);
-      const data = blank(freshSave());
-      data.profileId = playerId;
+      const data = blank(freshSave(), playerId);
       data.timeZone = timeZone;
       return data;
     },
@@ -1133,8 +1286,8 @@ export function createProgressModel({ questions = [] } = {}) {
       let parsed;
       try { parsed = typeof input === "string" ? JSON.parse(input) : clone(input); }
       catch { fail("INVALID_IMPORT"); }
-      if (parsed?.schema !== 1 && parsed?.schema !== 3) fail("INVALID_IMPORT");
-      return parsed.schema === 3 ? validate(parsed) : blank(legacySave(parsed, metadata.questions));
+      if (![1, 3, 4].includes(parsed?.schema)) fail("INVALID_IMPORT");
+      return [3, 4].includes(parsed.schema) ? validate(parsed) : blank(legacySave(parsed, metadata.questions));
     },
     learning,
     result,
@@ -1151,7 +1304,8 @@ export function createProgressModel({ questions = [] } = {}) {
     participation(input, challengeId, timing) {
       if (!token(challengeId)) fail("INVALID_LEARNING");
       return apply(input, { kind: "participation", challengeId,
-        questionMs: timing?.questionMs, feedbackMs: timing?.feedbackMs, now: timing?.now });
+        questionMs: timing?.questionMs, feedbackMs: timing?.feedbackMs, now: timing?.now,
+        ...(timing?.issuedAt !== undefined ? { issuedAt: timing.issuedAt } : {}) });
     },
     collection(input, action) {
       return apply(input, { kind: "collection", action: clone(action) });

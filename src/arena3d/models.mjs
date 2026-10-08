@@ -33,8 +33,9 @@ import {
   taperedTube,
 } from "./model-utils.mjs";
 import { EXPANSION_BUILDERS } from "./creature-expansion.mjs";
+import { V4_BUILDERS } from "./creature-expansion-v4.mjs";
 
-export const MODEL_VERSION = "3.1.0-models.1";
+export const MODEL_VERSION = "4.0.0-models.1";
 export const SUPPORTED_SPECIES = Object.freeze([
   "fox",
   "turtle",
@@ -46,6 +47,7 @@ export const SUPPORTED_SPECIES = Object.freeze([
   "sprite",
   "golem",
   ...Object.keys(EXPANSION_BUILDERS),
+  ...Object.keys(V4_BUILDERS),
 ]);
 const HALF_PI = Math.PI / 2;
 const PALETTE = Object.freeze({
@@ -1207,6 +1209,7 @@ function buildGolem(builder, body, rig) {
 
 const BUILDERS = {
   ...EXPANSION_BUILDERS,
+  ...V4_BUILDERS,
   fox: buildFox,
   turtle: buildTurtle,
   owl: buildOwl,

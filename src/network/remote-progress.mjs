@@ -1,4 +1,4 @@
-import { createProgressModel, PROGRESS_LIMITS } from "./progress.mjs";
+import { createProgressModel, PROGRESS_LIMITS, skinIntent } from "./progress.mjs";
 import { CARD } from "../cards.mjs";
 import { FINISH } from "../collection.mjs";
 
@@ -36,6 +36,11 @@ const messages = Object.freeze({
   PAYLOAD_TOO_LARGE: "导入文件过大，请保留原文件并选择符合大小限制的备份。",
   LEGACY_IMPORT_CONFLICT: "账号已有记录，无法导入覆盖。现有账号记录和选中的备份均未改变。",
   STALE_REVISION: "确认期间账号记录已变化，请重新选择备份并核对摘要。",
+  INSUFFICIENT_SKIN_TICKETS: "造型券还不够，可以先看看今日小任务。",
+  INSUFFICIENT_OFFICIAL_DUST: "指定兑换需要100正式叶屑，当前余额还不够。",
+  SKIN_PACK_PENDING: "有一份造型礼盒还没看完，先接着揭晓吧。",
+  SKIN_PACK_NOT_FOUND: "这份造型礼盒已变化，请刷新账号记录。",
+  SKIN_NOT_OWNED: "还没有获得这款造型，暂时不能装备。",
 });
 const serverCodes = new Set([
   ...Object.keys(messages), "ACCOUNT_SESSION_REQUIRED", "GUEST_SESSION_REQUIRED", "PLAYER_NOT_FOUND",
@@ -47,6 +52,10 @@ const serverCodes = new Set([
   "INVALID_IMPORT", "IMPORT_TOO_LARGE", "INVALID_REQUEST_ID", "INVALID_RECEIPT", "RECEIPT_NOT_FOUND",
   "REVISION_CONFLICT", "EVENT_CONFLICT", "EVENT_ID_CONFLICT", "REQUEST_ID_CONFLICT",
   "PLAYER_EVENT_CONFLICT", "INVALID_PROGRESS_ACTION",
+  "INVALID_REWARD_STATE", "INVALID_SKIN_ACTION", "INVALID_SKIN_MODE", "INVALID_SKIN_PACK", "INVALID_SKIN_ID",
+  "INVALID_SKIN_REVEAL", "SKIN_PACK_PENDING", "SKIN_PACK_NOT_FOUND", "SKIN_NOT_OWNED",
+  "INSUFFICIENT_SKIN_TICKETS", "INSUFFICIENT_OFFICIAL_DUST", "REWARD_BALANCE_LIMIT",
+  "REWARD_HISTORY_EXPIRED", "REWARD_EVENT_CONFLICT", "REWARD_DAY_EXPIRED", "REWARD_REVISION_CONFLICT",
   "JSON_REQUIRED", "BAD_JSON", "BODY_TOO_LARGE", "BAD_REQUEST", "ORIGIN_REJECTED", "HOST_REJECTED",
   "METHOD_NOT_ALLOWED", "RATE_LIMIT", "RATE_LIMITED", "WRITE_FAILED",
 ]);
@@ -100,10 +109,13 @@ function collectionIntent(action) {
  * used here. Existing local practice continues to use ProgressStore separately. */
 export class RemoteProgressStore {
   constructor({ questions = [], playerId = null, onChange = () => {}, onIssue = () => {},
-    fetcher = globalThis.fetch?.bind(globalThis), timeoutMs = 15000 } = {}) {
+    fetcher = globalThis.fetch?.bind(globalThis), timeoutMs = 15000,
+    monotonicNow = () => globalThis.performance.now() } = {}) {
     if (typeof fetcher !== "function") throw new TypeError("RemoteProgressStore requires fetch");
     if (playerId !== null && !token(playerId)) fail("INVALID_PLAYER_ID");
     if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) throw new TypeError("Invalid timeoutMs");
+    if (typeof monotonicNow !== "function") throw new TypeError("Invalid monotonicNow");
+    this._monotonicNow = monotonicNow; this._serverClock = null;
     this.model = createProgressModel({ questions });
     this.fetcher = fetcher; this.timeoutMs = timeoutMs;
     this.onChange = onChange; this.onIssue = onIssue;
@@ -115,6 +127,16 @@ export class RemoteProgressStore {
   }
   get data() { return this._data ? clone(this._data) : null; }
   get revision() { return this._data?.revision ?? 0; }
+  /** Latest authenticated response timestamp, never an account field. */
+  get serverNow() { return this._serverClock?.serverNow ?? null; }
+  /** Display-only clock. Reward decisions continue to use server observations. */
+  rewardNow() {
+    const clock = this._serverClock;
+    if (!clock) return null;
+    const observed = this._monotonicNow();
+    if (Number.isFinite(observed)) clock.elapsed = Math.max(clock.elapsed, observed - clock.observedAt, 0);
+    return Math.min(4102444800000, clock.serverNow + Math.floor(clock.elapsed));
+  }
   get dirty() { return !!this._pending || !!this._receipts.size; }
   get playerId() { return this._playerId; }
   set playerId(value) { this.setPlayerId(value); }
@@ -156,7 +178,7 @@ export class RemoteProgressStore {
     this._epoch++;
     for (const controller of this._controllers) controller.abort();
     this._controllers.clear(); this._inflight.clear(); this._serial = Promise.resolve();
-    this._playerId = playerId; this._data = null; this._pending = null;
+    this._playerId = playerId; this._data = null; this._pending = null; this._serverClock = null;
     this._receipts.clear(); this._prepared = new WeakMap();
     this.loaded = false; this.readPending = true; this.issue = null;
     this.recoveryRaw = ""; this.recoveryKey = null;
@@ -164,7 +186,7 @@ export class RemoteProgressStore {
   }
   dispose() {
     if (this._disposed) return;
-    this._disposed = true; this._epoch++;
+    this._disposed = true; this._epoch++; this._serverClock = null;
     for (const controller of this._controllers) controller.abort();
     this._controllers.clear(); this._inflight.clear(); this._prepared = new WeakMap();
     // Keep the last verified memory copy available for an explicit rescue
@@ -172,7 +194,8 @@ export class RemoteProgressStore {
   }
   _decode(payload, receipt) {
     if (!plain(payload) || Object.keys(payload).some((key) =>
-      !["data", "playerId", "revision", "receipt", "changed"].includes(key)) ||
+      !["data", "playerId", "revision", "receipt", "changed", "serverNow"].includes(key)) ||
+      !Number.isSafeInteger(payload.serverNow) || payload.serverNow < 0 || payload.serverNow > 4102444800000 ||
       !token(payload.playerId) || !Number.isSafeInteger(payload.revision) || payload.revision < 0 ||
       payload.data?.revision !== payload.revision || payload.data?.profileId !== payload.playerId ||
       Object.hasOwn(payload, "changed") && typeof payload.changed !== "boolean" ||
@@ -185,7 +208,10 @@ export class RemoteProgressStore {
     // already be canonical; defaults or stripped unknown fields are rejected.
     if (!same(data, payload.data)) fail("INVALID_RESPONSE");
     if (this._data && data.revision === this.revision && !same(data, this._data)) fail("INVALID_RESPONSE");
+    const observedAt = this._monotonicNow();
+    if (!Number.isFinite(observedAt) || observedAt < 0) fail("INVALID_RESPONSE");
     return { data, playerId: payload.playerId, revision: payload.revision,
+      serverNow: payload.serverNow, observedAt,
       ...(receipt ? { receipt: { recorded: payload.receipt.recorded } } : {}),
       ...(typeof payload.changed === "boolean" ? { changed: payload.changed } :
         typeof payload.receipt?.changed === "boolean" ? { changed: payload.receipt.changed } : {}) };
@@ -233,6 +259,7 @@ export class RemoteProgressStore {
   }
   _accept(value) {
     const before = this.revision;
+    this._serverClock = { serverNow: value.serverNow, observedAt: value.observedAt, elapsed: 0 };
     if (this.playerId === null) this._playerId = value.playerId;
     // Idempotent replay responses can describe an older commit. They confirm
     // the request, but must not undo a newer read from the same account.
@@ -352,6 +379,15 @@ export class RemoteProgressStore {
     try { return this._mutation("/api/progress/collection", { action: collectionIntent(action) }); }
     catch (error) { return Promise.resolve(this._result(false, { code: error.code || "INVALID_COLLECTION_ACTION" })); }
   }
+  skinAction(action) {
+    try { return this._mutation("/api/progress/skins", { action: skinIntent(action) }); }
+    catch (error) { return Promise.resolve(this._result(false, { code: error.code || "INVALID_SKIN_ACTION" })); }
+  }
+  openSkinPack(mode = "test", count = 1) { return this.skinAction({ kind: "open", mode, count }); }
+  revealSkinPack(mode, batchId, index = "all") { return this.skinAction({ kind: "reveal", mode, batchId, index }); }
+  closeSkinPack(mode, batchId) { return this.skinAction({ kind: "close", mode, batchId }); }
+  redeemSkin(mode, skinId) { return this.skinAction({ kind: "redeem", mode, skinId }); }
+  equipSkin(mode, skinId) { return this.skinAction({ kind: "equip", mode, skinId }); }
   prepareImport(input) {
     if (this._disposed || !this.loaded || this.readPending || !this._data) fail("READ_FAILED");
     if (this.dirty || this.issue) fail("PROGRESS_UNSYNCED");

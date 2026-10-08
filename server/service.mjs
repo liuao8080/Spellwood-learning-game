@@ -1,5 +1,8 @@
 import { createHash, randomInt } from "node:crypto";
 import { OPPONENTS } from "../src/cards.mjs";
+import { effectiveCardCost, legalActions } from "../src/engine.mjs";
+import { DEFAULT_HERO_SKIN, HERO_SKINS } from "../src/hero-skins.mjs";
+import { normalizeJourney } from "../src/reward-journey.mjs";
 import { normalizeDifficulty } from "../src/combat-rating.mjs";
 import { chooseMulligan } from "../src/opening.mjs";
 import {
@@ -22,6 +25,20 @@ import {
   plain,
 } from "./protocol.mjs";
 const hash = (s) => createHash("sha256").update(s).digest("hex");
+export const DRAW_ENGLISH_LIMIT = 2;
+export const DRAW_ENGLISH_MS = 120000;
+export function validatedCosmetic(journey, ownerId) {
+  const base = { skinId: DEFAULT_HERO_SKIN, skinMode: "base" };
+  if (journey === undefined) return base;
+  try {
+    const clean = normalizeJourney(journey, ownerId ? { ownerId } : {});
+    return { skinId: clean.equipped.skinId, skinMode: clean.equipped.mode };
+  } catch { return base; }
+}
+function computerCosmetic(botId) {
+  const index = parseInt(hash(String(botId)).slice(0, 8), 16) % HERO_SKINS.length;
+  return { skinId: HERO_SKINS[index].id, skinMode: "computer" };
+}
 export const DEFAULTS = Object.freeze({
   queueMs: 10000,
   openingMs: 60000,
@@ -39,12 +56,13 @@ export const DEFAULTS = Object.freeze({
   receiptLimit: 128,
 });
 export class GameService {
-  constructor({ questions, send, config = {}, now = () => Date.now(), beforeCommand=()=>{}, onChallenge=()=>{}, onLearning=()=>true, onResult=()=>true, computerFor=null } = {}) {
+  constructor({ questions, send, config = {}, now = () => Date.now(), beforeCommand=()=>{}, onChallenge=()=>{}, onLearning=()=>true, onResult=()=>true, computerFor=null, cosmeticFor=null } = {}) {
     this.questions = questions;
     this.send = send;
     this.config = { ...DEFAULTS, ...config };
     this.now = now;
     this.beforeCommand=beforeCommand;this.onChallenge=onChallenge;this.onLearning=onLearning;this.onResult=onResult;this.computerFor=computerFor;
+    this.cosmeticFor=cosmeticFor;
     this.sessions = new Map();
     this.tokenIndex = new Map();
     this.rooms = new Map();
@@ -321,7 +339,7 @@ export class GameService {
     const resolvedRoom = this.rooms.get(c.roomId),
       ownerSide = resolvedRoom?.seats.findIndex((m) => m.sessionId === s.id);
     const privateFeedback =
-      c.type === "ritual.answer" && response.ok && ownerSide >= 0
+      ["ritual.answer", "draw.answer", "draw.cancel"].includes(c.type) && response.ok && ownerSide >= 0
         ? resolvedRoom.seats[ownerSide].feedbacks.get(c.payload.challengeId)
         : null;
     s.receipts.set(c.commandId, {
@@ -409,15 +427,23 @@ export class GameService {
       return r;
     }
     if (r.phase !== "playing") fail("OPENING_PENDING");
-    if (c.type === "ritual.answer") {
+    if (["ritual.answer", "draw.answer", "draw.cancel"].includes(c.type)) {
       if (r.state.active !== side) fail("NOT_YOUR_TURN");
       if (!m.pending || m.pending.challengeId !== p.challengeId)
+        fail("INVALID_CHALLENGE");
+      if (m.controller !== "human") fail("AI_CONTROLLED");
+      if ((c.type.startsWith("draw.") ? "draw" : "ritual") !== m.pendingContext?.purpose)
         fail("INVALID_CHALLENGE");
       if (this.now() >= m.pending.expiresAt) {
         this.resolveQuestion(r, side, null, true);
         fail("CHALLENGE_EXPIRED");
       }
+      if (c.type === "draw.cancel") {
+        this.resolveQuestion(r, side, null, false, true);
+        return r;
+      }
       const feedback = this.questions.answer(m.pending, p.optionId, this.now());
+      this.noteHumanTurn(r, side);
       this.resolveQuestion(r, side, feedback, false);
       return r;
     }
@@ -429,6 +455,7 @@ export class GameService {
       fail("TURN_EXPIRED");
     }
     if (c.type === "ritual.begin") {
+      if (m.englishTurn === r.state.turn) fail("ENGLISH_ALREADY_USED");
       if (
         !ritualChoices(r.state, side).some(
           (x) => x.kind === p.kind && x.target === p.target,
@@ -439,16 +466,42 @@ export class GameService {
         r.turnDeadline,
         this.now() + this.config.questionMs,
       );
-      m.pending = this.questions.issue({
+      const question = this.questions.issue({
         deck: m.questionDeck,
-        cursor: m.learning.cursor++,
+        cursor: m.learning.cursor,
         kind: p.kind,
         target: p.target,
         expiresAt,
       });
+      this.beginQuestion(r, side, question, { purpose: "ritual" });
+      this.noteHumanTurn(r, side);
+      m.englishTurn = r.state.turn;
+      m.combatTurn = r.state.turn;
       r.turnDeadline = expiresAt;
       this.scheduleTurn(r);
       this.commit(r, r.state, { kind: "ritual_begin", actorSeat: side });
+      this.sendChallenge(r, side);
+      return r;
+    }
+    if (c.type === "draw.begin") {
+      if (!this.canBeginDraw(r, side)) fail("DRAW_ENGLISH_UNAVAILABLE");
+      if (this.wireHandId(r, side, m.naturalHandId) !== p.handId)
+        fail("INVALID_HAND_INSTANCE");
+      const question = this.questions.issue({
+        deck: m.questionDeck, cursor: m.learning.cursor,
+        kind: "insight", target: null, expiresAt: this.now() + DRAW_ENGLISH_MS,
+      });
+      this.beginQuestion(r, side, question, { purpose: "draw", handId: m.naturalHandId, turn: r.state.turn });
+      this.noteHumanTurn(r, side);
+      m.drawChargesLeft--;
+      m.englishTurn = r.state.turn;
+      const next = structuredClone(r.state);
+      next.players[side].ritualUsed = true;
+      next.seq++;
+      this.timer(r, "challenge" + side, question.expiresAt - this.now(), () => {
+        if (m.pending?.challengeId === question.challengeId) this.resolveQuestion(r, side, null, true);
+      });
+      this.commit(r, next, { kind: "draw_begin", actorSeat: side });
       this.sendChallenge(r, side);
       return r;
     }
@@ -456,11 +509,41 @@ export class GameService {
       const before = r.state,
         next = applyCombat(before, p.action);
       if (next === before) fail("ILLEGAL_ACTION");
+      this.noteHumanTurn(r, side);
+      if (["play", "attack"].includes(p.action.type)) {
+        m.ownActions++;
+        m.combatTurn = r.state.turn;
+      }
       this.commit(r, next, publicEvent(before, next, p.action, side));
       this.maybeAI(r);
       return r;
     }
     fail("UNKNOWN_COMMAND");
+  }
+  noteHumanTurn(r, side) {
+    const m = r.seats[side];
+    if (m.controller === "human" && r.phase === "playing" && r.state.active === side)
+      m.humanTurns.add(r.state.turn);
+  }
+  wireHandId(r, side, handId) {
+    return handId ? "c" + hash(`${r.id}:${r.seats[side].handSalt}:${handId}`).slice(0, 32) : null;
+  }
+  canBeginDraw(r, side) {
+    const m = r.seats[side], p = r.state.players[side];
+    return r.phase === "playing" && r.state.active === side && m.controller === "human" &&
+      !m.pending && m.drawChargesLeft > 0 && r.state.turn >= side + 3 &&
+      m.englishTurn !== r.state.turn && !p.ritualUsed && m.combatTurn !== r.state.turn &&
+      this.now() + DRAW_ENGLISH_MS <= r.turnDeadline &&
+      Boolean(m.naturalHandId && p.handIds.includes(m.naturalHandId));
+  }
+  beginQuestion(r, side, question, context) {
+    const m = r.seats[side], issuedAt = this.now();
+    // Register the trusted source before changing room state, so a failed
+    // persistence precondition cannot leave an unacknowledged pending command.
+    if (m.playerId) this.onChallenge(m.playerId, question.challengeId, issuedAt, { source: "match" });
+    m.pending = question;
+    m.pendingContext = { ...context, issuedAt };
+    m.learning.cursor++;
   }
   queueKey(p) {
     return [p.ruleset, p.combatRules, p.contentVersion, p.bank ?? "school", p.grade, p.course].join(
@@ -588,8 +671,11 @@ export class GameService {
     if (randomInt(2)) entries.reverse();
     const computerSeat = entries.findIndex((e) => e.bot);
     let computer=null;
+    const cosmetics = new Map();
     try {
       if(computerSeat>=0)computer=normalizeDifficulty(this.computerFor ? this.computerFor(humans[0]) : this.config.computerDifficulty);
+      for (const session of humans)
+        cosmetics.set(session.id, validatedCosmetic(this.cosmeticFor?.(session), session.playerId));
     } catch {
       for(const s of humans){this.removeQueue(s);this.send(s.ws,{type:'queue.status',status:'cancelled',reason:'PROGRESS_UNAVAILABLE'});}
       return;
@@ -615,6 +701,7 @@ export class GameService {
       grade: opts.grade,
       course: opts.course,
       createdAt: this.now(),
+      startedAt: null,
       finishedAt: null,
       confirmed: [false, false],
       openingDeadline: this.now() + this.config.openingMs,
@@ -628,6 +715,7 @@ export class GameService {
       sessionId: e.session?.id || null,
       name: e.bot?.name || e.session.name,
       avatar: e.bot?.art ?? e.session.avatar,
+      ...(e.bot ? computerCosmetic(e.bot.id) : cosmetics.get(e.session.id)),
       controller: e.bot ? "bot" : "human",
       style: e.bot?.style || "control",
       botId: e.bot?.id || null,
@@ -636,6 +724,15 @@ export class GameService {
       proxyActed: false,
       wantsHuman: false,
       pending: null,
+      pendingContext: null,
+      handSalt: id(24),
+      naturalHandId: null,
+      drawChargesLeft: DRAW_ENGLISH_LIMIT,
+      englishTurn: null,
+      combatTurn: null,
+      humanTurns: new Set(),
+      ownActions: 0,
+      finalParticipation: null,
       feedbacks: new Map(),
       playerId: e.session?.playerId ?? null,
       questionDeck: this.questions.createDeck({
@@ -676,6 +773,7 @@ export class GameService {
     this.broadcast(r, null);
   }
   startDeadline(r) {
+    if (r.startedAt === null) r.startedAt = this.now();
     r.turnDeadline = this.now() + this.config.turnMs;
     this.scheduleTurn(r);
   }
@@ -696,19 +794,27 @@ export class GameService {
   sendChallenge(r, side) {
     const m = r.seats[side],
       s = this.sessions.get(m.sessionId);
-    if (m.pending && m.playerId) this.onChallenge(m.playerId,m.pending.challengeId,this.now());
     if (s?.ws && m.pending)
       this.send(s.ws, {
         type: "private.challenge",
         roomId: r.id,
         revision: r.revision,
         ...this.questions.toPublic(m.pending),
+        purpose: m.pendingContext.purpose,
+        issuedAt: m.pendingContext.issuedAt,
+        ...(m.pendingContext.purpose === "draw" ? {
+          kind: "draw", handId: this.wireHandId(r, side, m.pendingContext.handId),
+        } : {}),
       });
   }
-  resolveQuestion(r, side, feedback, timedOut) {
+  resolveQuestion(r, side, feedback, timedOut, cancelled = false) {
     const m = r.seats[side],
       q = m.pending;
     if (!q) return;
+    if (m.pendingContext?.purpose === "draw") {
+      this.resolveDrawQuestion(r, side, feedback, timedOut, cancelled);
+      return;
+    }
     const before = r.state;
     const correct = !timedOut && feedback.outcome === "correct",
       next = applyRitual(before, side, q.kind, correct, q.target || "hero");
@@ -717,6 +823,7 @@ export class GameService {
       fail("RITUAL_STATE_CHANGED");
     }
     m.pending = null;
+    m.pendingContext = null;
     if (!timedOut) {
       m.learning.attempts++;
       if (correct) m.learning.correct++;
@@ -747,6 +854,43 @@ export class GameService {
     m.feedbacks.set(q.challengeId, privateFeedback);
     while (m.feedbacks.size > 4)
       m.feedbacks.delete(m.feedbacks.keys().next().value);
+    const s = this.sessions.get(m.sessionId);
+    if (s?.ws) this.send(s.ws, privateFeedback);
+    this.maybeAI(r);
+  }
+  resolveDrawQuestion(r, side, feedback, timedOut, cancelled) {
+    const m = r.seats[side], q = m.pending, context = m.pendingContext;
+    const validInstance = r.phase === "playing" && r.state.active === side &&
+      r.state.turn === context.turn && r.state.players[side].handIds.includes(context.handId);
+    const correct = validInstance && !timedOut && !cancelled && feedback?.outcome === "correct";
+    const next = structuredClone(r.state);
+    if (correct) {
+      const p = next.players[side];
+      p.handBoosts ??= {};
+      p.handBoosts[context.handId] = { turn: next.turn, amount: 1 };
+    }
+    next.seq++;
+    m.pending = null;
+    m.pendingContext = null;
+    this.clearTimer(r, "challenge" + side);
+    if (!timedOut && !cancelled) {
+      m.learning.attempts++;
+      if (correct) m.learning.correct++;
+    }
+    const outcome = cancelled ? "cancelled" : timedOut ? "unanswered" : correct ? "correct" : "wrong";
+    // Public events never reveal which card was drawn or its private instance.
+    this.commit(r, next, { kind: "draw_english", actorSeat: side, outcome, changes: [] });
+    const privateFeedback = {
+      type: "private.feedback", roomId: r.id, revision: r.revision,
+      challengeId: q.challengeId, purpose: "draw",
+      handId: this.wireHandId(r, side, context.handId),
+      ...(timedOut || cancelled ? { outcome } : feedback),
+      discountGranted: correct,
+    };
+    if (!timedOut && !cancelled && m.playerId)
+      privateFeedback.progressSaved = this.onLearning(m.playerId, privateFeedback) !== false;
+    m.feedbacks.set(q.challengeId, privateFeedback);
+    while (m.feedbacks.size > 4) m.feedbacks.delete(m.feedbacks.keys().next().value);
     const s = this.sessions.get(m.sessionId);
     if (s?.ws) this.send(s.ws, privateFeedback);
     this.maybeAI(r);
@@ -821,7 +965,7 @@ export class GameService {
           before,
           side,
           m.style,
-          m.controller === "bot",
+          m.controller === "bot" && m.englishTurn !== r.state.turn,
           m.controller === "bot" ? r.computer : "tactical",
         ),
         next = applyComputer(before, side, a);
@@ -830,6 +974,8 @@ export class GameService {
         return;
       }
       if (m.controller === "proxy") m.proxyActed = true;
+      if (a.type === "power") m.englishTurn = r.state.turn;
+      if (["play", "attack", "power"].includes(a.type)) m.combatTurn = r.state.turn;
       this.commit(
         r,
         next,
@@ -846,11 +992,12 @@ export class GameService {
   }
   commit(r, next, event) {
     const oldActive = r.state.active;
+    const priorState = r.state;
     r.state = next;
     // A completed battle cannot keep an answerable private challenge alive.
     // Cancelling it grants no armor, no effect and no learning mistake.
     if (next.phase === "finished" || r.phase === "finished")
-      for (const member of r.seats) member.pending = null;
+      for (const member of r.seats) { member.pending = null; member.pendingContext = null; }
     r.revision++;
     r.event = {
       ...event,
@@ -871,6 +1018,10 @@ export class GameService {
       this.timer(r, "expiry", this.config.finishedMs, () => this.expire(r));
     } else if (r.phase === "playing" && oldActive !== next.active) {
       const m = r.seats[next.active];
+      // Only the engine's turn transition is a natural draw. Insight,
+      // kingfisher and recall occur without changing the active seat.
+      const previous = new Set(priorState.players[next.active].handIds);
+      m.naturalHandId = next.players[next.active].handIds.find(handId => !previous.has(handId)) ?? null;
       if (m.wantsHuman && this.connected(m)) {
         m.controller = "human";
         m.controlEpoch++;
@@ -880,6 +1031,9 @@ export class GameService {
       this.startDeadline(r);
     }
     if (r.phase === 'finished') for (let side=0;side<r.seats.length;side++) {
+      const m = r.seats[side];
+      m.finalParticipation ??= Object.freeze({ startedAt: r.startedAt ?? r.createdAt,
+        ownTurns: m.humanTurns.size, ownActions: m.ownActions });
       const playerId=r.seats[side].playerId;
       if(playerId)this.onResult(playerId,this.view(r,side));
     }
@@ -940,12 +1094,30 @@ export class GameService {
     };
   }
   view(r, side, { event = null, resync = false, notice } = {}) {
+    const m = r.seats[side],
+      canAct = r.phase === "playing" && r.state.active === side &&
+        m.controller === "human" && !m.pending && this.now() < r.turnDeadline;
+    const cardTargets = new Map();
+    if (canAct) for (const action of legalActions(r.state)) {
+      if (action.type !== "play") continue;
+      let entry = cardTargets.get(action.index);
+      if (!entry) {
+        entry = { handId: this.wireHandId(r, side, r.state.players[side].handIds[action.index]),
+          index: action.index, targets: [], untargeted: false };
+        cardTargets.set(action.index, entry);
+      }
+      if (action.target === undefined) entry.untargeted = true;
+      else entry.targets.push({ target: action.target,
+        seat: action.target === "hero" ? 1 - side : r.state.players.findIndex(p => p.board.some(u => u.uid === action.target)) });
+    }
     const players = r.state.players.map((p, i) => {
       const m = r.seats[i];
       return {
         seat: i,
         name: m.name,
         avatar: m.avatar,
+        skinId: m.skinId,
+        skinMode: m.skinMode,
         controller: m.controller,
         connected: this.connected(m),
         botId: m.botId,
@@ -957,21 +1129,31 @@ export class GameService {
         deckCount: p.deck.length,
         board: p.board.map((u) => ({ ...u })),
         fatigue: p.fatigue,
-        ritualUsed: p.ritualUsed || Boolean(m.pending),
-        ritualsLeft: Math.max(0, p.ritualsLeft - (m.pending ? 1 : 0)),
-        ritualReserved: Boolean(m.pending),
+        ritualUsed: p.ritualUsed || m.englishTurn === r.state.turn || Boolean(m.pending),
+        ritualsLeft: Math.max(0, p.ritualsLeft - (m.pendingContext?.purpose === "ritual" ? 1 : 0)),
+        ritualReserved: m.pendingContext?.purpose === "ritual",
         ...(i === side
-          ? { hand: [...p.hand], controlRequestPending: m.wantsHuman }
+          ? {
+            deckId: m.deckId,
+            hand: [...p.hand],
+            handIds: p.handIds.map(handId => this.wireHandId(r, side, handId)),
+            handCosts: p.hand.map((_, index) => effectiveCardCost(r.state, side, index)),
+            handBoosts: Object.fromEntries(Object.entries(p.handBoosts ?? {})
+              .filter(([handId, boost]) => p.handIds.includes(handId) && boost.turn === r.state.turn && r.state.active === side)
+              .map(([handId, boost]) => [this.wireHandId(r, side, handId), { ...boost }])),
+            legalCardTargets: [...cardTargets.values()],
+            drawEnglish: {
+              chargesLeft: m.drawChargesLeft, maxCharges: DRAW_ENGLISH_LIMIT,
+              eligibleHandId: r.state.active === side && r.state.turn >= side + 3 && p.handIds.includes(m.naturalHandId)
+                ? this.wireHandId(r, side, m.naturalHandId) : null,
+              canBegin: this.canBeginDraw(r, side), usedThisTurn: m.englishTurn === r.state.turn || p.ritualUsed,
+              pending: m.pendingContext?.purpose === "draw",
+            },
+            controlRequestPending: m.wantsHuman,
+          }
           : {}),
       };
     });
-    const m = r.seats[side],
-      canAct =
-        r.phase === "playing" &&
-        r.state.active === side &&
-        m.controller === "human" &&
-        !m.pending &&
-        this.now() < r.turnDeadline;
     return {
       type: "room.snapshot",
       roomId: r.id,
@@ -1017,6 +1199,7 @@ export class GameService {
       resync,
       ...(notice ? { notice } : {}),
       ...(r.result ? { result: this.resultFor(r, side) } : {}),
+      ...(m.finalParticipation ? { participation: { ...m.finalParticipation } } : {}),
     };
   }
   snapshot(r, s, resync = false) {

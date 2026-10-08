@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import WebSocket from 'ws';
+import { PROTOCOL } from '../server/protocol.mjs';
 
 const args = process.argv.slice(2);
 function option(name, fallback) { const i = args.indexOf(name); return i < 0 ? fallback : args[i + 1]; }
@@ -27,7 +28,7 @@ async function cannotResume() {
     const retry = new WebSocket(address, { origin: origin.origin });
     let received = false;
     const timer = setTimeout(() => { retry.terminate(); reject(Error('Expired-session verification timed out')); }, 5000);
-    retry.on('open', () => retry.send(JSON.stringify({ type: 'session.resume', protocol: 1, resumeToken: token })));
+    retry.on('open', () => retry.send(JSON.stringify({ type: 'session.resume', protocol: PROTOCOL, resumeToken: token })));
     retry.on('message', data => {
       const message = JSON.parse(String(data));
       if (message.type === 'session.error' && message.code === 'SESSION_EXPIRED') { received = true; clearTimeout(timer); retry.close(); resolve(true); }
@@ -56,7 +57,7 @@ async function finish(error = null) {
 save();
 main = new WebSocket(address, { origin: origin.origin });
 authDeadline = setTimeout(() => finish(Error('Initial session did not open')), 6000);
-main.on('open', () => main.send(JSON.stringify({ type: 'session.open', protocol: 1 })));
+main.on('open', () => main.send(JSON.stringify({ type: 'session.open', protocol: PROTOCOL })));
 main.on('ping', () => heartbeatPings++);
 main.on('message', data => {
   let message; try { message = JSON.parse(String(data)); } catch { void finish(Error('Invalid protocol response')); return; }

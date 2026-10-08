@@ -1,15 +1,18 @@
 import {
   Scene, PerspectiveCamera, WebGLRenderer, Color, FogExp2,
   HemisphereLight, DirectionalLight, Vector2, Vector3, Raycaster,
-  Group, Mesh, Box3, CylinderGeometry, TorusGeometry, MeshStandardMaterial,
-  MeshBasicMaterial, SphereGeometry, BufferGeometry, Float32BufferAttribute,
+  Group, Mesh, Box3, TorusGeometry, MeshStandardMaterial,
+  MeshBasicMaterial, BufferGeometry, Float32BufferAttribute,
   Points, PointsMaterial, AdditiveBlending, PCFShadowMap, ACESFilmicToneMapping,
   SRGBColorSpace, MathUtils, CanvasTexture, Sprite, SpriteMaterial,
   IcosahedronGeometry,
   CubicBezierCurve3, TubeGeometry, ConeGeometry, PlaneGeometry,
 } from "three";
 import { createModelLibrary } from "./models.mjs";
+import { createHeroModel } from "./hero-models.mjs";
+import { DEFAULT_HERO_SKIN, getHeroSkin } from "../hero-skins.mjs";
 import { CardTextures } from "./card-textures.mjs";
+import { BoardInput } from "./board-input.mjs";
 import { CARD } from "../cards.mjs";
 import { SoftwareRenderer } from "./software-renderer.mjs";
 import { targetPreview } from "./targeting.mjs";
@@ -19,13 +22,15 @@ const lerp = MathUtils.lerp;
 const smooth = (v) => 1 - (1 - v) ** 3;
 const easeInOut = (v) => v < .5 ? 4 * v * v * v : 1 - (-2 * v + 2) ** 3 / 2;
 const slots = [-4.8, -1.6, 1.6, 4.8];
+const SELF_HERO_X = -6.2;
 const colorFor = { damage: 0xffb264, heal: 0x92edac, shield: 0x8bdcff, grow: 0xe7ef98 };
 
 /** Persistent perspective scene. Rule state belongs to the server, not this class. */
 export class ArenaScene {
-  constructor({ canvas, onPick = () => {}, onAnchors = () => {}, onStatus = () => {}, onSound = () => {}, onHandDraw = () => {}, externalHand = false, reduced = false, quality = "medium" }) {
-    this.canvas = canvas; this.onPick = onPick; this.onAnchors = onAnchors; this.onStatus = onStatus;
+  constructor({ canvas, onPick = () => {}, onInspect = () => {}, getInputRevision = null, onAnchors = () => {}, onStatus = () => {}, onSound = () => {}, onHandDraw = () => {}, externalHand = false, reduced = false, quality = "medium", heroSkins = {} }) {
+    this.canvas = canvas; this.onPick = onPick; this.onInspect = onInspect; this.getInputRevision = getInputRevision; this.inputRevision = 0; this.onAnchors = onAnchors; this.onStatus = onStatus;
     this.reduced = reduced; this.quality = quality;
+    this.heroSkins = { self: getHeroSkin(heroSkins.self).id, opponent: getHeroSkin(heroSkins.opponent).id };
     this.onSound = onSound;
     this.externalHand = externalHand; this.onHandDraw = onHandDraw;
     this.units = new Map(); this.contactShadows = new Map(); this.cards = []; this.enemyCards = []; this.heroes = []; this.decks = []; this.jobs = new Set();
@@ -99,17 +104,77 @@ export class ArenaScene {
 
   makeHeroes() {
     for (const side of [0, 1]) {
-      const group = new Group();
-      const base = new Mesh(new CylinderGeometry(.91, 1.05, .32, 32), new MeshStandardMaterial({ color: side ? 0x54426e : 0x325c42, roughness: .58, metalness: .22 }));
-      base.position.y = .17; base.castShadow = true; base.receiveShadow = true; group.add(base);
-      const ring = new Mesh(new TorusGeometry(.84, .06, 10, 40), new MeshStandardMaterial({ color: 0xd4b878, metalness: .62, roughness: .32 }));
-      ring.rotation.x = -Math.PI / 2; ring.position.y = .37; group.add(ring);
-      const crystal = new Mesh(new SphereGeometry(.47, 12, 9), new MeshStandardMaterial({ color: side ? 0xa595ed : 0x8cddb0, emissive: side ? 0x251c53 : 0x103c2b, emissiveIntensity: .65, metalness: .22, roughness: .21 }));
-      crystal.scale.set(.7, 1.7, .7); crystal.position.y = .95; crystal.castShadow = true; group.add(crystal);
-      group.position.set(side ? 0 : -7.2, .1, side ? -4.25 : 4.5);
-      group.userData.pick = { kind: "hero", relativeSeat: side };
-      this.scene.add(group); this.heroes.push({ root: group, crystal, relativeSeat: side });
+      this.heroes.push(this.createHero(side, this.heroSkins?.[side ? "opponent" : "self"] || DEFAULT_HERO_SKIN));
     }
+  }
+
+  createHero(side, skinId) {
+    // Low LOD is deliberate on both renderers: two heroes cost <=3,664 triangles.
+    const model = createHeroModel(skinId, { quality: "low", seat: side }), root = model.root;
+    root.position.set(side ? 0 : SELF_HERO_X * (this.boardWidthScale || 1), .1, side ? -4.25 : 4.5);
+    root.rotation.y = side ? -.08 : .16;
+    root.userData.pick = { kind: "hero", relativeSeat: side };
+    model.pickProxy.userData.pick = root.userData.pick;
+    this.scene.add(root);
+    root.updateMatrixWorld(true);
+    return { root, model, skinId: model.skinId, relativeSeat: side, poses: {}, poseTokens: {} };
+  }
+
+  /** Cosmetic-only. Call with room-frozen IDs after mapping absolute seats to self/opponent. */
+  setHeroSkins(skins = {}) {
+    if (this.destroyed) return;
+    this.heroSkins ||= { self: DEFAULT_HERO_SKIN, opponent: DEFAULT_HERO_SKIN };
+    for (const [side, key] of [[0, "self"], [1, "opponent"]]) {
+      if (!Object.hasOwn(skins, key)) continue;
+      const id = getHeroSkin(skins[key]).id;
+      this.heroSkins[key] = id;
+      const old = this.heroes[side];
+      if (!old || old.skinId === id) continue;
+      old.poseTokens = {}; old.poses = {}; old.model.cancel(); old.model.dispose();
+      this.heroes[side] = this.createHero(side, id);
+    }
+    this.fitHeroSeats();
+    this.pickables = [...this.units.values()].map(x => x.model.root).concat(this.cards.map(x => x.model.root), this.heroes.map(x => x.root));
+    this.requestRender();
+  }
+
+  fitHeroSeats() {
+    if (!this.width || !this.height) return;
+    this.camera.updateMatrixWorld(true);
+    for (const hero of this.heroes) for (let attempt = 0; attempt < 2; attempt++) {
+      hero.root.updateMatrixWorld(true);
+      const bounds = hero.model.bounds;
+      let left = Infinity, right = -Infinity;
+      for (const x of [bounds.min.x, bounds.max.x]) for (const y of [bounds.min.y, bounds.max.y]) for (const z of [bounds.min.z, bounds.max.z]) {
+        const screen = this.project(new Vector3(x, y, z).applyMatrix4(hero.root.matrixWorld));
+        left = Math.min(left, screen.x); right = Math.max(right, screen.x);
+      }
+      const shift = Math.max(0, 12 - left) - Math.max(0, right - (this.width - 12));
+      if (!shift) break;
+      const center = hero.root.position.clone().project(this.camera); center.x += shift * 2 / this.width;
+      hero.root.position.x = center.unproject(this.camera).x;
+    }
+    for (const hero of this.heroes) hero.root.updateMatrixWorld(true);
+  }
+
+  heroFor(key) {
+    if (!String(key).startsWith("hero:")) return null;
+    const seat = Number(String(key).slice(5));
+    return Number.isInteger(seat) && seat >= 0 && seat <= 1 ? this.heroes[seat === this.viewerSeat ? 0 : 1] : null;
+  }
+
+  heroPose(key, action, duration = 650) {
+    const hero = this.heroFor(key);
+    if (!hero || !this.renderer || this.reduced) return Promise.resolve();
+    const field = `${action}Progress`, token = {};
+    hero.poseTokens[field] = token;
+    return this.addJob(duration, t => {
+      if (hero.poseTokens[field] === token && !hero.model.disposed) hero.poses[field] = t;
+    }, () => {
+      if (hero.poseTokens[field] !== token) return;
+      delete hero.poseTokens[field]; delete hero.poses[field];
+      hero.model.applyPose(hero.poses);
+    });
   }
 
   makeFireflies() {
@@ -146,17 +211,15 @@ export class ArenaScene {
         this.hover = this.pick(e); this.canvas.style.cursor = this.hover ? "pointer" : "default"; this.requestRender();
       },
       leave: () => { this.pointer.set(0, 0); this.hover = null; this.requestRender(); },
-      down: (e) => { this.pointerDown = { x: e.clientX, y: e.clientY }; },
-      up: (e) => {
-        const p = this.pointerDown; this.pointerDown = null;
-        if (!p || Math.hypot(e.clientX - p.x, e.clientY - p.y) > 12) return;
-        const picked = this.pick(e); if (picked) this.onPick(picked);
-      },
       contextlost: (e) => { e.preventDefault(); this.contextLost = true; this.cancel(); this.stop(); this.onStatus({ available: false, renderer: "WebGL2", reason: "context-lost" }); },
       contextrestored: () => { if (!this.destroyed) { this.contextLost = false; this.frameFault = false; this.start(); this.onStatus({ available: true, renderer: "WebGL2", restored: true }); } },
     };
+    this.boardInput = new BoardInput({element:this.canvas, pick:event=>this.pick(event),
+      getRevision:()=>this.getInputRevision?.() ?? this.inputRevision,
+      isEnabled:()=>!!this.renderer && !this.destroyed && !this.hidden && !this.contextLost && !this.frameFault && this.snapshot?.phase === "playing",
+      onActivate:intent=>this.onPick(intent), onInspect:intent=>this.onInspect(intent)});
     window.addEventListener("resize", this.handlers.resize);
-    for (const [event, fn] of [["pointermove", "move"], ["pointerleave", "leave"], ["pointerdown", "down"], ["pointerup", "up"], ["webglcontextlost", "contextlost"], ["webglcontextrestored", "contextrestored"]]) this.canvas.addEventListener(event, this.handlers[fn]);
+    for (const [event, fn] of [["pointermove", "move"], ["pointerleave", "leave"], ["webglcontextlost", "contextlost"], ["webglcontextrestored", "contextrestored"]]) this.canvas.addEventListener(event, this.handlers[fn]);
   }
 
   pick(event) {
@@ -173,6 +236,7 @@ export class ArenaScene {
   }
 
   resize() {
+    this.boardInput?.cancel();
     if (!this.renderer) return;
     const r = this.canvas.getBoundingClientRect(), w = Math.max(1, r.width), h = Math.max(1, r.height);
     this.width = w; this.height = h;
@@ -184,7 +248,7 @@ export class ArenaScene {
     if(this.externalHand && h < 270) this.boardWidthScale = narrow ? 1.2 : 1.35;
     this.unitScale = narrow ? .95 : portrait ? 1.25 : 1.3;
     this.arena.root.scale.x = this.boardWidthScale;
-    this.heroes[0].root.position.x = -7.2 * this.boardWidthScale;
+    this.heroes[0].root.position.x = SELF_HERO_X * this.boardWidthScale;
     for (const deck of this.decks) deck.root.position.x = (deck.side ? -6.8 : 6.8) * this.boardWidthScale;
     const fit = Math.max(1, (narrow ? .76 : portrait ? 1.22 : 1.48) / this.camera.aspect);
     const closeBoard = this.externalHand ? h < 270 ? .76 : .91 : 1;
@@ -195,9 +259,10 @@ export class ArenaScene {
       const center=new Vector3(0,.08,-2).project(this.camera),next=new Vector3(3.2,.08,-2).project(this.camera);
       const projectedStep=Math.abs(next.x-center.x)*w/2;
       this.boardWidthScale=Math.max(this.boardWidthScale,Math.min(62,(w-56)/3.8)/Math.max(1,projectedStep));
-      this.arena.root.scale.x=this.boardWidthScale;this.heroes[0].root.position.x=-7.2*this.boardWidthScale;
+      this.arena.root.scale.x=this.boardWidthScale;this.heroes[0].root.position.x=SELF_HERO_X*this.boardWidthScale;
       for(const deck of this.decks)deck.root.position.x=(deck.side?-6.8:6.8)*this.boardWidthScale;
     }
+    this.fitHeroSeats();
     if (this.snapshot) { this.handKey = null; this.setBattle(this.snapshot, this.viewerSeat); }
     this.requestRender();
   }
@@ -212,6 +277,7 @@ export class ArenaScene {
 
   setBattle(state, viewerSeat = 0) {
     if (!this.renderer || this.destroyed) return;
+    this.boardInput?.cancel(); this.inputRevision++;
     this.clearAim();
     this.snapshot = state; this.viewerSeat = viewerSeat;
     const wanted = new Set();
@@ -322,7 +388,16 @@ export class ArenaScene {
   }
 
   updateTargets() {
-    const preview = targetPreview(this.snapshot, this.viewerSeat, this.selected), wanted = new Set(preview.targets);
+    let preview = targetPreview(this.snapshot, this.viewerSeat, this.selected);
+    const own = this.snapshot?.players[this.viewerSeat];
+    if (this.selected?.kind === "card" && Array.isArray(own?.legalCardTargets)) {
+      const legal = this.snapshot.phase === "playing" && this.snapshot.active === this.viewerSeat && own.controller !== "proxy"
+        ? own.legalCardTargets.find(entry => entry.index === this.selected.index) : null;
+      preview = { source: `hero:${this.viewerSeat}`, targets: (legal?.targets || [])
+        .map(value => value?.target === "hero" && [0, 1].includes(value.seat) ? `hero:${value.seat}` : value?.target)
+        .filter(key => typeof key === "string" && (this.units.has(key) || this.heroFor(key))) };
+    }
+    const wanted = new Set(preview.targets);
     for (const [key, ring] of this.targetRings) if (!wanted.has(key)) { this.scene.remove(ring); ring.geometry.dispose(); ring.material.dispose(); this.targetRings.delete(key); }
     const hovered = this.hover?.kind === "unit" ? this.hover.uid : this.hover?.kind === "hero" ? `hero:${this.hover.relativeSeat ? 1 - this.viewerSeat : this.viewerSeat}` : null;
     for (const key of wanted) {
@@ -401,7 +476,7 @@ export class ArenaScene {
   }
 
   aimAnchor(key, target) {
-    const item = this.units.get(key);
+    const item = this.units.get(key) || this.heroFor(key);
     if (!item) return this.anchor(key, target ? 2.0 : 1.2);
     // Keep the arrow tip above each species, including the taller rabbit/stag.
     // Anchors are owned by the model rig, so scale and side pose stay coherent.
@@ -416,8 +491,7 @@ export class ArenaScene {
 
   anchor(key, y = 1) {
     if (String(key).startsWith("hero:")) {
-      const seat = Number(String(key).slice(5));
-      return this.heroes[seat === this.viewerSeat ? 0 : 1].root.position.clone().add(new Vector3(0, y, 0));
+      return this.heroFor(key)?.root.position.clone().add(new Vector3(0, y, 0));
     }
     const item = this.units.get(key);
     return item?.model.root.position.clone().add(new Vector3(0, y, 0));
@@ -468,6 +542,7 @@ export class ArenaScene {
   async pulse(targetKey, kind = "damage") {
     const at = this.anchor(targetKey, .65);
     if (!at || !this.renderer || this.reduced) return;
+    if (kind === "heal") this.heroPose(targetKey, "heal", 650);
     const color = colorFor[kind] || colorFor.damage;
     const ring = new Mesh(new TorusGeometry(.58, .045, 8, 40), new MeshBasicMaterial({ color, transparent: true, opacity: .9, depthWrite: false }));
     ring.rotation.x = -Math.PI / 2; ring.position.copy(at); this.temporary.add(ring);
@@ -485,22 +560,7 @@ export class ArenaScene {
         if (item.hitToken === token) { item.hitToken = null; item.model.applyPose?.({ hitProgress: 0 }); }
       });
     }
-    if (!String(targetKey).startsWith("hero:")) return Promise.resolve();
-    const seat = Number(String(targetKey).slice(5)), hero = this.heroes[seat === this.viewerSeat ? 0 : 1];
-    if (!hero) return Promise.resolve();
-    const token = {}; hero.hitToken = token;
-    const crystal = hero.crystal;
-    const baseline = hero.recoilBase ||= { scale: crystal.scale.clone(), lean: crystal.rotation.z, emission: crystal.material.emissiveIntensity };
-    const { scale, lean, emission } = baseline;
-    return this.addJob(duration, t => {
-      if (hero.hitToken !== token) return;
-      const pulse = Math.sin(t * Math.PI);
-      crystal.scale.copy(scale).multiplyScalar(1 + pulse * .09);
-      crystal.rotation.z = lean + Math.sin(t * Math.PI * 2) * .075;
-      crystal.material.emissiveIntensity = emission + pulse * .9;
-    }, () => {
-      if (hero.hitToken === token) { hero.hitToken = null; crystal.scale.copy(scale); crystal.rotation.z = lean; crystal.material.emissiveIntensity = emission; hero.recoilBase = null; }
-    });
+    return this.heroPose(targetKey, "hit", duration);
   }
 
   containSprite(sprite, padding = 10) {
@@ -546,12 +606,13 @@ export class ArenaScene {
   }
 
   async projectile(sourceKey, targetKey, impact = () => {}, element = "fire") {
-    const item = this.units.get(sourceKey);
+    const item = this.units.get(sourceKey) || this.heroFor(sourceKey);
     const from = item?.model.anchors?.projectile?.getWorldPosition(new Vector3()) || this.anchor(sourceKey, 1.2);
-    const target = this.units.get(targetKey);
+    const target = this.units.get(targetKey) || this.heroFor(targetKey);
     const to = target?.model.anchors?.impact?.getWorldPosition(new Vector3()) || this.anchor(targetKey, 1.0);
     if (!from || !to || this.reduced) { impact(); return; }
     const fx = createElementalCast({ element, from, to });
+    this.heroPose(sourceKey, "cast", fx.duration);
     this.temporary.add(fx.root);
     const generation = this.generation; let hit = false;
     this.onSound(element === "water" ? "heal" : element === "nature" ? "growth" : "spark");
@@ -564,9 +625,27 @@ export class ArenaScene {
   shield(targetKey) {
     const at = this.anchor(targetKey, 1);
     if (!at || !this.renderer || this.reduced) return Promise.resolve();
+    this.heroPose(targetKey, "armor", 620);
     const badge = createBarrierBadge(); badge.root.name = "armor-gain-emblem";
     badge.root.position.copy(at); this.temporary.add(badge.root);
     return this.addJob(620, t => { badge.root.scale.setScalar(.6 + Math.sin(t * Math.PI) * .9); badge.root.position.y = at.y + t * .3; badge.root.visible = t < .95; }, () => badge.dispose());
+  }
+
+  returnUnit(uid, seat) {
+    const item = this.units.get(uid), destination = this.anchor(`hero:${seat}`, .9);
+    if (!item || !destination || this.reduced) return Promise.resolve();
+    const token = {}, from = item.base.clone(), scale = this.scaleFor(item.unit.cardId);
+    item.animating = true; item.motionToken = token;
+    return this.addJob(520, t => {
+      if (item.motionToken !== token || item.model.disposed) return;
+      item.model.root.position.copy(from).lerp(destination, smooth(t));
+      item.model.root.position.y += Math.sin(t * Math.PI) * .7;
+      item.model.root.scale.setScalar(scale * Math.max(.04, 1 - t * .96));
+    }, () => {
+      if (item.motionToken !== token || item.model.disposed) return;
+      item.animating = false; item.motionToken = null;
+      item.model.root.position.copy(item.base); item.model.root.scale.setScalar(scale);
+    });
   }
 
   impacts(changes = [], element = "fire", contactEffect = true) {
@@ -574,6 +653,12 @@ export class ArenaScene {
     for (const change of changes) {
       const key = change.uid || `hero:${change.seat}`;
       const at = this.anchor(key, .8);
+      if (change.returned) {
+        work.push(this.floatText(key, "回到手牌", "#b9ebff", 500));
+        work.push(this.returnUnit(change.uid, change.seat));
+        this.onSound("draw");
+        continue;
+      }
       if (change.hpDelta < 0 || change.armorDelta < 0) work.push(this.recoil(key));
       if (change.hpDelta < 0) {
         work.push(this.floatText(key, String(change.hpDelta), "#ffe2b6", change.removed ? 290 : 760));
@@ -598,18 +683,33 @@ export class ArenaScene {
         work.push(this.floatText(key, "护盾抵挡", "#bff5ff", 620));
         work.push(this.burst(at, "shield", 460)); this.onSound("shield");
       }
+      if (change.shieldGained) {
+        const item = this.units.get(change.uid);
+        if (item && !this.barriers.has(change.uid)) { const badge = createBarrierBadge(); item.model.root.add(badge.root); this.barriers.set(change.uid, badge); }
+        work.push(this.floatText(key, "获得护盾", "#bff5ff", 620));
+        work.push(this.shield(key)); this.onSound("shield");
+      }
+      if (change.maxHpDelta > 0) { work.push(this.floatText(key, `+${change.maxHpDelta}生命上限`, "#e4f6aa")); work.push(this.burst(at, "grow")); this.onSound("growth"); }
       if (change.atkDelta > 0) { work.push(this.floatText(key, `+${change.atkDelta}攻击`, "#e4f6aa")); work.push(this.burst(at, "grow")); this.onSound("growth"); }
+      if (change.atkDelta < 0) { work.push(this.floatText(key, `${change.atkDelta}攻击`, "#b9ebff")); work.push(this.burst(at, "weaken", 450, "water")); }
     }
     if (changes.some((c) => c.hpDelta < 0 || c.armorDelta < 0)) this.onSound("hit");
-    if (changes.some((c) => c.removed)) this.onSound("death");
+    if (changes.some((c) => c.removed && !c.returned)) this.onSound("death");
     return Promise.all(work);
   }
 
   async summon(next, event) {
     const uid = event.newUnitUid, from = this.anchor(`hero:${event.actorSeat}`, 1.4);
-    this.setBattle(next, this.viewerSeat);
+    // Keep existing targets until the accepted arrival effect lands. In particular,
+    // a lethal salamander arrival must not delete its target before its flame flies.
+    const before = this.snapshot;
+    const staged = before ? { ...next, players: next.players.map((player, seat) => ({ ...player,
+      board: [...(before.players[seat]?.board || []), ...player.board.filter(unit => unit.uid === uid && !before.players[seat]?.board?.some(old => old.uid === uid))],
+    })) } : next;
+    this.setBattle(staged, this.viewerSeat);
     const item = this.units.get(uid); if (!item) return;
     if (this.reduced) { this.onSound("summon"); return; }
+    this.heroPose(`hero:${event.actorSeat}`, "cast", 680);
     const card = this.library.createCard({ frontTexture: this.textures.get(event.cardId), backTexture: this.textures.back });
     card.root.scale.setScalar(1.18); this.temporary.add(card.root);
     const to = item.base.clone().add(new Vector3(0, 1.0, 0));
@@ -662,6 +762,10 @@ export class ArenaScene {
   celebrate(won) {
     this.onSound(won ? "win" : "turn");
     if (!this.renderer || !this.temporary || this.reduced || this.hidden || this.contextLost || this.destroyed) return Promise.resolve();
+    if (typeof won === "boolean") {
+      this.heroPose(`hero:${this.viewerSeat}`, won ? "win" : "lose", 1150);
+      this.heroPose(`hero:${1 - this.viewerSeat}`, won ? "lose" : "win", 1150);
+    }
     const group = new Group(), geometry = new IcosahedronGeometry(.14, 0);
     const material = new MeshStandardMaterial({ color: won ? 0xf4d58c : 0x9cc9c3, emissive: won ? 0x80521a : 0x1a5047, emissiveIntensity: .5, metalness: .5, roughness: .3, transparent: true });
     const leaves = [];
@@ -688,23 +792,28 @@ export class ArenaScene {
     const rangedAttack = event.kind === "attack" && ranged.has(sourceCard?.id);
     const draws = next.players.map((p, seat) => {
       const old = this.snapshot?.players[seat], before = old?.hand?.length ?? old?.handCount ?? 0;
-      return Math.max(0, (p.hand?.length ?? p.handCount ?? 0) - before + (event.kind === "play" && seat === actor ? 1 : 0));
+      const returned = event.changes?.filter(change => change.returned && change.seat === seat).length || 0;
+      return Math.max(0, (p.hand?.length ?? p.handCount ?? 0) - before + (event.kind === "play" && seat === actor ? 1 : 0) - returned);
     });
     const target = event.targetUid || (Number.isInteger(event.targetSeat) ? `hero:${event.targetSeat}` : null);
     let impact = Promise.resolve();
     let didHit = false;
-    const hit = () => { if (!didHit && generation === this.generation) { didHit = true; onImpact(); impact = this.impacts(event.changes || [], element, !rangedAttack && sourceCard?.type !== "spell"); } };
+    const areaEffect = sourceCard?.target?.startsWith("all-");
+    const hit = () => { if (!didHit && generation === this.generation) { didHit = true; onImpact(); impact = this.impacts(event.changes || [], element, areaEffect || (!rangedAttack && sourceCard?.type !== "spell")); } };
     if (event.kind === "attack" && event.sourceUid && target && !this.reduced) {
       // A removed unit's number/fade end before the row can rearrange at 740ms.
       // Longer surviving labels follow their own UID and need not lock input.
       if (rangedAttack) await this.projectile(event.sourceUid, target, hit, element);
       else await this.attack(event.sourceUid, target, hit);
     } else if (event.kind === "play" && event.newUnitUid) {
-      await this.summon(next, event); if (generation !== this.generation) return; hit();
+      await this.summon(next, event); if (generation !== this.generation) return;
+      if (sourceCard?.keyword === "arrivalDamage" && target) await this.projectile(event.newUnitUid, target, hit, element);
+      else hit();
     } else if ((event.kind === "play" && sourceCard?.type === "spell") || (event.kind === "ritual" && event.ritualKind === "spark" && event.outcome !== "wrong" && event.outcome !== "unanswered")) {
-      const spellTarget = target || `hero:${sourceCard?.keyword === "damage" || event.ritualKind === "spark" ? 1 - actor : actor}`;
+      const spellTarget = target || (areaEffect && event.changes?.find(change => change.uid)?.uid) || `hero:${sourceCard?.keyword === "damage" || event.ritualKind === "spark" ? 1 - actor : actor}`;
       await this.projectile(`hero:${actor}`, spellTarget, hit, element);
     } else { hit(); await impact; }
+    if (event.changes?.some(change => change.returned)) await impact;
     if (generation === this.generation) await Promise.all(draws.map((count, seat) => this.drawCards(next, seat, count)));
     if (generation === this.generation && event.kind === "end") this.onSound("turn");
   }
@@ -753,6 +862,7 @@ export class ArenaScene {
         const t = Math.min(1, (now - job.start) / job.duration); job.update(t);
         if (t === 1) { this.jobs.delete(job); job.finish(); }
       }
+      for (const hero of this.heroes) hero.model.applyPose({ time: now * .001, ...hero.poses, reducedMotion: this.reduced });
       for (const [uid, shadow] of this.contactShadows) {
         const item = this.units.get(uid); if (!item) continue;
         shadow.position.set(item.model.root.position.x + .12, .035, item.model.root.position.z + .13);
@@ -789,18 +899,20 @@ export class ArenaScene {
     item.fadeMaterials = null;
   }
   cancel() {
+    this.boardInput?.cancel();
     this.generation++;
     for (const job of this.jobs) job.finish(); this.jobs.clear();
     for (const item of this.units.values()) { item.animating = false; item.motionToken = null; this.restoreFade(item); item.model.root.position.copy(item.base); item.model.root.scale.setScalar(this.scaleFor(item.unit.cardId)); item.model.applyPose?.({ idlePhase: 0, lean: 0, attackProgress: 0, hitProgress: 0 }); }
+    for (const hero of this.heroes) { hero.poses = {}; hero.poseTokens = {}; hero.model.cancel(); hero.model.setVisualState({}); }
     this.clearAim();
   }
 
   dispose() {
     if (this.destroyed) return;
-    this.stop(); this.cancel(); this.destroyed = true;
+    this.stop(); this.cancel(); this.destroyed = true; this.boardInput?.dispose();
     if (this.handlers) {
       window.removeEventListener("resize", this.handlers.resize);
-      for (const [event, fn] of [["pointermove", "move"], ["pointerleave", "leave"], ["pointerdown", "down"], ["pointerup", "up"], ["webglcontextlost", "contextlost"], ["webglcontextrestored", "contextrestored"]]) this.canvas.removeEventListener(event, this.handlers[fn]);
+      for (const [event, fn] of [["pointermove", "move"], ["pointerleave", "leave"], ["webglcontextlost", "contextlost"], ["webglcontextrestored", "contextrestored"]]) this.canvas.removeEventListener(event, this.handlers[fn]);
     }
     for (const badge of this.barriers.values()) badge.dispose(); this.barriers.clear();
     for (const item of this.units.values()) item.model.dispose?.();
@@ -808,11 +920,12 @@ export class ArenaScene {
     for (const item of this.enemyCards) item.dispose?.();
     for (const ring of this.targetRings.values()) { ring.geometry.dispose(); ring.material.dispose(); } this.targetRings.clear();
     for (const deck of this.decks) for (const card of deck.cards) card.dispose();
-    for (const h of this.heroes) h.root.traverse((o) => { o.geometry?.dispose(); o.material?.dispose(); });
+    for (const h of this.heroes) h.model.dispose();
     this.fireflies?.geometry.dispose(); this.fireflies?.material.dispose();
     this.arena?.dispose?.(); this.library?.dispose(); this.textures?.dispose(); this.glowTexture?.dispose();
     for (const shadow of this.contactShadows.values()) shadow.material.dispose(); this.contactShadows.clear();
     this.contactShadowGeometry?.dispose(); this.contactShadowTexture?.dispose();
-    this.renderer?.dispose(); this.scene.clear(); this.units.clear(); this.cards = [];
+    this.renderer?.dispose(); this.scene.clear(); this.units.clear(); this.cards = []; this.heroes = [];
+    this.enemyCards = []; this.decks = []; this.pickables = []; this.arena = null;
   }
 }

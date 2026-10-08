@@ -23,7 +23,7 @@ function setup(options = {}) {
   const model = createProgressModel({ questions });
   const env = { model, progress: model.fresh(playerId, "UTC"), calls: [], changes: [], issues: [], handler: null };
   env.success = (extra = {}) => response({ data: env.progress, playerId: env.progress.profileId,
-    revision: env.progress.revision, ...extra });
+    revision: env.progress.revision, serverNow: when, ...extra });
   env.fetcher = async (path, init) => {
     env.calls.push({ path, init, body: init.body ? JSON.parse(init.body) : undefined });
     return env.handler ? env.handler(path, init) : env.success();
@@ -78,7 +78,7 @@ test("loads only a canonical cookie-authenticated account snapshot and never tou
 test("malformed, unknown and identity-mismatched success envelopes preserve the verified memory copy", async () => {
   const env = setup(); await env.store.load();
   const before = env.store.export();
-  const envelope = () => ({ data: copy(env.progress), playerId, revision: env.progress.revision });
+  const envelope = () => ({ data: copy(env.progress), playerId, revision: env.progress.revision, serverNow: when });
   const cases = [
     () => ({}),
     () => ({ ...envelope(), sessionToken: "do-not-accept" }),
@@ -96,7 +96,7 @@ test("malformed, unknown and identity-mismatched success envelopes preserve the 
     assert.equal(env.store.export(), before);
     assert.equal(env.store.loaded, true);
   }
-  env.handler = () => response({ data: env.model.fresh(otherPlayer, "UTC"), playerId: otherPlayer, revision: 0 });
+  env.handler = () => response({ data: env.model.fresh(otherPlayer, "UTC"), playerId: otherPlayer, revision: 0, serverNow: when });
   assert.equal((await env.store.refresh()).code, "PROFILE_CHANGED");
   assert.equal(env.store.playerId, playerId);
   assert.equal(env.store.export(), before);
@@ -200,7 +200,7 @@ test("a timed-out opening stays unknown; GET can discover it and retry reuses it
     const body = JSON.parse(init.body);
     if (receipts.has(body.requestId)) return response(receipts.get(body.requestId));
     openOnServer(env); created++;
-    receipts.set(body.requestId, { data: copy(env.progress), playerId, revision: env.progress.revision, changed: true });
+    receipts.set(body.requestId, { data: copy(env.progress), playerId, revision: env.progress.revision, changed: true, serverNow: when });
     return new Promise(() => {});
   };
   const unknown = await env.store.openPack("test");
@@ -300,7 +300,7 @@ test("account switch discards queued old work and late replies even when mocked 
   env.handler = () => env.success();
   assert.equal((await env.store.load()).ok, true);
   const changes = env.changes.length;
-  delayed.resolve(response({ data: env.model.fresh(playerId, "UTC"), playerId, revision: 0 }));
+  delayed.resolve(response({ data: env.model.fresh(playerId, "UTC"), playerId, revision: 0, serverNow: when }));
   assert.equal((await oldRead).stale, true);
   assert.equal((await queuedOld).stale, true);
   assert.equal(env.store.data.profileId, otherPlayer);
@@ -417,4 +417,53 @@ test("unknown import retries its original raw request and emits a session reset 
   assert.equal(retried.requiresSessionReset, true);
   assert.deepEqual(rawCalls[0], rawCalls[1]);
   assert.equal(env.changes.filter(({ meta }) => meta.restored).length, 1);
+});
+
+test("server display time is mandatory and malformed clocks preserve the previous account and clock anchor", async () => {
+  let monotonic = 100;
+  const env = setup({ monotonicNow: () => monotonic });
+  assert.equal(env.store.serverNow, null); assert.equal(env.store.rewardNow(), null);
+  await env.store.load(); const before = env.store.export();
+  for (const serverNow of [undefined, null, '1791432000000', -1, 1.5, Infinity, 4102444800001]) {
+    env.handler = () => env.success({ serverNow });
+    monotonic += 10;
+    assert.equal((await env.store.refresh()).code, 'INVALID_RESPONSE');
+    assert.equal(env.store.serverNow, when); assert.equal(env.store.rewardNow(), when + monotonic - 100);
+    assert.equal(env.store.export(), before);
+  }
+  env.handler = () => env.success(); monotonic = NaN;
+  assert.equal((await env.store.refresh()).code, 'INVALID_RESPONSE');
+  assert.equal(env.store.serverNow, when); assert.equal(env.store.export(), before);
+});
+
+test("reward display follows server noon and Shanghai midnight using monotonic time even when local wall time changes", async t => {
+  let monotonic = 500, serverNow = Date.UTC(2026, 9, 8, 4), localNow = Date.UTC(2036, 0, 1);
+  t.mock.method(Date, 'now', () => localNow);
+  const env = setup({ monotonicNow: () => monotonic }); env.handler = () => env.success({ serverNow });
+  await env.store.load(); assert.equal(env.store.serverNow, serverNow); assert.equal(env.store.rewardNow(), serverNow);
+  monotonic += 5000.9; localNow -= 365 * 86400000;
+  assert.equal(env.store.rewardNow(), serverNow + 5000);
+  serverNow = Date.UTC(2026, 9, 8, 15, 59, 59); await env.store.refresh();
+  const { dailySummary } = await import('../src/reward-journey.mjs');
+  assert.equal(dailySummary(env.store.data.journey, env.store.rewardNow()).rewardDay, '2026-10-08');
+  monotonic += 1000; localNow += 20 * 365 * 86400000;
+  assert.equal(dailySummary(env.store.data.journey, env.store.rewardNow()).rewardDay, '2026-10-09');
+  const displayed = env.store.rewardNow(); monotonic -= 800;
+  assert.equal(env.store.rewardNow(), displayed);
+  assert.equal(env.store.serverNow, serverNow);
+  assert.equal(Object.hasOwn(env.store.data, 'serverNow'), false);
+  assert.equal(env.store.export().includes('serverNow'), false);
+  assert.equal(env.calls.some(call => call.body && JSON.stringify(call.body).includes('serverNow')), false);
+  env.store.setPlayerId(otherPlayer); assert.equal(env.store.serverNow, null); assert.equal(env.store.rewardNow(), null);
+  env.progress = env.model.fresh(otherPlayer, 'UTC'); monotonic += 1000; await env.store.load();
+  assert.equal(env.store.rewardNow(), serverNow); env.store.dispose(); assert.equal(env.store.rewardNow(), null);
+});
+
+test("display clock values never travel back in participation or preference intents", async () => {
+  const env = setup({ monotonicNow: () => 100 }); await env.store.load();
+  await env.store.qualifyLearning('clock-client-forgery', { serverNow: when + 86400000, questionMs: 999999, feedbackMs: 999999 });
+  const request = env.calls.find(call => call.path === '/api/progress/participation');
+  assert.deepEqual(Object.keys(request.body).sort(), ['challengeId', 'requestId']);
+  assert.equal((await env.store.updatePreferences({ serverNow: when })).code, 'INVALID_PREFERENCES');
+  assert.equal(env.store.data.serverNow, undefined);
 });
