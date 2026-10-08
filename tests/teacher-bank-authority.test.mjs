@@ -286,3 +286,27 @@ test("teacher and school learning share one reward day and one combat rating", (
   assert.deepEqual(data.collection, collection);
   assert.equal(Object.keys(data.legacy.mastery).length, 6);
 });
+
+test('short feedback is nonqualifying navigation; later eligible participation still commits once',t=>{
+ const identityStore=createIdentityStore();t.after(()=>identityStore.close());
+ let clock=when;
+ const progress=createPlayerProgress({identityStore,questions:questionService().metadata().questions,now:()=>clock});
+ const playerId=identityStore.createGuest().player.playerId;
+ const bridge=createProgressBridge({identityStore,progress,now:()=>clock});
+ const challengeId='brief-feedback-question';
+ bridge.noteChallenge(playerId,challengeId,clock);
+ clock+=2100;
+ bridge.learning(playerId,{challengeId,learning:{qid:teacherQuestions[0].id,correct:false,answeredAt:clock}});
+ clock+=10;
+ const early=bridge.participation(playerId,challengeId);
+ assert.deepEqual(early.receipt,{changed:false,qualified:false});
+ assert.equal(identityStore.hasPlayerEvent(playerId,'participation:'+challengeId),false);
+ assert.equal(early.player.progress.legacy.mastery[teacherQuestions[0].id].seen,1);
+ assert.equal(early.player.progress.collection.totalDays,0);
+ clock+=1190;
+ assert.equal(bridge.participation(playerId,challengeId).duplicate,false);
+ assert.equal(identityStore.hasPlayerEvent(playerId,'participation:'+challengeId),true);
+ assert.equal(bridge.participation(playerId,challengeId).duplicate,true);
+ assert.equal(progress.ensure(playerId).progress.legacy.mastery[teacherQuestions[0].id].seen,1);
+ code(()=>bridge.participation(playerId,'unknown-challenge-id'),'INVALID_PARTICIPATION');
+});
