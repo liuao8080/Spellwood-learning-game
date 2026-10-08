@@ -12,6 +12,7 @@ import { createModelLibrary } from "./models.mjs";
 import { createHeroModel } from "./hero-models.mjs";
 import { DEFAULT_HERO_SKIN, getHeroSkin } from "../hero-skins.mjs";
 import { CardTextures } from "./card-textures.mjs";
+import { BoardInput } from "./board-input.mjs";
 import { CARD } from "../cards.mjs";
 import { SoftwareRenderer } from "./software-renderer.mjs";
 import { targetPreview } from "./targeting.mjs";
@@ -26,8 +27,8 @@ const colorFor = { damage: 0xffb264, heal: 0x92edac, shield: 0x8bdcff, grow: 0xe
 
 /** Persistent perspective scene. Rule state belongs to the server, not this class. */
 export class ArenaScene {
-  constructor({ canvas, onPick = () => {}, onAnchors = () => {}, onStatus = () => {}, onSound = () => {}, onHandDraw = () => {}, externalHand = false, reduced = false, quality = "medium", heroSkins = {} }) {
-    this.canvas = canvas; this.onPick = onPick; this.onAnchors = onAnchors; this.onStatus = onStatus;
+  constructor({ canvas, onPick = () => {}, onInspect = () => {}, getInputRevision = null, onAnchors = () => {}, onStatus = () => {}, onSound = () => {}, onHandDraw = () => {}, externalHand = false, reduced = false, quality = "medium", heroSkins = {} }) {
+    this.canvas = canvas; this.onPick = onPick; this.onInspect = onInspect; this.getInputRevision = getInputRevision; this.inputRevision = 0; this.onAnchors = onAnchors; this.onStatus = onStatus;
     this.reduced = reduced; this.quality = quality;
     this.heroSkins = { self: getHeroSkin(heroSkins.self).id, opponent: getHeroSkin(heroSkins.opponent).id };
     this.onSound = onSound;
@@ -210,17 +211,15 @@ export class ArenaScene {
         this.hover = this.pick(e); this.canvas.style.cursor = this.hover ? "pointer" : "default"; this.requestRender();
       },
       leave: () => { this.pointer.set(0, 0); this.hover = null; this.requestRender(); },
-      down: (e) => { this.pointerDown = { x: e.clientX, y: e.clientY }; },
-      up: (e) => {
-        const p = this.pointerDown; this.pointerDown = null;
-        if (!p || Math.hypot(e.clientX - p.x, e.clientY - p.y) > 12) return;
-        const picked = this.pick(e); if (picked) this.onPick(picked);
-      },
       contextlost: (e) => { e.preventDefault(); this.contextLost = true; this.cancel(); this.stop(); this.onStatus({ available: false, renderer: "WebGL2", reason: "context-lost" }); },
       contextrestored: () => { if (!this.destroyed) { this.contextLost = false; this.frameFault = false; this.start(); this.onStatus({ available: true, renderer: "WebGL2", restored: true }); } },
     };
+    this.boardInput = new BoardInput({element:this.canvas, pick:event=>this.pick(event),
+      getRevision:()=>this.getInputRevision?.() ?? this.inputRevision,
+      isEnabled:()=>!!this.renderer && !this.destroyed && !this.hidden && !this.contextLost && !this.frameFault && this.snapshot?.phase === "playing",
+      onActivate:intent=>this.onPick(intent), onInspect:intent=>this.onInspect(intent)});
     window.addEventListener("resize", this.handlers.resize);
-    for (const [event, fn] of [["pointermove", "move"], ["pointerleave", "leave"], ["pointerdown", "down"], ["pointerup", "up"], ["webglcontextlost", "contextlost"], ["webglcontextrestored", "contextrestored"]]) this.canvas.addEventListener(event, this.handlers[fn]);
+    for (const [event, fn] of [["pointermove", "move"], ["pointerleave", "leave"], ["webglcontextlost", "contextlost"], ["webglcontextrestored", "contextrestored"]]) this.canvas.addEventListener(event, this.handlers[fn]);
   }
 
   pick(event) {
@@ -237,6 +236,7 @@ export class ArenaScene {
   }
 
   resize() {
+    this.boardInput?.cancel();
     if (!this.renderer) return;
     const r = this.canvas.getBoundingClientRect(), w = Math.max(1, r.width), h = Math.max(1, r.height);
     this.width = w; this.height = h;
@@ -277,6 +277,7 @@ export class ArenaScene {
 
   setBattle(state, viewerSeat = 0) {
     if (!this.renderer || this.destroyed) return;
+    this.boardInput?.cancel(); this.inputRevision++;
     this.clearAim();
     this.snapshot = state; this.viewerSeat = viewerSeat;
     const wanted = new Set();
@@ -898,6 +899,7 @@ export class ArenaScene {
     item.fadeMaterials = null;
   }
   cancel() {
+    this.boardInput?.cancel();
     this.generation++;
     for (const job of this.jobs) job.finish(); this.jobs.clear();
     for (const item of this.units.values()) { item.animating = false; item.motionToken = null; this.restoreFade(item); item.model.root.position.copy(item.base); item.model.root.scale.setScalar(this.scaleFor(item.unit.cardId)); item.model.applyPose?.({ idlePhase: 0, lean: 0, attackProgress: 0, hitProgress: 0 }); }
@@ -907,10 +909,10 @@ export class ArenaScene {
 
   dispose() {
     if (this.destroyed) return;
-    this.stop(); this.cancel(); this.destroyed = true;
+    this.stop(); this.cancel(); this.destroyed = true; this.boardInput?.dispose();
     if (this.handlers) {
       window.removeEventListener("resize", this.handlers.resize);
-      for (const [event, fn] of [["pointermove", "move"], ["pointerleave", "leave"], ["pointerdown", "down"], ["pointerup", "up"], ["webglcontextlost", "contextlost"], ["webglcontextrestored", "contextrestored"]]) this.canvas.removeEventListener(event, this.handlers[fn]);
+      for (const [event, fn] of [["pointermove", "move"], ["pointerleave", "leave"], ["webglcontextlost", "contextlost"], ["webglcontextrestored", "contextrestored"]]) this.canvas.removeEventListener(event, this.handlers[fn]);
     }
     for (const badge of this.barriers.values()) badge.dispose(); this.barriers.clear();
     for (const item of this.units.values()) item.model.dispose?.();

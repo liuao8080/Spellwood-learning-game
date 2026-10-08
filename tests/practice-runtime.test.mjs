@@ -76,12 +76,13 @@ test("cached navigation preserves the actual practice authority and current room
   const handlers=new Map(),views=Array.from({length:3},()=>({hidden:false,disposed:false,setHidden(v){this.hidden=v;},dispose(){this.disposed=true;}}));
   const collection={hidden:false,resetCount:0,visibility(v){this.hidden=v;},reset(){this.resetCount++;}};
   const sandbox={isPractice:true,identityEpoch:0,identityPanel:null,identityChannel:null,pageSuspended:false,document:{hidden:false},deadlineTimer:null,rewardDayTimer:null,wardrobeView:null,clearTimeout,SOUND:{visibility(){}},cancelVoice(){},desk:{visibility(){}},collectionView:collection,
+    boardLabelInput:{cancelCount:0,disposed:false,cancel(){this.cancelCount++;},dispose(){this.disposed=true;}},
     handScene:views[0],lobbyScene:views[1],scene:views[2],arenaResizeObserver:null,link:connection,connectionState:'ready',addEventListener(n,h){handlers.set(n,h);},render(){for(const view of views)view.setHidden(false);}};
   vm.createContext(sandbox);vm.runInContext(lifecycleSource,sandbox);
   try{
     connection.connect();await until(()=>connection.state==='ready');await connection.command('queue.join',{grade:1,course:'s1',deckId:'grove'});await until(()=>room?.phase==='opening');
     const authority=connection.practiceService.rooms.get(room.roomId),roomId=room.roomId;
-    handlers.get('pagehide')({persisted:true});assert.equal(collection.resetCount,0);assert.ok(views.every(v=>v.hidden&&!v.disposed));assert.equal(connection.practiceService.rooms.get(roomId),authority);
+    handlers.get('pagehide')({persisted:true});assert.equal(collection.resetCount,0);assert.equal(sandbox.boardLabelInput.cancelCount,1);assert.equal(sandbox.boardLabelInput.disposed,false);assert.ok(views.every(v=>v.hidden&&!v.disposed));assert.equal(connection.practiceService.rooms.get(roomId),authority);
     handlers.get('pageshow')({persisted:true});assert.equal(collection.hidden,false);assert.ok(views.every(v=>!v.hidden&&!v.disposed));
     await connection.command('opening.choose',{indices:[]},{roomId,expectedRevision:room.revision});await until(()=>room.phase==='playing');
     assert.equal(room.roomId,roomId);assert.equal(connection.practiceService.rooms.get(roomId),authority);

@@ -115,3 +115,27 @@ body.immersive .pack-exit-confirm section { max-height: calc(var(--safe-height) 
 @media(max-width:960px) and (max-height:500px) and (orientation:landscape){.immersive .rituals:has(.draw-english){height:178px;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:16px repeat(3,46px)}.immersive .rituals:has(.draw-english)>button{height:46px;font-size:12px}.immersive .rituals .draw-english small{font-size:10px}}
 
 .immersive .rituals h2 span{float:none;margin-left:4px}
+
+/* At 320px, five actions cannot share the space between two 44px hand arrows.
+   Give the optional action its own compact row and keep the four usual actions. */
+@media(max-width:600px) and (orientation:portrait){
+ body.immersive.has-room .rituals:has(.draw-english){left:6px;right:6px;height:104px;padding:3px 5px;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:44px 50px;gap:2px}
+ body.immersive.has-room .rituals:has(.draw-english) h2{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%)}
+ body.immersive.has-room .rituals:has(.draw-english)>button{height:50px;min-width:44px;font-size:12px}
+ body.immersive.has-room .rituals:has(.draw-english)>[data-action="ritual"]{grid-row:2}
+ body.immersive.has-room .rituals:has(.draw-english)>.end-turn{grid-row:2;grid-column:4}
+ body.immersive.has-room .rituals:has(.draw-english)>.draw-english{grid-row:1;grid-column:2/span 2;height:44px;min-height:44px}
+ body.immersive.has-room:has(.draw-english) #hand-stage:not(.hand-fallback) #hand-prev:not([hidden]),body.immersive.has-room:has(.draw-english) #hand-stage:not(.hand-fallback) #hand-next:not([hidden]){bottom:calc(100% + 61px)}
+ body.immersive.has-room:has(.draw-english) #arena,body.immersive.has-room:has(.draw-english) #unit-labels{bottom:calc(302px + var(--safe-bottom));height:calc(var(--safe-height) - 430px)}
+ body.immersive.has-room:has(.draw-english) #notice{bottom:calc(308px + var(--safe-bottom))}
+}
+.immersive .card-info-dialog .card-info-english{font:600 19px/1.35 Georgia,serif;color:#cce6d4;margin:5px 0 12px}
+.unit-inspection-state{background:#1c4439;border:1px solid #88aa7655;border-radius:12px;padding:10px 13px;margin:14px 0}
+.immersive .unit-inspection-state p{margin:3px 0;font-size:16px}
+.immersive .unit-inspection-state .subtle{font-size:14px}
+@media(max-width:600px){.immersive .target-command:has([data-action="unit-info"]){grid-template-columns:minmax(0,1fr) 52px 52px}}
+@media(max-height:500px) and (orientation:landscape){
+ .immersive .command-bar>[data-action="card-info"]{display:block;flex-basis:100%;width:100%}
+ .immersive .command-bar:has([data-action="card-info"]){height:calc(var(--safe-height) - 130px);max-height:220px}
+ .immersive .command-bar:has([data-action="card-info"])>div{max-height:calc(100% - 96px)}
+}

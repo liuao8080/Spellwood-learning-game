@@ -3,6 +3,7 @@ import {
   fictionalUsername, calmAnimations, studyOne, register,
   prepareMatch, confirmOpening, sync, uiCommand, waitForBoard,
   matchPair, canvasAndKeyboard,
+  playOneVisibleCard,
 } from './helpers.mjs';
 
 const skin = (page, name, value) => page.locator(`[data-skin-action="${name}"]${value === undefined ? '' : `[data-value="${value}"]`}`);
@@ -35,9 +36,12 @@ async function buildExpansionDeck(actor) {
     draft[index] = replacement;
   }
   expect(counts()).toEqual(wanted);
+  const savedRevision = actor.observed.progress.get(actor.observed.player.playerId).revision;
   await action(page, 'library-save').click();
   await expect(page.locator('.card-library')).toBeHidden();
-  await expect.poll(() => currentProgress(actor).legacy.customDeck).toEqual(draft);
+  await expect.poll(() => actor.observed.progress.get(actor.observed.player.playerId).revision).toBeGreaterThan(savedRevision);
+  await expect.poll(() => currentProgress(actor).chosenDeckId).toBe('custom');
+  await expect.poll(() => currentProgress(actor).customDeck).toEqual(draft);
 }
 
 async function playExpansionChoice(actor, other, testInfo) {
@@ -191,11 +195,11 @@ async function touchTargets(page, controls) {
     const size = await control.evaluate(element => {
       const b = element.getBoundingClientRect();
       const hit = document.elementFromPoint(b.x + b.width / 2, b.y + b.height / 2);
-      return { width: b.width, height: b.height, hit: element === hit || element.contains(hit) };
+      return { width: b.width, height: b.height, hit: element === hit || element.contains(hit), control: element.dataset.action || element.dataset.skinAction || element.tagName };
     });
-    expect(size.width, 'interactive width').toBeGreaterThanOrEqual(44);
-    expect(size.height, 'interactive height').toBeGreaterThanOrEqual(44);
-    expect(size.hit, 'control centre is not occluded by another element').toBe(true);
+    expect(size.width, `${size.control} interactive width`).toBeGreaterThanOrEqual(44);
+    expect(size.height, `${size.control} interactive height`).toBeGreaterThanOrEqual(44);
+    expect(size.hit, `${size.control} centre is not occluded by another element`).toBe(true);
   }
   const sizes = await page.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
   expect(sizes.content).toBeLessThanOrEqual(sizes.viewport + 2);
@@ -374,20 +378,23 @@ test('three one-click presets and a two-click custom swap retain all thirty-six 
   const page = actor.page;
   await calmAnimations(actor);
   await action(page, 'library').click();
+  await safeScreenshot(page, testInfo, 'desktop-presets-and-deck-slots');
   const presets = await action(page, 'library-equip-preset').evaluateAll(elements => elements.map(element => element.dataset.value));
   expect(presets).toEqual(['grove', 'ember', 'moon']);
   const savedPresets = [];
   for (const id of presets) {
     const visibleSlots = await action(page, 'library-slot').allTextContents();
     expect(visibleSlots).toHaveLength(20);
+    const savedRevision = actor.observed.progress.get(actor.observed.player.playerId).revision;
     await page.locator(`[data-action="library-equip-preset"][data-value="${id}"]`).click();
     await expect(page.locator('.card-library')).toBeHidden();
-    await expect.poll(() => currentProgress(actor).legacy.deckId).toBe('custom');
-    savedPresets.push([...currentProgress(actor).legacy.customDeck]);
+    await expect.poll(() => actor.observed.progress.get(actor.observed.player.playerId).revision).toBeGreaterThan(savedRevision);
+    await expect.poll(() => currentProgress(actor).chosenDeckId).toBe('custom');
+    savedPresets.push([...currentProgress(actor).customDeck]);
     await action(page, 'library').click();
   }
   expect(new Set(savedPresets.map(deck => JSON.stringify(deck))).size).toBe(3);
-  const before = [...currentProgress(actor).legacy.customDeck];
+  const before = [...currentProgress(actor).customDeck];
   await page.locator('[data-action="library-slot"][data-value="0"]').click();
   await page.locator('[data-action="library-card"][data-value="glass_snail"]').click();
   await expect(page.locator('.deck-swap-hint')).toContainText('先点下方一张旧卡');
@@ -395,9 +402,10 @@ test('three one-click presets and a two-click custom swap retain all thirty-six 
   await expect(page.locator('[data-action="library-slot"][data-value="0"]')).toContainText('琉璃蜗牛');
   await action(page, 'library-save').click();
   await expect(page.locator('.card-library')).toBeHidden();
-  await expect.poll(() => currentProgress(actor).legacy.customDeck).toEqual(['glass_snail', ...before.slice(1)]);
+  await expect.poll(() => currentProgress(actor).customDeck).toEqual(['glass_snail', ...before.slice(1)]);
   await reloadSaved(actor);
-  expect(currentProgress(actor).legacy.customDeck).toEqual(['glass_snail', ...before.slice(1)]);
+  expect(currentProgress(actor).chosenDeckId).toBe('custom');
+  expect(currentProgress(actor).customDeck).toEqual(['glass_snail', ...before.slice(1)]);
   await action(page, 'library').click();
   await page.locator('[data-action="library-tab"][data-value="cards"]').click();
   const cards = await action(page, 'library-card').evaluateAll(elements => elements.map(element => ({
@@ -411,6 +419,7 @@ test('three one-click presets and a two-click custom swap retain all thirty-six 
     await expect(page.locator('.library-detail .card-effect')).not.toBeEmpty();
     await expect(page.locator('.library-detail')).toContainText('试试看');
   }
+  actor.metrics.cardDetailsReviewed = cards.length;
   await page.locator('[data-action="library-card"][data-value="glass_snail"]').click();
   await page.locator('.library-detail').scrollIntoViewIfNeeded();
   await safeScreenshot(page, testInfo, 'new-card-complete-rule-detail');
@@ -534,7 +543,7 @@ test('two real players charge only their own natural draw twice with correct wro
     if (nth === 1) await expect(action(actor.page, 'draw-begin')).toHaveCount(0);
     if (nth === 2) {
       if (actor === order[0]) {
-        for (const viewport of viewports) {
+        for (const viewport of [...viewports, { width: 320, height: 568 }]) {
           await actor.page.setViewportSize(viewport);
           await expect(action(actor.page, 'draw-begin')).toBeVisible();
           await touchTargets(actor.page, actor.page.locator('.rituals button'));
@@ -554,7 +563,7 @@ test('two real players charge only their own natural draw twice with correct wro
       expect(actor.observed.room.selfRitualsLeft).toBe(4);
     }
     if (turn === 2) {
-      for (const viewport of viewports) {
+      for (const viewport of [...viewports, { width: 320, height: 568 }]) {
         await actor.page.setViewportSize(viewport);
         await touchTargets(actor.page, actor.page.locator('.rituals button'));
         const first = actor.page.locator('#hand-semantics [data-hand-index]').first();
@@ -574,5 +583,117 @@ test('two real players charge only their own natural draw twice with correct wro
     expect(actor.observed.commands.filter(command => command.type === 'draw.begin')).toHaveLength(2);
     expect(actor.observed.errors).toEqual([]);
     expect(actor.observed.room.assisted).toBe(false);
+  }
+});
+
+function boardReadOnlySnapshot(actor) {
+  const room = actor.observed.room;
+  return structuredClone({
+    revision: room.revision, players: room.players,
+    handIds: room.selfHandIds, handCards: room.selfHandCards,
+    handCosts: room.selfHandCosts, draw: room.selfDrawEnglish,
+    rituals: room.selfRitualsLeft,
+  });
+}
+
+async function verifyBoardUnchanged(actor, before, commandsBefore) {
+  // Wait for two presentation frames after the real input/close, so a queued
+  // compatibility click is not mistaken for an already-settled interaction.
+  await actor.page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  expect(JSON.stringify(boardReadOnlySnapshot(actor)) === JSON.stringify(before),
+    'inspection preserves revision, both public boards, own mana/hand/costs, ready state and English charges').toBe(true);
+  expect(actor.observed.commands.slice(commandsBefore).map(command => command.type),
+    'viewing or dismissing details must not send a game command').toEqual([]);
+}
+
+test('armed unit inspection by right click native touch and keyboard never spends an action', async ({ actors }, testInfo) => {
+  test.setTimeout(150_000);
+  testInfo.annotations.push({ type: 'coverage', description: 'Two real isolated players summon through visible UI and wait for a ready own unit. While attack is armed, own/enemy projected DOM labels open exact-instance details by right click and 520ms Chromium CDP touch hold; I/ContextMenu also inspect. Closing preserves selection, both boards, own mana/hand/ready and command count. One Escape from hand focus then clicking an enemy does not attack. This covers DOM labels and Chromium touch-event emulation, not physical touch hardware or direct 3D model picking.' });
+  const a = await actors('inspection-A', { hasTouch: true });
+  const b = await actors('inspection-B', { hasTouch: true });
+  await calmAnimations(a); await calmAnimations(b);
+  await matchPair(a, b); await confirmOpening(a, b);
+  let inspector;
+  for (let turn = 0; turn < 14; turn += 1) {
+    const actor = [a, b].find(item => item.observed.room.youSeat === a.observed.room.activeSeat);
+    const other = actor === a ? b : a;
+    await actor.page.bringToFront();
+    await waitForBoard(actor);
+    const room = actor.observed.room;
+    if (room.players[room.youSeat].board.some(unit => unit.ready) && room.players[1 - room.youSeat].board.length) {
+      inspector = actor; break;
+    }
+    for (let move = 0; move < 8 && actor.observed.room.players[room.youSeat].board.length === 0; move += 1) {
+      if (!await playOneVisibleCard(actor)) break;
+      await sync(a, b); await waitForBoard(actor);
+    }
+    await uiCommand(actor, () => action(actor.page, 'end').click());
+    await sync(a, b);
+  }
+  expect(Boolean(inspector), 'natural play produced a ready own unit and visible opponent unit within fourteen turns').toBe(true);
+  const actor = inspector, page = actor.page, room = actor.observed.room;
+  const own = room.players[room.youSeat].board.find(unit => unit.ready);
+  const enemy = room.players[1 - room.youSeat].board[0];
+  const label = unit => page.locator(`.unit-label[data-uid="${unit.uid}"]`);
+  await label(own).click();
+  await expect(page.locator('.target-command')).toBeVisible();
+  await expect(label(enemy)).toHaveClass(/targetable/);
+  const client = await actor.context.newCDPSession(page);
+  try {
+    const cases = [
+      { input: 'right', unit: enemy, mine: false },
+      { input: 'right', unit: own, mine: true },
+      { input: 'touch', unit: enemy, mine: false },
+      { input: 'touch', unit: own, mine: true },
+      { input: 'i', unit: own, mine: true },
+      { input: 'ContextMenu', unit: enemy, mine: false },
+    ];
+    for (const item of cases) {
+      if (item.input === 'touch') await page.setViewportSize({ width: 390, height: 844 });
+      const control = label(item.unit);
+      await expect(control).toBeInViewport();
+      const publicName = (await control.getAttribute('aria-label')).split('，')[0];
+      const before = boardReadOnlySnapshot(actor), commandsBefore = actor.observed.commands.length;
+      if (item.input === 'right') await control.click({ button: 'right' });
+      else if (item.input === 'touch') {
+        const box = await control.boundingBox();
+        await client.send('Input.dispatchTouchEvent', {
+          type: 'touchStart', touchPoints: [{ x: box.x + box.width / 2, y: box.y + box.height / 2, id: 1, radiusX: 2, radiusY: 2, force: 1 }],
+        });
+        try { await sleep(520); }
+        finally { await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); }
+      } else {
+        await control.focus();
+        await page.keyboard.press(item.input);
+      }
+      const dialog = page.locator('.card-info-dialog.board-card-info');
+      await expect(dialog).toBeVisible();
+      await expect(dialog.locator('#card-info-title')).toHaveText(publicName);
+      await expect(dialog.locator('.card-facts')).toContainText(`当前攻击 ${item.unit.atk}`);
+      await expect(dialog.locator('.card-facts')).toContainText(`生命 ${item.unit.hp}/${item.unit.maxHp}`);
+      await expect(dialog.locator('.unit-inspection-state')).toContainText(item.mine ? '我方伙伴' : '对方伙伴');
+      await expect(dialog.locator('.unit-inspection-state')).toContainText(item.unit.shield ? '护盾：抵挡下一次伤害' : '当前没有护盾');
+      await expect(dialog.locator('.unit-inspection-state')).toContainText('基础卡牌：');
+      await expect(dialog.locator('.card-info-english')).not.toBeEmpty();
+      await safeScreenshot(page, testInfo, `${item.input}-${item.mine ? 'own' : 'enemy'}-unit-details`);
+      await action(page, 'card-info-close').click();
+      await expect(dialog).toBeHidden();
+      await expect(page.locator('.target-command')).toBeVisible();
+      await expect(label(enemy)).toHaveClass(/targetable/);
+      await verifyBoardUnchanged(actor, before, commandsBefore);
+    }
+  } finally { await client.detach(); }
+  const before = boardReadOnlySnapshot(actor), commandsBefore = actor.observed.commands.length;
+  await page.locator('#hand-semantics [data-hand-index]').first().focus();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.target-command')).toBeHidden();
+  await expect(label(enemy)).not.toHaveClass(/targetable/);
+  await label(enemy).click();
+  await verifyBoardUnchanged(actor, before, commandsBefore);
+  await safeScreenshot(page, testInfo, 'escape-cancelled-attack-from-hand-focus');
+  actor.metrics.unitInspection = { rightClickOwn: true, rightClickEnemy: true, nativeTouchOwn: true, nativeTouchEnemy: true, holdMs: 520, keyboardI: true, keyboardContextMenu: true, escapeFromHandFocus: true };
+  for (const participant of [a, b]) {
+    expect(participant.observed.errors).toEqual([]);
+    expect(participant.observed.room.assisted).toBe(false);
   }
 });
