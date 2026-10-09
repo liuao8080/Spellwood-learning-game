@@ -9,31 +9,41 @@ async function snapshot(actor){
   return {pageVisibility:document.visibilityState,arena:read('arena'),hand:read('hand-canvas')};
  });
 }
-for(const[index,variant]of ['baseline','arena-skipped','hand-skipped','hand-skipped','arena-skipped','baseline'].entries()){
- test(`@draw-diagnostic ${index} fixed ${variant} build isolates drawing with a real rabbit attack`,async({actors})=>{
+const cases=[...['baseline','arena-skipped','hand-skipped','hand-skipped','arena-skipped','baseline'].map((variant,index)=>({index,variant,partnerVariant:'baseline',tag:'@draw-diagnostic'})),
+ ...[['baseline','baseline'],['baseline','arena-skipped'],['baseline','arena-skipped'],['baseline','baseline'],['arena-skipped','baseline']].map(([variant,partnerVariant],index)=>({index:index+6,variant,partnerVariant,tag:'@draw-followup'}))];
+for(const {index,variant,partnerVariant,tag} of cases){
+ test(`${tag} ${index} fixed A-${variant} B-${partnerVariant} builds isolate drawing with a real rabbit attack`,async({actors})=>{
   test.setTimeout(150000);
   const directory=path.resolve('test-results/browser-evidence');await mkdir(directory,{recursive:true});
-  const report={kind:'draw-isolation-not-visual-acceptance',index,variant,status:'preparing',
+  const report={kind:'draw-isolation-not-visual-acceptance',index,variant,partnerVariant,status:'preparing',
    caveat:'Fixed lab build. No native recorder in any condition. Skipped canvas drawing is not a product fix. Matrix/model updates, game rules and actual UI commands remain. Independent legal openings are not seeded; hand and quality differences are retained.'};
   let writes=Promise.resolve();const checkpoint=()=>{const data=JSON.stringify(report,null,2);writes=writes.then(()=>writeFile(path.join(directory,`draw-diagnostic-${index}-${variant}.json`),data));return writes;};
   await checkpoint();
   const a=await actors('draw-A',{viewport:{width:844,height:390},reducedMotion:'no-preference',diagnosticEntry:`draw-diagnostic-${variant}.html`});
-  const b=await actors('draw-B',{reducedMotion:'reduce',diagnosticEntry:'draw-diagnostic-baseline.html'});
+  const b=await actors('draw-B',{reducedMotion:'reduce',diagnosticEntry:`draw-diagnostic-${partnerVariant}.html`});
   let observation=false;
   try{
    await b.page.bringToFront();await calmAnimations(b);await a.page.bringToFront();await normalMotion(a);await buildMeleeDeck(a);
    await prepareMatch(a);await a.page.locator('#deck').selectOption('custom');await prepareMatch(b);
    await Promise.all([a,b].map(actor=>action(actor.page,'match').click()));
-   await Promise.all([a,b].map(actor=>expect(action(actor.page,'opening-confirm')).toBeVisible()));await confirmOpening(a,b);
-   const uid=await reachReadyMelee(a,b,['rabbit']);await a.page.bringToFront();await waitForBoard(a);
+   await Promise.all([a,b].map(actor=>expect(action(actor.page,'opening-confirm')).toBeVisible()));
+   if(tag==='@draw-followup'){
+    const choices=await action(a.page,'opening-card').evaluateAll(elements=>elements.map(el=>({index:el.dataset.index,name:el.querySelector('strong').textContent})));
+    report.mulliganIndices=choices.filter(card=>card.name!=='月光兔').slice(0,2).map(card=>card.index);
+    for(const index of report.mulliganIndices)await a.page.locator(`[data-action="opening-card"][data-index="${index}"]`).click();
+   }
+   await confirmOpening(a,b);
+   const uid=await reachReadyMelee(a,b,['rabbit'],tag==='@draw-followup'?14:10);await a.page.bringToFront();await waitForBoard(a);
    const seat=a.observed.room.youSeat;report.before=publicState(a);report.source=report.before.players[seat].board.find(unit=>unit.uid===uid);
+   for(const player of report.before.players)expect(player.deckCount).toBeGreaterThan(0);
    expect(report.source.cardId).toBe('rabbit');expect(report.source.atk).toBe(2);
    await a.page.locator(`.unit-label[data-uid="${uid}"]`).click();await expect(a.page.locator('.target-command')).toBeVisible();
    await action(a.page,'enemy-hero').hover();await a.page.waitForTimeout(1000);
    report.aBefore=await snapshot(a);report.bBefore=await snapshot(b);
    for(const kind of ['arena','hand']){
-    expect(report.aBefore[kind].variant).toBe(variant);expect(report.bBefore[kind].variant).toBe('baseline');
-    expect(report.aBefore[kind].updates).toBeGreaterThan(0);expect(report.bBefore[kind].draws).toBeGreaterThan(0);
+    expect(report.aBefore[kind].variant).toBe(variant);expect(report.bBefore[kind].variant).toBe(partnerVariant);
+    expect(report.aBefore[kind].updates).toBeGreaterThan(0);expect(report.bBefore[kind].updates).toBeGreaterThan(0);
+    if(partnerVariant!==`${kind}-skipped`)expect(report.bBefore[kind].draws).toBeGreaterThan(0);
     if(variant!==`${kind}-skipped`)expect(report.aBefore[kind].draws).toBeGreaterThan(0);
    }
    await checkpoint();
@@ -50,6 +60,7 @@ for(const[index,variant]of ['baseline','arena-skipped','hand-skipped','hand-skip
    if(variant==='arena-skipped')expect(report.drawDeltas.aArena).toBe(0);
    else expect(report.drawDeltas.aArena).toBeGreaterThan(0);
    report.handWindowNote=report.drawDeltas.aHand===0?'Hand had no draw in this attack interval; initial positive draw count separately proves baseline loaded':'Hand drew during interval';
+   if(partnerVariant==='arena-skipped')expect(report.drawDeltas.bArena).toBe(0);
    if(variant==='hand-skipped')expect(report.drawDeltas.aHand).toBe(0);
    report.status='diagnostic-complete-not-quality-acceptance';
   }finally{

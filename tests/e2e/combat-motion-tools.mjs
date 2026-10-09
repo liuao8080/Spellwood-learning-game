@@ -45,10 +45,10 @@ async function buildMeleeDeck(actor) {
   await expect.poll(() => currentProgress(actor)?.customDeck).toEqual(draft);
 }
 
-async function reachReadyMelee(a, b, allowedCards = Object.keys(meleeDeck)) {
+async function reachReadyMelee(a, b, allowedCards = Object.keys(meleeDeck), maximumTurns = 10) {
   // Only A's own legal choices guide A's selection. B's hand is never inspected.
   // A summons once, then both simply pass until that actual unit is ready.
-  for (let turn = 0; turn < 10; turn += 1) {
+  for (let turn = 0; turn < maximumTurns; turn += 1) {
     const active = a.observed.room.activeSeat === a.observed.room.youSeat ? a : b;
     await active.page.bringToFront();
     await waitForBoard(active);
@@ -76,12 +76,12 @@ async function reachReadyMelee(a, b, allowedCards = Object.keys(meleeDeck)) {
         return source.uid;
       }
     }
-    if (turn < 9) {
+    if (turn < maximumTurns - 1) {
       await uiCommand(active, () => action(active.page, 'end').click());
       await sync(a, b);
     }
   }
-  throw new Error('Coverage gap: the UI did not reach a ready melee unit within ten ordinary turns');
+  throw new Error(`Coverage gap: the UI did not reach a ready melee unit within ${maximumTurns} ordinary turns`);
 }
 
 function publicState(actor) {

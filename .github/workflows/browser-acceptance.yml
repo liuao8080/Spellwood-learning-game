@@ -62,7 +62,7 @@ jobs:
         if: ${{ !cancelled() && steps.layout.outcome == 'success' }}
         env:
           E2E_SUITE: full
-        run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout|@combat-motion|@frame-diagnostic|@draw-diagnostic'
+        run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout|@combat-motion|@frame-diagnostic|@draw-diagnostic|@draw-followup'
       - name: Keep only safe evidence for three days
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -131,8 +131,8 @@ jobs:
           node scripts/build-draw-diagnostics.mjs
           sha256sum --check /tmp/production.sha256
       - run: npx --no-install playwright install --with-deps chromium
-      - name: Six fixed-build drawing comparisons, not visual acceptance
-        run: npx --no-install playwright test --grep @draw-diagnostic
+      - name: Fixed-build partner controls and missing arena repeat, not acceptance
+        run: npx --no-install playwright test --grep @draw-followup
       - name: Keep only anonymous numeric observations
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
