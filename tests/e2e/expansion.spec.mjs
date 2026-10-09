@@ -352,6 +352,9 @@ test('twenty sequential wardrobe previews and a resumable test ten-pull fit comp
   await skin(page, 'mode', 'test').click();
   await skin(page, 'open', 10).click();
   await expect(page.locator('.skin-source')).toContainText('已揭开 0/10');
+  // The local opening renders before its asynchronous persisted-progress
+  // response reaches the independent observer. Require that real save first.
+  await expect.poll(() => journey(actor).openings.test?.count, { timeout: 12_000 }).toBe(10);
   const batch = structuredClone(journey(actor).openings.test);
   expect(batch.count).toBe(10);
   await skin(page, 'reveal').click();
