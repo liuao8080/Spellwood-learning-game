@@ -396,9 +396,22 @@ test('twenty sequential wardrobe previews and a resumable test ten-pull fit comp
   await matchPair(actor,peer);await confirmOpening(actor,peer);await sync(actor,peer);
   expect(actor.observed.room.selfSkinId).toBe('leaf_ranger');
   expect(peer.observed.room.opponentSkinId).toBe('leaf_ranger');
-  actor.metrics.equippedRanger = {selfSkinId:actor.observed.room.selfSkinId,peerOpponentSkinId:peer.observed.room.opponentSkinId,revision:actor.observed.room.revision};
+  actor.metrics.equippedRanger = {selfSkinId:actor.observed.room.selfSkinId,peerOpponentSkinId:peer.observed.room.opponentSkinId,revision:actor.observed.room.revision,initialActiveSeat:actor.observed.room.activeSeat,youSeat:actor.observed.room.youSeat};
+  // Matchmaking may seat the equipped player second. Settle through a real
+  // opponent turn instead of waiting for a deliberately disabled own-turn button.
+  if (actor.observed.room.activeSeat !== actor.observed.room.youSeat) {
+    await peer.page.bringToFront(); await waitForBoard(peer);
+    await uiCommand(peer,()=>action(peer.page,'end').click());
+    await sync(actor,peer);
+  }
+  expect(actor.observed.room.activeSeat).toBe(actor.observed.room.youSeat);
+  actor.metrics.equippedRanger.settledRevision=actor.observed.room.revision;
   for(const viewport of [{width:1280,height:800},{width:844,height:390},{width:320,height:568}]){
     await page.setViewportSize(viewport);await page.bringToFront();await waitForBoard(actor);
+    await expect(page.locator('#arena')).toBeVisible();
+    await expect(page.locator('#arena')).toHaveAttribute('data-renderer','WebGL2');
+    expect(actor.observed.room.selfSkinId).toBe('leaf_ranger');
+    expect(peer.observed.room.opponentSkinId).toBe('leaf_ranger');
     await safeScreenshot(page,testInfo,`${viewport.width}x${viewport.height}-redeemed-ranger-real-match`);
   }
   expect(officialWallet(actor)).toEqual(official);
