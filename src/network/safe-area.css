@@ -169,12 +169,14 @@ body.immersive .pack-exit-confirm section { max-height: calc(var(--safe-height) 
  body.immersive.has-room .compact-hand-hint{display:inline;font-size:11px;color:#cce3c4}
  body.immersive.has-room .rituals>button,body.immersive.has-room .rituals:has(.draw-english)>button,
  body.immersive.has-room .rituals:has(.draw-english)>.draw-english{grid-row:1;grid-column:auto;width:100%;height:44px;min-height:44px;min-width:44px;padding:2px 1px;font-size:12px;line-height:16px}
- body.immersive.has-room .rituals:has(.draw-english)>.end-turn{grid-column:5}
+ body.immersive.has-room .rituals:has(.draw-english)>[data-action="ritual"]{grid-row:1}
+ body.immersive.has-room .rituals:has(.draw-english)>.end-turn{grid-row:1;grid-column:5}
  body.immersive.has-room .rituals small,body.immersive.has-room.hand-overflow .rituals small{font-size:10px;line-height:12px}
  body.immersive.has-room #hand-stage #hand-prev,body.immersive.has-room #hand-stage #hand-next,
  body.immersive.has-room #hand-stage:not(.hand-fallback) #hand-prev:not([hidden]),body.immersive.has-room #hand-stage:not(.hand-fallback) #hand-next:not([hidden]),
  body.immersive.has-room:has(.draw-english) #hand-stage:not(.hand-fallback) #hand-prev:not([hidden]),body.immersive.has-room:has(.draw-english) #hand-stage:not(.hand-fallback) #hand-next:not([hidden]){display:none!important}
  body.immersive.has-room .command-bar{height:52px;padding:3px}
+ body.immersive.has-room .command-bar>button{height:44px;min-height:44px;padding:2px 3px}
  body.immersive.has-room .command-bar>div{max-height:44px}
  body.immersive.has-room #notice,body.immersive.has-room:has(.draw-english) #notice{bottom:calc(274px + var(--safe-bottom))}
  body.immersive.has-room #notice[data-kind="hand-tip"]{display:none}
