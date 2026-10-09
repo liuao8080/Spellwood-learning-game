@@ -60,6 +60,13 @@ export async function verifyCpuHandReachability(actor,peer,testInfo) {
   await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[touch(geometry.hand.x+geometry.hand.width*.82)]});
   await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await inspectSelected('native-touch');
   actor.metrics.cpuHandReachability.touchSwipes=swipes;
+  // A physical Tab away while the mouse is held must cancel this intent.
+  await first.focus();await page.keyboard.press('End');await settle(page);
+  await page.mouse.move(geometry.hand.x+geometry.hand.width*.82,geometry.hand.y+geometry.hand.height*.55);
+  await page.mouse.down();await expect(canvas).toBeFocused();
+  await page.keyboard.press('Tab');await expect(canvas).not.toBeFocused();await page.mouse.up();
+  await expect(page.locator('.command-bar')).toBeHidden();await expect(page.locator('.card-info-dialog')).toBeHidden();
+  actor.metrics.cpuHandReachability.tabDepartureCancelled=true;
   expect(actor.observed.commands.slice(commands)).toEqual([]);expect(peer.observed.commands.slice(peerCommands)).toEqual([]);
   expect(actor.observed.room.selfController).toBe('human');expect(actor.observed.room.opponentController).toBe('human');
   expect(actor.observed.room.revision).toBe(revision);

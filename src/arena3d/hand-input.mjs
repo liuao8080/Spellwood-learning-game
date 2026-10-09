@@ -14,6 +14,7 @@ export class HandInput {
       pointerdown: event => this.down(event), pointermove: event => this.move(event),
       pointerup: event => this.up(event), pointercancel: event => this.cancelPointer(event),
       lostpointercapture: event => this.cancelPointer(event),
+      blur: () => this.cancel(),
       pointerleave: event => { this.clearHover(); if (!this.element.hasPointerCapture?.(event.pointerId)) this.cancelPointer(event); },
       contextmenu: event => this.context(event),
       // Pointerup owns selection. Never let a compatibility click dispatch it again.

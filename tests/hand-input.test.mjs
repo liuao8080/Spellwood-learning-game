@@ -60,9 +60,10 @@ test("press/release card identity, pointer id and current revision must all agre
   h.revise(); h.advance(420); h.fire("pointerup");
   assert.equal(h.selected.length, 0); assert.equal(h.inspected.length, 0);
 });
-for (const cancellation of ["pointercancel", "lostpointercapture", "blur", "hidden", "manual", "multitouch"]) test(`${cancellation} clears every pending gesture`, t => {
+for (const cancellation of ["pointercancel", "lostpointercapture", "blur", "element-blur", "hidden", "manual", "multitouch"]) test(`${cancellation} clears every pending gesture`, t => {
   const h = harness(t); h.fire("pointerdown");
   if (cancellation === "blur") h.windowTarget.listeners.get("blur")();
+  else if (cancellation === "element-blur") h.element.listeners.get("blur")?.();
   else if (cancellation === "hidden") { h.documentTarget.hidden = true; h.documentTarget.listeners.get("visibilitychange")(); }
   else if (cancellation === "manual") h.input.cancel();
   else if (cancellation === "multitouch") h.fire("pointerdown", { pointerId: 2, isPrimary: false });
