@@ -349,12 +349,15 @@ test('@combat-motion normal melee leaves its slot, changes hero HP once and retu
   try {
     await stage('isolated-guests', 25_000, async () => {
       a = await actors('motion-guest-A', { viewport: { width: 844, height: 390 }, reducedMotion: 'no-preference' });
-      a.metrics.combatMotion = evidence; a.page.setDefaultTimeout(3000);
+      // Setup uses the same bounded action budget as the rest of browser CI.
+      // The stricter capture-stage deadlines below still guard recording.
+      a.metrics.combatMotion = evidence;
       b = await actors('motion-guest-B', { reducedMotion: 'reduce' });
-      b.page.setDefaultTimeout(3000);
     });
     await stage('settings-and-legal-deck', 30_000, async () => {
+      await b.page.bringToFront();
       await calmAnimations(b);
+      await a.page.bringToFront();
       await normalMotion(a);
       await buildMeleeDeck(a);
       await prepareMatch(a); await a.page.locator('#deck').selectOption('custom');
