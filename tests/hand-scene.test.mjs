@@ -161,9 +161,27 @@ test("hidden zero-size hand measurements preserve the last useful camera and scr
 test("hand resize retains its backing image until painting and blocks stale-frame selection",t=>{
   const h=harness(t,{software:true,width:390,height:190});h.scene.setHand(ids);h.frame();
   const before=h.renderer.resizes;Object.assign(h.box,{width:430,height:190});h.scene.resize();
-  assert.equal(h.renderer.resizes,before);assert.equal(h.renderer.width,390);assert.equal(h.scene.select(0),false);
+  assert.equal(h.renderer.resizes,before);assert.equal(h.renderer.width,390);assert.equal(h.scene.select(0,'pointer'),false);
   h.frame();assert.equal(h.renderer.width,430);assert.equal(h.renderer.resizes,before+1);assert.equal(h.scene.select(0),true);
   h.scene.resize();h.frame();assert.equal(h.renderer.resizes,before+1);
+});
+
+test('semantic Enter and button selection survive a pending resize without admitting stale pointer hits', t => {
+  const h = harness(t, { width: 390, height: 190 }); h.scene.setHand(ids, { revision: 9 }); h.frame();
+  Object.assign(h.box, { width: 828, height: 168 }); h.scene.resize();
+  assert(h.scene.pendingSize); assert.equal(h.scene.enabled(), false); h.scene.focus(4);
+  const event = { key: 'Enter', repeat: false, preventDefault() { this.prevented = true; } };
+  assert.equal(h.scene.handleKey(event), true); assert(event.prevented);
+  assert.equal(h.selected.length, 1); assert.equal(h.selected[0].index, 4); assert.equal(h.selected[0].revision, 9);
+  assert.equal(h.selected[0].cardId, ids[4]); assert.equal(h.selected[0].source, 'keyboard');
+  assert.equal(h.scene.select(3, 'accessible-button'), true);
+  assert.equal(h.scene.select(0, 'pointer'), false); assert.equal(h.scene.pick({ clientX: 20, clientY: 230 }), null);
+  h.scene.handleKey({ ...event, repeat: true }); assert.equal(h.selected.length, 2);
+  for (const field of ['hidden', 'pageHidden', 'contextLost', 'frameFault', 'destroyed']) {
+    h.scene[field] = true; assert.equal(h.scene.handleKey(event), false); assert.equal(h.scene.select(4, 'accessible-button'), false); h.scene[field] = false;
+  }
+  h.scene.setInteractive(false); assert.equal(h.scene.handleKey(event), false);
+  h.scene.setInteractive(true); h.frame(); assert.equal(h.scene.select(0, 'pointer'), true);
 });
 test("disposing twice removes listeners and releases shared resources exactly once", t => {
   const h = harness(t); h.scene.setHand(ids); const resources = [...h.scene.resources]; const counts = new Map();

@@ -191,9 +191,12 @@ export class HandScene {
     return null;
   }
 
-  enabled() { return !!this.renderer && !this.destroyed && !this.hidden && !this.pageHidden && !this.contextLost && !this.frameFault && !this.pendingSize && this.interactive; }
+  enabled({ coordinateFree = false } = {}) { return !!this.renderer && !this.destroyed && !this.hidden && !this.pageHidden && !this.contextLost && !this.frameFault && (coordinateFree || !this.pendingSize) && this.interactive; }
   emit(kind, index, source) {
-    const card = this.cards[index]; if (!this.enabled() || !card) return false;
+    // Semantic controls address a known current card index. They need no stale
+    // pixel hit test and must not lose Enter while a resize awaits its paint.
+    const coordinateFree = ['keyboard', 'accessible-button', 'button'].includes(source);
+    const card = this.cards[index]; if (!this.enabled({ coordinateFree }) || !card) return false;
     const intent = { kind: "card", index, cardId: card.cardId, revision: this.revision, source };
     (kind === "inspect" ? this.onInspect : this.onSelect)(intent); return true;
   }
@@ -227,14 +230,14 @@ export class HandScene {
     this.scrollBy(scrollForHandIndex(this.layoutInfo, index) - this.scroll);
   }
   handleKey(event) {
-    if (!this.enabled() || !this.cards.length || event.altKey || event.ctrlKey || event.metaKey) return false;
+    if (!this.enabled({ coordinateFree: true }) || !this.cards.length || event.altKey || event.ctrlKey || event.metaKey) return false;
     const current = this.focusedIndex ?? this.selectedIndex ?? 0, last = this.cards.length - 1;
     let next = null;
     if (event.key === "ArrowRight") next = Math.min(last, current + 1);
     else if (event.key === "ArrowLeft") next = Math.max(0, current - 1);
     else if (event.key === "Home") next = 0;
     else if (event.key === "End") next = last;
-    else if (event.key === "Enter" || event.key === " ") { if (!event.repeat) this.select(current); }
+    else if (event.key === "Enter" || event.key === " ") { if (!event.repeat) this.select(current, "keyboard"); }
     else if (event.key?.toLowerCase() === "i" || (event.key === "F10" && event.shiftKey) || event.key === "ContextMenu") { if (!event.repeat) this.inspect(current, "keyboard"); }
     else if (event.key === "Escape") this.focus(null);
     else return false;

@@ -66,3 +66,23 @@ logic cases cover 16/33/120/633/2000ms intervals, all four cancellation points,
 repeated impact attempts and rejected work; five real-Three-object/mock-renderer
 cases cover actual scene integration and cleanup. All passed along with typecheck
 and network build. These tests are not WebGL visual acceptance.
+
+### CI25: improved endpoint evidence; additional keyboard regression remains
+
+CI25 run `37876713684`, head `aab51d872d1534a69f0d7c0349d0419070c4acf3`,
+finished 17/19 passed. Original frames now show the attacker at the forward
+endpoint in frames 04/05, then back at the slot in 06. Independent review confirms
+this endpoint hold; continuous travel remains unverified and 0.719s frame-gap
+still fails the unchanged gate. No frame-rate claim follows from this improvement.
+
+The other failure was draw-English feedback followed by one keyboard Enter:
+`.card-resources` did not appear. That scenario had zero attacks, so melee phase
+length alone cannot explain it. A concrete input race exists in the hand scene:
+`pendingSize` blocks both coordinate hit-testing and coordinate-free keyboard
+selection until the next canvas paint, while the semantic button is focusable.
+The original capture did not record this flag, so it does not prove the race
+caused that particular failure. The candidate fix lets semantic keyboard/button
+intents use current card index/revision during pending resize; pointer hit-testing
+still waits for geometry, and all hidden/context-lost/fault/busy guards remain.
+A focused regression reproduces pending-resize selection plus guard preservation.
+Browser verification of this candidate is pending; 17/19 is not completion.
