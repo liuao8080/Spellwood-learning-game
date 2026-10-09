@@ -34,6 +34,7 @@ import {
 } from "./model-utils.mjs";
 import { EXPANSION_BUILDERS } from "./creature-expansion.mjs";
 import { V4_BUILDERS } from "./creature-expansion-v4.mjs";
+import { createStoneSurfaceTexture } from "./stone-surface.mjs";
 
 export const MODEL_VERSION = "4.0.0-models.1";
 export const SUPPORTED_SPECIES = Object.freeze([
@@ -1339,7 +1340,7 @@ function makeHandle({
   return api;
 }
 
-/** All detail stays in the perimeter. Central stone remains a quiet playing surface. */
+/** Sculpted detail stays in the perimeter. Central stone remains a quiet playing surface. */
 function forestEdgeDetail(builder, body, random) {
   // Layered bevelled wood end-grain, not a background image or decal.
   for (const [y, color, depth] of [
@@ -1557,7 +1558,7 @@ function forestEdgeDetail(builder, body, random) {
   }
 }
 
-function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4, rowDepth = 2.12, frontSlots = null, backSlots = null, backRowDepth = rowDepth, heroDockZ = null } = {}) {
+function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4, rowDepth = 2.12, frontSlots = null, backSlots = null, backRowDepth = rowDepth, heroDockZ = null, stoneSurface = null } = {}) {
   builder.add(body, roundedSlab(18, 12, 0.66, 1.05, 0.07), "bark", {
     position: [0, -0.47, 0],
     rotation: [-HALF_PI, 0, 0],
@@ -1574,10 +1575,16 @@ function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4, rowDepth = 2
     rotation: [-HALF_PI, 0, 0],
   });
   // Large solid inset is lower than the outer lip; sidewall remains readable.
-  builder.add(body, roundedSlab(16.35, 10.35, 0.3, 0.8, 0.02), "stone", {
-    position: [0, -0.17, 0],
-    rotation: [-HALF_PI, 0, 0],
-  });
+  const inset = roundedSlab(16.35, 10.35, 0.3, 0.8, 0.02);
+  if (stoneSurface) {
+    const positions = inset.getAttribute('position'), uv = inset.getAttribute('uv');
+    for (let i = 0; i < positions.count; i++) uv.setXY(i, clamp(positions.getX(i) / 16.35 + .5, 0, 1), clamp(positions.getY(i) / 10.35 + .5, 0, 1));
+    const mesh = builder.ownMesh(new Mesh(inset, stoneSurface));
+    mesh.name = 'forest-table:quiet-stone';
+    mesh.position.set(0, -.17, 0); mesh.rotation.x = -HALF_PI;
+    mesh.castShadow = true; mesh.receiveShadow = true;
+    body.add(mesh);
+  } else builder.add(body, inset, "stone", { position: [0, -.17, 0], rotation: [-HALF_PI, 0, 0] });
   const trim = roundedRectShape(17.5, 11.5, 0.95);
   trim.holes.push(roundedRectShape(17.33, 11.33, 0.89));
   builder.add(body, extrudeShape(trim, 0.035, 0.008), "bronze", {
@@ -1718,6 +1725,7 @@ export function createModelLibrary({
   quality = "medium",
   palette = {},
   textures = {},
+  arenaSurface = "plain",
 } = {}) {
   if (!["low", "medium", "high"].includes(quality))
     throw new RangeError("Unsupported model quality");
@@ -1740,7 +1748,12 @@ export function createModelLibrary({
         root = new Group();
       root.name = "spellwood-arena";
       const body = builder.part("forest-table", root);
-      const slots = arenaGeometry(builder, body, options);
+      // CPU compatibility keeps the original merged vertex-color surface and
+      // avoids a large textured triangle in its per-pixel rasterizer.
+      const stoneTexture = arenaSurface === 'stone' ? createStoneSurfaceTexture(palette.stone || PALETTE.stone) : null;
+      const stoneSurface = stoneTexture ? new MeshStandardMaterial({ map: stoneTexture, color: 0xffffff, roughness: .94, metalness: 0 }) : null;
+      if (stoneSurface) stoneSurface.name = 'spellwood-quiet-stone';
+      const slots = arenaGeometry(builder, body, { ...options, stoneSurface });
       const handle = makeHandle({
         root,
         builder,
@@ -1758,6 +1771,12 @@ export function createModelLibrary({
         row.map((p, i) => anchor(root, `slot-${side}-${i}`, p)),
       );
       root.userData.tabletopY = 0;
+      root.userData.arenaSurface = stoneSurface ? 'stone' : 'plain';
+      const disposeHandle = handle.dispose;
+      handle.dispose = () => {
+        if (handle.disposed) return;
+        stoneSurface?.dispose(); stoneTexture?.dispose(); disposeHandle();
+      };
       return retain(handle);
     },
     createCreature({ species = "fox", side = "player", variantSeed = 1 } = {}) {

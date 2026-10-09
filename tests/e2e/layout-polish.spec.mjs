@@ -132,6 +132,9 @@ async function populatedLayout(actor, testInfo, viewport) {
       viewport: { x: 0, y: 0, right: innerWidth, bottom: innerHeight },
       contentWidth: document.documentElement.scrollWidth,
       arena: rect(document.querySelector('#arena')),
+      surface: document.querySelector('#arena').dataset.arenaSurface,
+      renderQuality: document.querySelector('#arena').dataset.qualityLevel,
+      renderBuffer: [document.querySelector('#arena').width, document.querySelector('#arena').height],
       hand: sample(document.querySelector('#hand-canvas'), 'hand-canvas'),
       stats, panels, actions, labels, obstacles,
     };
@@ -140,6 +143,7 @@ async function populatedLayout(actor, testInfo, viewport) {
   actor.metrics.populatedLayouts.push({ size, ...geometry });
   // Save before assertions so a geometry failure has exact-state pixel evidence.
   await safeScreenshot(page, testInfo, `${size}-eight-units-seven-card-hand`);
+  expect(geometry.surface).toBe('stone');
   expect(geometry.labels, `${size}: the field is populated, not an empty-board pass`).toHaveLength(8);
   expect(geometry.stats, `${size}: both heroes expose HP and mana`).toHaveLength(4);
   expect(geometry.actions.length, `${size}: rituals and End Turn remain visible`).toBeGreaterThanOrEqual(4);

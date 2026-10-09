@@ -176,6 +176,7 @@ test('simulated unavailable WebGL uses the real CPU wardrobe and responsive live
   }
   await expect(page.locator('#hand-canvas')).toHaveAttribute('data-renderer', /CPU/);
   await expect(page.locator('#arena')).toHaveAttribute('data-renderer', /CPU/);
+  await expect(page.locator('#arena')).toHaveAttribute('data-arena-surface', 'plain');
   const selectedAt = Date.now();
   await canvasAndKeyboard(actor, testInfo);
   actor.metrics.cpuInteractionSample.pointerAndKeyboardMs = Date.now() - selectedAt;

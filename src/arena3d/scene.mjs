@@ -89,7 +89,8 @@ export class ArenaScene {
       this.contactShadowTexture = new CanvasTexture(shadowCanvas);
       this.contactShadowGeometry = new PlaneGeometry(2.2, 1.65);
     }
-    this.library = createModelLibrary({ quality: this.quality });
+    this.library = createModelLibrary({ quality: this.quality, arenaSurface: this.renderer.isSoftwareRenderer ? 'plain' : 'stone' });
+    canvas.dataset.arenaSurface = this.renderer.isSoftwareRenderer ? 'plain' : 'stone';
     this.arena = this.library.createArena({ seed: 27, slotsPerSide: 4 });
     this.arena.root.traverse(object => { object.userData.cpuStatic = true; });
     this.scene.add(this.arena.root);
