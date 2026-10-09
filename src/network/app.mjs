@@ -373,7 +373,7 @@ function cardInfo() {
     ? `<span>当前攻击 ${instance.attack}</span><span>生命 ${instance.health}/${instance.maximumHealth}</span>`
     : `<span>${inspectedCost} 能量${inspectedCost < guide.cost ? `（本回合减1，基础${guide.cost}）` : ""}</span>${guide.type === "伙伴" ? `<span>${guide.atk} 攻击</span><span>${guide.hp} 生命</span>` : "<span>法术</span>"}`;
   const state = instance ? `<section class="unit-inspection-state" aria-label="当前伙伴状态"><p><b>${instance.ownerLabel}</b> · ${instance.actionLabel}${instance.shield ? " · 护盾：抵挡下一次伤害" : " · 当前没有护盾"}</p><p class="subtle">基础卡牌：${guide.cost}能量 · ${guide.atk}攻击 · ${guide.hp}生命${instance.changedAttack || instance.changedMaximumHealth ? "。当前数值已受效果改变" : ""}</p></section>` : "";
-  return `<section class="dialog card-info-dialog ${instance ? "board-card-info" : ""}" role="dialog" aria-modal="true" aria-labelledby="card-info-title"><header class="card-info-heading"><div class="card-info-portrait">${artThumb(id)}</div><div><p class="eyebrow">${esc(guide.element)} · ${esc(guide.keyword)}</p><h2 id="card-info-title">${esc(guide.name)}</h2><p class="card-info-english" lang="en">${esc(guide.en)}</p><p class="card-facts">${facts}</p></div></header>${state}<p class="card-effect">${esc(guide.effect)}</p><div class="card-info-columns"><section><h3>${esc(guide.keyword)}</h3><p>${esc(guide.rule)}</p><h3>怎么使用</h3><p>${esc(guide.target)}</p><p>${esc(guide.timing)}</p></section><section><h3>试试看</h3><p>${esc(guide.example)}</p><details class="card-info-tip"><summary>${guide.exchange ? "攻击前看看" : "使用小提示"}</summary>${guide.exchange ? `<p>${esc(guide.exchange)}</p>` : ""}<p>${esc(guide.tip)}</p></details></section></div><footer class="card-info-footer">${room?.phase === "playing" ? `<p class="card-info-time">${room.canAct ? "你的回合" : "对手回合"} · ${deadlineTag(room.turnDeadline)} · 查看说明时继续计时</p>` : ""}<button class="primary" data-action="card-info-close">返回棋盘</button></footer></section>`;
+  return `<section class="dialog card-info-dialog ${instance ? "board-card-info" : ""}" role="dialog" aria-modal="true" aria-labelledby="card-info-title"><div class="card-info-body" tabindex="0" role="region" aria-label="卡牌详细说明"><header class="card-info-heading"><div class="card-info-portrait">${artThumb(id)}</div><div><p class="eyebrow">${esc(guide.element)} · ${esc(guide.keyword)}</p><h2 id="card-info-title">${esc(guide.name)}</h2><p class="card-info-english" lang="en">${esc(guide.en)}</p><p class="card-facts">${facts}</p></div></header>${state}<p class="card-effect">${esc(guide.effect)}</p><div class="card-info-columns"><section><h3>${esc(guide.keyword)}</h3><p>${esc(guide.rule)}</p><h3>怎么使用</h3><p>${esc(guide.target)}</p><p>${esc(guide.timing)}</p></section><section><h3>试试看</h3><p>${esc(guide.example)}</p><details class="card-info-tip"><summary>${guide.exchange ? "攻击前看看" : "使用小提示"}</summary>${guide.exchange ? `<p>${esc(guide.exchange)}</p>` : ""}<p>${esc(guide.tip)}</p></details></section></div></div><footer class="card-info-footer">${room?.phase === "playing" ? `<p class="card-info-time">${room.canAct ? "你的回合" : "对手回合"} · ${deadlineTag(room.turnDeadline)} · 查看说明时继续计时</p>` : ""}<button class="primary" data-action="card-info-close">返回棋盘</button></footer></section>`;
 }
 function settings() {
   const activeRenderer = room ? rendererStatus : lobbyStatus;
@@ -398,7 +398,10 @@ function render() {
   if (scene && selectionKey !== renderedSelection) { renderedSelection = selectionKey; try { scene.select(selected); } catch { sceneFault = true; } }
   
   const previousDialog = modalRoot.querySelector(".dialog"), previousScroll = previousDialog?.scrollTop || 0;
+  const previousCardScroll = previousDialog?.querySelector(".card-info-body")?.scrollTop || 0;
+  const previousCardTipOpen = previousDialog?.querySelector('.card-info-tip')?.open === true;
   const focused = document.activeElement;
+  const cardFocus = focused?.matches?.('.card-info-body') ? '.card-info-body' : focused?.matches?.('.card-info-tip summary') ? '.card-info-tip summary' : null;
   const focusAction = focused?.dataset?.action;
   const focusIndex = focused?.dataset?.index;
   const focusValue = focused?.dataset?.value;
@@ -427,15 +430,26 @@ function render() {
   const modalHTML = contents ? `<div class="modal-shade${compactFeedback ? ` battle-recap-layer${ownEffectRecap ? " own-effect-recap" : ""}` : ""}">${contents}</div>` : "";
   if (modalHTML !== renderedModalHTML) { modalRoot.innerHTML = modalHTML; renderedModalHTML = modalHTML; }
   pictures.connect(modalRoot);
-  const modalKey = (connectionState === "replaced" && room ? "connection-replaced" : null) || (panel === "study" ? `study:${desk?.question?.challengeId || "catalogue"}` : panel) || (challenge ? `question:${challenge.challengeId}${feedback ? ":feedback" : ""}` : room?.phase === "opening" ? `opening:${room.roomId}` : room?.phase === "finished" && !visualBusy ? `result:${room.roomId}` : null);
+  const cardInspectionKey = inspectUnitRef ? `unit:${inspectUnitRef.seat}:${inspectUnitRef.uid}`
+    : inspectHandId != null ? `hand:${inspectHandId}`
+    : inspectCardId != null ? `card:${inspectCardId}`
+    : selected?.kind === "card" ? `slot:${selected.index ?? "missing"}` : "missing";
+  const modalKey = (connectionState === "replaced" && room ? "connection-replaced" : null) || (panel === "card-info" ? `card-info:${cardInspectionKey}` : panel === "study" ? `study:${desk?.question?.challengeId || "catalogue"}` : panel) || (challenge ? `question:${challenge.challengeId}${feedback ? ":feedback" : ""}` : room?.phase === "opening" ? `opening:${room.roomId}` : room?.phase === "finished" && !visualBusy ? `result:${room.roomId}` : null);
   const dialog = modalRoot.querySelector(".dialog");
   if(dialog && $("#notice").dataset.kind === "hand-tip"){$("#notice").textContent="";clearTimeout(timer);}
   if (dialog && !previousDialog) modalOpener = {element:focused,action:focusAction,index:focusIndex};
   if (!dialog && previousDialog && modalOpener) { const target=modalOpener.element?.isConnected ? modalOpener.element : [...ui.querySelectorAll("[data-action]")].find(el=>el.dataset.action===modalOpener.action && el.dataset.index===modalOpener.index); target?.focus({preventScroll:true}); modalOpener=null; }
   if (dialog) {
     dialog.tabIndex = -1;
-    if (modalKey === renderedModalKey) dialog.scrollTop = previousScroll;
+    if (modalKey === renderedModalKey) {
+      dialog.scrollTop = previousScroll;
+      const cardBody = dialog.querySelector(".card-info-body");
+      const cardTip = dialog.querySelector('.card-info-tip');
+      if (cardTip) cardTip.open = previousCardTipOpen;
+      if (cardBody) cardBody.scrollTop = previousCardScroll;
+    }
     if (dialog !== previousDialog) dialog.focus({ preventScroll: true });
+    if (modalKey === renderedModalKey && cardFocus) dialog.querySelector(cardFocus)?.focus({ preventScroll: true });
     if ((feedback || desk?.answer) && !renderedFeedback && modalKey === renderedModalKey) dialog.querySelector(".feedback")?.scrollIntoView({ block: "nearest", behavior: "auto" });
   }
   if (focusAction && (!dialog || modalKey === renderedModalKey)) {

@@ -57,6 +57,43 @@ function readOnlyState(actor) {
     draw: room.selfDrawEnglish, rituals: room.selfRitualsLeft });
 }
 
+async function inspectScrollRegion(page, client, testInfo, actor) {
+  const body=page.locator('.card-info-body'), footer=page.locator('.card-info-footer');
+  const before=await body.evaluate(el=>({top:el.scrollTop,client:el.clientHeight,total:el.scrollHeight}));
+  expect(before.total).toBeGreaterThan(before.client);
+  const box=await body.boundingBox(), closeBefore=await footer.boundingBox();
+  expect(box.y+box.height).toBeLessThanOrEqual(closeBefore.y+1);
+  const point=y=>({x:box.x+box.width*.5,y,radiusX:5,radiusY:5,force:1,id:1});
+  // Genuine Chromium touch scrolling, not an assignment to scrollTop.
+  for(let swipe=0;swipe<5;swipe++){
+    const current=await body.evaluate(el=>el.scrollTop+el.clientHeight>=el.scrollHeight-2);
+    if(current)break;
+    const start=box.y+box.height*.8,end=box.y+box.height*.2;
+    await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point(start)]});
+    for(let step=1;step<=8;step++){
+      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[point(start+(end-start)*step/8)]});
+      await page.waitForTimeout(30);
+    }
+    await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await page.waitForTimeout(150);
+  }
+  const after=await body.evaluate(el=>({top:el.scrollTop,client:el.clientHeight,total:el.scrollHeight}));
+  expect(after.top).toBeGreaterThan(before.top+20);
+  await expect(body.locator('.card-info-tip summary')).toBeInViewport();
+  await body.locator('.card-info-tip summary').tap();
+  await expect(body.locator('.card-info-tip')).toHaveAttribute('open','');
+  // Browser-native scrollIntoView verifies the last expanded rule can be read.
+  await body.locator('.card-info-tip p').last().scrollIntoViewIfNeeded();
+  const last=await body.locator('.card-info-tip p').last().boundingBox(), closeAfter=await footer.boundingBox();
+  expect(last.y+last.height).toBeLessThanOrEqual(closeAfter.y+1);
+  expect(Math.abs(closeAfter.y-closeBefore.y)).toBeLessThan(1);
+  const close=await action(page,'card-info-close').boundingBox();
+  const receives=await page.evaluate(({x,y})=>document.elementFromPoint(x,y)?.closest('[data-action]')?.dataset.action,{x:close.x+close.width/2,y:close.y+close.height/2});
+  expect(receives).toBe('card-info-close');
+  actor.metrics.portraitCommand.readingScroll={before,after,footerY:closeAfter.y,lastRuleBottom:last.y+last.height,nativeTouch:true};
+  await safeScreenshot(page,testInfo,'320x568-expanded-rules-above-fixed-return');
+}
+
 const overlap = (a, b) => Math.min(a.right, b.right) - Math.max(a.x, b.x) > 1 &&
   Math.min(a.bottom, b.bottom) - Math.max(a.y, b.y) > 1;
 const inside = (box, viewport) => box.x >= -1 && box.y >= -1 &&
@@ -146,7 +183,7 @@ async function nativeHold(client, x, y) {
 }
 
 test('@portrait-command compact card commands, native inspection and orientation preserve the live board', async ({ actors }, testInfo) => {
-  test.setTimeout(90_000);
+  test.setTimeout(120_000);
   testInfo.annotations.push({ type: 'coverage', description: 'Real isolated guests, ordinary unseeded Ember decks and at most eight real UI turns produce at least one unit per side. Reduced-motion geometry only: 320x568 three-button card command, cancel, 560ms Chromium CDP hand and unit-label holds, details dismissal, 844x390 orientation and portrait return. 44px controls, 190px portrait hand, board/badge hit testing, optional draw help when present, and zero new authority commands during inspection/cancellation/orientation. Screenshots need independent visual review. No normal-animation, fully populated-board, physical-device, storage/state injection, or local-browser claim.' });
   const a = await actors('portrait-command-A', { hasTouch: true });
   const b = await actors('portrait-command-B', { hasTouch: true });
@@ -218,6 +255,7 @@ test('@portrait-command compact card commands, native inspection and orientation
     await expect(dialog.locator('#card-info-title')).toHaveText(unitName);
     await expect(dialog.locator('.unit-inspection-state')).toContainText('我方伙伴');
     await safeScreenshot(page, testInfo, '320x568-native-unit-details');
+    await inspectScrollRegion(page,client,testInfo,actor);
     await action(page, 'card-info-close').tap();
     await expect(dialog).toBeHidden();
     await expect(page.locator('.command-bar')).toBeHidden();
@@ -237,6 +275,36 @@ test('@portrait-command compact card commands, native inspection and orientation
   await expect(page.locator('.command-bar')).toBeHidden();
   await boardGeometry(actor, testInfo, '320x568-final-cancelled', false);
   await unchanged('orientation-return-and-cancel');
+  // A separate refresh phase intentionally sends exactly one End Turn per side.
+  // The preceding inspection/cancel/orientation phase keeps all zero-command checks.
+  const other=actor===a?b:a;
+  await uiCommand(actor,()=>action(page,'end').click());await sync(a,b);
+  await page.setViewportSize(landscape);
+  const own=actor.observed.room.players[actor.observed.room.youSeat].board[0];
+  await page.locator(`.unit-label[data-uid="${own.uid}"]`).click({button:'right'});
+  const reading=page.locator('.card-info-body'),tip=page.locator('.card-info-tip');
+  await expect(reading).toBeVisible();
+  await tip.locator('summary').scrollIntoViewIfNeeded();await tip.locator('summary').click();
+  await expect(tip).toHaveAttribute('open','');
+  await reading.focus();await page.keyboard.press('End');await sleep(200);
+  const scrollBefore=await reading.evaluate(el=>el.scrollTop);
+  expect(scrollBefore).toBeGreaterThan(0);
+  const refreshCounts=[a,b].map(item=>item.observed.commands.length),revision=actor.observed.room.revision;
+  await other.page.bringToFront();await waitForBoard(other);
+  await uiCommand(other,()=>action(other.page,'end').click());await sync(a,b);
+  await page.bringToFront();await expect.poll(()=>actor.observed.room.revision).toBeGreaterThan(revision);
+  await expect(page.locator('.card-info-tip')).toHaveAttribute('open','');
+  await expect(reading).toBeFocused();
+  const scrollAfter=await reading.evaluate(el=>el.scrollTop);
+  expect(scrollAfter).toBeGreaterThanOrEqual(scrollBefore-2);
+  const refreshDeltas=[a,b].map((item,index)=>item.observed.commands.length-refreshCounts[index]);
+  expect(refreshDeltas).toEqual(actor===a?[0,1]:[1,0]);
+  const readingBox=await reading.boundingBox(),footerBox=await page.locator('.card-info-footer').boundingBox();
+  expect(readingBox.y+readingBox.height).toBeLessThanOrEqual(footerBox.y+1);
+  await safeScreenshot(page,testInfo,'844x390-reading-state-after-opponent-turn');
+  await page.keyboard.press('Home');await expect.poll(()=>reading.evaluate(el=>el.scrollTop)).toBe(0);
+  await action(page,'card-info-close').click();await expect(reading).toBeHidden();
+  actor.metrics.portraitCommand.readingRefresh={scrollBefore,scrollAfter,refreshDeltas,keyboardHome:true,expandedRetained:true};
   actor.metrics.portraitCommand.stage = 'completed';
   for (const participant of [a, b]) {
     expect(participant.observed.errors).toEqual([]);

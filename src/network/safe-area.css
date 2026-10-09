@@ -197,3 +197,9 @@ body.immersive .pack-exit-confirm section { max-height: calc(var(--safe-height) 
   .unit-label[data-side] b.wide { font-size:clamp(9px,calc(var(--unit-label-max-width,128px) * .12),16px); }
   .unit-label[data-side] .unit-name { grid-row:1; grid-column:1/-1; display:flex; align-items:center; justify-content:center; gap:2px; min-width:0; max-width:none; height:14px; font-size:11px; line-height:14px; overflow:hidden; }
 }
+
+/* Keep the return control outside the scrolling rules, even on short phones. */
+.immersive .card-info-dialog{display:flex;flex-direction:column;overflow:hidden;max-height:calc(var(--safe-height,100dvh) - 16px)}
+.card-info-body{min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#b7a36c #183c33;padding-right:5px;touch-action:pan-y;flex:1 1 auto}
+.card-info-body:focus-visible{outline:2px solid #b5e8cc;outline-offset:-2px}
+.immersive .card-info-dialog>.card-info-footer{position:static;flex:0 0 auto;margin-top:10px;padding:10px 0 3px;border-top:1px solid #8e9c6866;background:#123229;box-shadow:0 -7px 12px #09231b24}
