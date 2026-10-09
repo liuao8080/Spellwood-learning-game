@@ -62,7 +62,7 @@ jobs:
         if: ${{ !cancelled() && steps.layout.outcome == 'success' }}
         env:
           E2E_SUITE: full
-        run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout|@combat-motion'
+        run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout|@combat-motion|@frame-diagnostic'
       - name: Keep only safe evidence for three days
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -72,6 +72,38 @@ jobs:
             test-results/browser-evidence/*.json
             test-results/browser-evidence/*.png
             test-results/browser-evidence/*-arena-only.webm
+          retention-days: 3
+          if-no-files-found: warn
+          include-hidden-files: false
+
+  frame-diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      SPELLWOOD_BROWSER_CI: '1'
+      E2E_SUITE: frame-diagnostic
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: npm run build:network
+      - run: node --test tests/safe-trace-summary.test.mjs tests/frame-window-summary.test.mjs
+      - run: npx --no-install playwright install --with-deps chromium
+      - name: Paired recording and label paint diagnosis, not acceptance
+        run: npx --no-install playwright test --grep @frame-diagnostic
+      - name: Keep anonymous numeric trace summaries and arena-only clips
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: frame-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/browser-evidence/acceptance-frame-diagnostic.json
+            test-results/browser-evidence/paired-frame-diagnostics.json
+            test-results/browser-evidence/diagnostic-*-arena-only.webm
           retention-days: 3
           if-no-files-found: warn
           include-hidden-files: false
