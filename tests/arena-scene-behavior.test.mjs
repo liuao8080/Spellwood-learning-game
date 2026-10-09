@@ -521,3 +521,40 @@ for(const software of [true,false])test(`large ${software?'CPU':'GPU'} canvas ke
  if(software)assert.ok(render.outputSize[0]*render.outputSize[1]<=722000);
  else assert.deepEqual(render.outputSize,[1920,1080]);
 });
+
+test('adaptive quality waits for effects and samples only the newly applied profile', async t => {
+  const { scene, frame, render } = harness(t);
+  let samples = 0, ratios = 0, sizes = 0;
+  scene.adaptiveQuality.sample = () => { samples++; return null; };
+  render.setPixelRatio = () => { ratios++; };
+  render.setSize = () => { sizes++; };
+  scene.pendingQuality = scene.adaptiveQuality.profiles[1];
+  const animation = scene.addJob(5000, () => {});
+  const started = [...scene.jobs][0].start;
+  frame(started + 100);
+  assert.equal(scene.appliedQuality.level, 0);
+  assert.equal(samples, 0, 'pending work cannot skip to another unsampled quality tier');
+  frame(started + 5001);
+  await animation;
+  assert.equal(scene.appliedQuality.level, 1);
+  assert.equal(scene.shadowLight.shadow.mapSize.x, 512);
+  assert.equal(samples, 0, 'the apply frame interval belongs to the previous quality');
+  assert.equal(ratios, 0, 'shadow-only changes do not resize the drawing buffer');
+  assert.equal(sizes, 0);
+  scene.pendingQuality = scene.adaptiveQuality.profiles[2];
+  frame(started + 5018);
+  assert.equal(ratios, 1);
+  assert.equal(sizes, 0, 'setPixelRatio already performs the Three drawing-buffer resize');
+  assert.equal(scene.appliedQuality.pixelScale, .8);
+  frame(started + 5035);
+  assert.equal(samples, 1);
+});
+
+test('render-loop restart does not report paused time as a frame gap', t => {
+  const { scene, frame, canvas } = harness(t);
+  scene.stop();
+  scene.lastSoftwareFrame = 10;
+  scene.start();
+  frame(100000);
+  assert.equal(canvas.dataset.frameGapMs, '0');
+});

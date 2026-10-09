@@ -24,10 +24,13 @@ export class AdaptiveQualityController {
   /** Call on visibility/context changes and on-demand render-loop restarts.
    * Paused time must not be treated as either poor performance or recovery.
    * Keep the last quality choice; require fresh evidence before changing it.
+   * When a deferred profile is actually applied, supply its RAF timestamp to
+   * start the cooldown there and discard frames spanning the old profile.
    */
-  resetSamples() {
+  resetSamples({ appliedAt = null } = {}) {
     this.lastSampleNow = null;
-    this.lastChangeNow = null;
+    this.appliedAt = Number.isFinite(appliedAt) ? appliedAt : null;
+    this.lastChangeNow = this.appliedAt;
     this.healthyMs = 0;
     this.clearWindow();
   }
@@ -50,11 +53,15 @@ export class AdaptiveQualityController {
    */
   sample({ now, frameIntervalMs, renderMs = 0, active = true } = {}) {
     if (!active) { this.resetSamples(); return null; }
+    // The apply frame's interval belongs to the previous profile. Ignoring it
+    // also avoids treating its drawing-buffer reallocation as steady load.
+    if (this.appliedAt !== null && Number.isFinite(now) && now <= this.appliedAt) return null;
     if (!Number.isFinite(now) || !Number.isFinite(frameIntervalMs) || frameIntervalMs <= 0 ||
         !Number.isFinite(renderMs) || renderMs < 0) {
       this.resetSamples();
       return null;
     }
+    if (this.appliedAt !== null && now - frameIntervalMs < this.appliedAt - .001) return null;
     if (this.lastSampleNow !== null && now <= this.lastSampleNow) {
       this.resetSamples();
       return null;

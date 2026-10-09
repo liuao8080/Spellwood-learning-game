@@ -857,6 +857,7 @@ export class ArenaScene {
   start() {
     if (!this.renderer || this.running || this.destroyed || this.hidden || this.contextLost || this.frameFault) return;
     this.running = true;
+    this.lastSoftwareFrame = null;
     this.metricCallbacks=0;this.metricMaxRafGap=0;this.metricLastRaf=null;
     if(this.canvas?.dataset){this.canvas.dataset.sceneState='running';this.canvas.dataset.reducedMotion=String(this.reduced);}
     const frame = (now) => {
@@ -904,13 +905,21 @@ export class ArenaScene {
       }
         // Keep the target frame and effect timing stable; apply only once the
         // current animation jobs have settled, without recreating game objects.
-        if(this.pendingQuality&&!this.jobs.size){
-          this.appliedQuality=this.pendingQuality;this.pendingQuality=null;
+      let qualityApplied=false;
+      if(this.pendingQuality&&!this.jobs.size){
+        const previous=this.appliedQuality;
+        this.appliedQuality=this.pendingQuality;this.pendingQuality=null;
+        if(previous.shadowMapSize!==this.appliedQuality.shadowMapSize){
           this.shadowLight.shadow.mapSize.set(this.appliedQuality.shadowMapSize,this.appliedQuality.shadowMapSize);
           this.shadowLight.shadow.needsUpdate=true;
-          this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,this.quality==="low"?1:1.5)*this.appliedQuality.pixelScale);
-          this.renderer.setSize(this.width,this.height,false);
         }
+        // Three's setPixelRatio already updates the drawing buffer. A shadow-
+        // only adjustment must leave that buffer untouched.
+        if(previous.pixelScale!==this.appliedQuality.pixelScale)
+          this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,this.quality==="low"?1:1.5)*this.appliedQuality.pixelScale);
+        this.adaptiveQuality.resetSamples({appliedAt:now});
+        qualityApplied=true;
+      }
       const renderStarted=performance.now();
       this.renderer.render(this.scene, this.camera);
       const renderFinished=performance.now();
@@ -925,7 +934,7 @@ export class ArenaScene {
         this.canvas.dataset.renderAnchorMs=this.frameTimings.anchorMs.toFixed(2);
         this.canvas.dataset.frameGapMs=String(Math.round(this.lastFrameInterval||0));
       }
-      if(!this.renderer.isSoftwareRenderer){
+      if(!this.renderer.isSoftwareRenderer&&!this.pendingQuality&&!qualityApplied){
         const profile=this.adaptiveQuality.sample({now,frameIntervalMs:this.lastFrameInterval,
           renderMs:this.frameTimings.submitMs,active:!this.reduced&&!this.hidden&&globalThis.document?.visibilityState!=="hidden"});
         if(profile)this.pendingQuality=profile;

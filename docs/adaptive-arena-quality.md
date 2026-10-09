@@ -7,3 +7,5 @@ CI18 recorded a real attack, a single HP18→16 change and return, but both nati
 Per-frame update/job, render-submission and anchor/DOM timings now accompany RAF gaps. Render submission time is not a GPU timer. Quality changes apply between visual jobs and before a fresh render, preserving effect clocks and avoiding an empty resized canvas frame.
 
 Local candidate verification:13 controller tests,3 focused real-geometry/mocked-renderer tests,typecheck and network build passed. Browser evidence for this candidate is pending. No claim of normal-speed smoothness, physical-phone performance or publication is made.
+
+Independent integration review found and repaired a delayed-application accounting issue: a pending tier now pauses further sampling, and its cooldown starts at actual application. The first apply-frame interval is excluded. Shadow-only changes no longer resize the drawing buffer; pixel changes resize once before rendering. Loop restart clears paused-time gaps. Current focused verification passed15 controller and2 scene-integration tests plus typecheck. These checks do not establish a browser performance gain.

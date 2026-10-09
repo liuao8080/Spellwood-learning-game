@@ -159,3 +159,35 @@ test("missing measurements cannot bridge two separate healthy periods into recov
   d.frames(420);
   assert.equal(d.controller.profile.level, 1);
 });
+
+test("a deferred profile's cooldown begins when it is applied, not when requested", () => {
+  const controller = new AdaptiveQualityController();
+  for (let now = 100; now <= 800; now += 100) controller.sample({ now, frameIntervalMs: 100, renderMs: 70 });
+  assert.equal(controller.profile.level, 1);
+  // The caller leaves the original profile active while visual jobs run, and
+  // does not submit more samples until the deferred level can actually apply.
+  controller.resetSamples({ appliedAt: 5000 });
+  assert.equal(controller.sample({ now: 5000, frameIntervalMs: 640, renderMs: 300 }), null);
+  for (let now = 5100; now <= 6500; now += 100) {
+    assert.equal(controller.sample({ now, frameIntervalMs: 100, renderMs: 70 }), null);
+  }
+  assert.equal(controller.profile.level, 1);
+  assert.deepEqual(controller.sample({ now: 6600, frameIntervalMs: 100, renderMs: 70 }),
+    { level: 2, shadowMapSize: 512, pixelScale: .8 });
+});
+
+test("applying a profile discards previous-quality recovery and crossing-frame samples", () => {
+  const controller = new AdaptiveQualityController();
+  for (let now = 100; now <= 800; now += 100) controller.sample({ now, frameIntervalMs: 100, renderMs: 70 });
+  for (let now = 816; now <= 7520; now += 16) controller.sample({ now, frameIntervalMs: 16, renderMs: 8 });
+  assert.equal(controller.profile.level, 1);
+  controller.resetSamples({ appliedAt: 8000 });
+  assert.equal(controller.sample({ now: 8000, frameIntervalMs: 0, renderMs: 8 }), null);
+  assert.equal(controller.sample({ now: 8016, frameIntervalMs: 640, renderMs: 8 }), null);
+  for (let now = 8032; now <= 15376; now += 16) {
+    assert.equal(controller.sample({ now, frameIntervalMs: 16, renderMs: 8 }), null);
+  }
+  assert.equal(controller.profile.level, 1, "old healthy windows cannot complete new-profile recovery");
+  for (let now = 15392; now <= 16800; now += 16) controller.sample({ now, frameIntervalMs: 16, renderMs: 8 });
+  assert.equal(controller.profile.level, 0);
+});
