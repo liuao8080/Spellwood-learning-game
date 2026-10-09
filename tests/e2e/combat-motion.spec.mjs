@@ -107,6 +107,8 @@ async function startDomObservation(page, uid, evidence, checkpoint) {
     arenaHidden: value?.arenaHidden === true,
     visibility: ['visible', 'hidden'].includes(value?.visibility) ? value.visibility : 'other',
     inputReady: value?.inputReady === true,
+    timing: Object.fromEntries(['updateMs','submitMs','anchorMs','frameGapMs','qualityLevel','pixelScale','shadowMapSize']
+      .map(key=>[key,finite(value?.timing?.[key])])),
   });
   // Send small, allowlisted batches out before any later screenshot can hang.
   // This binding accepts observations only; it never sends a game command.
@@ -143,6 +145,12 @@ async function startDomObservation(page, uid, evidence, checkpoint) {
         reducedMotion: arena.dataset.reducedMotion === 'false' ? false : arena.dataset.reducedMotion === 'true' ? true : null,
         arenaHidden: arena.hidden, visibility: document.visibilityState,
         inputReady: Boolean(document.querySelector('[data-action="end"]:enabled')),
+        timing: {
+          updateMs:number(arena.dataset.renderUpdateMs),submitMs:number(arena.dataset.renderSubmitMs),
+          anchorMs:number(arena.dataset.renderAnchorMs),frameGapMs:number(arena.dataset.frameGapMs),
+          qualityLevel:number(arena.dataset.qualityLevel),pixelScale:number(arena.dataset.pixelScale),
+          shadowMapSize:number(arena.dataset.shadowMapSize),
+        },
       };
     };
     const onClick = event => {
