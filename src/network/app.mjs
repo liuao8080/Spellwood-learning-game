@@ -1,4 +1,5 @@
 import { unitLabelWidth } from "./unit-label-width.mjs";
+import { restoreModalOpener } from "./focus-return.mjs";
 import { TEACHER_CATEGORIES } from "../question-banks.mjs";
 import { HandScene } from "../arena3d/hand-scene.mjs";
 import { LobbyScene } from "../arena3d/lobby-scene.mjs";
@@ -437,8 +438,9 @@ function render() {
   const modalKey = (connectionState === "replaced" && room ? "connection-replaced" : null) || (panel === "card-info" ? `card-info:${cardInspectionKey}` : panel === "study" ? `study:${desk?.question?.challengeId || "catalogue"}` : panel) || (challenge ? `question:${challenge.challengeId}${feedback ? ":feedback" : ""}` : room?.phase === "opening" ? `opening:${room.roomId}` : room?.phase === "finished" && !visualBusy ? `result:${room.roomId}` : null);
   const dialog = modalRoot.querySelector(".dialog");
   if(dialog && $("#notice").dataset.kind === "hand-tip"){$("#notice").textContent="";clearTimeout(timer);}
-  if (dialog && !previousDialog) modalOpener = {element:focused,action:focusAction,index:focusIndex};
-  if (!dialog && previousDialog && modalOpener) { const target=modalOpener.element?.isConnected ? modalOpener.element : [...ui.querySelectorAll("[data-action]")].find(el=>el.dataset.action===modalOpener.action && el.dataset.index===modalOpener.index); target?.focus({preventScroll:true}); modalOpener=null; }
+  if (dialog && !previousDialog) modalOpener = {element:focused,action:focusAction,index:focusIndex,value:focusValue,option:focusOption,uid:focusUid,seat:focusSeat};
+  const closingOpener = !dialog && previousDialog ? modalOpener : null;
+  if (closingOpener) modalOpener = null;
   if (dialog) {
     dialog.tabIndex = -1;
     if (modalKey === renderedModalKey) {
@@ -470,6 +472,9 @@ function render() {
   warning.hidden = room ? rendererStatus.available !== false && !sceneFault : lobbyStatus.available !== false;
   warning.textContent = !room ? (lobbyStatus.available === false ? "营地画面暂不可用，四周入口仍然可以使用" : "") : sceneFault ? "场景暂时无法完整显示，已切换到简化操作。对局数值已按最新结果同步。" : rendererStatus.available === false ? "当前浏览器未能开启3D画面，已提供简化战场。可在支持WebGL2的浏览器中体验立体棋盘。" : "";
   if (room && rendererStatus.available !== false && !sceneFault) updateLabels(); else { layer.innerHTML = ""; labelSignature = ""; }
+  // Background controls and the hand were inert while the dialog was open.
+  // Restore only after their final DOM and interactive state have been synced.
+  if (closingOpener) restoreModalOpener(closingOpener,[...ui.querySelectorAll('[data-action]'),...layer.querySelectorAll('[data-action]')],$('#hand-canvas'));
   refreshDeadlines(); scheduleRewardDay();
 }
 let anchorPositions = [];
