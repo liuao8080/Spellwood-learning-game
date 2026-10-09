@@ -1779,7 +1779,7 @@ export function createModelLibrary({
       };
       return retain(handle);
     },
-    createCreature({ species = "fox", side = "player", variantSeed = 1 } = {}) {
+    createCreature({ species = "fox", side = "player", variantSeed = 1, faceDetail = true } = {}) {
       if (!BUILDERS[species])
         throw new RangeError(`Unsupported species: ${species}`);
       const builder = makeBuilder(),
@@ -1790,7 +1790,7 @@ export function createModelLibrary({
       root.userData.variantSeed = variantSeed;
       const body = builder.part(`${species}-body`, root),
         rig = {};
-      const info = BUILDERS[species](builder, body, rig);
+      const info = BUILDERS[species](builder, body, rig, { faceDetail });
       const handle = makeHandle({
         root,
         builder,
