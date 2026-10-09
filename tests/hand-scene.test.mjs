@@ -201,3 +201,24 @@ test("same-name hand instances show their own saved costs and reset without grow
  h.scene.setHand(['fox','fox'],{revision:3,costs:[CARD.fox.cost,CARD.fox.cost]});assert.equal(disposed,1);assert.equal(h.scene.cards[0].frontTexture,h.scene.cards[1].frontTexture);assert.equal(h.scene.textures.entries.size,1);
  h.scene.setHand(['fox'],{revision:4,costs:[-1]});assert.deepEqual(h.scene.costs,[CARD.fox.cost]);h.scene.setHand([]);assert.equal(h.scene.textures.entries.size,0);
 });
+
+test('an authority-only revision cancels old gestures without repainting an unchanged hand',t=>{
+ const h=harness(t,{reduced:false});h.scene.setHand(ids,{revision:1});h.frame();
+ const draws=h.draws,inputRevision=h.scene.inputRevision,event=point(h,0);
+ h.listeners.get('pointerdown')(event);assert.ok(h.scene.input.active);
+ h.scene.setHand(ids,{revision:2});
+ assert.equal(h.scene.revision,2);assert.equal(h.scene.inputRevision,inputRevision+1);
+ assert.equal(h.scene.input.active,null);assert.equal(h.raf.size,0);assert.equal(h.draws,draws);
+ h.listeners.get('pointerup')(event);assert.equal(h.selected.length,0);
+ h.scene.select(0,'keyboard');assert.equal(h.selected.length,1);assert.equal(h.selected[0].revision,2);assert.equal(h.selected[0].cardId,ids[0]);
+});
+test('selection cost finish hover and resize still schedule the necessary hand redraw',t=>{
+ const h=harness(t,{reduced:false});h.scene.setHand(ids,{revision:1});h.frame();
+ h.scene.setHand(ids,{revision:2,selectedIndex:1});assert.equal(h.raf.size,1);h.frame();
+ h.scene.setHand(ids,{revision:3,selectedIndex:1,costs:[CARD.fox.cost-1]});assert.equal(h.raf.size,1);h.frame();
+ h.scene.setHand(ids,{revision:4,selectedIndex:1,costs:[CARD.fox.cost-1],finishes:{fox:'leaf'}});assert.equal(h.raf.size,1);h.frame();
+ h.scene.hover(2);assert.equal(h.raf.size,1);h.frame();
+ h.box.width-=10;h.scene.resize();assert.equal(h.raf.size,1);h.frame();
+ h.scene.setInteractive(false);assert.equal(h.scene.select(0,'keyboard'),false);
+ h.scene.setInteractive(true);h.scene.select(0,'keyboard');assert.equal(h.selected.at(-1).revision,4);
+});

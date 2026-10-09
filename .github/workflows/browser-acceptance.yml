@@ -111,6 +111,8 @@ jobs:
           include-hidden-files: false
 
   draw-diagnostic:
+    # Completed isolation experiments remain manually reproducible, not gates.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 16
     env:

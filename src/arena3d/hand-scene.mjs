@@ -94,7 +94,8 @@ export class HandScene {
     const key = ids.map((id,index) => `${id}:${finishes?.[id] || "base"}:${nextCosts[index]}`).join("|");
     const changed = key !== this.handKey, revised = revision !== this.revision;
     const nextSelected = Number.isInteger(selectedIndex) && selectedIndex >= 0 && selectedIndex < ids.length ? selectedIndex : null;
-    if (!changed && !revised && nextSelected === this.selectedIndex) return;
+    const selectionChanged = nextSelected !== this.selectedIndex;
+    if (!changed && !revised && !selectionChanged) return;
     if (changed || revised) { this.inputRevision++; this.input.cancel(); }
     this.revision = revision; this.ids = [...ids]; this.costs=nextCosts; this.finishes = { ...finishes };
     if (changed) {
@@ -107,7 +108,11 @@ export class HandScene {
       if (this.focusedIndex != null && this.focusedIndex >= ids.length) this.focusedIndex = ids.length ? ids.length - 1 : null;
     }
     this.selectedIndex = nextSelected;
-    this.layout(!changed); this.status();
+    // A fresh authority revision still invalidates old gestures and updates new
+    // intents. It does not move identical cards. Hover cancellation, resize,
+    // focus and hidden-state restoration schedule their own necessary redraws.
+    if (changed || selectionChanged) this.layout(!changed);
+    this.status();
   }
 
   layout(animate = false) {

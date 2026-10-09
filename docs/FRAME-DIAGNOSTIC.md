@@ -70,3 +70,29 @@ No native recorder is created in any second-stage condition.
 
 These blank/static lab canvases are diagnostic only and cannot be presented as
 visual acceptance or a product optimization. The original motion gate stays fixed.
+
+
+## Drawing isolation result and limit
+
+CI30 obtained five of six planned samples. The second skipped-arena trial did not
+reach the chosen creature within its legal preparation limit; that missing sample
+is preserved. Baseline RAF maxima were 451.3/461.7 ms, skipped-hand 265.5/270.3 ms,
+and the first skipped-arena 205 ms. The skipped-arena build adapted to quality 0
+and a different buffer, so this is not a clean numerical quality comparison.
+
+CI31 obtained both requested partner controls, a trailing baseline and the missing
+skipped-arena repeat. Its leading baseline did not draw the chosen creature within
+14 ordinary turns and is retained as a preparation coverage failure. With A held
+at quality 3, 460×135 pixels and 102 reported calls/62,244 triangles, skipping only
+B's arena drawing produced 106.6/106.9 ms maximum overlapping RAF gaps. The trailing
+baseline with B drawing measured 609.5 ms. B still processed state and real actions;
+only its separate fixed lab build omitted drawing. B normally drew its 1280×546
+arena four times and hand once, not continuously. The repeated A-arena omission
+measured 291.3 ms, so its earlier 205 ms must not be treated as a stable threshold.
+
+These results support a substantial contribution from the second software-rendered
+page on the same runner. They do not establish real-device performance, an exact
+GPU root cause, or acceptable production animation. No production canvas is omitted.
+Further visual deletion experiments stop here. The original full-scene 250 ms gate
+stays unchanged. A separately reproduced redundant hand-layout issue is corrected
+as a product change, with independent normal-motion input regression.
