@@ -1,3 +1,4 @@
+import { targetNoticeIdentity, targetNoticeExpired } from './target-notice.mjs';
 import { unitLabelWidth } from "./unit-label-width.mjs";
 import { restoreModalOpener } from "./focus-return.mjs";
 import { TEACHER_CATEGORIES } from "../question-banks.mjs";
@@ -47,6 +48,7 @@ let desk, rewardDayTimer = null, deadlineTimer = null, collectionView, wardrobeV
 let identityClient=null, identityPanel=null, activeIdentity=null, identityEpoch=0, identityChannel=null, identityRefreshPending=false;
 let identityVerified = isPractice, identityCheckError = "", identityCheckTask = null;
 let handIntroductionShown = false;
+let targetNoticeKey = null;
 let pageSuspended = false;
 let inspectCardId = null, inspectHandId = null, inspectUnitRef = null, modalOpener = null, handStatus = {available:null}, lobbyStatus = {available:null}, handSemanticKey = null;
 const library=new CardLibrary({preferences:()=>preferences,onChange:()=>render(),onNotice:notice,onClose:()=>{panel=null;render();},onSave:async customDeck=>{const result=await desk?.preferences({deckId:"custom",customDeck});if(result?.ok){preferences.deckId="custom";preferences.customDeck=customDeck;return true;}return false;}});
@@ -74,10 +76,16 @@ function refreshDeadlines() {
   if (room && ["opening", "playing"].includes(room.phase) && !document.hidden && !pageSuspended) deadlineTimer = setTimeout(refreshDeadlines, 1000);
 }
 
+function clearTargetNotice() {
+  if ($("#notice").dataset.kind !== "target") return;
+  clearTimeout(timer); timer = null; targetNoticeKey = null;
+  $("#notice").textContent = ""; $("#notice").dataset.kind = "general";
+}
 function notice(text, kind = "general") {
+  targetNoticeKey = kind === "target" ? targetNoticeIdentity(room, selected) : null;
   $("#notice").dataset.kind = kind;
   $("#notice").textContent = text;
-  clearTimeout(timer); timer = setTimeout(() => { $("#notice").textContent = ""; }, 4200);
+  clearTimeout(timer); timer = setTimeout(() => { $("#notice").textContent = ""; $("#notice").dataset.kind = "general"; targetNoticeKey = null; timer = null; }, 4200);
 }
 function cancelVoice() { voiceEpoch++; clearTimeout(voiceTimer); voiceTimer = null; if (voice) { voice.pause(); voice.remove(); voice = null; } SOUND.duckSpeech(false); }
 function listen(urls) {
@@ -214,6 +222,7 @@ function acceptSnapshot(next) {
 
 async function send(type, payload = {}, roomCommand = true) {
   if (commandBusy) return;
+  clearTargetNotice();
   commandBusy = true; render();
   try {
     await link.command(type, payload, roomCommand && room ? { roomId: room.roomId, expectedRevision: room.revision } : {});
@@ -249,7 +258,7 @@ function inspectHand(index) {
 function target(value, seat = 1-room.youSeat) {
   if (!selected || !room?.canAct || commandBusy || visualBusy || challenge || panel) return;
   if (selected.kind === "unit") send("battle.action", { action: { type: "attack", uid: selected.uid, target: value } });
-  else if (selected.kind === "card") { if(!cardTargetAllowed(room,selected.index,value,seat)){notice("请选择亮起的合法目标");return;} send("battle.action", { action: { type: "play", index: selected.index, target: value } }); }
+  else if (selected.kind === "card") { if(!cardTargetAllowed(room,selected.index,value,seat)){notice("请选择亮起的合法目标", "target");return;} send("battle.action", { action: { type: "play", index: selected.index, target: value } }); }
   else if (selected.kind === "ritual") send("ritual.begin", { kind: "spark", target: value });
   selected = null;
 }
@@ -381,6 +390,7 @@ function settings() {
   return `<section class="dialog settings" role="dialog" aria-modal="true"><h2>声音与画面</h2><label><input id="setting-reduced" type="checkbox" ${preferences.reduced ? "checked" : ""}>减少动态</label><label><input id="setting-music" type="checkbox" ${preferences.music ? "checked" : ""}>背景音乐</label><label><input id="setting-sound" type="checkbox" ${preferences.sound ? "checked" : ""}>战斗音效</label><label><input id="setting-speech" type="checkbox" ${preferences.speech ? "checked" : ""}>英语朗读</label><label>音乐音量<input id="music-volume" type="range" min="0" max="100" value="${preferences.musicVolume}"></label><label>音效音量<input id="sound-volume" type="range" min="0" max="100" value="${preferences.soundVolume}"></label><p class="subtle">渲染：${esc(activeRenderer.renderer || "准备中")}${activeRenderer.fps ? ` · 最近画面约${activeRenderer.fps}fps` : ""}</p><button class="primary" data-action="save-settings">完成</button></section>`;
 }
 function render() {
+  if (targetNoticeExpired($("#notice").dataset.kind, targetNoticeKey, room, selected)) clearTargetNotice();
   desk?.syncAttention();
   const identityBlocked = !isPractice && !identityVerified;
   document.body.classList.toggle('identity-checking', identityBlocked);
@@ -548,7 +558,7 @@ document.addEventListener("click", (event) => {
   else if (a === "my-info") notice("守护生命，也要争取场面的主动权");
   else if (a === "play" && selected?.kind === "card") { send("battle.action", { action: { type: "play", index: selected.index } }); selected = null; }
   else if (a === "end") { selected = null; send("battle.action", { action: { type: "end" } }); }
-  else if (a === "ritual") { const kind = button.dataset.value; if (kind === "spark") { selected = { kind: "ritual", ritual: kind }; notice("请选择火花目标"); } else send("ritual.begin", { kind }); }
+  else if (a === "ritual") { const kind = button.dataset.value; if (kind === "spark") { selected = { kind: "ritual", ritual: kind }; notice("请选择火花目标", "target"); } else send("ritual.begin", { kind }); }
   else if (a === "draw-begin" && room?.self.drawEnglish?.canBegin) send("draw.begin",{handId:room.self.drawEnglish.eligibleHandId});
   else if (a === "draw-cancel" && challenge?.purpose === "draw" && !feedback) {const id=challenge.challengeId;void send("draw.cancel",{challengeId:id}).then(ok=>{if(ok&&challenge?.challengeId===id){challenge=null;feedback=null;cancelVoice();render();}});}
   else if (a === "answer" && challenge && !feedback) send(answerCommand(challenge), { challengeId: challenge.challengeId, optionId: button.dataset.option });

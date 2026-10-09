@@ -160,15 +160,31 @@ async function exerciseConditionedCard(actor, other, choice, card, testInfo) {
   expect(Boolean(invalid.unit), 'a genuine ineligible public unit is available for the guarded click').toBe(true);
   await expect(unitLabel(page, invalid.seat, invalid.unit.uid)).not.toHaveClass(/targetable/);
   await unitLabel(page, invalid.seat, invalid.unit.uid).click();
+  await expect(page.locator('#notice')).toHaveText('请选择亮起的合法目标');
+  await expect(page.locator('#notice')).toHaveAttribute('data-kind','target');
+  await safeScreenshot(page,testInfo,`${card}-invalid-target-warning`);
+  await expect(page.locator('#notice')).toHaveText('请选择亮起的合法目标');
+  const cancelAt=await page.evaluate(()=>performance.now());
+  await action(page,'clear').click();
+  await expect(page.locator('#notice')).toHaveText('');
+  const cancelledAt=await page.evaluate(()=>performance.now());
+  expect(actor.observed.commands.length).toBe(beforeCommands);
+  await selectCard(actor,choice.index);await verifyTargets(actor,choice,card);
+  await unitLabel(page,invalid.seat,invalid.unit.uid).click();
+  await expect(page.locator('#notice')).toHaveText('请选择亮起的合法目标');
   await sleep(250);
   await verifyTargets(actor, choice, card);
   expect(actor.observed.commands.length, 'clicking an ineligible unit sends no command and keeps the current card selected').toBe(beforeCommands);
   expect(readOnlyState(actor) === beforeSelection).toBe(true);
   const commands = actor.observed.commands.length, events = new Set(actor.observed.events.keys());
   const revision = room.revision, cost = room.selfHandCosts[choice.index];
+  await expect(page.locator('#notice')).toHaveText('请选择亮起的合法目标');
+  const submitAt=await page.evaluate(()=>performance.now());
   const command = await uiCommand(actor, () => unitLabel(page, target.seat, target.target).click());
   expect(command.type).toBe('battle.action'); expect(command.action).toBe('play');
   await sync(actor, other); await waitForBoard(actor); await sleep(250);
+  await expect(page.locator('#notice')).toHaveText('');
+  const acceptedAt=await page.evaluate(()=>performance.now());
   expect(actor.observed.commands.slice(commands).map(item => ({ type: item.type, action: item.action })))
     .toEqual([{ type: 'battle.action', action: 'play' }]);
   expect(other.observed.commands.length).toBe(otherCommands);
@@ -193,7 +209,8 @@ async function exerciseConditionedCard(actor, other, choice, card, testInfo) {
   actor.metrics.summons += 1;
   actor.metrics.conditionedTargets.effects.push({ card, seat, targetUid: target.target,
     before, after, excludedSeat: invalid.seat, excludedUid: invalid.unit.uid,
-    invalidClickCommandCount: 0, commandCount: 1, publicPlayEventCount: 1 });
+    invalidClickCommandCount: 0, commandCount: 1, publicPlayEventCount: 1,
+    warningLifecycle:{cancelAt,cancelledAt,submitAt,acceptedAt,emptyAfterCancel:true,emptyAfterAccepted:true} });
   await safeScreenshot(page, testInfo, `${card}-accepted-condition-effect`);
 }
 

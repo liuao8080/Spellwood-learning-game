@@ -31,7 +31,7 @@ jobs:
       - name: Build the real network client
         run: npm run build:network
       - name: NAT admission and real client startup
-        run: node --test --test-concurrency=1 --test-timeout=30000 tests/admission.test.mjs tests/identity-admission.test.mjs tests/nat-startup.test.mjs tests/card-target-copy.test.mjs
+        run: node --test --test-concurrency=1 --test-timeout=30000 tests/admission.test.mjs tests/identity-admission.test.mjs tests/nat-startup.test.mjs tests/card-target-copy.test.mjs tests/target-notice.test.mjs
       - name: Install official Playwright Chromium
         run: npx --no-install playwright install --with-deps chromium
       - name: Install the standard Ubuntu combat evidence decoder
