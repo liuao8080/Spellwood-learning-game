@@ -141,14 +141,20 @@ test("perspective scene builds volumetric figures and raycasts a real model", (t
   assert.equal(scene.pick({ clientX: p.x, clientY: p.y })?.uid, "attacker");
 });
 
-test("attack travels from source toward target, contacts once, and returns in 740ms", async (t) => {
+test("attack renders anticipation contact and return with a nominal 740ms phase budget", async (t) => {
   const { scene, frame } = harness(t); scene.setBattle(state(), 0);
   const item = scene.units.get("attacker"), from = item.base.clone(); let impacts = 0;
   const motion = scene.attack("attacker", "defender", () => impacts++), start = [...scene.jobs][0].start;
   frame(start + 100); assert.equal(impacts, 0);
-  frame(start + 360); assert.equal(impacts, 1); assert(item.model.root.position.distanceTo(from) > 2.5);
-  frame(start + 500); assert.equal(impacts, 1);
-  frame(start + 741); await motion;
+  frame(start + 2000); await tick(); assert.equal(impacts, 0, 'late wind-up cannot skip travel');
+  let phase = [...scene.jobs][0]; assert.equal(phase.duration, 230);
+  frame(phase.start + 2000); await tick();
+  assert.equal(impacts, 1); assert(item.model.root.position.distanceTo(from) > 2.5);
+  const contact = item.model.root.position.clone();
+  phase = [...scene.jobs][0]; assert.equal(phase.duration, 82);
+  frame(phase.start + 2000); await tick(); assert(item.model.root.position.equals(contact));
+  phase = [...scene.jobs][0]; assert.equal(phase.duration, 310);
+  frame(phase.start + 2000); await motion; assert.equal(impacts, 1);
   assert(item.model.root.position.distanceTo(from) < 1e-8); assert.equal(item.animating, false);
   assert.equal(scene.jobs.size, 0);
 });
@@ -157,7 +163,8 @@ test("canceling a lethal hit restores opacity and scale before a fresh snapshot"
   const { scene, frame } = harness(t); const initial = state(); scene.setBattle(initial, 0);
   const next = structuredClone(initial); next.players[1].board.shift();
   const motion = scene.present(next, { kind: "attack", sourceUid: "attacker", targetUid: "defender", changes: [{ seat: 1, uid: "defender", hpDelta: -2, removed: true }] });
-  const start = [...scene.jobs][0].start; frame(start + 360);
+  const start = [...scene.jobs][0].start; frame(start + 118); await tick();
+  const travel = [...scene.jobs][0]; frame(travel.start + 230); await tick();
   const fadeStart = [...scene.jobs].find((j) => j.duration === 320).start;
   frame(fadeStart + 170);
   const item = scene.units.get("defender"); assert(item.fadeMaterials.some((x) => x.material.opacity < x.opacity));
@@ -166,6 +173,15 @@ test("canceling a lethal hit restores opacity and scale before a fresh snapshot"
   item.model.root.traverse((o) => { if (o.material && o.material.visible !== false) assert.equal(o.material.opacity, 1); });
   assert.equal(scene.temporary.children.length, 0); assert.equal(scene.jobs.size, 0);
   assert.equal(scene.units.get("neighbor").base.x, -1.6, "cancel did not compact the old row");
+});
+
+test('rejected melee phase releases the motion token and restores the figure', async t => {
+  const { scene } = harness(t); scene.setBattle(state(), 0);
+  const item = scene.units.get('attacker');
+  scene.addJob = async (_duration, update) => { update(.5); throw new Error('rejected phase'); };
+  await assert.rejects(scene.attack('attacker', 'defender'), /rejected phase/);
+  assert.equal(item.animating, false); assert.equal(item.motionToken, null);
+  assert(item.model.root.position.equals(item.base));
 });
 
 test("summon cancellation removes the flying card and keeps the accepted unit", async (t) => {

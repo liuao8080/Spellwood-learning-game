@@ -40,3 +40,29 @@ CPU timeline observations. It records support/failure explicitly and no
 script URLs or attribution names. It changes neither game code, clocks,
 recording, nor the motion acceptance gate. Missing entries cannot establish
 absence of stalls. The new diagnostic itself awaits browser execution.
+
+### CI24 and phased melee reliability candidate
+
+CI24 run `37874756677`, head `17de18b4f3c869ba89822cc7baed0be80f239463`,
+finished 18/19 passed; motion frame gap 0.948 seconds still failed. Both passive
+observers were supported. Attack-period long tasks measured 346/580/349ms;
+long animation frames exposed substantial browser rendering-phase time with
+little attributed scripting. This does not isolate a GPU/paint root cause.
+
+The next narrow correction addresses a separately proven presentation flaw:
+a single 740ms global tween could jump directly from anticipation into return
+on a delayed frame, emitting damage without ever updating the contact pose.
+Melee now runs anticipation (118ms), travel (230ms), contact (82ms) and return
+(310ms) as sequential scene jobs. Anticipation ends at a retained -.08 setback;
+travel starts there and ends at contact. Each phase's endpoint gets a scene
+update before the next is scheduled. Browser presentation remains unverified.
+The nominal budget is still 740ms; missed frames can extend the actual sequence.
+It is not a frame-rate fix and does not relax the existing coverage gate.
+
+Impact remains once-only and generation/token guarded. Hidden pages, context
+loss, stale sequences and frame faults stop later phases. Finally cleanup
+restores the owning model and releases its motion token on errors. Eleven
+logic cases cover 16/33/120/633/2000ms intervals, all four cancellation points,
+repeated impact attempts and rejected work; five real-Three-object/mock-renderer
+cases cover actual scene integration and cleanup. All passed along with typecheck
+and network build. These tests are not WebGL visual acceptance.

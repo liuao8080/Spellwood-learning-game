@@ -19,6 +19,7 @@ import { targetPreview } from "./targeting.mjs";
 import { createElementalCast, createElementalBurst, createBarrierBadge } from "./elemental-effects.mjs";
 import { AdaptiveQualityController } from "./adaptive-quality.mjs";
 import { createEffectWarmup, primeHiddenEffectCanvas } from "./effect-warmup.mjs";
+import { playMeleeSequence } from "./melee-sequence.mjs";
 
 const lerp = MathUtils.lerp;
 const smooth = (v) => 1 - (1 - v) ** 3;
@@ -636,16 +637,23 @@ export class ArenaScene {
     if (!item || !to || this.reduced) return;
     const from = item.base.clone(), destination = to.clone().lerp(from, .18);
     const generation = this.generation, token = {}; item.animating = true; item.motionToken = token;
-    let hit = false; this.onSound("attack");
-    await this.addJob(740, (t) => {
-      if (item.motionToken !== token) return;
-      let travel = t < .16 ? -.08 * Math.sin(t / .16 * Math.PI) : t < .47 ? smooth((t - .16) / .31) : t < .58 ? 1 : 1 - easeInOut((t - .58) / .42);
-      item.model.root.position.copy(from).lerp(destination, travel);
-      item.model.root.position.y = from.y + Math.sin(Math.max(0, travel) * Math.PI) * .62;
-      item.model.applyPose?.({ idlePhase: 0, lean: Math.sin(t * Math.PI) * .3, attackProgress: t });
-      if (t >= .47 && !hit) { hit = true; impact(); }
-    });
-    if (generation === this.generation && item.motionToken === token && !this.destroyed) { item.animating = false; item.motionToken = null; item.model.root.position.copy(item.base); }
+    this.onSound("attack");
+    try { await playMeleeSequence({
+      runPhase: (duration, update) => this.addJob(duration, update),
+      isCurrent: () => generation === this.generation && item.motionToken === token &&
+        !this.destroyed && !this.hidden && !this.contextLost && !this.frameFault,
+      setPose: ({ travel, progress }) => {
+        item.model.root.position.copy(from).lerp(destination, travel);
+        item.model.root.position.y = from.y + Math.sin(Math.max(0, travel) * Math.PI) * .62;
+        item.model.applyPose?.({ idlePhase: 0, lean: Math.sin(progress * Math.PI) * .3, attackProgress: progress });
+      },
+      impact,
+    }); } finally {
+      if (generation === this.generation && item.motionToken === token && !this.destroyed) {
+        item.animating = false; item.motionToken = null; item.model.root.position.copy(item.base);
+        item.model.applyPose?.({ idlePhase: 0, lean: 0, attackProgress: 0 });
+      }
+    }
   }
 
   async pulse(targetKey, kind = "damage") {
@@ -910,7 +918,7 @@ export class ArenaScene {
     const areaEffect = sourceCard?.target?.startsWith("all-");
     const hit = () => { if (!didHit && generation === this.generation) { didHit = true; onImpact(); impact = this.impacts(event.changes || [], element, areaEffect || (!rangedAttack && sourceCard?.type !== "spell")); } };
     if (event.kind === "attack" && event.sourceUid && target && !this.reduced) {
-      // A removed unit's number/fade end before the row can rearrange at 740ms.
+      // A removed unit's number/fade end before the attack's return settles.
       // Longer surviving labels follow their own UID and need not lock input.
       if (rangedAttack) await this.projectile(event.sourceUid, target, hit, element);
       else await this.attack(event.sourceUid, target, hit);
