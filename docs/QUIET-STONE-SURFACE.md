@@ -30,3 +30,13 @@ Validation planned for the candidate:
 Roll back the surface if it is visually noisier, indistinguishable at target
 sizes, distorts targeting contrast, leaks resources or adds unexpected draw cost.
 No improvement or performance pass is claimed before those checks finish.
+
+## Verified candidate, 9 October 2026
+
+CI33 at `99164d38` passed 20/21 game scenarios and the separate material fixture.
+The original motion gate remained red (735 ms maximum recorded interval, 250 ms
+limit). The A/B fixture measured four to five main submissions and four to five
+shadow submissions, with 12,364 triangles unchanged. Independent original-image
+review retained this as a small, restrained improvement without hurting targeting
+or text. It is most apparent on the empty desktop board and less apparent in a
+populated small-phone view; it is not a claim of detailed realistic stone.

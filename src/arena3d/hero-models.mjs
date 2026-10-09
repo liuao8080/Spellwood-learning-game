@@ -13,6 +13,7 @@ import {
 } from "three";
 import { getHeroSkin, DEFAULT_HERO_SKIN } from "../hero-skins.mjs";
 import { HeroGeometry } from "./hero-geometry.mjs";
+import { shadeRangerGarment } from "./garment-colors.mjs";
 const TAU = Math.PI * 2;
 const PALETTES = {
   forest_apprentice: ["#597c58", "#e8dcbc", "#b49b61", "#604435"],
@@ -275,7 +276,8 @@ function shell(b, c, trim, p = [0.51, 1.47, 0.33], j = "prop") {
     );
 }
 
-function base(b, id, p) {
+function base(b, id, p, garmentDetail) {
+  const shade = (geometry, region) => id === 'leaf_ranger' && garmentDetail ? shadeRangerGarment(geometry, region) : geometry;
   const [cloth, lining, accent, leather] = p,
     robot = id === "copper_gardener";
   const skin = robot ? "#c6a06f" : "#e8b996",
@@ -292,7 +294,7 @@ function base(b, id, p) {
   ].includes(id);
   // Closed tailored torso, gently pinched at the waist; separate pants and rounded toe caps.
   if (!robot)
-    b.profile(
+    shade(b.profile(
       cloth,
       [
         [0, long ? 0.27 : 0.48],
@@ -305,13 +307,13 @@ function base(b, id, p) {
       ],
       [0, 0, 0],
       [1, 1, 0.73],
-    );
+    ), 'tunic');
   for (const s of [-1, 1]) {
     const j = s < 0 ? "legL" : "legR",
       arm = s < 0 ? "upperArmL" : "upperArmR",
       fore = s < 0 ? "forearmL" : "forearmR";
     b.oval(lining, [s * 0.17, 0.39, 0], [0.128, 0.25, 0.135], j);
-    b.boot(leather, [s * 0.17, 0, 0], j);
+    shade(b.boot(leather, [s * 0.17, 0, 0], j), 'boot');
     if (b.quality !== "low") {
       b.profile(
         lining,
@@ -327,7 +329,7 @@ function base(b, id, p) {
         j,
       );
     }
-    b.oval(
+    shade(b.oval(
       cloth,
       [s * 0.32, 1.18, 0.015],
       [0.17, 0.21, 0.165],
@@ -335,8 +337,8 @@ function base(b, id, p) {
       "body",
       "normal",
       [0, 0, s * 0.28],
-    );
-    b.oval(
+    ), 'sleeve');
+    shade(b.oval(
       cloth,
       [s * 0.435, 1.015, 0.09],
       [0.125, 0.185, 0.14],
@@ -344,7 +346,7 @@ function base(b, id, p) {
       "body",
       "normal",
       [0, 0, s * 0.23],
-    );
+    ), 'sleeve');
     b.oval(
       lining,
       [s * 0.45, 0.94, 0.13],
@@ -381,7 +383,7 @@ function base(b, id, p) {
           "tiny",
         );
   }
-  b.profile(
+  shade(b.profile(
     leather,
     [
       [0, 0.88],
@@ -391,9 +393,9 @@ function base(b, id, p) {
     ],
     [0, 0, 0],
     [1, 1, 0.76],
-  );
+  ), 'belt');
   b.box(accent, [0, 0.914, 0.221], [0.095, 0.077, 0.033], "body", [], "accent");
-  b.oval(lining, [0, 1.29, 0.1], [0.225, 0.075, 0.2]);
+  shade(b.oval(lining, [0, 1.29, 0.1], [0.225, 0.075, 0.2]), 'collar');
   // A rounded face with cheeks, a protruding nose, inset eyes and a sculpted smile.
   b.oval(
     skin,
@@ -1725,7 +1727,7 @@ function decorate(b, id, p) {
 }
 export function createHeroModel(
   skinId = DEFAULT_HERO_SKIN,
-  { quality = "medium", seat = 0 } = {},
+  { quality = "medium", seat = 0, garmentDetail = true } = {},
 ) {
   const skin = getHeroSkin(skinId);
   quality = ["low", "medium", "high"].includes(quality) ? quality : "medium";
@@ -1733,7 +1735,7 @@ export function createHeroModel(
   root.name = `hero:${skin.id}`;
   root.userData.skinId = skin.id;
   const b = new HeroGeometry(quality);
-  base(b, skin.id, PALETTES[skin.id]);
+  base(b, skin.id, PALETTES[skin.id], garmentDetail);
   decorate(b, skin.id, PALETTES[skin.id]);
   b.profile(
     "#304c47",

@@ -329,7 +329,7 @@ test('twenty sequential wardrobe previews and a resumable test ten-pull fit comp
     expect(triangles).toBeLessThanOrEqual(quality === 'low' ? 2100 : 5200);
     (actor.metrics.heroPreviewModels ||= []).push({id:item.id,renderer,quality,triangles,modelCount:Number(await canvas.getAttribute('data-model-count'))});
     expect(await page.locator('.hero-preview').evaluate(element=>Number(getComputedStyle(element,'::after').opacity))).toBe(0);
-    await expect(page.locator('.hero-preview-fallback')).toHaveAttribute('src', `/assets/heroes/${item.id}/portrait.webp`);
+    await expect(page.locator('.hero-preview-fallback')).toHaveAttribute('src', `/assets/heroes/${item.id}/portrait.webp${item.id === 'leaf_ranger' ? '?v=ranger-seams-2026-10-09' : ''}`);
     await page.locator('.hero-preview').scrollIntoViewIfNeeded();
     await safeScreenshot(page, testInfo, `catalogue-${String(index + 1).padStart(2, '0')}-${item.id}`);
   }
@@ -384,6 +384,21 @@ test('twenty sequential wardrobe previews and a resumable test ten-pull fit comp
   expect(journey(actor).recent.find(item => item.id === batch.id)).toEqual({ ...batch, revealed: 1023 });
   expect(officialWallet(actor)).toEqual(official);
   expect(actor.observed.skinWrites.filter(write => write.kind === 'open')).toEqual([{ kind: 'open', mode: 'test', count: 10 }]);
+  // Use the existing free test redemption UI, never inject ownership or room state.
+  await skin(page, 'select', 'leaf_ranger').click();
+  if (!journey(actor).test.owned.includes('leaf_ranger')) await skin(page, 'redeem').click();
+  await expect.poll(() => journey(actor).test.owned.includes('leaf_ranger')).toBe(true);
+  await skin(page, 'equip').click();
+  await expect.poll(() => journey(actor).equipped).toEqual({mode:'test',skinId:'leaf_ranger'});
+  await skin(page, 'close').click();
+  const peer=await actors('ranger-wardrobe-peer');await calmAnimations(peer);
+  await matchPair(actor,peer);await confirmOpening(actor,peer);await sync(actor,peer);
+  expect(actor.observed.room.players[actor.observed.room.youSeat].skinId).toBe('leaf_ranger');
+  for(const viewport of [{width:1280,height:800},{width:844,height:390},{width:320,height:568}]){
+    await page.setViewportSize(viewport);await page.bringToFront();await waitForBoard(actor);
+    await safeScreenshot(page,testInfo,`${viewport.width}x${viewport.height}-redeemed-ranger-real-match`);
+  }
+  expect(officialWallet(actor)).toEqual(official);
 });
 
 test('three one-click presets and a two-click custom swap retain all thirty-six free card details', async ({ actors }, testInfo) => {
