@@ -1,7 +1,7 @@
 /** Cosmetic catalogue only. Learning rewards and ownership live on the server. */
 export const DEFAULT_HERO_SKIN = "forest_apprentice";
 export const HERO_SKIN_VERSION = "hero-2026-10-08-v1";
-const RANGER_MATERIAL_VERSION = "ranger-seams-2026-10-09";
+const RANGER_MATERIAL_VERSION = "ranger-seams-2026-10-09-r2";
 const entries = [
   [
     "forest_apprentice",

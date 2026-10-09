@@ -22,7 +22,7 @@
   },
   {
     "skinId": "leaf_ranger",
-    "assetVersion": "ranger-seams-2026-10-09",
+    "assetVersion": "ranger-seams-2026-10-09-r2",
     "source": "original-authored-3d-model-offline-application-cpu-render",
     "modelKey": "leaf_ranger",
     "quality": "high",
@@ -30,17 +30,17 @@
       "width": 192,
       "height": 256,
       "file": "leaf_ranger/thumb.webp",
-      "bytes": 5228,
-      "sha256": "1bacba00467fbaf8d4b7c9dab3f975e9b62aaa466f48aaec06b6476331fa805a"
+      "bytes": 5174,
+      "sha256": "a53c26e174656660b67dcb326409ef3186f264963823dc2c22dd89b87bae3a76"
     },
     "portrait": {
       "width": 384,
       "height": 480,
       "file": "leaf_ranger/portrait.webp",
-      "bytes": 11130,
-      "sha256": "6cd26d0449bba650dc2a536e35e62dcb541618153e0ff1133a5f65b3072b234d"
+      "bytes": 11434,
+      "sha256": "e488ea279b7ebd096fe6bcfcaee5ececfd203fcd82a821cfed0bf89f64280466"
     },
-    "materialRevision": "ranger-seams-2026-10-09"
+    "materialRevision": "ranger-seams-2026-10-09-r2"
   },
   {
     "skinId": "mushroom_keeper",

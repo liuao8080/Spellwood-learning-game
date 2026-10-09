@@ -47,7 +47,7 @@ test('ranger preview assets use the new cache key and match their recorded bytes
  assert.equal(row.assetVersion,skin.assetVersion);
  for(const type of ['thumb','portrait']){
   const url=new URL(skin[type],'http://localhost');
-  assert.equal(url.searchParams.get('v'),'ranger-seams-2026-10-09');
+  assert.equal(url.searchParams.get('v'),'ranger-seams-2026-10-09-r2');
   const bytes=readFileSync(new URL(`../dist${url.pathname}`,import.meta.url));
   assert.equal(bytes.length,row[type].bytes);
   assert.equal(createHash('sha256').update(bytes).digest('hex'),row[type].sha256);
