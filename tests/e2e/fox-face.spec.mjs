@@ -4,6 +4,7 @@ import {build} from 'esbuild';
 import {mkdir,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {extractCombatFrames} from '../../scripts/extract-combat-frames.mjs';
+import {beginStillArenaProbe,readStillArenaProbe,finishStillArenaProbe} from './still-arena-probe.mjs';
 
 test('@fox-review face A/B fixture preserves geometry and submissions in idle and attack poses',async({page},testInfo)=>{
  testInfo.annotations.push({type:'coverage',description:'Isolated real WebGL model comparison, same camera/light/pose; not live gameplay or physical-device performance. A separate actual match records an ordinary fox attack.'});
@@ -73,13 +74,42 @@ test('@fox-review live face with a real neighbour and ordinary normal-motion att
  for(const card of evidence.openingSwap)await a.page.locator(`[data-action="opening-card"][data-index="${card.index}"]`).click();
  await confirmOpening(a,b);
  const uid=await prepareFoxAndNeighbour(a,b,evidence,checkpoint);await a.page.bringToFront();await waitForBoard(a);
- const seat=a.observed.room.youSeat,source=a.observed.room.players[seat].board.find(unit=>unit.uid===uid);expect(source.cardId).toBe('fox');
+ const initialRemaining=a.observed.room.turnDeadline-Date.now();
+ evidence.stillPreparation={initialRemainingMs:initialRemaining,commands:[]};
+ if(initialRemaining<90000){
+  evidence.stillPreparation.commands.push({actor:'viewer',action:(await uiCommand(a,()=>action(a.page,'end').click())).action});await sync(a,b);
+  await b.page.bringToFront();await waitForBoard(b);
+  evidence.stillPreparation.commands.push({actor:'peer',action:(await uiCommand(b,()=>action(b.page,'end').click())).action});await sync(a,b);
+  await a.page.bringToFront();await waitForBoard(a);
+ }
+ evidence.stillPreparation.remainingMs=a.observed.room.turnDeadline-Date.now();await checkpoint();
+ if(evidence.stillPreparation.remainingMs<90000){evidence.status='diagnostic-coverage-incomplete';await checkpoint();throw new Error('Diagnostic coverage gap: less than 90 seconds remain for three idle observations and the original attack; no clock or authority override');}
+ const seat=a.observed.room.youSeat,source=a.observed.room.players[seat].board.find(unit=>unit.uid===uid);expect(source.cardId).toBe('fox');expect(a.observed.room.activeSeat).toBe(seat);expect(source.ready).toBe(true);
  evidence.before=publicState(a);evidence.source={uid,cardId:source.cardId,attack:source.atk};
+ evidence.stillPeer=await b.page.locator('#arena').evaluate(canvas=>{const r=canvas.getBoundingClientRect();return{buffer:[canvas.width,canvas.height],display:[r.width,r.height],visibility:document.visibilityState,reducedMotion:canvas.dataset.reducedMotion,sceneState:canvas.dataset.sceneState,qualityLevel:canvas.dataset.qualityLevel,pixelScale:canvas.dataset.pixelScale};});
  expect(evidence.before.players[1-seat].armor,'Passive opponent has not played an armor card').toBe(0);
  for(const viewport of [{width:1280,height:800},{width:390,height:844},{width:320,height:568},{width:844,height:390}]){
   await a.page.setViewportSize(viewport);await expect(a.page.locator(`.unit-label[data-uid="${uid}"]`)).toBeVisible();
   await a.page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   evidence.screenshots.push({viewport,file:await safeScreenshot(a.page,testInfo,`live-${viewport.width}x${viewport.height}-idle`)});await checkpoint();
+  if(viewport.width!==320){
+   // Same ordinary match and view, no accepted commands during the observation.
+   // Screenshots can stall readback: retain before/after timings separately.
+   const revision=a.observed.room.revision,commands=a.observed.commands.length;
+   const probe={viewport,revision,samples:[],caveat:'Passive normal-motion idle observation; screenshots/readback can affect timing. Peer remains unchanged. No physical-device or performance-pass claim.'};
+   evidence.stillArena??=[];evidence.stillArena.push(probe);await beginStillArenaProbe(a.page);
+   try{
+    for(const targetMs of [2000,5000,10000]){
+     const current=await readStillArenaProbe(a.page);await a.page.waitForTimeout(Math.max(0,targetMs-current.elapsedMs));
+     const before=await readStillArenaProbe(a.page);
+     const file=await safeScreenshot(a.page,testInfo,`still-${viewport.width}x${viewport.height}-${targetMs/1000}s`);
+     const after=await readStillArenaProbe(a.page);
+     probe.samples.push({targetMs,before,file,after});await checkpoint();
+     expect(a.observed.room.revision,'Idle probe must not cross an authority update').toBe(revision);
+     expect(a.observed.commands.length,'Idle probe must not send game commands').toBe(commands);
+    }
+   }finally{probe.observation=await finishStillArenaProbe(a.page);await checkpoint();}
+  }
  }
  await a.page.locator(`.unit-label[data-uid="${uid}"]`).click();await expect(a.page.locator('.target-command')).toBeVisible();
  await startDomObservation(a.page,uid,evidence,checkpoint);
