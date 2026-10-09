@@ -18,7 +18,7 @@ import { SoftwareRenderer } from "./software-renderer.mjs";
 import { targetPreview } from "./targeting.mjs";
 import { createElementalCast, createElementalBurst, createBarrierBadge } from "./elemental-effects.mjs";
 import { AdaptiveQualityController } from "./adaptive-quality.mjs";
-import { createEffectWarmup } from "./effect-warmup.mjs";
+import { createEffectWarmup, primeHiddenEffectCanvas } from "./effect-warmup.mjs";
 
 const lerp = MathUtils.lerp;
 const smooth = (v) => 1 - (1 - v) ** 3;
@@ -112,8 +112,9 @@ export class ArenaScene {
     if(this.renderer.isSoftwareRenderer||typeof this.renderer.compileAsync!=="function")return;
     const epoch=this.effectWarmupEpoch=(this.effectWarmupEpoch||0)+1,started=performance.now();
     this.canvas.dataset.effectWarmup="pending";
-    // The detached resources are never added to the visible scene or rendered
-    // as evidence. Retaining them keeps shader-program cache references alive.
+    this.canvas.dataset.effectWarmupDraw="pending";
+    // Detached resources are compiled before use. A first draw is allowed only
+    // while the actual gameplay canvas is hidden; it is never evidence footage.
     this.effectWarmupPromise=Promise.resolve().then(async()=>{
       if(this.destroyed||this.contextLost||epoch!==this.effectWarmupEpoch)return;
       this.effectWarmup ||= createEffectWarmup();
@@ -129,9 +130,20 @@ export class ArenaScene {
       if(this.destroyed||this.contextLost||epoch!==this.effectWarmupEpoch)return;
       this.canvas.dataset.effectWarmup="ready";
       this.canvas.dataset.effectWarmupMs=String(Math.round(performance.now()-started));
+      this.primeHiddenEffects();
     }).catch(()=>{
       if(!this.destroyed&&epoch===this.effectWarmupEpoch)this.canvas.dataset.effectWarmup="failed";
     });
+  }
+
+  primeHiddenEffects() {
+    if(this.destroyed||this.contextLost||!this.effectWarmup||this.canvas.dataset.effectWarmup!=="ready"||["performed","failed"].includes(this.canvas.dataset.effectWarmupDraw))return;
+    try {
+      const started=performance.now();
+      const result=primeHiddenEffectCanvas({renderer:this.renderer,scene:this.scene,camera:this.camera,canvas:this.canvas,handle:this.effectWarmup});
+      this.canvas.dataset.effectWarmupDraw=result.status;
+      this.canvas.dataset.effectWarmupDrawMs=String(Math.round(performance.now()-started));
+    } catch {this.canvas.dataset.effectWarmupDraw="failed";}
   }
 
   makeHeroes() {
@@ -916,7 +928,7 @@ export class ArenaScene {
   }
 
   setReduced(value) { if (value && !this.reduced) this.cancel(); this.reduced = !!value;if(this.canvas?.dataset)this.canvas.dataset.reducedMotion=String(this.reduced); this.requestRender(); }
-  setHidden(value) { if(this.hidden===!!value)return;this.hidden = !!value; if (value) { this.cancel(); this.stop(); } else {this.resize();this.start();} }
+  setHidden(value) { if(this.hidden===!!value){if(value)this.primeHiddenEffects();return;}this.hidden = !!value; if (value) { this.cancel(); this.stop(); this.primeHiddenEffects(); } else {this.resize();this.start();} }
   requestRender() { this.needsRender = true; if (this.renderer && !this.hidden) this.start(); }
   start() {
     if (!this.renderer || this.running || this.destroyed || this.hidden || this.contextLost || this.frameFault) return;

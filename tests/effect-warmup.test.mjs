@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { Group, Scene, Sprite, SpriteMaterial, SRGBColorSpace, Vector3 } from "three";
-import { createEffectWarmup } from "../src/arena3d/effect-warmup.mjs";
+import { Group, Scene, Sprite, SpriteMaterial, SRGBColorSpace, Vector2, Vector3, Vector4 } from "three";
+import { createEffectWarmup, primeHiddenEffectCanvas } from "../src/arena3d/effect-warmup.mjs";
 import { createElementalBurst, createElementalCast } from "../src/arena3d/elemental-effects.mjs";
 import { ArenaScene } from "../src/arena3d/scene.mjs";
 
@@ -145,3 +145,67 @@ test("warmup clearly fails without canvas support before allocating effect resou
   assert.throws(() => createEffectWarmup({ createCanvas: () => null }), /requires a canvas/);
   assert.throws(() => createEffectWarmup({ createCanvas: () => ({ getContext: () => null }) }), /requires a 2D canvas context/);
 });
+
+
+function hiddenDrawFixture() {
+  const canvas = canvasFactory();
+  const handle = createEffectWarmup({ createCanvas: () => canvas });
+  const scene = new Scene(), retained = new Group(); scene.add(retained);
+  const camera = { marker: "existing-camera" };
+  const size = new Vector2(708, 208), viewport = new Vector4(2, 3, 700, 200), scissor = new Vector4(4, 5, 690, 190);
+  const calls = [];
+  const renderer = {
+    isSoftwareRenderer: false, size, viewport, scissor, scissorTest: true,
+    getRenderTarget: () => null,
+    getContext: () => ({ isContextLost: () => false, flush: () => calls.push(["flush"]) }),
+    getSize: into => into.copy(size), getViewport: into => into.copy(viewport), getScissor: into => into.copy(scissor),
+    getScissorTest() { return this.scissorTest; },
+    setSize(w, h, style) { calls.push(["size", w, h, style]); size.set(w, h); viewport.set(0, 0, w, h); },
+    setViewport: value => viewport.copy(value), setScissor: value => scissor.copy(value),
+    setScissorTest(value) { this.scissorTest = value; },
+    render(s, c) {
+      assert.equal(s, scene); assert.equal(c, camera);
+      assert.equal(handle.root.parent, scene); assert.equal(handle.root.visible, true);
+      handle.root.traverse(object => assert.equal(object.visible, true));
+      assert.deepEqual(size.toArray(), [8, 8]); assert.equal(this.scissorTest, false);
+      calls.push(["render"]);
+    },
+  };
+  const input = { renderer, scene, camera, canvas: { hidden: true }, handle };
+  return { input, calls, retained };
+}
+
+for (const fail of [false, true]) test(`hidden default-canvas preparation restores every owner state${fail ? " after a render failure" : " after one bounded mocked renderer invocation"}`, () => {
+  const { input, calls, retained } = hiddenDrawFixture();
+  const { renderer, handle, scene } = input;
+  const before = []; handle.root.traverse(object => before.push([object, object.visible]));
+  if (fail) renderer.render = () => { throw new Error("driver test failure"); };
+  try {
+    if (fail) assert.throws(() => primeHiddenEffectCanvas(input), /driver test failure/);
+    else assert.deepEqual(primeHiddenEffectCanvas(input), { status: "performed", width: 8, height: 8 });
+    assert.equal(handle.root.parent, null); assert.deepEqual(scene.children, [retained]);
+    for (const [object, visible] of before) assert.equal(object.visible, visible);
+    assert.deepEqual(renderer.size.toArray(), [708, 208]);
+    assert.deepEqual(renderer.viewport.toArray(), [2, 3, 700, 200]);
+    assert.deepEqual(renderer.scissor.toArray(), [4, 5, 690, 190]); assert.equal(renderer.scissorTest, true);
+    assert.equal(calls.filter(call => call[0] === "size").length, 2);
+    assert.equal(handle.disposed, false, "program references stay alive after initialization");
+  } finally { handle.dispose(); }
+});
+
+for (const scenario of ["visible", "software", "owned-target", "owned-root", "disposed", "context-lost", "unsupported"]) {
+  test(`hidden preparation performs no renderer mutations for ${scenario}`, () => {
+    const { input, calls } = hiddenDrawFixture();
+    try {
+      if (scenario === "visible") input.canvas.hidden = false;
+      if (scenario === "software") input.renderer.isSoftwareRenderer = true;
+      if (scenario === "owned-target") input.renderer.getRenderTarget = () => ({ existing: true });
+      if (scenario === "owned-root") new Group().add(input.handle.root);
+      if (scenario === "disposed") input.handle.dispose();
+      if (scenario === "context-lost") input.renderer.getContext = () => ({ isContextLost: () => true });
+      if (scenario === "unsupported") delete input.renderer.getViewport;
+      assert.equal(primeHiddenEffectCanvas(input).status, "skipped");
+      assert.deepEqual(calls, []);
+    } finally { input.handle.dispose(); }
+  });
+}

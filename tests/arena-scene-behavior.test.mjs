@@ -586,3 +586,26 @@ test('detached effect precompilation survives context loss without publishing st
   const restored = scene.effectWarmup;
   scene.dispose(); assert.equal(restored.disposed, true);
 });
+
+test('hidden first-draw preparation retries only after the DOM canvas becomes hidden', async t => {
+  const { scene, render, canvas } = harness(t);
+  let draws = 0;
+  canvas.hidden = false;
+  render.compileAsync = async () => {};
+  render.getRenderTarget = () => null;
+  render.getSize = into => into.set(1280, 800);
+  render.getViewport = into => into.set(0, 0, 1280, 800);
+  render.getScissor = into => into.set(0, 0, 1280, 800);
+  render.getScissorTest = () => false;
+  render.setViewport = () => {}; render.setScissor = () => {}; render.setScissorTest = () => {};
+  render.getContext = () => ({ isContextLost: () => false, flush: () => { draws++; } });
+  scene.prepareEffectPrograms(); await scene.effectWarmupPromise;
+  assert.equal(canvas.dataset.effectWarmupDraw, 'skipped'); assert.equal(draws, 0);
+  scene.setHidden(true);
+  assert.equal(draws, 0, 'logical hiding alone cannot authorize a visible-canvas warm draw');
+  canvas.hidden = true;
+  scene.setHidden(true);
+  assert.equal(canvas.dataset.effectWarmupDraw, 'performed'); assert.equal(draws, 1);
+  scene.setHidden(true);
+  assert.equal(draws, 1, 'ordinary repeated lobby rendering never repeats the preload');
+});

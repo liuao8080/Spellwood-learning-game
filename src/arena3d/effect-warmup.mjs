@@ -1,4 +1,4 @@
-import { CanvasTexture, Group, Sprite, SpriteMaterial, SRGBColorSpace, Vector3 } from "three";
+import { CanvasTexture, Group, Sprite, SpriteMaterial, SRGBColorSpace, Vector2, Vector3, Vector4 } from "three";
 import { createElementalBurst, createElementalCast } from "./elemental-effects.mjs";
 
 /** Retained, invisible representatives of the actual combat-effect materials.
@@ -53,4 +53,37 @@ export function createEffectWarmup({ createCanvas = () => globalThis.document?.c
   // compileAsync uses traverse(), so hidden charge/flight/impact branches are
   // included even though this detached root can never appear in a render.
   return { root, textures, dispose, get disposed() { return disposed; } };
+}
+
+
+/** First-draw preparation on the same default framebuffer/color/MSAA path.
+ * Only a genuinely hidden gameplay canvas is eligible. This is initialization,
+ * never a gameplay/evidence frame, and all scene/renderer state is restored.
+ */
+export function primeHiddenEffectCanvas({ renderer, scene, camera, canvas, handle } = {}) {
+  if (canvas?.hidden !== true) return { status: "skipped", reason: "visible-canvas" };
+  if (!renderer || renderer.isSoftwareRenderer) return { status: "skipped", reason: "renderer" };
+  const methods = ["getRenderTarget", "getSize", "setSize", "getViewport", "setViewport",
+    "getScissor", "setScissor", "getScissorTest", "setScissorTest", "render"];
+  if (methods.some(name => typeof renderer[name] !== "function")) return { status: "skipped", reason: "unsupported" };
+  if (renderer.getRenderTarget() !== null) return { status: "skipped", reason: "owned-target" };
+  if (renderer.getContext?.()?.isContextLost?.()) return { status: "skipped", reason: "context-lost" };
+  if (!scene || !camera || !handle?.root || handle.disposed || handle.root.parent)
+    return { status: "skipped", reason: "unavailable-resources" };
+  const size = renderer.getSize(new Vector2()), viewport = renderer.getViewport(new Vector4());
+  const scissor = renderer.getScissor(new Vector4()), scissorTest = renderer.getScissorTest();
+  const visibility = []; handle.root.traverse(object => visibility.push([object, object.visible]));
+  try {
+    renderer.setSize(8, 8, false); renderer.setScissorTest(false);
+    for (const [object] of visibility) object.visible = true;
+    scene.add(handle.root);
+    renderer.render(scene, camera);
+    renderer.getContext?.()?.flush?.();
+    return { status: "performed", width: 8, height: 8 };
+  } finally {
+    handle.root.removeFromParent();
+    for (const [object, visible] of visibility) object.visible = visible;
+    renderer.setSize(size.x, size.y, false);
+    renderer.setViewport(viewport); renderer.setScissor(scissor); renderer.setScissorTest(scissorTest);
+  }
 }
