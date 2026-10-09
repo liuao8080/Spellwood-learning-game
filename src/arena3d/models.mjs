@@ -134,7 +134,7 @@ function eye(
   );
 }
 
-function buildFox(builder, body, rig) {
+function buildFox(builder, body, rig, { foxFaceDetail = true } = {}) {
   const fur = "#d88844",
     dark = "#985022",
     light = "#f2b668";
@@ -263,16 +263,16 @@ function buildFox(builder, body, rig) {
       [0.255, 0.19, 0.19],
       { style: "fur", rotation: [0, -s * 0.28, -s * 0.16] },
     );
-    eye(builder, rig.head, [s * 0.205, 0.15, 0.32], 0.105, "amber");
+    eye(builder, rig.head, [s * 0.205, 0.15, 0.32], 0.105, foxFaceDetail ? "#785331" : "amber");
     builder.oval(
       rig.head,
-      light,
+      foxFaceDetail ? fur : light,
       [s * 0.22, 0.295, 0.29],
       [0.11, 0.037, 0.025],
       { style: "fur", rotation: [0, 0, -s * 0.16] },
     );
   }
-  builder.oval(rig.head, "cream", [0, -0.08, 0.4], [0.23, 0.12, 0.19], {
+  builder.oval(rig.head, foxFaceDetail ? "#ebd4ae" : "cream", [0, -0.08, 0.4], [0.23, 0.12, 0.19], {
     style: "fur",
   });
   builder.oval(rig.head, "eye", [0, 0.005, 0.555], [0.105, 0.065, 0.065], {
@@ -1779,7 +1779,7 @@ export function createModelLibrary({
       };
       return retain(handle);
     },
-    createCreature({ species = "fox", side = "player", variantSeed = 1, faceDetail = true } = {}) {
+    createCreature({ species = "fox", side = "player", variantSeed = 1, faceDetail = true, foxFaceDetail = true } = {}) {
       if (!BUILDERS[species])
         throw new RangeError(`Unsupported species: ${species}`);
       const builder = makeBuilder(),
@@ -1790,7 +1790,7 @@ export function createModelLibrary({
       root.userData.variantSeed = variantSeed;
       const body = builder.part(`${species}-body`, root),
         rig = {};
-      const info = BUILDERS[species](builder, body, rig, { faceDetail });
+      const info = BUILDERS[species](builder, body, rig, { faceDetail, foxFaceDetail });
       const handle = makeHandle({
         root,
         builder,

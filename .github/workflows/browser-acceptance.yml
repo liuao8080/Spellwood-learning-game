@@ -62,7 +62,7 @@ jobs:
         if: ${{ !cancelled() && steps.layout.outcome == 'success' }}
         env:
           E2E_SUITE: full
-        run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout|@combat-motion|@frame-diagnostic|@draw-diagnostic|@draw-followup|@hedgehog-review|teacher-bank\.spec\.mjs'
+        run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout|@combat-motion|@frame-diagnostic|@draw-diagnostic|@draw-followup|@hedgehog-review|@fox-review|teacher-bank\.spec\.mjs'
       - name: Teacher scope and reading acceptance with its own suite budget
         if: ${{ !cancelled() && steps.layout.outcome == 'success' }}
         env:
@@ -72,7 +72,7 @@ jobs:
         if: ${{ !cancelled() && steps.layout.outcome == 'success' }}
         env:
           E2E_SUITE: hedgehog
-        run: npx --no-install playwright test --grep @hedgehog-review
+        run: npx --no-install playwright test --grep '@hedgehog-review|@fox-review'
       - name: Keep only safe evidence for three days
         id: full-evidence
         if: always()
@@ -201,7 +201,7 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          files=[p for p in Path('test-results/browser-evidence').glob('*hedgehog*') if p.is_file()]
+          files=[p for p in Path('test-results/browser-evidence').iterdir() if p.is_file() and ('hedgehog' in p.name or 'fox' in p.name)]
           size=sum(p.stat().st_size for p in files)
           assert size<=24*1024*1024, 'Model evidence exceeds bounded transfer size; preserve full artifact without reencoding'
           print(f'{len(files)} original model evidence files, {size} bytes')
@@ -210,8 +210,10 @@ jobs:
         if: ${{ always() && steps.model-evidence-size.outcome == 'success' }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: hedgehog-review-${{ github.run_id }}-${{ github.run_attempt }}
-          path: test-results/browser-evidence/*hedgehog*
+          name: creature-review-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/browser-evidence/*hedgehog*
+            test-results/browser-evidence/*fox*
           retention-days: 3
           if-no-files-found: warn
           include-hidden-files: false
