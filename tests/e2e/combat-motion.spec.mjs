@@ -5,6 +5,7 @@ import {
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { extractCombatFrames } from '../../scripts/extract-combat-frames.mjs';
+import { startPassiveFrameDiagnostics } from '../../scripts/passive-frame-diagnostics.mjs';
 
 // These are public catalogue choices, not engine imports or a seeded hand.
 // One ordinary UI-built deck makes a melee source reachable in bounded turns.
@@ -92,6 +93,8 @@ function publicState(actor) {
 }
 
 async function startDomObservation(page, uid, evidence, checkpoint) {
+  // Passive CPU timeline diagnostics only; strict normal-motion gates remain.
+  await page.evaluate(startPassiveFrameDiagnostics);
   // This observer reads only public DOM geometry, rendered hero HP and browser
   // visibility. Native RAF timestamps are observed, never replaced or advanced.
   // No renderer, client, engine, storage, canvas pixels or network API is touched.
@@ -192,7 +195,9 @@ async function startDomObservation(page, uid, evidence, checkpoint) {
         stop();
         const final = sample();
         publish(final);
-        const result = { samples, clicks, final, sampleLimit: 360, observationLimitMs: 6000, delivery: 'complete' };
+        const result = { samples, clicks, final, sampleLimit: 360, observationLimitMs: 6000, delivery: 'complete',
+          diagnostics: globalThis.__passiveFrameDiagnostics?.finish() ?? null };
+        delete globalThis.__passiveFrameDiagnostics;
         delete window.__combatMotionObservation;
         return result;
       },

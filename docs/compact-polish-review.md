@@ -14,3 +14,29 @@ The later geometry candidate passed four focused cases:320×222 and390×414 aren
 CI21 obtained all five actual populated-board screenshots and completed the natural seven-card wheel/touch checks. The320px layout failed because older, more-specific optional-help rules kept the ritual and End Turn buttons on row2, below the new52px rail and behind the hand. Explicit row1 overrides repair that cascade; selected-card buttons are explicitly44px inside their52px bar. The normal-motion and remaining functional stages were skipped after this layout failure, so shader warmup has not yet been judged.
 
 A new independently authored90-second portrait-command scenario adds real guest play, selected/cancelled commands, native hand/unit holds, detail dismissal and orientation return. It checks optional draw-help placement,44px controls,190px hand and zero unintended authority commands. Local discovery lists19 scenarios; actual execution and independent screenshot review are pending.
+
+### CI23: first-draw experiment and verification limit
+
+Head `1a2cee390fb8ba93203312ece3b6811971489a17`, Actions run
+`37872867469`, completed 2026-10-09 UTC: 18/19 browser cases passed.
+The runner merge `c873666f5bbfbc4c9b06624e7addbb6384191a57` has tree
+`107831c744eab10f8dca07dd628a21a35bb7b081`, equal to the head tree.
+Normal motion still failed the unchanged 0.25-second frame-gap gate at
+0.631 seconds. Hidden default-canvas preparation returned in 145 ms after
+184 ms of program preparation. At the first observed damage transition,
+CPU update/submission were 5.4/2.4 ms, but surrounding RAF intervals were
+383/633/367 ms. These are not GPU timings; no causal performance improvement
+or physical-device smoothness is established.
+
+An independent review of original decoded frames 05–08 observed departure
+by roughly half a slot, return, then a white/purple ring around the hero.
+The attacker reaching the contact point and continuous contact flash were
+not visible. Original 460×135 evidence and its gaps limit visual conclusions.
+The complete 179-file artifact has SHA256
+`a345740e50fe693bb52802bc9f7d469a6012937b576c841e52db6002041e143c`.
+
+The next diagnostic adds bounded passive long-task/long-animation-frame
+CPU timeline observations. It records support/failure explicitly and no
+script URLs or attribution names. It changes neither game code, clocks,
+recording, nor the motion acceptance gate. Missing entries cannot establish
+absence of stalls. The new diagnostic itself awaits browser execution.
