@@ -74,6 +74,7 @@ jobs:
           E2E_SUITE: hedgehog
         run: npx --no-install playwright test --grep @hedgehog-review
       - name: Keep only safe evidence for three days
+        id: full-evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -85,6 +86,115 @@ jobs:
           retention-days: 3
           if-no-files-found: warn
           include-hidden-files: false
+      - name: Copy this run's original evidence into bounded transfer parts
+        id: evidence-parts
+        if: ${{ always() && steps.full-evidence.outcome == 'success' }}
+        env:
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          FULL_ARTIFACT_ID: ${{ steps.full-evidence.outputs.artifact-id }}
+          FULL_ARTIFACT_SHA256: ${{ steps.full-evidence.outputs.artifact-digest }}
+        run: |
+          timeout 30s python3 - <<'PYTHON'
+          import importlib.util, json, os, re, shutil, subprocess
+          from pathlib import Path
+          def git(*args):
+              return subprocess.check_output(['git', *args], text=True).strip()
+          checkout=git('rev-parse','HEAD'); tree=git('rev-parse','HEAD^{tree}')
+          assert checkout==os.environ['GITHUB_SHA']
+          head=os.environ.get('PR_HEAD') or checkout
+          assert re.fullmatch('[0-9a-f]{40}',head)
+          assert head==checkout or head in git('show','-s','--format=%P','HEAD').split()
+          digest=os.environ['FULL_ARTIFACT_SHA256']
+          assert re.fullmatch('[0-9a-f]{64}',digest)
+          request={'sourceRunId':int(os.environ['GITHUB_RUN_ID']),
+                   'sourceRunAttempt':int(os.environ['GITHUB_RUN_ATTEMPT']),
+                   'sourceHead':head,'checkoutHead':checkout,'sourceTree':tree,
+                   'artifactName':f"browser-acceptance-{os.environ['GITHUB_RUN_ID']}-{os.environ['GITHUB_RUN_ATTEMPT']}",
+                   'originalArtifactId':int(os.environ['FULL_ARTIFACT_ID']),
+                   'originalArchiveSha256':digest}
+          source=Path('test-results/browser-evidence'); stage=Path('evidence-transfer-source')
+          assert source.is_dir() and not stage.exists(); stage.mkdir()
+          for item in sorted(source.iterdir()):
+              if item.suffix in {'.json','.png'} or item.name.endswith('-arena-only.webm'):
+                  assert item.is_file() and not item.is_symlink()
+                  shutil.copyfile(item,stage/item.name)
+          spec=importlib.util.spec_from_file_location('split_evidence','scripts/split-browser-evidence.py')
+          module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+          manifest=module.split_evidence(stage,'evidence-transfer-parts',request,single_limit=8*1024*1024)
+          print(json.dumps({'parts':len(manifest['parts']),'files':sum(len(p['files']) for p in manifest['parts'])}))
+          PYTHON
+      - name: Retain current-run provenance and original-byte hashes
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-manifest
+          path: evidence-transfer-parts/manifest
+          if-no-files-found: error
+          retention-days: 3
+      - name: Retain current-run original evidence part 01
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-01
+          path: evidence-transfer-parts/part-01
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 02
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-02
+          path: evidence-transfer-parts/part-02
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 03
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-03
+          path: evidence-transfer-parts/part-03
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 04
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-04
+          path: evidence-transfer-parts/part-04
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 05
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-05
+          path: evidence-transfer-parts/part-05
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 06
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-06
+          path: evidence-transfer-parts/part-06
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 07
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-07
+          path: evidence-transfer-parts/part-07
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 08
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-08
+          path: evidence-transfer-parts/part-08
+          if-no-files-found: ignore
+          retention-days: 3
       - name: Check single-model evidence fits the supported transfer budget
         id: model-evidence-size
         if: always()
