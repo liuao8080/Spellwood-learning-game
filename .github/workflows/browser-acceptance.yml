@@ -94,6 +94,8 @@ jobs:
           FULL_ARTIFACT_ID: ${{ steps.full-evidence.outputs.artifact-id }}
           FULL_ARTIFACT_SHA256: ${{ steps.full-evidence.outputs.artifact-digest }}
         run: |
+          timeout 30s python3 tests/split-browser-evidence.test.py
+          timeout 30s python3 tests/current-evidence-source.test.py
           timeout 30s python3 - <<'PYTHON'
           import importlib.util, json, os, re, shutil, subprocess
           from pathlib import Path
@@ -103,7 +105,10 @@ jobs:
           assert checkout==os.environ['GITHUB_SHA']
           head=os.environ.get('PR_HEAD') or checkout
           assert re.fullmatch('[0-9a-f]{40}',head)
-          assert head==checkout or head in git('show','-s','--format=%P','HEAD').split()
+          # Checkout is shallow; pretty-log ancestry may hide real parents.
+          headers=git('cat-file','-p','HEAD').split('\n\n',1)[0].splitlines()
+          parents=[line.split(' ',1)[1] for line in headers if line.startswith('parent ')]
+          assert head==checkout or head in parents
           digest=os.environ['FULL_ARTIFACT_SHA256']
           assert re.fullmatch('[0-9a-f]{64}',digest)
           request={'sourceRunId':int(os.environ['GITHUB_RUN_ID']),
