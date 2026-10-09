@@ -217,6 +217,7 @@ export class HandScene {
     if (this.destroyed) return;
     index = this.cards[index] ? index : null;
     const changed = index !== this.focusedIndex;
+    if (index !== null && source === "keyboard") this.canvas.dataset.inputModality = "keyboard";
     this.focusedIndex = index;
     if (changed) this.input?.cancel();
     this.layout(true);
@@ -246,6 +247,7 @@ export class HandScene {
     else if (event.key?.toLowerCase() === "i" || (event.key === "F10" && event.shiftKey) || event.key === "ContextMenu") { if (!event.repeat) this.inspect(current, "keyboard"); }
     else if (event.key === "Escape") this.focus(null);
     else return false;
+    this.canvas.dataset.inputModality = "keyboard";
     if (next !== null) this.focus(next);
     event.preventDefault?.(); return true;
   }

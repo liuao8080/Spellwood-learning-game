@@ -40,6 +40,7 @@ export async function verifyCpuHandReachability(actor,peer,testInfo) {
  try {
   await first.focus();await page.keyboard.press('End');await settle(page);
   await expect(last).toBeFocused();await expect(page.locator('#hand-next')).toBeDisabled();
+  await expect(canvas).toHaveAttribute('data-input-modality','keyboard');
   await safeScreenshot(page,testInfo,'cpu-last-card-keyboard-visible');await page.keyboard.press('Enter');await inspectSelected('keyboard');
   await reset();await page.mouse.move(geometry.hand.x+geometry.hand.width*.5,geometry.hand.y+geometry.hand.height*.5);
   await page.mouse.wheel(2000,0);await settle(page);await expect(page.locator('#hand-next')).toBeDisabled();
@@ -56,17 +57,37 @@ export async function verifyCpuHandReachability(actor,peer,testInfo) {
   }
   expect(swipes).toBeGreaterThan(0);await expect(page.locator('#hand-next')).toBeDisabled();
   await expect(page.locator('.command-bar')).toBeHidden();await expect(page.locator('.card-info-dialog')).toBeHidden();
+  await expect(canvas).toHaveAttribute('data-input-modality','pointer');await expect(canvas).toHaveCSS('outline-style','none');
   await safeScreenshot(page,testInfo,'cpu-last-card-native-touch-visible');
   await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[touch(geometry.hand.x+geometry.hand.width*.82)]});
   await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await inspectSelected('native-touch');
   actor.metrics.cpuHandReachability.touchSwipes=swipes;
+  // After a real touch, keyboard input can continue directly on the canvas.
+  await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[touch(geometry.hand.x+geometry.hand.width*.82)]});
+  await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  await expect(canvas).toBeFocused();await expect(page.locator('.card-command b').first()).toHaveText(lastName);
+  await page.keyboard.press('End');await expect(canvas).toHaveAttribute('data-input-modality','keyboard');
+  await expect(canvas).toHaveCSS('outline-style','solid');
+  await safeScreenshot(page,testInfo,'cpu-last-card-canvas-keyboard-focus');
+  await page.keyboard.press('i');await expect(page.locator('.card-info-dialog h2')).toHaveText(lastName);
+  await page.keyboard.press('Escape');await expect(page.locator('.card-info-dialog')).toBeHidden();await expect(canvas).toBeFocused();
+  await expect(canvas).toHaveCSS('outline-style','solid');
+  await safeScreenshot(page,testInfo,'cpu-last-card-canvas-keyboard-return-focus');
+  await action(page,'clear').click();actor.metrics.cpuHandReachability.canvasKeyboardAfterTouch=true;
   // A physical Tab away while the mouse is held must cancel this intent.
   await first.focus();await page.keyboard.press('End');await settle(page);
   await page.mouse.move(geometry.hand.x+geometry.hand.width*.82,geometry.hand.y+geometry.hand.height*.55);
   await page.mouse.down();await expect(canvas).toBeFocused();
   await page.keyboard.press('Tab');await expect(canvas).not.toBeFocused();await page.mouse.up();
+  await expect(page.locator('#hand-semantics [data-hand-index]:focus')).toHaveCount(1);
   await expect(page.locator('.command-bar')).toBeHidden();await expect(page.locator('.card-info-dialog')).toBeHidden();
   actor.metrics.cpuHandReachability.tabDepartureCancelled=true;
+  await page.keyboard.press('End');await expect(last).toBeFocused();
+  await expect(canvas).toHaveAttribute('data-input-modality','keyboard');
+  await page.keyboard.press('i');await expect(page.locator('.card-info-dialog h2')).toHaveText(lastName);
+  await page.keyboard.press('Escape');await expect(page.locator('.card-info-dialog')).toBeHidden();await expect(last).toBeFocused();
+  await safeScreenshot(page,testInfo,'cpu-last-card-keyboard-return-focus');
+  actor.metrics.cpuHandReachability.keyboardDetailReturnFocus=true;
   expect(actor.observed.commands.slice(commands)).toEqual([]);expect(peer.observed.commands.slice(peerCommands)).toEqual([]);
   expect(actor.observed.room.selfController).toBe('human');expect(actor.observed.room.opponentController).toBe('human');
   expect(actor.observed.room.revision).toBe(revision);

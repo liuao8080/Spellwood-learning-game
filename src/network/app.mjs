@@ -596,7 +596,7 @@ document.addEventListener("keydown", (event) => {
       return;
     }
   }
-  if (!panel && !challenge && $("#hand-semantics").contains(document.activeElement) && handScene?.handleKey(event)) return;
+  if (!panel && !challenge && ($("#hand-semantics").contains(document.activeElement) || document.activeElement === $("#hand-canvas")) && handScene?.handleKey(event)) return;
   const dialog = modalRoot.querySelector(".dialog");
   if (event.key === "Tab" && dialog) {
     const focusable = [...dialog.querySelectorAll('button:not(:disabled),input,select,a[href],[tabindex="0"]')];

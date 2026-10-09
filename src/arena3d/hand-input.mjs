@@ -55,6 +55,7 @@ export class HandInput {
     this.element.focus?.({ preventScroll: true });
     this.cancel();
     if (this.destroyed || !this.isEnabled()) return;
+    if (this.element.dataset) this.element.dataset.inputModality = "pointer";
     const hit = this.pick(event), revision = this.getRevision();
     const active = this.active = { pointerId: event.pointerId, pointerType: event.pointerType,
       x: event.clientX, y: event.clientY, lastX: event.clientX, hit, revision,

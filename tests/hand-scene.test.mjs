@@ -128,6 +128,9 @@ test('pointer focus transfer from semantic controls precedes the new hand gestur
  if(semanticFocused)h.canvas.focus({preventScroll:true});
  h.listeners.get('pointerup')(event);
  assert.equal(h.selected.length,1);assert.equal(h.selected[0].cardId,ids[6]);assert.equal(h.selected[0].revision,42);
+ assert.equal(h.canvas.dataset.inputModality,'pointer');
+ h.scene.handleKey({key:'End',preventDefault(){}});assert.equal(h.canvas.dataset.inputModality,'keyboard');
+ assert.equal(h.scene.focusedIndex,6);assert.equal(h.scene.cards[6].focus.visible,true);
  h.scene.focus(0);h.frame();const next=point(h,0);h.listeners.get('pointerdown')(next);
  h.scene.focus(null);h.listeners.get('pointerup')(next);
  assert.equal(h.selected.length,1,'a later real focus departure still cancels the pending gesture');
