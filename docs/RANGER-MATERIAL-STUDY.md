@@ -31,13 +31,17 @@ the existing authoritative `selfSkinId` and peer `opponentSkinId` fields; this
 repairs a test field error without removing cosmetic identity validation.
 The three equipped-match screenshots were not reached in that failed run.
 
-Pending second-candidate real-browser checks:
-- Same camera, light and bind pose with detail off/on, medium and low geometry,
-  full preview and 96×120 thumbnail size; expect the same three submissions.
-- Real wardrobe preview, then existing free test-mode redemption and equip UI,
-  followed by a two-client match with the ranger's authoritative skin identity.
-- Screenshots of that equipped hero at desktop and compact landscape/portrait.
+Second-candidate validation at `ba37f39d` / CI37:
+- Independent original-image review retained the 384px medium/low and 96px low
+  A/B sample: collar, sleeve, hem and boots separate without dirty black patches.
+- The actual 20-preview wardrobe, free test redemption/equip and two-client
+  authoritative skin checks passed; original images at 1280×800, 844×390 and
+  320×568 passed independent review for this one hero's visible appearance.
+- CI37 seated the equipped player first. The added legal opponent-end branch was
+  not exercised in that sample. Earlier failed test-field, cache-version and
+  active-turn wait assumptions remain in CI34–36 evidence.
+- Overall CI37: 20/21 game scenarios and 2/2 isolated fixtures passed. Normal
+  recorded animation still failed at 929ms against the unchanged 250ms gate.
 
-Keep only if independent original-image review finds readable clothing/boot
-separation without dirty-looking bands, broken joints or lost small-scale clarity.
-This visual candidate makes no claim about the outstanding motion performance gate.
+This closes only the single-character material sample. It does not establish
+physical-phone performance, fluid animation or overall game-art completion.
