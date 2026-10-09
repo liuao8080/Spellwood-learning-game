@@ -22,7 +22,7 @@ import { CollectionView } from "./collection-view.mjs";
 import { rewardView, savedDailySummary } from "./reward-view.mjs";
 import { WardrobeView } from "./wardrobe-view.mjs";
 import { getHeroSkin } from "../hero-skins.mjs";
-import { selectedCardOption, cardTargetAllowed, selectedTargetIds, answerCommand, drawFeedbackText } from "./battle-options.mjs";
+import { selectedCardOption, selectedCardReason, cardTargetAllowed, selectedTargetIds, answerCommand, drawFeedbackText } from "./battle-options.mjs";
 import { equippedFinishes, rewardBalance, COLLECTION_TEST_MODE } from "../collection.mjs";
 import { IdentityClient } from './identity-client.mjs';
 import { IdentityPanel } from './identity-view.mjs';
@@ -306,7 +306,7 @@ function battle() {
   const cost=option?.cost??card?.cost;
   const canPlay=!!option?.legal?.untargeted&&myTurn;
   const hasTargets=!!option?.legal?.targets.length;
-  const cardReason = !card ? "" : !s.canAct ? "等你的回合再出牌" : commandBusy || visualBusy ? "正在结算，请稍候" : s.self.mana < cost ? `还差${cost - s.self.mana}点能量` : card.type !== "spell" && s.self.board.length >= 4 ? "伙伴位置已满，需要先腾出空位" : card.keyword === "restore" && s.self.hp >= 18 ? "生命已满，暂时不用治疗" : hasTargets ? "点亮起的伙伴或目标，完成这张牌的效果" : !option?.legal ? "当前没有可用的出牌方式" : "";
+  const cardReason = card ? selectedCardReason(s, selected.index, { commandBusy, visualBusy }) : "";
   const ritualButtons = [["insight", "☾", "灵光", "抽1张牌"], ["spark", "✦", "火花", "造成2伤害"], ["bloom", "❧", "守护", "恢复3生命"]].map(([id, icon, name, sub]) => {
     const reason = id === "bloom" && s.self.hp >= 18 ? "生命已满" : id === "insight" && s.self.hand.length >= 7 ? "手牌已满" : id === "insight" && s.self.deckCount === 0 ? "牌库已空" : "";
     const disabled = !myTurn || s.self.ritualUsed || s.self.ritualReserved || s.self.drawEnglish?.usedThisTurn || s.self.drawEnglish?.pending || s.self.ritualsLeft < 1 || reason;

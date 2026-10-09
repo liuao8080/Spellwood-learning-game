@@ -1,3 +1,4 @@
+import { restoreModalOpener } from '../src/network/focus-return.mjs';
 import test from 'node:test';
 import { TEACHER_CATEGORIES } from '../src/question-banks.mjs';
 import assert from 'node:assert/strict';
@@ -18,7 +19,7 @@ import { CollectionView } from '../src/network/collection-view.mjs';
 import { WardrobeView } from '../src/network/wardrobe-view.mjs';
 import { rewardView, savedDailySummary } from '../src/network/reward-view.mjs';
 import { getHeroSkin } from '../src/hero-skins.mjs';
-import { selectedCardOption, cardTargetAllowed, selectedTargetIds, answerCommand, drawFeedbackText } from '../src/network/battle-options.mjs';
+import { selectedCardOption, selectedCardReason, cardTargetAllowed, selectedTargetIds, answerCommand, drawFeedbackText } from '../src/network/battle-options.mjs';
 import { cardGuide } from '../src/card-guide.mjs';
 import { BoardInput } from '../src/arena3d/board-input.mjs';
 import { boardCardInspection, isInspectionKey } from '../src/network/card-inspection.mjs';
@@ -214,7 +215,7 @@ function appModel(t,server) {
   class Identity extends IdentityClient {constructor(config){super({...config,fetch:browser.fetch});}}
   class IdentityView extends IdentityPanel {constructor(config){super({...config,document:doc});}}
   class Desk extends StudyDesk { constructor(config) { super({ ...config, storage: memoryStorage(), locks: null }); } }
-  const sandbox={BoardInput,boardCardInspection,isInspectionKey,TEACHER_CATEGORIES,HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:browser.fetch,IdentityClient:Identity,IdentityPanel:IdentityView,RemoteProgressStore,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,cardArtUrl,CollectionView,WardrobeView,rewardView,savedDailySummary,getHeroSkin,selectedCardOption,cardTargetAllowed,selectedTargetIds,answerCommand,drawFeedbackText,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,queueMicrotask,
+  const sandbox={restoreModalOpener,BoardInput,boardCardInspection,isInspectionKey,TEACHER_CATEGORIES,HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:browser.fetch,IdentityClient:Identity,IdentityPanel:IdentityView,RemoteProgressStore,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,cardArtUrl,CollectionView,WardrobeView,rewardView,savedDailySummary,getHeroSkin,selectedCardOption,selectedCardReason,cardTargetAllowed,selectedTargetIds,answerCommand,drawFeedbackText,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,queueMicrotask,
     addEventListener(name,handler){pageHandlers.set(name,handler);},
     SOUND:{unlock(){},sync(){},duckSpeech(){},visibility(){},play(){}},
     setTimeout(fn,ms){const id=setTimeout(fn,ms);id.unref?.();timers.add(id);return id;},clearTimeout(id){clearTimeout(id);timers.delete(id);},

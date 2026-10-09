@@ -74,8 +74,39 @@ async function playExpansionChoice(actor, other, testInfo) {
   const advertised = chosen.targets.filter(item => item.target !== 'hero').map(item => `${item.seat}:${item.target}`).sort();
   await expect.poll(() => page.locator('.unit-label.targetable').evaluateAll(elements =>
     elements.map(element => `${element.dataset.seat}:${element.dataset.uid}`).sort())).toEqual(advertised);
-  await safeScreenshot(page, testInfo, `${capture}-legal-targets`);
+  const expectedCopy = {
+    reed_frog:'点敌方伙伴削弱', ember_salamander:'点敌方伙伴造成伤害',
+    sunseed_blessing:'点友方伙伴施祝福', tidal_recall:'点友方伙伴收回手牌',
+  }[chosen.card];
+  const commandCount=actor.observed.commands.length, revision=room.revision;
+  for(const viewport of [{width:320,height:568},{width:390,height:844},{width:844,height:390}]) {
+    await page.setViewportSize(viewport); await waitForBoard(actor);
+    await expect(page.locator('.card-reason')).toHaveText(expectedCopy);
+    const layout=await page.locator('.card-command').evaluate(bar=>{
+      const reason=bar.querySelector('.card-reason'),box=reason.getBoundingClientRect(),outer=reason.parentElement.getBoundingClientRect();
+      const buttons=[...bar.querySelectorAll('button')].map(button=>{const r=button.getBoundingClientRect();return {left:r.left,top:r.top,right:r.right,bottom:r.bottom};});
+      return {complete:reason.scrollHeight<=reason.clientHeight+1&&reason.scrollWidth<=reason.clientWidth+1,
+        inside:box.left>=outer.left&&box.right<=outer.right&&box.top>=outer.top&&box.bottom<=outer.bottom,
+        overlaps:buttons.some(r=>box.left<r.right&&box.right>r.left&&box.top<r.bottom&&box.bottom>r.top)};
+    });
+    expect(layout).toEqual({complete:true,inside:true,overlaps:false});
+    await expect.poll(()=>page.locator('.unit-label.targetable').evaluateAll(elements=>elements.map(el=>`${el.dataset.seat}:${el.dataset.uid}`).sort())).toEqual(advertised);
+    await safeScreenshot(page,testInfo,`${capture}-${viewport.width}x${viewport.height}-legal-target-copy`);
+  }
+  await page.locator(`#hand-semantics [data-hand-index="${chosen.index}"]`).focus();await page.keyboard.press('i');
+  await expect(page.locator('.card-info-dialog')).toBeVisible();
+  await page.keyboard.press('Escape');await expect(page.locator('.card-info-dialog')).toBeHidden();
+  await action(page,'clear').click();await expect(page.locator('.card-command')).toBeHidden();
+  expect(actor.observed.commands.length).toBe(commandCount);expect(actor.observed.room.revision).toBe(revision);
+  await page.locator(`#hand-semantics [data-hand-index="${chosen.index}"]`).focus();await page.keyboard.press('Enter');
+  await expect(page.locator('.card-reason')).toHaveText(expectedCopy);
+  const illegal=page.locator(`.unit-label:not(.targetable)[data-seat="${1-target.seat}"]`).first();
+  if(await illegal.count()) {
+    await illegal.click();await expect(page.locator('.card-reason')).toHaveText(expectedCopy);
+    expect(actor.observed.commands.length).toBe(commandCount);expect(actor.observed.room.revision).toBe(revision);
+  }
   await uiCommand(actor, () => page.locator(`.unit-label.targetable[data-seat="${target.seat}"][data-uid="${target.target}"]`).click());
+  expect(actor.observed.commands.length).toBe(commandCount+1);
   await sync(actor, other);
   expect(actor.observed.room.selfHandIds.includes(chosen.handId), 'the accepted targeted play consumed its own hand instance').toBe(false);
   const after = actor.observed.room.players[target.seat].board.find(unit => unit.uid === target.target);
