@@ -170,7 +170,7 @@ function observe(page) {
           state.room = {
             roomId: message.roomId, revision: message.revision, phase: message.phase,
             youSeat: message.youSeat, activeSeat: message.activeSeat,
-            bank: message.bank || 'school', grade: message.grade, course: message.course, turn: message.turn,
+            bank: message.bank || 'school', grade: message.grade, course: message.course, turn: message.turn, turnDeadline: message.turnDeadline,
             mode: message.mode, assisted: message.assisted,
             selfController: message.self.controller, opponentController: message.opponent.controller,
             // Owner-only visible state is kept in memory for UI assertions, not

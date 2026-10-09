@@ -263,7 +263,7 @@ function buildHedgehog(builder, body, rig, { faceDetail = true } = {}) {
     leaf(builder, body, "#426540", [side * .26, .54, .32], .59, .39, [.15, side * .15, -side * 1.0]);
     leaf(builder, body, "#708749", [side * .42, .42, .14], .46, .29, [.5, side * .25, -side * .9]);
   }
-  builder.add(body, leafSolid(.34,.27,.052), "#bd813c", {position:[0,.39,.66],rotation:[0,0,Math.PI],style:"metal"});
+  builder.add(body, leafSolid(.34,.27,.052), "#bd813c", {position:faceDetail?[.32,.56,.43]:[0,.39,.66],rotation:[0,0,faceDetail?-1.0:Math.PI],style:"metal"});
   // A small leaf buckler and three berry jewels identify the guard companion.
   leaf(
     builder,

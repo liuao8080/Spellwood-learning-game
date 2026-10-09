@@ -1,11 +1,7 @@
 name: Recover bounded browser evidence
 
 on:
-  pull_request:
-    paths:
-      - 'evidence/transfer-request.json'
-      - 'scripts/split-browser-evidence.py'
-      - '.github/workflows/recover-browser-evidence.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
