@@ -1,3 +1,4 @@
+import { verifyCpuHandReachability } from './cpu-hand-reachability.mjs';
 import { getHeroSkin } from '../../src/hero-skins.mjs';
 import {
   test, expect, action, sleep, currentProgress, safeScreenshot,
@@ -184,6 +185,7 @@ test('simulated unavailable WebGL uses the real CPU wardrobe and responsive live
   expect(actor.metrics.canvasPointerSelection).toBe(true);
   expect(actor.metrics.keyboardDescriptionAndSelection).toBe(true);
   await safeScreenshot(page, testInfo, 'cpu-live-match-hand');
+  await verifyCpuHandReachability(actor,other,testInfo);
   expect(actor.observed.room.assisted).toBe(false);
 });
 const viewports = [{ width: 320, height: 740 }, { width: 390, height: 844 }, { width: 844, height: 390 }];
