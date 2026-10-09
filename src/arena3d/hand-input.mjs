@@ -49,7 +49,11 @@ export class HandInput {
     this.suppressContextUntil = 0;
     if (this.active && event.pointerId !== this.active.pointerId) { this.cancel(); return; }
     if (event.isPrimary === false || (event.button != null && event.button !== 0)) return;
+    // A semantic button may still own keyboard focus. Transfer it before
+    // capturing a fresh pointer intent: its focusout handler cancels old input.
+    this.element.focus?.({ preventScroll: true });
     this.cancel();
+    if (this.destroyed || !this.isEnabled()) return;
     const hit = this.pick(event), revision = this.getRevision();
     const active = this.active = { pointerId: event.pointerId, pointerType: event.pointerType,
       x: event.clientX, y: event.clientY, lastX: event.clientX, hit, revision,

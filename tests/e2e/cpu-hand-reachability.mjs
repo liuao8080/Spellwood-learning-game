@@ -20,9 +20,12 @@ export async function verifyCpuHandReachability(actor,peer,testInfo) {
  actor.metrics.cpuHandReachability={viewport:{width:640,height:740},geometry,gapToRituals:geometry.rituals.x-geometry.hand.right,methods:[]};
  await page.evaluate(()=>{
   const events=[],canvas=document.querySelector('#hand-canvas');
-  const record=e=>events.push({type:e.type,trusted:e.isTrusted,pointerType:e.pointerType||null});
+  const focusOwner=()=>document.activeElement===canvas?'canvas':document.activeElement?.closest?.('#hand-semantics')?'semantics':'other';
+  const record=e=>events.push({type:e.type,trusted:e.isTrusted,pointerType:e.pointerType||null,focus:focusOwner()});
+  const focusRecord=e=>{if(e.target===canvas||e.target.closest?.('#hand-semantics'))record(e);};
   const types=['wheel','pointerdown','pointermove','pointerup'];types.forEach(type=>canvas.addEventListener(type,record,{passive:true}));
-  window.__cpuHandInputEvidence={finish:()=>{types.forEach(type=>canvas.removeEventListener(type,record));delete window.__cpuHandInputEvidence;return events;}};
+  document.addEventListener('focusin',focusRecord);document.addEventListener('focusout',focusRecord);
+  window.__cpuHandInputEvidence={finish:()=>{types.forEach(type=>canvas.removeEventListener(type,record));document.removeEventListener('focusin',focusRecord);document.removeEventListener('focusout',focusRecord);delete window.__cpuHandInputEvidence;return events;}};
  });
  const client=await actor.context.newCDPSession(page);
  const reset=async()=>{await first.focus();await page.keyboard.press('Home');await settle(page);await expect(page.locator('#hand-prev')).toBeDisabled();};

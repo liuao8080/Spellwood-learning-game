@@ -116,6 +116,22 @@ test("keyboard focus scrolls to card seven, has a visible frame and exposes equi
   assert.equal(h.selected[0].index, 6); assert.equal(h.inspected[0].index, 6); assert.equal(h.scene.selectedIndex, null);
   h.scene.handleKey(key("Escape")); assert.equal(h.scene.focusedIndex, null);
 });
+test('pointer focus transfer from semantic controls precedes the new hand gesture',t=>{
+ const h=harness(t,{width:350,height:200,software:true});h.scene.setHand(ids,{revision:42});h.frame();
+ h.scene.focus(0);h.scene.scrollToIndex(6);h.frame();
+ let semanticFocused=true;
+ h.canvas.focus=options=>{assert.equal(options.preventScroll,true);if(semanticFocused){semanticFocused=false;h.scene.focus(null);}};
+ const event={...point(h,6),pointerType:'mouse'};
+ h.listeners.get('pointerdown')(event);
+ // The browser's default pointer focus transfer follows pointerdown handlers.
+ // It must already have happened before HandInput captured this new intent.
+ if(semanticFocused)h.canvas.focus({preventScroll:true});
+ h.listeners.get('pointerup')(event);
+ assert.equal(h.selected.length,1);assert.equal(h.selected[0].cardId,ids[6]);assert.equal(h.selected[0].revision,42);
+ h.scene.focus(0);h.frame();const next=point(h,0);h.listeners.get('pointerdown')(next);
+ h.scene.focus(null);h.listeners.get('pointerup')(next);
+ assert.equal(h.selected.length,1,'a later real focus departure still cancels the pending gesture');
+});
 test("hand revisions, resize, modal disable and hidden states cancel captured input", t => {
   const h = harness(t); h.scene.setHand(ids, { revision: 1 }); h.frame();
   for (const cancel of [() => h.scene.setHand(ids, { revision: 2 }), () => h.scene.resize(), () => h.scene.setInteractive(false), () => h.scene.setHidden(true)]) {
