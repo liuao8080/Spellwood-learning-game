@@ -1,3 +1,4 @@
+import { getHeroSkin } from '../../src/hero-skins.mjs';
 import {
   test, expect, action, sleep, currentProgress, safeScreenshot,
   fictionalUsername, calmAnimations, studyOne, register,
@@ -329,7 +330,7 @@ test('twenty sequential wardrobe previews and a resumable test ten-pull fit comp
     expect(triangles).toBeLessThanOrEqual(quality === 'low' ? 2100 : 5200);
     (actor.metrics.heroPreviewModels ||= []).push({id:item.id,renderer,quality,triangles,modelCount:Number(await canvas.getAttribute('data-model-count'))});
     expect(await page.locator('.hero-preview').evaluate(element=>Number(getComputedStyle(element,'::after').opacity))).toBe(0);
-    await expect(page.locator('.hero-preview-fallback')).toHaveAttribute('src', `/assets/heroes/${item.id}/portrait.webp${item.id === 'leaf_ranger' ? '?v=ranger-seams-2026-10-09' : ''}`);
+    await expect(page.locator('.hero-preview-fallback')).toHaveAttribute('src', getHeroSkin(item.id).portrait);
     await page.locator('.hero-preview').scrollIntoViewIfNeeded();
     await safeScreenshot(page, testInfo, `catalogue-${String(index + 1).padStart(2, '0')}-${item.id}`);
   }
