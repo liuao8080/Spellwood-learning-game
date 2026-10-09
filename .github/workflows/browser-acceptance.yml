@@ -62,7 +62,7 @@ jobs:
         if: ${{ !cancelled() && steps.layout.outcome == 'success' }}
         env:
           E2E_SUITE: full
-        run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout|@combat-motion|@frame-diagnostic'
+        run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout|@combat-motion|@frame-diagnostic|@draw-diagnostic'
       - name: Keep only safe evidence for three days
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -77,6 +77,8 @@ jobs:
           include-hidden-files: false
 
   frame-diagnostic:
+    # Completed first-stage control remains manually reproducible.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     env:
@@ -104,6 +106,41 @@ jobs:
             test-results/browser-evidence/acceptance-frame-diagnostic.json
             test-results/browser-evidence/paired-frame-diagnostics.json
             test-results/browser-evidence/diagnostic-*-arena-only.webm
+          retention-days: 3
+          if-no-files-found: warn
+          include-hidden-files: false
+
+  draw-diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    env:
+      SPELLWOOD_BROWSER_CI: '1'
+      E2E_SUITE: draw-diagnostic
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: npm run build:network
+      - name: Build fixed diagnostic clients without changing production
+        run: |
+          sha256sum client-dist/app.js > /tmp/production.sha256
+          node scripts/build-draw-diagnostics.mjs
+          sha256sum --check /tmp/production.sha256
+      - run: npx --no-install playwright install --with-deps chromium
+      - name: Six fixed-build drawing comparisons, not visual acceptance
+        run: npx --no-install playwright test --grep @draw-diagnostic
+      - name: Keep only anonymous numeric observations
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: draw-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/browser-evidence/acceptance-draw-diagnostic.json
+            test-results/browser-evidence/draw-diagnostic-*.json
           retention-days: 3
           if-no-files-found: warn
           include-hidden-files: false

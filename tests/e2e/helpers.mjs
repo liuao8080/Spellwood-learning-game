@@ -261,7 +261,8 @@ export const test = base.extend({
     async function make(label, options = {}) {
       // Each actor has a wholly separate cookie jar and web storage. No storage
       // state file, shared profile, or identity seeding is used.
-      const { simulateMissingWebGL = false, ...contextOptions } = options;
+      const { simulateMissingWebGL = false, diagnosticEntry = null, ...contextOptions } = options;
+      if(diagnosticEntry && !/^draw-diagnostic-(baseline|arena-skipped|hand-skipped)\.html$/.test(diagnosticEntry)) throw new Error('Unknown fixed diagnostic entry');
       const context = await browser.newContext({
         viewport: { width: 1280, height: 800 }, locale: 'zh-CN', ...contextOptions,
       });
@@ -278,7 +279,7 @@ export const test = base.extend({
       const actor = { label, context, page, observed: observe(page), metrics: { summons: 0, attacks: 0, answers: 0 } };
       if (simulateMissingWebGL) actor.metrics.compatibilitySimulation = 'This isolated context reports unavailable WebGL contexts; native 2D and the real application fallback are unchanged. This does not establish real GPU absence.';
       actors.push(actor);
-      await page.goto(server.origin);
+      await page.goto(server.origin + (diagnosticEntry ? '/' + diagnosticEntry : ''));
       await expect(action(page, 'identity')).toContainText('游客');
       await expect.poll(() => actor.observed.player?.kind).toBe('guest');
       await expect.poll(() => Boolean(currentProgress(actor))).toBe(true);
