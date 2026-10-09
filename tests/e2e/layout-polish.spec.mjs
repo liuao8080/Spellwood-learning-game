@@ -2,12 +2,34 @@ import {
   test, expect, action, currentProgress, safeScreenshot, calmAnimations,
   confirmOpening, sync, uiCommand, waitForBoard,
 } from './helpers.mjs';
+import { readFile } from 'node:fs/promises';
 
 const viewports = [
   { width: 1280, height: 800 }, { width: 844, height: 390 },
   { width: 740, height: 360 }, { width: 390, height: 844 },
   { width: 320, height: 568 },
 ];
+
+test('@layout desktop label component keeps long names shields and three-digit stats inside narrow slots', async ({ page }, testInfo) => {
+  await page.setViewportSize({ width:1280, height:800 });
+  const css = (await Promise.all(['style.css','immersive.css','safe-area.css'].map(name => readFile(new URL(`../../src/network/${name}`, import.meta.url), 'utf8')))).join('\n');
+  const widths = [44,52,68,90,128];
+  await page.setContent(`<style>${css}</style><p>Isolated label component fixture, not gameplay evidence</p>` + widths.map((width,index) =>
+    `<button class="unit-label" data-side="opponent" style="left:200px;top:${100+index*100}px;--unit-label-max-width:${width}px" aria-label="溪流海獭长名字，攻击99，生命999，有护盾"><b class="wide">99</b><span class="unit-name"><em>溪流海獭长名字</em><i class="unit-shield" aria-hidden="true">◇</i></span><b class="wide">999</b></button>`).join(''));
+  const boxes = await page.locator('.unit-label').evaluateAll(elements => elements.map(element => {
+    const box=element.getBoundingClientRect();
+    const children=[...element.querySelectorAll('b,.unit-name,.unit-shield')].map(child => {
+      const b=child.getBoundingClientRect();const range=document.createRange();range.selectNodeContents(child);
+      const text=range.getBoundingClientRect();
+      return { inside:b.left>=box.left && b.right<=box.right && b.top>=box.top && b.bottom<=box.bottom,
+        textFits: !child.matches('b') || text.width<=b.width+1, visible:b.width>0&&b.height>0 };
+    });
+    return { width:box.width, height:box.height, children };
+  }));
+  await safeScreenshot(page,testInfo,'desktop-label-component-widths-44-to-128');
+  expect(boxes.map(box=>box.width)).toEqual(widths);
+  for(const box of boxes){expect(box.height).toBe(44);for(const child of box.children){expect(child.inside).toBe(true);expect(child.textFits).toBe(true);expect(child.visible).toBe(true);}}
+});
 // Every card is a cheap, non-damaging creature. The UI still builds and saves a
 // legal 20-card deck, and the real server owns its ordinary unseeded shuffle.
 const wanted = { sprout: 3, rabbit: 3, hedgehog: 3, firefly: 3, acorn_squirrel: 3, fox: 3, otter: 2 };

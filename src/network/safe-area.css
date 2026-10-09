@@ -184,3 +184,16 @@ body.immersive .pack-exit-confirm section { max-height: calc(var(--safe-height) 
  body.immersive.has-room .fallback-board{inset:100px 8px 274px}
  body.immersive.has-room #renderer-warning{top:calc(98px + var(--safe-top))}
 }
+
+/* Long names and the shield marker must not widen one desktop slot into its
+   neighbour. Full names/status remain in the button's accessible label. */
+.unit-label .unit-name em { min-width:0; overflow:hidden; text-overflow:ellipsis; font-style:normal; }
+.unit-label .unit-shield { flex:0 0 auto; font-style:normal; color:#c4efff; }
+@media(min-width:961px) and (min-height:501px) {
+  .unit-label[data-side] { width:var(--unit-label-max-width,128px); min-width:44px; max-width:var(--unit-label-max-width,128px); height:44px; min-height:44px; padding:4px 5px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:14px 20px; gap:0 4px; border-radius:14px; }
+  .unit-label[data-side] b { width:100%; min-width:0; height:20px; grid-row:2; font-size:18px; line-height:18px; }
+  .unit-label[data-side] b:first-of-type { grid-column:1; }
+  .unit-label[data-side] b:last-of-type { grid-column:2; }
+  .unit-label[data-side] b.wide { font-size:clamp(9px,calc(var(--unit-label-max-width,128px) * .12),16px); }
+  .unit-label[data-side] .unit-name { grid-row:1; grid-column:1/-1; display:flex; align-items:center; justify-content:center; gap:2px; min-width:0; max-width:none; height:14px; font-size:11px; line-height:14px; overflow:hidden; }
+}

@@ -86,3 +86,18 @@ intents use current card index/revision during pending resize; pointer hit-testi
 still waits for geometry, and all hidden/context-lost/fault/busy guards remain.
 A focused regression reproduces pending-resize selection plus guard preservation.
 Browser verification of this candidate is pending; 17/19 is not completion.
+
+### CI26/27 functional follow-through
+
+CI26 confirmed the full draw-English correct/wrong/cancel/reload flow after the
+semantic-hand repair, but the wardrobe test read its independent response map
+before `response.json()` completed. The product already awaited the successful
+skin save before rendering. A bounded 12s poll for the real saved `count===10`
+was added before cloning the batch; reveal/reload/identity assertions remain.
+CI27 then exposed a separate genuine desktop label defect before those later
+cases could run: a shielded otter label was 145.34px wide while neighbouring
+slot centres were 134.69px apart, overlapping by 3px. All five original viewport
+images were retained. Desktop label width is now bounded by actual projected
+same-row spacing (6px gutter, maximum128px). The name can ellipsize while its
+shield marker remains independent; the complete accessible name/status stays.
+Compact fixed-width target rules are unchanged. Browser validation is pending.

@@ -1,3 +1,4 @@
+import { unitLabelWidth } from "./unit-label-width.mjs";
 import { TEACHER_CATEGORIES } from "../question-banks.mjs";
 import { HandScene } from "../arena3d/hand-scene.mjs";
 import { LobbyScene } from "../arena3d/lobby-scene.mjs";
@@ -470,13 +471,13 @@ function updateLabels() {
     const p = a.seat === room.youSeat ? visual.self : visual.opponent, u = p.board.find((u) => u.uid === a.uid);
     if (!u || !a.visible) return "";
     const readiness = a.seat !== room.youSeat || room.phase !== "playing" ? "" : !u.ready ? "下回合" : room.canAct && connectionState === "ready" && !commandBusy && !visualBusy ? "可攻击" : room.activeSeat !== room.youSeat ? "待回合" : "已就绪";
-    return `<button class="unit-label ${targets.includes(u.uid) ? "targetable" : ""} ${u.ready && a.seat === room.youSeat && room.canAct ? "ready" : ""}" style="--anchor-x:${a.x}px;--anchor-y:${a.y}px;left:${a.x}px;top:${a.y}px" data-action="unit" data-side="${a.seat === room.youSeat ? "self" : "opponent"}" data-slot="${p.board.findIndex(item => item.uid === u.uid)}" data-uid="${esc(u.uid)}" data-seat="${a.seat}" aria-label="${esc(CARD[u.cardId].name)}，攻击${u.atk}，生命${u.hp}${u.shield ? "，有护盾" : ""}${readiness ? `，${readiness}` : ""}。长按、右键或I键看说明"><b class="${String(u.atk).length > 1 ? "wide" : ""}">${u.atk}</b><span>${esc(CARD[u.cardId].name)}${u.shield ? " ◇" : ""}</span><b class="${String(u.hp).length > 1 ? "wide" : ""}">${u.hp}</b>${readiness ? `<small class="unit-state">${readiness}</small>` : ""}</button>`;
+    return `<button class="unit-label ${targets.includes(u.uid) ? "targetable" : ""} ${u.ready && a.seat === room.youSeat && room.canAct ? "ready" : ""}" style="--anchor-x:${a.x}px;--anchor-y:${a.y}px;left:${a.x}px;top:${a.y}px" data-action="unit" data-side="${a.seat === room.youSeat ? "self" : "opponent"}" data-slot="${p.board.findIndex(item => item.uid === u.uid)}" data-uid="${esc(u.uid)}" data-seat="${a.seat}" aria-label="${esc(CARD[u.cardId].name)}，攻击${u.atk}，生命${u.hp}${u.shield ? "，有护盾" : ""}${readiness ? `，${readiness}` : ""}。长按、右键或I键看说明"><b class="${String(u.atk).length > 1 ? "wide" : ""}">${u.atk}</b><span class="unit-name"><em>${esc(CARD[u.cardId].name)}</em>${u.shield ? '<i class="unit-shield" aria-hidden="true">◇</i>' : ""}</span><b class="${String(u.hp).length > 1 ? "wide" : ""}">${u.hp}</b>${readiness ? `<small class="unit-state">${readiness}</small>` : ""}</button>`;
     }).join("");
     if (focusedUid) [...layer.querySelectorAll("[data-uid]")].find((el) => el.dataset.uid === focusedUid)?.focus({ preventScroll: true });
   }
   for (const el of layer.querySelectorAll("[data-uid]")) {
     const a = anchorPositions.find((a) => a.uid === el.dataset.uid);
-    if (a) { el.style.left = `${a.x}px`; el.style.top = `${a.y}px`; el.style.setProperty("--anchor-x", `${a.x}px`); el.style.setProperty("--anchor-y", `${a.y}px`); }
+    if (a) { el.style.setProperty("--unit-label-max-width", `${unitLabelWidth(a, anchorPositions)}px`); el.style.left = `${a.x}px`; el.style.top = `${a.y}px`; el.style.setProperty("--anchor-x", `${a.x}px`); el.style.setProperty("--anchor-y", `${a.y}px`); }
   }
 }
 
