@@ -558,3 +558,31 @@ test('render-loop restart does not report paused time as a frame gap', t => {
   frame(100000);
   assert.equal(canvas.dataset.frameGapMs, '0');
 });
+
+test('detached effect precompilation survives context loss without publishing stale readiness', async t => {
+  const { scene, render, handlers, canvas } = harness(t);
+  let finish, calls = 0, uploads = 0;
+  t.after(() => finish?.());
+  render.compileAsync = (root, camera, target) => {
+    calls++;
+    assert.equal(root.parent, null); assert.equal(root.visible, false);
+    assert.equal(camera, scene.camera); assert.equal(target, scene.scene);
+    return new Promise(resolve => { finish = resolve; });
+  };
+  render.initTexture = () => { uploads++; };
+  scene.prepareEffectPrograms();
+  await tick();
+  const first = scene.effectWarmup, firstPromise = scene.effectWarmupPromise;
+  assert.equal(canvas.dataset.effectWarmup, 'pending');
+  handlers.get('webglcontextlost')({ preventDefault() {} });
+  assert.equal(first.disposed, true); assert.equal(scene.effectWarmup, null);
+  finish(); await firstPromise;
+  assert.notEqual(canvas.dataset.effectWarmup, 'ready');
+  render.compileAsync = async root => { calls++; assert.equal(root.parent, null); };
+  handlers.get('webglcontextrestored')();
+  await scene.effectWarmupPromise;
+  assert.equal(canvas.dataset.effectWarmup, 'ready');
+  assert.equal(calls, 2); assert.equal(uploads, 2);
+  const restored = scene.effectWarmup;
+  scene.dispose(); assert.equal(restored.disposed, true);
+});

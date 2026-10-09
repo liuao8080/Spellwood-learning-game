@@ -161,21 +161,21 @@ body.immersive .pack-exit-confirm section { max-height: calc(var(--safe-height) 
  body.immersive.has-room .hero-panel.mine,body.immersive.has-room .hero-panel.theirs{top:51px;height:44px;min-height:44px}
  body.immersive.has-room .hero-panel strong{font-size:13px}
  body.immersive.has-room #arena,body.immersive.has-room #unit-labels,
- body.immersive.has-room:has(.draw-english) #arena,body.immersive.has-room:has(.draw-english) #unit-labels{top:calc(98px + var(--safe-top));bottom:calc(272px + var(--safe-bottom));height:calc(var(--safe-height) - 370px)}
+ body.immersive.has-room:has(.draw-english) #arena,body.immersive.has-room:has(.draw-english) #unit-labels{top:calc(98px + var(--safe-top));bottom:calc(248px + var(--safe-bottom));height:calc(var(--safe-height) - 346px)}
  body.immersive.has-room .rituals,body.immersive.has-room.hand-overflow .rituals,
- body.immersive.has-room .rituals:has(.draw-english){left:6px;right:6px;height:76px;padding:3px 5px;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:14px 52px;gap:2px}
+ body.immersive.has-room .rituals:has(.draw-english){left:6px;right:6px;height:52px;padding:3px 5px;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:44px;gap:2px}
  body.immersive.has-room .rituals:has(.draw-english){grid-template-columns:repeat(5,minmax(0,1fr))}
- body.immersive.has-room .rituals h2,body.immersive.has-room .rituals:has(.draw-english) h2{position:static;width:auto;height:14px;margin:0;padding:0;grid-column:1/-1;grid-row:1;clip-path:none;overflow:hidden;white-space:nowrap;font-size:11px;line-height:14px}
+ body.immersive.has-room .rituals h2,body.immersive.has-room .rituals:has(.draw-english) h2{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}
  body.immersive.has-room .compact-hand-hint{display:inline;font-size:11px;color:#cce3c4}
  body.immersive.has-room .rituals>button,body.immersive.has-room .rituals:has(.draw-english)>button,
- body.immersive.has-room .rituals:has(.draw-english)>.draw-english{grid-row:2;grid-column:auto;width:100%;height:52px;min-height:44px;min-width:44px;padding:2px 1px;font-size:12px;line-height:16px}
+ body.immersive.has-room .rituals:has(.draw-english)>.draw-english{grid-row:1;grid-column:auto;width:100%;height:44px;min-height:44px;min-width:44px;padding:2px 1px;font-size:12px;line-height:16px}
  body.immersive.has-room .rituals:has(.draw-english)>.end-turn{grid-column:5}
  body.immersive.has-room .rituals small,body.immersive.has-room.hand-overflow .rituals small{font-size:10px;line-height:12px}
  body.immersive.has-room #hand-stage #hand-prev,body.immersive.has-room #hand-stage #hand-next,
  body.immersive.has-room #hand-stage:not(.hand-fallback) #hand-prev:not([hidden]),body.immersive.has-room #hand-stage:not(.hand-fallback) #hand-next:not([hidden]),
  body.immersive.has-room:has(.draw-english) #hand-stage:not(.hand-fallback) #hand-prev:not([hidden]),body.immersive.has-room:has(.draw-english) #hand-stage:not(.hand-fallback) #hand-next:not([hidden]){display:none!important}
- body.immersive.has-room .command-bar{height:76px}
- body.immersive.has-room .command-bar>div{max-height:64px}
+ body.immersive.has-room .command-bar{height:52px;padding:3px}
+ body.immersive.has-room .command-bar>div{max-height:44px}
  body.immersive.has-room #notice,body.immersive.has-room:has(.draw-english) #notice{bottom:calc(274px + var(--safe-bottom))}
  body.immersive.has-room #notice[data-kind="hand-tip"]{display:none}
  body.immersive.has-room .battle-save-warning{bottom:270px}

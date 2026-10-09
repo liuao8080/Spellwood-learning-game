@@ -1557,7 +1557,7 @@ function forestEdgeDetail(builder, body, random) {
   }
 }
 
-function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4, rowDepth = 2.12 } = {}) {
+function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4, rowDepth = 2.12, frontSlots = null, backSlots = null, backRowDepth = rowDepth, heroDockZ = null } = {}) {
   builder.add(body, roundedSlab(18, 12, 0.66, 1.05, 0.07), "bark", {
     position: [0, -0.47, 0],
     rotation: [-HALF_PI, 0, 0],
@@ -1589,8 +1589,10 @@ function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4, rowDepth = 2
   const slotPositions = [[], []];
   for (let side = 0; side < 2; side++)
     for (let i = 0; i < slotCount; i++) {
-      const x = (i - (slotCount - 1) / 2) * 3.15,
-        z = (side === 0 ? 1 : -1) * clamp(rowDepth, 1.5, 3.2);
+      const rowSlots = side === 0 ? frontSlots : backSlots;
+      const x = Array.isArray(rowSlots) && Number.isFinite(rowSlots[i])
+        ? rowSlots[i] : (i - (slotCount - 1) / 2) * 3.15,
+        z = side === 0 ? clamp(rowDepth, 1.5, 3.2) : -clamp(backRowDepth, 1.5, 4.2);
       slotPositions[side].push([x, 0.026, z]);
       builder.add(
         body,
@@ -1604,6 +1606,17 @@ function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4, rowDepth = 2
         style: "metal",
       });
     }
+  // A carved extension gives the portrait hero real foot contact rather than
+  // leaving the figure floating in the empty gutter below the unit badges.
+  if (Number.isFinite(heroDockZ)) {
+    const z = clamp(heroDockZ - .25, 4.8, 6.1);
+    builder.add(body, new CylinderGeometry(.42, .5, .12, 20), "barkLight", {
+      position: [0, -.025, z],
+    });
+    builder.add(body, new TorusGeometry(.39, .025, 5, 24), "bronze", {
+      position: [0, .043, z], rotation: [HALF_PI, 0, 0], style: "metal",
+    });
+  }
   for (const s of [-1, 1]) {
     for (let i = -3; i <= 3; i++) {
       builder.add(body, leafSolid(0.28, 0.13, 0.025), "bronze", {

@@ -18,6 +18,7 @@ import { SoftwareRenderer } from "./software-renderer.mjs";
 import { targetPreview } from "./targeting.mjs";
 import { createElementalCast, createElementalBurst, createBarrierBadge } from "./elemental-effects.mjs";
 import { AdaptiveQualityController } from "./adaptive-quality.mjs";
+import { createEffectWarmup } from "./effect-warmup.mjs";
 
 const lerp = MathUtils.lerp;
 const smooth = (v) => 1 - (1 - v) ** 3;
@@ -94,6 +95,7 @@ export class ArenaScene {
     this.temporary = new Group(); this.scene.add(this.temporary);
     this.makeHeroes(); this.makeDecks(); this.makeFireflies();
     this.bind(); this.resize(); this.showGallery(); this.start();
+    this.prepareEffectPrograms();
     this.onStatus({ available: true, renderer: this.rendererName, quality: this.quality });
   }
 
@@ -104,6 +106,32 @@ export class ArenaScene {
       this.quality = "low";
       return new SoftwareRenderer(canvas);
     }
+  }
+
+  prepareEffectPrograms() {
+    if(this.renderer.isSoftwareRenderer||typeof this.renderer.compileAsync!=="function")return;
+    const epoch=this.effectWarmupEpoch=(this.effectWarmupEpoch||0)+1,started=performance.now();
+    this.canvas.dataset.effectWarmup="pending";
+    // The detached resources are never added to the visible scene or rendered
+    // as evidence. Retaining them keeps shader-program cache references alive.
+    this.effectWarmupPromise=Promise.resolve().then(async()=>{
+      if(this.destroyed||this.contextLost||epoch!==this.effectWarmupEpoch)return;
+      this.effectWarmup ||= createEffectWarmup();
+      for(const texture of this.effectWarmup.textures)this.renderer.initTexture?.(texture);
+      const handle=this.effectWarmup;
+      const timer=setTimeout(()=>{
+        if(this.destroyed||epoch!==this.effectWarmupEpoch)return;
+        this.effectWarmupEpoch++;handle.dispose();this.effectWarmup=null;
+        this.canvas.dataset.effectWarmup="failed";
+      },10000);
+      try {await this.renderer.compileAsync(handle.root,this.camera,this.scene);}
+      finally {clearTimeout(timer);}
+      if(this.destroyed||this.contextLost||epoch!==this.effectWarmupEpoch)return;
+      this.canvas.dataset.effectWarmup="ready";
+      this.canvas.dataset.effectWarmupMs=String(Math.round(performance.now()-started));
+    }).catch(()=>{
+      if(!this.destroyed&&epoch===this.effectWarmupEpoch)this.canvas.dataset.effectWarmup="failed";
+    });
   }
 
   makeHeroes() {
@@ -144,8 +172,17 @@ export class ArenaScene {
 
   fitHeroSeats() {
     if (!this.width || !this.height) return;
+    for (const hero of this.heroes) hero.root.scale.setScalar(1);
     this.heroes[0].root.position.set(SELF_HERO_X*(this.boardWidthScale||1),.1,4.5);
     this.heroes[1].root.position.set(this.compactLandscape?-SELF_HERO_X*(this.boardWidthScale||1):0,.1,this.compactLandscape?4.5:-4.25);
+    if (this.portraitHeroDock) {
+      this.heroes[0].root.position.set(0, .1, this.portraitHeroDock);
+      this.heroes[0].root.scale.setScalar(this.splitFrontRow ? .78 : .85);
+      if (this.splitFrontRow) {
+        this.heroes[1].root.position.set(0,.1,-6.1);
+        this.heroes[1].root.scale.setScalar(.78);
+      } else this.heroes[1].root.position.set(0,.1,-5.5);
+    }
     this.camera.updateMatrixWorld(true);
     for (const hero of this.heroes) for (let attempt = 0; attempt < 2; attempt++) {
       hero.root.updateMatrixWorld(true);
@@ -217,8 +254,8 @@ export class ArenaScene {
         this.hover = this.pick(e); this.canvas.style.cursor = this.hover ? "pointer" : "default"; this.requestRender();
       },
       leave: () => { this.pointer.set(0, 0); this.hover = null; this.requestRender(); },
-      contextlost: (e) => { e.preventDefault(); this.contextLost = true; this.cancel(); this.stop(); this.onStatus({ available: false, renderer: "WebGL2", reason: "context-lost" }); },
-      contextrestored: () => { if (!this.destroyed) { this.contextLost = false; this.frameFault = false; this.start(); this.onStatus({ available: true, renderer: "WebGL2", restored: true }); } },
+      contextlost: (e) => { e.preventDefault(); this.contextLost = true; this.effectWarmupEpoch=(this.effectWarmupEpoch||0)+1;this.effectWarmup?.dispose();this.effectWarmup=null;this.cancel(); this.stop(); this.onStatus({ available: false, renderer: "WebGL2", reason: "context-lost" }); },
+      contextrestored: () => { if (!this.destroyed) { this.contextLost = false; this.frameFault = false; this.prepareEffectPrograms(); this.start(); this.onStatus({ available: true, renderer: "WebGL2", restored: true }); } },
     };
     this.boardInput = new BoardInput({element:this.canvas, pick:event=>this.pick(event),
       getRevision:()=>this.getInputRevision?.() ?? this.inputRevision,
@@ -251,14 +288,11 @@ export class ArenaScene {
     this.renderer.setSize(Math.round(w * scale), Math.round(h * scale), false); this.camera.aspect = w / h;
     const compactLandscape=this.externalHand && w/h>2.2 && h<240;
     this.compactLandscape=compactLandscape;
-    const rowDepth=compactLandscape?2.8:2;
-    if(this.rowDepth!==rowDepth){
-      this.rowDepth=rowDepth;
-      this.arena.root.removeFromParent();this.arena.dispose();
-      this.arena=this.library.createArena({seed:27,slotsPerSide:4,rowDepth:rowDepth+.12});
-      this.arena.root.traverse(object=>{object.userData.cpuStatic=true;});
-      this.scene.add(this.arena.root);
-    }
+    this.splitFrontRow=this.externalHand && w<600 && !compactLandscape && h<400;
+    this.portraitHeroDock=this.externalHand && w<600 && !compactLandscape ? this.splitFrontRow?5.2:6.35 : null;
+    const rowDepth=compactLandscape||this.splitFrontRow?2.8:2;
+    this.rowDepth=rowDepth;
+    this.enemyRowDepth=this.splitFrontRow?3.8:this.portraitHeroDock?3.2:rowDepth;
     const narrow = w < 600, portrait = !narrow && this.camera.aspect < 1.1;
     this.boardWidthScale = narrow ? .72 : portrait ? .9 : 1;
     if(this.externalHand && h < 270) this.boardWidthScale = narrow ? 1.2 : 1.35;
@@ -282,8 +316,34 @@ export class ArenaScene {
       this.arena.root.scale.x=this.boardWidthScale;this.heroes[0].root.position.x=SELF_HERO_X*this.boardWidthScale;
       for(const deck of this.decks)deck.root.position.x=(deck.side?-6.8:6.8)*this.boardWidthScale;
     }
+    // Keep a real space for the hero on short portrait screens. Move figures,
+    // projected controls and carved slot rings together, never just the DOM.
+    this.frontSlotXs = this.splitFrontRow ? [.11875,.3125,.6875,.88125].map(fraction => {
+      const x=w*fraction;
+      const plane = new Vector3(0,.23,rowDepth+.63).project(this.camera);
+      plane.x=x/w*2-1;
+      return plane.unproject(this.camera).x;
+    }) : null;
+    this.backSlotXs = this.splitFrontRow ? [.11875,.3125,.6875,.88125].map(fraction => {
+      const x=w*fraction;
+      const plane = new Vector3(0,.23,-this.enemyRowDepth+.63).project(this.camera);
+      plane.x=x/w*2-1;
+      return plane.unproject(this.camera).x;
+    }) : null;
+    const arenaKey=JSON.stringify([rowDepth,this.portraitHeroDock,this.frontSlotXs,this.backSlotXs]);
+    if(this.arenaLayoutKey!==arenaKey){
+      this.arenaLayoutKey=arenaKey;
+      this.arena.root.removeFromParent();this.arena.dispose();
+      this.arena=this.library.createArena({seed:27,slotsPerSide:4,rowDepth:rowDepth+.12,
+        backRowDepth:this.enemyRowDepth+.12,
+        frontSlots:this.frontSlotXs?.map(x=>x/this.boardWidthScale),
+        backSlots:this.backSlotXs?.map(x=>x/this.boardWidthScale),heroDockZ:this.portraitHeroDock});
+      this.arena.root.scale.x=this.boardWidthScale;
+      this.arena.root.traverse(object=>{object.userData.cpuStatic=true;});
+      this.scene.add(this.arena.root);
+    }
     this.fitHeroSeats();
-    if (this.snapshot) { this.handKey = null; this.setBattle(this.snapshot, this.viewerSeat); }
+    if (this.snapshot) { this.handKey = null; this.enemyHandCount=null; this.setBattle(this.snapshot, this.viewerSeat); }
     this.requestRender();
   }
 
@@ -324,7 +384,9 @@ export class ArenaScene {
         item.unit = unit; item.seat = seat;
         this.restoreFade(item);
         const slot = state.phase === "gallery" && this.width > 900 ? (relative ? 3.2 : 1.6 + i * 3.2) : slots[i];
-        item.base.set(slot * (this.boardWidthScale || 1), .08, (relative ? -1 : 1)*(this.rowDepth||2));
+        item.base.set(slot * (this.boardWidthScale || 1), .08, relative ? -(this.enemyRowDepth||2) : (this.rowDepth||2));
+        if (!relative && this.frontSlotXs) item.base.x=this.frontSlotXs[i];
+        if (relative && this.backSlotXs) item.base.x=this.backSlotXs[i];
         if (!item.animating) item.model.root.position.copy(item.base);
         if (!item.animating) item.model.root.scale.setScalar(this.scaleFor(unit.cardId));
         item.model.setVisualState?.({ selected: this.selected?.uid === unit.uid, exhausted: !unit.ready, guarded: CARD[unit.cardId]?.keyword === "guard", damaged: unit.hp < (unit.maxHp || CARD[unit.cardId]?.hp || 1) });
@@ -391,6 +453,8 @@ export class ArenaScene {
       const layout = this.handLayout(i, count, true);
       card.root.position.copy(layout.position);
       card.root.scale.setScalar(layout.scale); card.root.rotation.set(...layout.rotation.toArray());
+      if(this.splitFrontRow){card.root.position.set((i-(count-1)/2)*.6,.3,-7.7);card.root.scale.setScalar(.55);}
+      else if(this.portraitHeroDock){card.root.position.set((i-(count-1)/2)*.65,1.05,-7);card.root.scale.setScalar(.75);}
       this.scene.add(card.root); this.enemyCards.push(card);
     }
   }
@@ -870,7 +934,9 @@ export class ArenaScene {
       const updateStarted=performance.now();
       const delta = Math.min(.05, Math.max(0, (now - this.lastTime) / 1000)); this.lastTime = now;
       if (!this.reduced) {
-        const cameraX = this.renderer.isSoftwareRenderer ? 0 : (this.pointer.x || 0) * .6;
+        // Packed portrait seats keep fixed screen-space gutters while swiping
+        // the hand. Pointer parallax is retained on wider battlefields.
+        const cameraX = this.renderer.isSoftwareRenderer || this.portraitHeroDock ? 0 : (this.pointer.x || 0) * .6;
         this.camera.position.x = lerp(this.camera.position.x, cameraX, Math.min(1, delta * 4));
         this.camera.lookAt(this.cameraLook);
         this.fireflies.rotation.y = Math.sin(now * .00005) * .06;
@@ -984,6 +1050,8 @@ export class ArenaScene {
   dispose() {
     if (this.destroyed) return;
     this.stop(); this.cancel(); this.destroyed = true; this.boardInput?.dispose();
+    this.effectWarmupEpoch=(this.effectWarmupEpoch||0)+1;
+    this.effectWarmup?.dispose();this.effectWarmup=null;
     if (this.handlers) {
       window.removeEventListener("resize", this.handlers.resize);
       for (const [event, fn] of [["pointermove", "move"], ["pointerleave", "leave"], ["webglcontextlost", "contextlost"], ["webglcontextrestored", "contextrestored"]]) this.canvas.removeEventListener(event, this.handlers[fn]);

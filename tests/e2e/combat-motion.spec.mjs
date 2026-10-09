@@ -109,6 +109,7 @@ async function startDomObservation(page, uid, evidence, checkpoint) {
     inputReady: value?.inputReady === true,
     timing: Object.fromEntries(['updateMs','submitMs','anchorMs','frameGapMs','qualityLevel','pixelScale','shadowMapSize']
       .map(key=>[key,finite(value?.timing?.[key])])),
+    effectWarmup: ['pending','ready','failed'].includes(value?.effectWarmup)?value.effectWarmup:'unavailable',
   });
   // Send small, allowlisted batches out before any later screenshot can hang.
   // This binding accepts observations only; it never sends a game command.
@@ -145,6 +146,7 @@ async function startDomObservation(page, uid, evidence, checkpoint) {
         reducedMotion: arena.dataset.reducedMotion === 'false' ? false : arena.dataset.reducedMotion === 'true' ? true : null,
         arenaHidden: arena.hidden, visibility: document.visibilityState,
         inputReady: Boolean(document.querySelector('[data-action="end"]:enabled')),
+        effectWarmup: arena.dataset.effectWarmup||'unavailable',
         timing: {
           updateMs:number(arena.dataset.renderUpdateMs),submitMs:number(arena.dataset.renderSubmitMs),
           anchorMs:number(arena.dataset.renderAnchorMs),frameGapMs:number(arena.dataset.frameGapMs),
