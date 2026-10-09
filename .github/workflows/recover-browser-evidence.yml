@@ -1,0 +1,113 @@
+name: Recover bounded browser evidence
+
+on:
+  pull_request:
+    paths:
+      - 'evidence/transfer-request.json'
+      - 'scripts/split-browser-evidence.py'
+      - '.github/workflows/recover-browser-evidence.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  split-existing-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Validate exact source request
+        id: source
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          request=json.load(open('evidence/transfer-request.json'))
+          run=request['sourceRunId']; name=request['artifactName']
+          assert run==37983082270 and request['originalArtifactId']==11641824808
+          assert request['sourceHead']=='c06cca5e3be69f69358cf329646a34d29d509351'
+          assert request['sourceTree']=='9c84e97a72f2a281e9fa90c7ca56f61863e4ef8b'
+          assert isinstance(run,int) and run>0
+          assert re.fullmatch(r'browser-acceptance-'+str(run)+r'-[1-9][0-9]*',name)
+          assert re.fullmatch(r'[0-9a-f]{40}',request['sourceHead'])
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write(f'run={run}\nname={name}\n')
+          PY
+      # Official v5 SHA verified from actions/download-artifact tag.
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 37983082270
+          artifact-ids: 11641824808
+          merge-multiple: true
+          path: evidence-source
+      - name: Copy original bytes into bounded parts and hash every file
+        run: python3 scripts/split-browser-evidence.py evidence-source evidence-parts evidence/transfer-request.json
+      - name: Retain source binding and hashes
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ steps.source.outputs.run }}-manifest
+          path: evidence-parts/manifest
+          if-no-files-found: error
+          retention-days: 3
+      - name: Retain unchanged evidence part 01
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ steps.source.outputs.run }}-part-01
+          path: evidence-parts/part-01
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain unchanged evidence part 02
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ steps.source.outputs.run }}-part-02
+          path: evidence-parts/part-02
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain unchanged evidence part 03
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ steps.source.outputs.run }}-part-03
+          path: evidence-parts/part-03
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain unchanged evidence part 04
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ steps.source.outputs.run }}-part-04
+          path: evidence-parts/part-04
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain unchanged evidence part 05
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ steps.source.outputs.run }}-part-05
+          path: evidence-parts/part-05
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain unchanged evidence part 06
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ steps.source.outputs.run }}-part-06
+          path: evidence-parts/part-06
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain unchanged evidence part 07
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ steps.source.outputs.run }}-part-07
+          path: evidence-parts/part-07
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain unchanged evidence part 08
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ steps.source.outputs.run }}-part-08
+          path: evidence-parts/part-08
+          if-no-files-found: ignore
+          retention-days: 3
