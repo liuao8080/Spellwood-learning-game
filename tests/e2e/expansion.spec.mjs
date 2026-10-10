@@ -473,17 +473,53 @@ test('three one-click presets and a two-click custom swap retain all thirty-six 
   }
   expect(new Set(savedPresets.map(deck => JSON.stringify(deck))).size).toBe(3);
   const before = [...currentProgress(actor).customDeck];
-  await page.locator('[data-action="library-slot"][data-value="0"]').click();
+  // The initial desktop footer covers much of the second row. Diagnose actual
+  // reachability using ordinary wheel input, without scrollIntoView or forced
+  // clicks that could silently hide an inaccessible last deck slot.
+  const readLastSlot = () => page.locator('.card-library').evaluate(dialog => {
+    const slot=dialog.querySelector('[data-action="library-slot"][data-value="19"]');
+    const footer=dialog.querySelector('.deck-footer');
+    const box=element=>{const r=element.getBoundingClientRect();return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};};
+    const s=box(slot),f=box(footer),d=box(dialog),x=(s.left+s.right)/2,y=(s.top+s.bottom)/2;
+    const hit=document.elementFromPoint(x,y);
+    return {slot:s,footer:f,dialog:d,scrollTop:dialog.scrollTop,scrollHeight:dialog.scrollHeight,clientHeight:dialog.clientHeight,x,y,
+      centerHitsSlot:!!hit&&(hit===slot||slot.contains(hit)),
+      fullyAboveFooter:s.top>=d.top+dialog.clientTop&&s.bottom<=Math.min(f.top,d.bottom-dialog.clientTop),
+      insideWidth:s.left>=d.left&&s.right<=d.right};
+  });
+  const initialLast=await readLastSlot();
+  actor.metrics.lastDeckSlotReachability={initial:initialLast,wheelAttempts:[]};
+  const previousRevision=actor.observed.progress.get(actor.observed.player.playerId).revision;
+  for(let scroll=0;scroll<6;scroll++) {
+    const state=await readLastSlot();
+    if(state.fullyAboveFooter&&state.insideWidth&&state.centerHitsSlot) break;
+    const attempt={attempt:scroll+1,before:state,deltaY:state.slot.top<state.dialog.top?-180:180};
+    actor.metrics.lastDeckSlotReachability.wheelAttempts.push(attempt);
+    try {
+      await page.mouse.move((state.dialog.left+state.dialog.right)/2,state.dialog.top+Math.min(240,state.dialog.height/3));
+      await page.mouse.wheel(0,attempt.deltaY);
+      await expect.poll(async()=>Math.abs((await readLastSlot()).scrollTop-state.scrollTop)).toBeGreaterThan(0);
+      await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    } finally { attempt.after=await readLastSlot().catch(()=>null); }
+  }
+  const reachableLast=await readLastSlot();
+  actor.metrics.lastDeckSlotReachability.final=reachableLast;
+  await safeScreenshot(page,testInfo,'last-deck-slot-after-real-wheel');
+  expect(reachableLast.fullyAboveFooter,'the complete last slot must fit above the footer after bounded ordinary scrolling').toBe(true);
+  expect(reachableLast.insideWidth).toBe(true);expect(reachableLast.centerHitsSlot).toBe(true);
+  expect(actor.observed.progress.get(actor.observed.player.playerId).revision).toBe(previousRevision);
+  await page.mouse.click(reachableLast.x,reachableLast.y);
+  await expect(page.locator('[data-action="library-slot"][data-value="19"]')).toHaveAttribute('aria-pressed','true');
   await page.locator('[data-action="library-card"][data-value="glass_snail"]').click();
   await expect(page.locator('.deck-swap-hint')).toContainText('先点下方一张旧卡');
   await expect(action(page, 'library-slot')).toHaveCount(20);
-  await expect(page.locator('[data-action="library-slot"][data-value="0"]')).toContainText('琉璃蜗牛');
+  await expect(page.locator('[data-action="library-slot"][data-value="19"]')).toContainText('琉璃蜗牛');
   await action(page, 'library-save').click();
   await expect(page.locator('.card-library')).toBeHidden();
-  await expect.poll(() => currentProgress(actor).customDeck).toEqual(['glass_snail', ...before.slice(1)]);
+  await expect.poll(() => currentProgress(actor).customDeck).toEqual([...before.slice(0,19),'glass_snail']);
   await reloadSaved(actor);
   expect(currentProgress(actor).chosenDeckId).toBe('custom');
-  expect(currentProgress(actor).customDeck).toEqual(['glass_snail', ...before.slice(1)]);
+  expect(currentProgress(actor).customDeck).toEqual([...before.slice(0,19),'glass_snail']);
   await action(page, 'library').click();
   await page.locator('[data-action="library-tab"][data-value="cards"]').click();
   const cards = await action(page, 'library-card').evaluateAll(elements => elements.map(element => ({
