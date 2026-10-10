@@ -14,6 +14,7 @@ export class HandInput {
       pointerdown: event => this.down(event), pointermove: event => this.move(event),
       pointerup: event => this.up(event), pointercancel: event => this.cancelPointer(event),
       lostpointercapture: event => this.cancelPointer(event),
+      blur: () => this.cancel(),
       pointerleave: event => { this.clearHover(); if (!this.element.hasPointerCapture?.(event.pointerId)) this.cancelPointer(event); },
       contextmenu: event => this.context(event),
       // Pointerup owns selection. Never let a compatibility click dispatch it again.
@@ -49,11 +50,16 @@ export class HandInput {
     this.suppressContextUntil = 0;
     if (this.active && event.pointerId !== this.active.pointerId) { this.cancel(); return; }
     if (event.isPrimary === false || (event.button != null && event.button !== 0)) return;
+    // A semantic button may still own keyboard focus. Transfer it before
+    // capturing a fresh pointer intent: its focusout handler cancels old input.
+    this.element.focus?.({ preventScroll: true });
     this.cancel();
+    if (this.destroyed || !this.isEnabled()) return;
+    if (this.element.dataset) this.element.dataset.inputModality = "pointer";
     const hit = this.pick(event), revision = this.getRevision();
     const active = this.active = { pointerId: event.pointerId, pointerType: event.pointerType,
       x: event.clientX, y: event.clientY, lastX: event.clientX, hit, revision,
-      moved: false, panning: false, consumed: false, lastEvent: event };
+      started: this.now(), moved: false, panning: false, consumed: false, lastEvent: event };
     try { this.element.setPointerCapture?.(event.pointerId); } catch { /* Capturing a just-cancelled pointer is harmless. */ }
     if (hit) this.longTimer = this.setTimer(() => {
       this.longTimer = null;
@@ -97,7 +103,13 @@ export class HandInput {
     this.active = null; this.clearLong(); this.release(active.pointerId);
     if (!this.valid(active) || active.moved || active.consumed || Math.hypot(event.clientX - active.x, event.clientY - active.y) > 10) return;
     const hit = this.pick(event);
-    if (this.same(hit, active.hit)) this.onSelect(this.intent(hit, "pointer", active.revision));
+    if (!this.same(hit, active.hit)) return;
+    // A busy frame may delay the timer until after pointerup. A completed hold
+    // still belongs to inspection, never to a short-press selection.
+    if (this.now() - active.started >= this.longPressMs) {
+      active.consumed = true; this.suppressContextUntil = this.now() + 1000; this.suppressContextHit = hit;
+      this.onInspect(this.intent(hit, "longpress", active.revision));
+    } else this.onSelect(this.intent(hit, "pointer", active.revision));
   }
 
   context(event) {

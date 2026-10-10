@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "version": "4.1.0-alpha.3",
+  "baseHead": "fd82c1aa8bfc381d6a6a298197a93945206ea5e7",
+  "branch": "codex/local-gpu-refinement",
+  "finalRun": "2026-10-10T06-00-44-822Z-b7d72d4e",
+  "finalBundleSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+  "browser": {
+    "selected": 33,
+    "passed": 33,
+    "failed": 0,
+    "skipped": 0,
+    "retries": 0,
+    "sourceIntegrity": {
+      "productAndBundleUnchanged": true,
+      "originalE2EUnchanged": true,
+      "localInfrastructureUnchanged": true,
+      "officialCIUnchanged": true,
+      "generatedSuiteUnchanged": true
+    }
+  },
+  "normalMelee": {
+    "maximumOriginalPtsGapMs": 36.0,
+    "unchangedLimitMs": 250,
+    "frames": 92,
+    "durationSeconds": 3.033,
+    "authority": {
+      "renderer": "WebGL2",
+      "normalMotionSamples": 185,
+      "maximumSourceDisplacementPx": 270.6751174378613,
+      "sourceDisplacementAtFirstHpChangePx": 270.6751174378613,
+      "finalSourceDisplacementPx": 0,
+      "visualHpStates": [
+        {
+          "elapsedMs": 0.2,
+          "hp": 18
+        },
+        {
+          "elapsedMs": 433.2,
+          "hp": 17
+        }
+      ],
+      "authoritativeHealthDelta": -1
+    }
+  },
+  "nativeWindow": {
+    "run": "native-dpr-2026-10-10T05-59-17-030Z-9896134a",
+    "actualViewport": [
+      844,
+      406
+    ],
+    "devicePixelRatio": 2,
+    "arenaCss": [
+      708,
+      224
+    ],
+    "arenaBuffer": [
+      1062,
+      336
+    ],
+    "maximumOriginalPtsGapMs": 52,
+    "originalAssertionChanges": 0
+  },
+  "code": {
+    "total": 1144,
+    "passed": 1141,
+    "failed": 3,
+    "skipped": 0,
+    "failure": "macOS EADDRNOTAVAIL binding source 127.0.0.2 in original identity-admission real multi-IP cases"
+  },
+  "limits": [
+    "No physical-phone/public-human-matchmaking acceptance",
+    "No whole-session FPS/audio/low-end GPU acceptance",
+    "Keep historical failed runs distinct; no cloud CI54 result rewrite"
+  ]
+}

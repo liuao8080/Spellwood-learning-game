@@ -13,4 +13,6 @@
 *.mp3 binary
 *.m4a binary
 *.ogg binary
+*.webm binary
+*.zip binary
 *.docx binary

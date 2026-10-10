@@ -291,6 +291,7 @@ export class PackScene {
       for (let i = 0; i < 10; i++) if ((saved & (1 << i)) && !(this.revealed & (1 << i))) this.reveal(i);
       return;
     }
+    this.cancelGesture();
     this.clearCards(); this.animations.clear(); this.startTime = null; this.readyEmitted = false;
     this.focusedIndex = null; this.revealed = 0;
     this.opening = opening ? { id: opening.id, cards: opening.cards.map(card => ({ ...card })), revealed: Number(opening.revealed) & 1023 } : null;
@@ -306,6 +307,7 @@ export class PackScene {
 
   launch() {
     if (this.destroyed || !this.renderer || !this.opening || !["sealed", "idle"].includes(this.phase)) return false;
+    this.cancelGesture();
     if (this.reduced || this.hidden) { this.settle(); return true; }
     this.phase = "charging"; this.startTime = performance.now(); this.readyEmitted = false;
     this.sound("pack-charge"); this.status(); this.requestRender(); return true;
@@ -318,6 +320,7 @@ export class PackScene {
   }
 
   settle(emitReady = true) {
+    this.cancelGesture();
     this.startTime = null; this.animations.clear(); this.phase = this.revealed === 1023 ? "complete" : "ready";
     this.gift.visible = false; this.leaves.visible = false; this.clearLightEffects(); this.layout();
     for (const card of this.cards) {
@@ -464,16 +467,39 @@ export class PackScene {
     this.animateRevealLights(now);
   }
 
+  gestureEnabled() {
+    return !this.destroyed && !!this.renderer && !this.hidden && !this.pageHidden && !this.contextLost && !this.frameFault && !BUSY.has(this.phase);
+  }
+
+  cancelGesture() {
+    const down = this.down; this.down = null;
+    // Clear ownership before releasing: lostpointercapture may fire immediately.
+    if (!down?.captured) return;
+    down.captured = false;
+    try { if (!this.canvas.hasPointerCapture || this.canvas.hasPointerCapture(down.id)) this.canvas.releasePointerCapture?.(down.id); }
+    catch { /* The browser may already have released or cancelled this pointer. */ }
+  }
+
   bind() {
     this.handlers = {
       resize: () => this.resize(),
       down: event => {
-        this.down = { x: event.clientX, y: event.clientY, id: event.pointerId };
-        this.canvas.setPointerCapture?.(event.pointerId);
+        if (this.down && event.pointerId !== this.down.id) { this.cancelGesture(); return; }
+        this.cancelGesture();
+        if (!this.gestureEnabled() || event.isPrimary !== true || event.button !== 0 ||
+          !Number.isFinite(event.pointerId) || !Number.isFinite(event.clientX) || !Number.isFinite(event.clientY) ||
+          event.buttons != null && event.buttons !== 1) return;
+        const down = this.down = { x: event.clientX, y: event.clientY, id: event.pointerId, phase: this.phase,
+          openingId: this.opening?.id, index: this.pick(event), captured: false };
+        if (this.canvas.setPointerCapture) try { this.canvas.setPointerCapture(down.id); down.captured = true; }
+        catch { /* Cancellation can race capture. */ }
       },
       up: event => {
-        const down = this.down; this.down = null; if (!down) return;
-        this.canvas.releasePointerCapture?.(event.pointerId);
+        const down = this.down; if (!down || event.pointerId !== down.id) return;
+        this.cancelGesture();
+        if (!this.gestureEnabled() || event.isPrimary !== true || event.button !== 0 ||
+          event.buttons != null && event.buttons !== 0 || !Number.isFinite(event.clientX) || !Number.isFinite(event.clientY) ||
+          down.phase !== this.phase || down.openingId !== this.opening?.id) return;
         const distance = Math.hypot(event.clientX - down.x, event.clientY - down.y);
         if (["idle", "sealed"].includes(this.phase)) {
           if (distance < 12 || distance > 30) this.onOpenRequested();
@@ -481,20 +507,23 @@ export class PackScene {
         }
         if (distance > 12 || BUSY.has(this.phase)) return;
         const index = this.pick(event);
+        if (index !== down.index) return;
         if (index !== null) {
           this.focus(index);
           if (!(this.revealed & (1 << index))) this.onReveal(index);
         } else if (this.focusedIndex !== null) this.focus(null);
       },
-      cancel: () => { this.down = null; },
+      cancel: event => { if (this.down?.id === event.pointerId) this.cancelGesture(); },
+      blur: () => this.cancelGesture(),
       move: event => { this.canvas.style.cursor = ["idle", "sealed"].includes(this.phase) || this.pick(event) !== null ? "pointer" : "default"; },
-      lost: event => { event.preventDefault(); this.contextLost = true; this.stop(); this.status(); },
+      lost: event => { event.preventDefault(); this.cancelGesture(); this.contextLost = true; this.stop(); this.status(); },
       restored: () => { this.contextLost = false; this.status(); this.requestRender(); },
       visibility: () => { this.pageHidden = !!document.hidden; if (this.pageHidden) this.pause(); else this.resume(); },
     };
-    this.bindings = [["pointerdown", "down"], ["pointerup", "up"], ["pointercancel", "cancel"], ["pointerleave", "cancel"], ["pointermove", "move"], ["webglcontextlost", "lost"], ["webglcontextrestored", "restored"]];
+    this.bindings = [["pointerdown", "down"], ["pointerup", "up"], ["pointercancel", "cancel"], ["pointerleave", "cancel"], ["lostpointercapture", "cancel"], ["blur", "blur"], ["pointermove", "move"], ["webglcontextlost", "lost"], ["webglcontextrestored", "restored"]];
     for (const [event, key] of this.bindings) this.canvas.addEventListener(event, this.handlers[key]);
     window.addEventListener("resize", this.handlers.resize);
+    window.addEventListener("blur", this.handlers.blur);
     document.addEventListener?.("visibilitychange", this.handlers.visibility);
     if (typeof ResizeObserver !== "undefined") { this.observer = new ResizeObserver(() => this.resize()); this.observer.observe(this.canvas); }
   }
@@ -513,6 +542,7 @@ export class PackScene {
   }
 
   resize() {
+    this.cancelGesture();
     if (!this.renderer || this.destroyed) return;
     const r = this.canvas.getBoundingClientRect(), w = Math.max(1, r.width), h = Math.max(1, r.height);
     this.width = w; this.height = h; this.aspect = w / h;
@@ -566,13 +596,13 @@ export class PackScene {
         if(this.canvas.dataset){this.canvas.dataset.renderMs=String(Math.round(this.renderCost));if(moving&&Number.isFinite(this.lastFrame)){const interval=now-this.lastFrame;this.canvas.dataset.frameIntervalMs=String(Math.round(interval));if(interval>0&&interval<500)this.canvas.dataset.frameRate=String(Math.round(1000/interval));}}
         this.lastFrame = now; this.dirty = false;
       } catch (error) {
-        this.frameFault = true; this.error = String(error?.message || error); this.stop(); this.status();
+        this.frameFault = true; this.error = String(error?.message || error); this.cancelGesture(); this.stop(); this.status();
       } finally { this.inFrame = false; }
     }
     if (BUSY.has(this.phase) || this.animations.size || this.focusStart != null) this.requestRender();
   }
   stop() { if (this.raf !== null) cancelAnimationFrame(this.raf); this.raf = null; }
-  pause() { if (this.pausedAt == null) this.pausedAt = performance.now(); this.stop();if(this.warmFrame!=null)cancelAnimationFrame(this.warmFrame);this.warmFrame=null; }
+  pause() { this.cancelGesture(); if (this.pausedAt == null) this.pausedAt = performance.now(); this.stop();if(this.warmFrame!=null)cancelAnimationFrame(this.warmFrame);this.warmFrame=null; }
   resume() {
     if (this.hidden || this.pageHidden || this.destroyed) return;
     if (this.pausedAt != null) {
@@ -589,10 +619,11 @@ export class PackScene {
   setHidden(value) {
     if (this.destroyed) return;
     this.hidden = !!value;
-    if (this.hidden) { this.pause(); this.down = null; } else { this.resize(); this.resume(); }
+    if (this.hidden) { this.pause(); } else { this.resize(); this.resume(); }
   }
   setReduced(value) {
     if (this.destroyed) return;
+    if (this.reduced !== !!value) this.cancelGesture();
     this.reduced = !!value;
     if (this.reduced) {
       if (BUSY.has(this.phase)) this.settle();
@@ -608,11 +639,12 @@ export class PackScene {
   }
   dispose() {
     if (this.destroyed) return;
-    this.destroyed = true; this.stop(); this.observer?.disconnect();
+    this.destroyed = true; this.cancelGesture(); this.stop(); this.observer?.disconnect();
     if(this.warmFrame!=null)cancelAnimationFrame(this.warmFrame);this.warmFrame=null;this.warmQueue=[];
     if(this.giftImage){this.giftImage.onload=this.giftImage.onerror=null;this.giftImage=null;}
     if (this.handlers) {
       window.removeEventListener("resize", this.handlers.resize);
+      window.removeEventListener("blur", this.handlers.blur);
       document.removeEventListener?.("visibilitychange", this.handlers.visibility);
       for (const [event, key] of this.bindings) this.canvas.removeEventListener(event, this.handlers[key]);
     }

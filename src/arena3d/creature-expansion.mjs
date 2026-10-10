@@ -211,7 +211,7 @@ function charm(builder, part, color, position, size = 0.1) {
   );
 }
 
-function buildHedgehog(builder, body, rig) {
+function buildHedgehog(builder, body, rig, { faceDetail = true } = {}) {
   const coat = "#af7946",
     quill = "#865331",
     cream = "#f5d5a3";
@@ -239,25 +239,31 @@ function buildHedgehog(builder, body, rig) {
     builder.oval(body, coat, [s * 0.29, 0.13, 0.26], [0.15, 0.12, 0.23], FUR);
     builder.oval(body, coat, [s * 0.41, 0.33, 0.24], [0.12, 0.22, 0.13], FUR);
   }
-  rig.head = builder.part("hedgehog-face", body, [0, 0.64, 0.36]);
-  builder.oval(rig.head, cream, [0, 0, 0], [0.37, 0.31, 0.34], FUR);
-  roundedEars(builder, rig.head, coat, "#d7a17f", 0.28, 0.21, 0.115);
-  builder.oval(rig.head, "#ffe4b6", [0, -0.07, 0.28], [0.21, 0.15, 0.24], FUR);
-  eyes(builder, rig.head, 0.16, 0.065, 0.28, 0.073, "#527c44");
+  // Extra rear clearance also contains the raised face when the body leans
+  // forward at the existing attack peak; rest bounds alone are insufficient.
+  rig.head = builder.part("hedgehog-face", body, [0, faceDetail ? 0.80 : 0.64, faceDetail ? 0.30 : 0.36]);
+  // The static face pitch sits below the animated head joint. No extra mesh,
+  // material or geometry is needed, and idle/attack motion still owns the joint.
+  const face = faceDetail ? builder.part("hedgehog-raised-face", rig.head) : rig.head;
+  if (faceDetail) face.rotation.x = -0.18;
+  builder.oval(face, cream, [0, 0, 0], [0.37, 0.31, 0.34], FUR);
+  roundedEars(builder, face, coat, "#d7a17f", 0.28, 0.21, 0.115);
+  builder.oval(face, "#ffe4b6", [0, -0.07, 0.28], [0.21, 0.15, 0.24], FUR);
+  eyes(builder, face, 0.16, 0.065, faceDetail ? 0.31 : 0.28, 0.073, "#527c44");
   builder.oval(
-    rig.head,
+    face,
     "#4c3327",
     [0, -0.018, 0.488],
     [0.074, 0.052, 0.05],
     EYE,
   );
-  smile(builder, rig.head, -0.135, 0.428, 0.07);
+  smile(builder, face, -0.135, 0.428, 0.07);
   // Broad leaf shoulders and a copper leaf clasp repeat the illustrated cloak.
   for (const side of [-1, 1]) {
     leaf(builder, body, "#426540", [side * .26, .54, .32], .59, .39, [.15, side * .15, -side * 1.0]);
     leaf(builder, body, "#708749", [side * .42, .42, .14], .46, .29, [.5, side * .25, -side * .9]);
   }
-  builder.add(body, leafSolid(.34,.27,.052), "#bd813c", {position:[0,.39,.66],rotation:[0,0,Math.PI],style:"metal"});
+  builder.add(body, leafSolid(.34,.27,.052), "#bd813c", {position:faceDetail?[.32,.56,.43]:[0,.39,.66],rotation:[0,0,faceDetail?-1.0:Math.PI],style:"metal"});
   // A small leaf buckler and three berry jewels identify the guard companion.
   leaf(
     builder,

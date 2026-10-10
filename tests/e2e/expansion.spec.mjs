@@ -1,3 +1,5 @@
+import { verifyCpuHandReachability } from './cpu-hand-reachability.mjs';
+import { getHeroSkin } from '../../src/hero-skins.mjs';
 import {
   test, expect, action, sleep, currentProgress, safeScreenshot,
   fictionalUsername, calmAnimations, studyOne, register,
@@ -72,8 +74,39 @@ async function playExpansionChoice(actor, other, testInfo) {
   const advertised = chosen.targets.filter(item => item.target !== 'hero').map(item => `${item.seat}:${item.target}`).sort();
   await expect.poll(() => page.locator('.unit-label.targetable').evaluateAll(elements =>
     elements.map(element => `${element.dataset.seat}:${element.dataset.uid}`).sort())).toEqual(advertised);
-  await safeScreenshot(page, testInfo, `${capture}-legal-targets`);
+  const expectedCopy = {
+    reed_frog:'点敌方伙伴削弱', ember_salamander:'点敌方伙伴造成伤害',
+    sunseed_blessing:'点友方伙伴施祝福', tidal_recall:'点友方伙伴收回手牌',
+  }[chosen.card];
+  const commandCount=actor.observed.commands.length, revision=room.revision;
+  for(const viewport of [{width:320,height:568},{width:390,height:844},{width:844,height:390}]) {
+    await page.setViewportSize(viewport); await waitForBoard(actor);
+    await expect(page.locator('.card-reason')).toHaveText(expectedCopy);
+    const layout=await page.locator('.card-command').evaluate(bar=>{
+      const reason=bar.querySelector('.card-reason'),box=reason.getBoundingClientRect(),outer=reason.parentElement.getBoundingClientRect();
+      const buttons=[...bar.querySelectorAll('button')].map(button=>{const r=button.getBoundingClientRect();return {left:r.left,top:r.top,right:r.right,bottom:r.bottom};});
+      return {complete:reason.scrollHeight<=reason.clientHeight+1&&reason.scrollWidth<=reason.clientWidth+1,
+        inside:box.left>=outer.left&&box.right<=outer.right&&box.top>=outer.top&&box.bottom<=outer.bottom,
+        overlaps:buttons.some(r=>box.left<r.right&&box.right>r.left&&box.top<r.bottom&&box.bottom>r.top)};
+    });
+    expect(layout).toEqual({complete:true,inside:true,overlaps:false});
+    await expect.poll(()=>page.locator('.unit-label.targetable').evaluateAll(elements=>elements.map(el=>`${el.dataset.seat}:${el.dataset.uid}`).sort())).toEqual(advertised);
+    await safeScreenshot(page,testInfo,`${capture}-${viewport.width}x${viewport.height}-legal-target-copy`);
+  }
+  await page.locator(`#hand-semantics [data-hand-index="${chosen.index}"]`).focus();await page.keyboard.press('i');
+  await expect(page.locator('.card-info-dialog')).toBeVisible();
+  await page.keyboard.press('Escape');await expect(page.locator('.card-info-dialog')).toBeHidden();
+  await action(page,'clear').click();await expect(page.locator('.card-command')).toBeHidden();
+  expect(actor.observed.commands.length).toBe(commandCount);expect(actor.observed.room.revision).toBe(revision);
+  await page.locator(`#hand-semantics [data-hand-index="${chosen.index}"]`).focus();await page.keyboard.press('Enter');
+  await expect(page.locator('.card-reason')).toHaveText(expectedCopy);
+  const illegal=page.locator(`.unit-label:not(.targetable)[data-seat="${1-target.seat}"]`).first();
+  if(await illegal.count()) {
+    await illegal.click();await expect(page.locator('.card-reason')).toHaveText(expectedCopy);
+    expect(actor.observed.commands.length).toBe(commandCount);expect(actor.observed.room.revision).toBe(revision);
+  }
   await uiCommand(actor, () => page.locator(`.unit-label.targetable[data-seat="${target.seat}"][data-uid="${target.target}"]`).click());
+  expect(actor.observed.commands.length).toBe(commandCount+1);
   await sync(actor, other);
   expect(actor.observed.room.selfHandIds.includes(chosen.handId), 'the accepted targeted play consumed its own hand instance').toBe(false);
   const after = actor.observed.room.players[target.seat].board.find(unit => unit.uid === target.target);
@@ -163,6 +196,7 @@ test('simulated unavailable WebGL uses the real CPU wardrobe and responsive live
   expect(actor.metrics.cpuRafSample.intervalsMs.every(value => value > 0 && Number.isFinite(value))).toBe(true);
   await expect(page.locator('.hero-preview canvas')).toHaveAttribute('data-renderer', /CPU/);
   await expect(page.locator('.hero-preview canvas')).toHaveAttribute('data-model-count', '1');
+  await expect(page.locator('.hero-preview canvas')).toHaveAttribute('data-model-quality', 'low');
   await safeScreenshot(page, testInfo, 'cpu-skin-revealed');
   await skin(page, 'finish').click();
   await skin(page, 'close').click();
@@ -175,12 +209,14 @@ test('simulated unavailable WebGL uses the real CPU wardrobe and responsive live
   }
   await expect(page.locator('#hand-canvas')).toHaveAttribute('data-renderer', /CPU/);
   await expect(page.locator('#arena')).toHaveAttribute('data-renderer', /CPU/);
+  await expect(page.locator('#arena')).toHaveAttribute('data-arena-surface', 'plain');
   const selectedAt = Date.now();
   await canvasAndKeyboard(actor, testInfo);
   actor.metrics.cpuInteractionSample.pointerAndKeyboardMs = Date.now() - selectedAt;
   expect(actor.metrics.canvasPointerSelection).toBe(true);
   expect(actor.metrics.keyboardDescriptionAndSelection).toBe(true);
   await safeScreenshot(page, testInfo, 'cpu-live-match-hand');
+  await verifyCpuHandReachability(actor,other,testInfo);
   expect(actor.observed.room.assisted).toBe(false);
 });
 const viewports = [{ width: 320, height: 740 }, { width: 390, height: 844 }, { width: 844, height: 390 }];
@@ -319,8 +355,15 @@ test('twenty sequential wardrobe previews and a resumable test ten-pull fit comp
     await expect(canvas).toHaveAttribute('data-skin-id', item.id);
     await expect(canvas).toHaveAttribute('data-model-count', '1');
     await expect(canvas).not.toHaveAttribute('data-renderer', 'unavailable');
-    expect(Number(await canvas.getAttribute('data-triangles'))).toBeGreaterThan(0);
-    await expect(page.locator('.hero-preview-fallback')).toHaveAttribute('src', `/assets/heroes/${item.id}/portrait.webp`);
+    const renderer=await canvas.getAttribute('data-renderer');
+    const quality=await canvas.getAttribute('data-model-quality');
+    const triangles=Number(await canvas.getAttribute('data-triangles'));
+    expect(quality).toBe(renderer.startsWith('CPU') ? 'low' : 'medium');
+    expect(triangles).toBeGreaterThan(0);
+    expect(triangles).toBeLessThanOrEqual(quality === 'low' ? 2100 : 5200);
+    (actor.metrics.heroPreviewModels ||= []).push({id:item.id,renderer,quality,triangles,modelCount:Number(await canvas.getAttribute('data-model-count'))});
+    expect(await page.locator('.hero-preview').evaluate(element=>Number(getComputedStyle(element,'::after').opacity))).toBe(0);
+    await expect(page.locator('.hero-preview-fallback')).toHaveAttribute('src', getHeroSkin(item.id).portrait);
     await page.locator('.hero-preview').scrollIntoViewIfNeeded();
     await safeScreenshot(page, testInfo, `catalogue-${String(index + 1).padStart(2, '0')}-${item.id}`);
   }
@@ -344,6 +387,9 @@ test('twenty sequential wardrobe previews and a resumable test ten-pull fit comp
   await skin(page, 'mode', 'test').click();
   await skin(page, 'open', 10).click();
   await expect(page.locator('.skin-source')).toContainText('已揭开 0/10');
+  // The local opening renders before its asynchronous persisted-progress
+  // response reaches the independent observer. Require that real save first.
+  await expect.poll(() => journey(actor).openings.test?.count, { timeout: 12_000 }).toBe(10);
   const batch = structuredClone(journey(actor).openings.test);
   expect(batch.count).toBe(10);
   await skin(page, 'reveal').click();
@@ -372,6 +418,36 @@ test('twenty sequential wardrobe previews and a resumable test ten-pull fit comp
   expect(journey(actor).recent.find(item => item.id === batch.id)).toEqual({ ...batch, revealed: 1023 });
   expect(officialWallet(actor)).toEqual(official);
   expect(actor.observed.skinWrites.filter(write => write.kind === 'open')).toEqual([{ kind: 'open', mode: 'test', count: 10 }]);
+  // Use the existing free test redemption UI, never inject ownership or room state.
+  await skin(page, 'select', 'leaf_ranger').click();
+  if (!journey(actor).test.owned.includes('leaf_ranger')) await skin(page, 'redeem').click();
+  await expect.poll(() => journey(actor).test.owned.includes('leaf_ranger')).toBe(true);
+  await skin(page, 'equip').click();
+  await expect.poll(() => journey(actor).equipped).toEqual({mode:'test',skinId:'leaf_ranger'});
+  await skin(page, 'close').click();
+  const peer=await actors('ranger-wardrobe-peer');await calmAnimations(peer);
+  await matchPair(actor,peer);await confirmOpening(actor,peer);await sync(actor,peer);
+  expect(actor.observed.room.selfSkinId).toBe('leaf_ranger');
+  expect(peer.observed.room.opponentSkinId).toBe('leaf_ranger');
+  actor.metrics.equippedRanger = {selfSkinId:actor.observed.room.selfSkinId,peerOpponentSkinId:peer.observed.room.opponentSkinId,revision:actor.observed.room.revision,initialActiveSeat:actor.observed.room.activeSeat,youSeat:actor.observed.room.youSeat};
+  // Matchmaking may seat the equipped player second. Settle through a real
+  // opponent turn instead of waiting for a deliberately disabled own-turn button.
+  if (actor.observed.room.activeSeat !== actor.observed.room.youSeat) {
+    await peer.page.bringToFront(); await waitForBoard(peer);
+    await uiCommand(peer,()=>action(peer.page,'end').click());
+    await sync(actor,peer);
+  }
+  expect(actor.observed.room.activeSeat).toBe(actor.observed.room.youSeat);
+  actor.metrics.equippedRanger.settledRevision=actor.observed.room.revision;
+  for(const viewport of [{width:1280,height:800},{width:844,height:390},{width:320,height:568}]){
+    await page.setViewportSize(viewport);await page.bringToFront();await waitForBoard(actor);
+    await expect(page.locator('#arena')).toBeVisible();
+    await expect(page.locator('#arena')).toHaveAttribute('data-renderer','WebGL2');
+    expect(actor.observed.room.selfSkinId).toBe('leaf_ranger');
+    expect(peer.observed.room.opponentSkinId).toBe('leaf_ranger');
+    await safeScreenshot(page,testInfo,`${viewport.width}x${viewport.height}-redeemed-ranger-real-match`);
+  }
+  expect(officialWallet(actor)).toEqual(official);
 });
 
 test('three one-click presets and a two-click custom swap retain all thirty-six free card details', async ({ actors }, testInfo) => {
@@ -397,17 +473,53 @@ test('three one-click presets and a two-click custom swap retain all thirty-six 
   }
   expect(new Set(savedPresets.map(deck => JSON.stringify(deck))).size).toBe(3);
   const before = [...currentProgress(actor).customDeck];
-  await page.locator('[data-action="library-slot"][data-value="0"]').click();
+  // The initial desktop footer covers much of the second row. Diagnose actual
+  // reachability using ordinary wheel input, without scrollIntoView or forced
+  // clicks that could silently hide an inaccessible last deck slot.
+  const readLastSlot = () => page.locator('.card-library').evaluate(dialog => {
+    const slot=dialog.querySelector('[data-action="library-slot"][data-value="19"]');
+    const footer=dialog.querySelector('.deck-footer');
+    const box=element=>{const r=element.getBoundingClientRect();return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};};
+    const s=box(slot),f=box(footer),d=box(dialog),x=(s.left+s.right)/2,y=(s.top+s.bottom)/2;
+    const hit=document.elementFromPoint(x,y);
+    return {slot:s,footer:f,dialog:d,scrollTop:dialog.scrollTop,scrollHeight:dialog.scrollHeight,clientHeight:dialog.clientHeight,x,y,
+      centerHitsSlot:!!hit&&(hit===slot||slot.contains(hit)),
+      fullyAboveFooter:s.top>=d.top+dialog.clientTop&&s.bottom<=Math.min(f.top,d.bottom-dialog.clientTop),
+      insideWidth:s.left>=d.left&&s.right<=d.right};
+  });
+  const initialLast=await readLastSlot();
+  actor.metrics.lastDeckSlotReachability={initial:initialLast,wheelAttempts:[]};
+  const previousRevision=actor.observed.progress.get(actor.observed.player.playerId).revision;
+  for(let scroll=0;scroll<6;scroll++) {
+    const state=await readLastSlot();
+    if(state.fullyAboveFooter&&state.insideWidth&&state.centerHitsSlot) break;
+    const attempt={attempt:scroll+1,before:state,deltaY:state.slot.top<state.dialog.top?-180:180};
+    actor.metrics.lastDeckSlotReachability.wheelAttempts.push(attempt);
+    try {
+      await page.mouse.move((state.dialog.left+state.dialog.right)/2,state.dialog.top+Math.min(240,state.dialog.height/3));
+      await page.mouse.wheel(0,attempt.deltaY);
+      await expect.poll(async()=>Math.abs((await readLastSlot()).scrollTop-state.scrollTop)).toBeGreaterThan(0);
+      await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    } finally { attempt.after=await readLastSlot().catch(()=>null); }
+  }
+  const reachableLast=await readLastSlot();
+  actor.metrics.lastDeckSlotReachability.final=reachableLast;
+  await safeScreenshot(page,testInfo,'last-deck-slot-after-real-wheel');
+  expect(reachableLast.fullyAboveFooter,'the complete last slot must fit above the footer after bounded ordinary scrolling').toBe(true);
+  expect(reachableLast.insideWidth).toBe(true);expect(reachableLast.centerHitsSlot).toBe(true);
+  expect(actor.observed.progress.get(actor.observed.player.playerId).revision).toBe(previousRevision);
+  await page.mouse.click(reachableLast.x,reachableLast.y);
+  await expect(page.locator('[data-action="library-slot"][data-value="19"]')).toHaveAttribute('aria-pressed','true');
   await page.locator('[data-action="library-card"][data-value="glass_snail"]').click();
   await expect(page.locator('.deck-swap-hint')).toContainText('先点下方一张旧卡');
   await expect(action(page, 'library-slot')).toHaveCount(20);
-  await expect(page.locator('[data-action="library-slot"][data-value="0"]')).toContainText('琉璃蜗牛');
+  await expect(page.locator('[data-action="library-slot"][data-value="19"]')).toContainText('琉璃蜗牛');
   await action(page, 'library-save').click();
   await expect(page.locator('.card-library')).toBeHidden();
-  await expect.poll(() => currentProgress(actor).customDeck).toEqual(['glass_snail', ...before.slice(1)]);
+  await expect.poll(() => currentProgress(actor).customDeck).toEqual([...before.slice(0,19),'glass_snail']);
   await reloadSaved(actor);
   expect(currentProgress(actor).chosenDeckId).toBe('custom');
-  expect(currentProgress(actor).customDeck).toEqual(['glass_snail', ...before.slice(1)]);
+  expect(currentProgress(actor).customDeck).toEqual([...before.slice(0,19),'glass_snail']);
   await action(page, 'library').click();
   await page.locator('[data-action="library-tab"][data-value="cards"]').click();
   const cards = await action(page, 'library-card').evaluateAll(elements => elements.map(element => ({
