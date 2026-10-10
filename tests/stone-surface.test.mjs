@@ -4,18 +4,29 @@ import { Raycaster, Vector3 } from 'three';
 import { createStoneSurfaceTexture } from '../src/arena3d/stone-surface.mjs';
 import { createModelLibrary } from '../src/arena3d/models.mjs';
 
-test('quiet stone texture is deterministic, bounded and low frequency', () => {
+test('engraved stone is deterministic and opaque with a quiet low-frequency centre', () => {
   const a = createStoneSurfaceTexture(), b = createStoneSurfaceTexture();
   assert.deepEqual(a.image.data, b.image.data);
-  assert.equal(a.image.width, 256); assert.equal(a.image.data.byteLength, 256 * 256 * 4);
+  assert.notEqual(a.image.data, b.image.data);
+  assert.equal(a.image.width, 512); assert.equal(a.image.data.byteLength, 512 * 512 * 4);
   const bases = [53, 91, 85], data = a.image.data;
   let changes = 0;
-  for (let i = 0; i < data.length; i += 4) for (let c = 0; c < 3; c++) {
-    assert.ok(Math.abs(data[i+c] / bases[c] - 1) < .1);
-    if (i % 1024 < 1020) assert.ok(Math.abs(data[i+c] - data[i+4+c]) <= 1);
-    if (data[i+c] !== bases[c]) changes++;
+  for (let y = 0; y < 512; y++) for (let x = 0; x < 512; x++) {
+    const i = (y * 512 + x) * 4, centre = x > 102 && x < 409 && y > 102 && y < 409;
+    assert.equal(data[i+3], 255);
+    for (let c = 0; c < 3; c++) {
+      // Decorative grooves stay outside the unit lanes. The old centre colour
+      // and neighbour limits still apply; only the perimeter has carved detail.
+      assert.ok(Math.abs(data[i+c] / bases[c] - 1) < (centre ? .1 : .3));
+      if (centre) assert.ok(Math.abs(data[i+c] - data[i+4+c]) <= 1);
+      if (data[i+c] !== bases[c]) changes++;
+    }
   }
   assert.ok(changes > 1000);
+  a.image.data.fill(0);
+  const c = createStoneSurfaceTexture();
+  assert.deepEqual(c.image.data, b.image.data, 'responsive textures cannot mutate the cached artwork or each other');
+  c.dispose();
   a.dispose(); b.dispose();
 });
 

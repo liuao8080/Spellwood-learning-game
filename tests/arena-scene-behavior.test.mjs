@@ -28,6 +28,17 @@ function state() { return { active: 0, phase: "playing", players: [
 ] }; }
 const tick = () => new Promise((r) => setImmediate(r));
 
+test('simultaneous growth and healing feedback start in separate lanes before the first frame', async t => {
+  const {scene} = harness(t); scene.setBattle(state(),0);
+  const growth = scene.floatText('attacker','+2生命上限');
+  const healing = scene.floatText('attacker','+2');
+  const labels = scene.temporary.children.filter(object=>object.isSprite);
+  assert.equal(labels.length,2);
+  assert.ok(labels[1].position.y-labels[0].position.y>.5,'the initial visible pose must already separate simultaneous feedback');
+  scene.cancel(); await Promise.all([growth,healing]);
+  assert.equal(scene.temporary.children.length,0);
+});
+
 test('bound arena handlers inspect on right click and discard a press across an authoritative revision', t => {
  const picked=[],inspected=[];let revision=7;
  const {scene,handlers}=harness(t,{onPick:value=>picked.push(value),onInspect:value=>inspected.push(value),getInputRevision:()=>revision});
@@ -163,8 +174,11 @@ test("canceling a lethal hit restores opacity and scale before a fresh snapshot"
   const { scene, frame } = harness(t); const initial = state(); scene.setBattle(initial, 0);
   const next = structuredClone(initial); next.players[1].board.shift();
   const motion = scene.present(next, { kind: "attack", sourceUid: "attacker", targetUid: "defender", changes: [{ seat: 1, uid: "defender", hpDelta: -2, removed: true }] });
-  const start = [...scene.jobs][0].start; frame(start + 118); await tick();
-  const travel = [...scene.jobs][0]; frame(travel.start + 230); await tick();
+  // Step just beyond each deadline: fractional performance.now() values can
+  // subtract to 229.999999999ms at an exact floating-point boundary.
+  const start = [...scene.jobs][0].start; frame(start + 119); await tick();
+  const travel = [...scene.jobs][0]; assert.equal(travel.duration, 230);
+  frame(travel.start + 231); await tick();
   const fadeStart = [...scene.jobs].find((j) => j.duration === 320).start;
   frame(fadeStart + 170);
   const item = scene.units.get("defender"); assert(item.fadeMaterials.some((x) => x.material.opacity < x.opacity));

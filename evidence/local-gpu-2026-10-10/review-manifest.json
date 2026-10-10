@@ -1,0 +1,158 @@
+{
+  "schema": 1,
+  "baselineRun": "2026-10-10T04-07-46-479Z-1402ac6b",
+  "finalRun": "2026-10-10T06-00-44-822Z-b7d72d4e",
+  "files": [
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T04-07-46-479Z-1402ac6b/-layout-desktop-label-component-keeps-long-names-shields-and-three-digit-stats-inside-narrow-slots-desktop-label-component-widths-44-to-128.png",
+      "file": "review/labels-before.png",
+      "bytes": 34781,
+      "sha256": "36d74799a1ce2936cb08e7bf30c4c375ff984e180ffebcd7e0b92e610ed0412d"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T06-00-44-822Z-b7d72d4e/-layout-desktop-label-component-keeps-long-names-shields-and-three-digit-stats-inside-narrow-slots-desktop-label-component-widths-44-to-128.png",
+      "file": "review/labels-after.png",
+      "bytes": 34783,
+      "sha256": "02715ce9a9465d97bbad88c90de9d26a7f5e39a957945a7b007af400263408f5"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T04-07-46-479Z-1402ac6b/low-geometry-stone-material-A-B-fixture-preserves-geometry-and-bounded-render-submissions-low-geometry-stone-after.png",
+      "file": "review/stone-before.png",
+      "bytes": 69420,
+      "sha256": "b419471b6ebffc2648463463f899d5b94b9e11ca0f6297a9608ac23376e51ea7"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T06-00-44-822Z-b7d72d4e/low-geometry-stone-material-A-B-fixture-preserves-geometry-and-bounded-render-submissions-low-geometry-stone-after.png",
+      "file": "review/stone-after.png",
+      "bytes": 73831,
+      "sha256": "8251bf25b3217f5cd5f1af7cc4ca4bf8402f4b9675623f41ce88bf746c43fc40"
+    },
+    {
+      "source": "docs/local-evidence/2026-10-10-motion/pre-lane-first-float.png",
+      "file": "review/float-before.png",
+      "bytes": 135040,
+      "sha256": "17d82d55c7acd26da1bbdc6dfc87660d43c578c4c1894f4272c16f8db3c3ff3c"
+    },
+    {
+      "source": "docs/local-evidence/2026-10-10-motion/final-first-float.png",
+      "file": "review/float-after.png",
+      "bytes": 143541,
+      "sha256": "9026ebb0a8c323c943284d3fb211a0ed12c538ff5cd41ca45c72cb8f523aa8be"
+    },
+    {
+      "source": "docs/local-evidence/2026-10-10-motion/pack-reveal-side.png",
+      "file": "review/pack-side.png",
+      "bytes": 267654,
+      "sha256": "575578a6eb050bef4ef801828618fe6d70a4cd2823d6d89de7806333acd07346"
+    },
+    {
+      "source": "docs/local-evidence/2026-10-10-motion/pack-reveal-front.png",
+      "file": "review/pack-front.png",
+      "bytes": 341543,
+      "sha256": "5cf633b00ab7abffe25c5a5204820589bed1da55eb6d93113513a926dac14758"
+    },
+    {
+      "source": "docs/local-evidence/2026-10-10-motion/pack-opening.webm",
+      "file": "review/pack-opening.webm",
+      "bytes": 456403,
+      "sha256": "cd10e303f33398bbb04fd9534ad4b3285a46966efc256dcc49c339044bb2ae58"
+    },
+    {
+      "source": "docs/local-evidence/2026-10-10-motion/pack-reveal.webm",
+      "file": "review/pack-reveal.webm",
+      "bytes": 127092,
+      "sha256": "f3131c24980e762a22f847bd7b4bba3c4e36424a1f4b56e7e05cf1ef8b044bd2"
+    },
+    {
+      "source": "docs/local-evidence/2026-10-10-motion/final-ritual-spark.webm",
+      "file": "review/final-ritual-spark.webm",
+      "bytes": 155451,
+      "sha256": "6df20ef2687f0cfdee65e3e45bb1267d9de51be5118091521f7d35c8fc0dacb6"
+    },
+    {
+      "source": "docs/local-evidence/2026-10-10-motion/final-heal.webm",
+      "file": "review/final-heal.webm",
+      "bytes": 186401,
+      "sha256": "07ae6405672030243b5776262c7963ae9ebcacbc1d5f8b2c6d1c2ba8a491300b"
+    },
+    {
+      "source": "docs/local-evidence/2026-10-10-motion/final-shield.webm",
+      "file": "review/final-shield.webm",
+      "bytes": 184808,
+      "sha256": "962947528a414ce2d7a2d0d0e3fde44dc4d46f1eda5f0342b1269eb03ccc5f32"
+    },
+    {
+      "source": "docs/local-evidence/2026-10-10-motion/final-maximum-health.webm",
+      "file": "review/final-maximum-health.webm",
+      "bytes": 189041,
+      "sha256": "52c3e834afd9f3adfe84b23551520bb602f3b776b1b3d05cab321cb5967b58d3"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T04-07-46-479Z-1402ac6b/-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-1280x800-eight-units-seven-card-hand.png",
+      "file": "review/1280x800-before.png",
+      "bytes": 598989,
+      "sha256": "94a1a9561e57b7ca8863f9738edb52dc89df0035c24048d0365cb67a2c3e4e30"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T06-00-44-822Z-b7d72d4e/-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-1280x800-eight-units-seven-card-hand.png",
+      "file": "review/1280x800-after.png",
+      "bytes": 609498,
+      "sha256": "68eb608efc66679a97a6153eceffd9285a5da5a0f1e3443383e33823499d17b8"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T04-07-46-479Z-1402ac6b/-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-844x390-eight-units-seven-card-hand.png",
+      "file": "review/844x390-before.png",
+      "bytes": 204123,
+      "sha256": "525c7cfd777e7c15078f511119b0af81705d17de20d1432bce6f7a8cff228020"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T06-00-44-822Z-b7d72d4e/-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-844x390-eight-units-seven-card-hand.png",
+      "file": "review/844x390-after.png",
+      "bytes": 255574,
+      "sha256": "523ebca846d21f529cab5f74c3a5339cf689a28bf0927f4148d363506bddd63a"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T04-07-46-479Z-1402ac6b/-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-740x360-eight-units-seven-card-hand.png",
+      "file": "review/740x360-before.png",
+      "bytes": 182482,
+      "sha256": "7641e80df28fd9bbb46b05edd1db3c2729020b922ba79f6bcd9bc8e277a57fc9"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T06-00-44-822Z-b7d72d4e/-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-740x360-eight-units-seven-card-hand.png",
+      "file": "review/740x360-after.png",
+      "bytes": 216196,
+      "sha256": "8c0646c63d69d1f8ea72638706eabf775f92ce3555ffcb71ad6e13823aec9dc2"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T04-07-46-479Z-1402ac6b/-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-390x844-eight-units-seven-card-hand.png",
+      "file": "review/390x844-before.png",
+      "bytes": 228294,
+      "sha256": "b0986ea122138831eeffb68a37fb1cdcfedd1761d3081937086351783a332dc3"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T06-00-44-822Z-b7d72d4e/-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-390x844-eight-units-seven-card-hand.png",
+      "file": "review/390x844-after.png",
+      "bytes": 226976,
+      "sha256": "34ae98b4f1b0440c84977441a99647934219ba26e15ad1a089faca2c13ef4289"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T04-07-46-479Z-1402ac6b/-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-320x568-eight-units-seven-card-hand.png",
+      "file": "review/320x568-before.png",
+      "bytes": 148964,
+      "sha256": "e08df6e9380a68bc1d896c73059379f45f6975f71ec38458ac58125f85528fef"
+    },
+    {
+      "source": "test-results/local-browser-evidence/2026-10-10T06-00-44-822Z-b7d72d4e/-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-320x568-eight-units-seven-card-hand.png",
+      "file": "review/320x568-after.png",
+      "bytes": 149197,
+      "sha256": "fb0dbf2e515efa7999c1dda68e361aa62bbfed7b3572add2020101f9ef7315ad"
+    },
+    {
+      "file": "review/manual-final-pack.jpg",
+      "bytes": 51532,
+      "sha256": "873e441d6d64aa2f5a059b01bf6ab5c5b493d81f726641fa75eba2e182cdd83a",
+      "scope": "Direct Codex in-app-browser screenshot of final b059 at 127.0.0.1:4173 after physical second-card click, 2/10; manual appearance evidence, not a performance measurement"
+    }
+  ],
+  "scope": "Unaltered selected PNG/native VP8 copies; CSS presentation size does not alter source files"
+}

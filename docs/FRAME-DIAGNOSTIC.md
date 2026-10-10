@@ -96,3 +96,17 @@ GPU root cause, or acceptable production animation. No production canvas is omit
 Further visual deletion experiments stop here. The original full-scene 250 ms gate
 stays unchanged. A separately reproduced redundant hand-layout issue is corrected
 as a product change, with independent normal-motion input regression.
+
+## Local hardware follow-up, 10 October 2026
+
+An independent installed Chrome/Apple M4 Metal check ran the actual fd82c1a
+production network build with ordinary matching and input. The complete local
+baseline recorded47ms maximum native frame gap; the final refined33/33 run
+recorded36ms, and a separate OS-native DPR2 window recorded52ms. An earlier
+candidate48ms sample remains historical. These pass the unchanged250ms gate
+at level0/pixelScale1/1024-shadow settings.
+No effect, shadow, quality default or threshold was reduced. This establishes
+those bounded desktop windows; it does not explain every cloud stall or establish
+physical-phone/public-network/whole-session performance. Local input and actual
+pack-reveal continuity defects were fixed separately. See [the local playtest
+report](LOCAL-PLAYTEST-2026-10-10.md) for source attribution, videos, failures and limits.

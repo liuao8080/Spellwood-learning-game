@@ -1,6 +1,6 @@
 {
   "name": "spellwood",
-  "version": "4.1.0-alpha.2",
+  "version": "4.1.0-alpha.3",
   "type": "module",
   "private": true,
   "scripts": {
@@ -12,7 +12,9 @@
     "test:network": "node --test tests/network-*.test.mjs",
     "build:network": "node scripts/build-network.mjs",
     "test:scene": "node --test --test-timeout=30000 tests/model-library.test.mjs tests/arena-scene-behavior.test.mjs",
-    "build:practice": "node scripts/build-practice.mjs"
+    "build:practice": "node scripts/build-practice.mjs",
+    "test:browser:local": "playwright test --config=playwright.local.config.mjs",
+    "test:motion:local": "playwright test --config=playwright.motion.config.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.64.0",

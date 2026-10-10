@@ -8,6 +8,7 @@ import { ArenaScene } from "../src/arena3d/scene.mjs";
 function canvasFactory() {
   const calls = [];
   const context = {
+    measureText: text => ({ width: String(text).length * 26 }),
     strokeText: (...args) => calls.push(["strokeText", ...args]),
     fillText: (...args) => calls.push(["fillText", ...args]),
   };

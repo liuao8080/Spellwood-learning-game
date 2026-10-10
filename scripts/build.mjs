@@ -1,9 +1,10 @@
 import fs from "node:fs";
 import { build } from "esbuild";
+import { fileURLToPath } from "node:url";
 const root = new URL("../", import.meta.url),
   read = (p) => fs.readFileSync(new URL(p, root), "utf8");
 const bundle = await build({
-  entryPoints: [new URL("../src/app.mjs", import.meta.url).pathname],
+  entryPoints: [fileURLToPath(new URL("../src/app.mjs", import.meta.url))],
   bundle: true,
   write: false,
   format: "iife",

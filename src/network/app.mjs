@@ -81,6 +81,11 @@ function clearTargetNotice() {
   clearTimeout(timer); timer = null; targetNoticeKey = null;
   $("#notice").textContent = ""; $("#notice").dataset.kind = "general";
 }
+function clearHandIntroduction() {
+  if ($("#notice").dataset.kind !== "hand-tip") return;
+  clearTimeout(timer); timer = null;
+  $("#notice").textContent = ""; $("#notice").dataset.kind = "general";
+}
 function notice(text, kind = "general") {
   targetNoticeKey = kind === "target" ? targetNoticeIdentity(room, selected) : null;
   $("#notice").dataset.kind = kind;
@@ -222,6 +227,7 @@ function acceptSnapshot(next) {
 
 async function send(type, payload = {}, roomCommand = true) {
   if (commandBusy) return;
+  clearHandIntroduction();
   clearTargetNotice();
   commandBusy = true; render();
   try {
@@ -235,6 +241,7 @@ async function send(type, payload = {}, roomCommand = true) {
 
 function pick(item) {
   if (!room || room.phase !== "playing" || challenge || panel || commandBusy || visualBusy) return;
+  clearHandIntroduction();
   if (item.kind === "card") {
     selected = selected?.kind === "card" && selected.index === item.index ? null : item;
   } else if (item.kind === "unit") {
@@ -247,11 +254,13 @@ function pick(item) {
 function inspectUnit(item) {
   if (!room || room.phase !== "playing" || challenge || panel || commandBusy || visualBusy ||
       item.revision != null && item.revision !== room.revision || !boardCardInspection(room, item)) return;
+  clearHandIntroduction();
   inspectUnitRef = {kind:"unit",uid:item.uid,seat:item.seat};
   inspectCardId = null; inspectHandId = null; panel = "card-info"; cancelVoice(); render();
 }
 function inspectHand(index) {
   if (!room || room.phase !== "playing" || challenge || panel || commandBusy || visualBusy || !CARD[room.self.hand[index]]) return;
+  clearHandIntroduction();
   inspectUnitRef = null; inspectCardId = room.self.hand[index]; inspectHandId = room.self.handIds?.[index];
   panel = "card-info"; cancelVoice(); render();
 }
@@ -297,7 +306,7 @@ function matchSetup() {
 }
 function hero(player, mine) {
   const shown = displayRoom?.roomId === room?.roomId ? (mine ? displayRoom.self : displayRoom.opponent) : player;
-  return `<button class="hero-panel ${mine ? "mine" : "theirs"}" data-action="${mine ? "my-info" : "enemy-hero"}" aria-label="${esc(player.name)}，生命${Math.max(0, shown.hp)}，护甲${shown.armor}"><span class="hero-gem">${Math.max(0, shown.hp)}</span><div><strong>${esc(player.name)}</strong><small>${player.controller === "proxy" ? player.controlRequestPending ? "下个自己的回合接回" : "伙伴正在托管" : mine ? "你的伙伴" : player.connected || player.controller === "bot" ? "正在对战" : "连接暂时中断"}</small><span class="mana">${"◆".repeat(player.mana)}${"◇".repeat(Math.max(0, player.maxMana - player.mana))} <b>${player.mana}/${player.maxMana}</b></span><small>手牌 ${player.hand?.length ?? player.handCount ?? 0} · 牌库 ${player.deckCount ?? 0}</small></div>${shown.armor ? `<i class="armor">⬡ ${shown.armor}</i>` : ""}</button>`;
+  return `<button class="hero-panel ${mine ? "mine" : "theirs"}" data-action="${mine ? "my-info" : "enemy-hero"}" aria-label="${esc(player.name)}，生命${Math.max(0, shown.hp)}，护甲${shown.armor}"><span class="hero-gem">${Math.max(0, shown.hp)}</span><div><strong title="${esc(player.name)}">${esc(player.name)}</strong><small>${player.controller === "proxy" ? player.controlRequestPending ? "下个自己的回合接回" : "伙伴正在托管" : mine ? "你的伙伴" : player.connected || player.controller === "bot" ? "正在对战" : "连接暂时中断"}</small><span class="mana">${"◆".repeat(player.mana)}${"◇".repeat(Math.max(0, player.maxMana - player.mana))} <b>${player.mana}/${player.maxMana}</b></span><small>手牌 ${player.hand?.length ?? player.handCount ?? 0} · 牌库 ${player.deckCount ?? 0}</small></div>${shown.armor ? `<i class="armor">⬡ ${shown.armor}</i>` : ""}</button>`;
 }
 function fallbackBoard() {
   if (rendererStatus.available !== false && !sceneFault) return "";

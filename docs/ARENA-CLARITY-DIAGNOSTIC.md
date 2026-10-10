@@ -38,4 +38,8 @@ These guards do not prove the remaining rendering cost is cheap. No shadow, anim
 
 The next performance conclusion requires an independently verified hardware-accelerated GPU browser or physical mobile device running the same production build and real input/authority flow. It must record the actual renderer/device conditions, CSS and drawing-buffer sizes, DPR, applied quality, and normal-speed motion; repeat the 2/5/10-second settled observations and retain original recordings. Both immediate interaction and quality recovery must be observed rather than inferred from short submission times. The existing 250 ms acceptance rule must remain unchanged.
 
-This check has not been performed. No user's computer was accessed, and no physical-device or Hearthstone-level smoothness claim follows from these CI results.
+This check had not been performed in the CI51 handoff. No physical-device or Hearthstone-level smoothness claim follows from those CI results.
+
+## Local hardware follow-up, 10 October 2026
+
+The independent local takeover verified installed headed Chrome154 on an Apple M4/Metal GPU with WebGL hardware acceleration. The unchanged fd82c1a full local baseline passed28/29 (a44px three-digit label failed), with47ms maximum native motion gap. The final refined full local run passed33/33 with36ms under the unchanged250ms gate at adaptive level0, pixelScale1 and1024 shadows; a separate OS-native DPR2 window measured52ms. Earlier candidate48ms and failed local-tool runs remain preserved. These are bounded desktop samples, not whole-session FPS, physical-phone acceptance, or a rewrite of CI51/CI54. The2/5/10-second observations, actual CSS/buffer/DPR, original recordings and source attribution are in [the local playtest report](LOCAL-PLAYTEST-2026-10-10.md).

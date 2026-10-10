@@ -12,7 +12,8 @@ import {
   qualifyDay,
 } from "../src/collection.mjs";
 import { artThumb } from "../src/network/card-library.mjs";
-import { ProgressStore, PROGRESS_KEY } from "../src/network/progress.mjs";
+import { ProgressStore, PROGRESS_KEY, createProgressModel } from "../src/network/progress.mjs";
+import { RemoteProgressStore } from "../src/network/remote-progress.mjs";
 import { LearningAttention } from "../src/network/learning-attention.mjs";
 import { StudyDesk } from "../src/network/study-desk.mjs";
 
@@ -287,7 +288,7 @@ function io() {
   };
 }
 
-async function harness({ env = io(), seed } = {}) {
+async function harness({ env = io(), seed, remote } = {}) {
   if (seed) env.values.set(PROGRESS_KEY, JSON.stringify(seed));
   const { document, Element } = dom(),
     root = document.body.appendChild(
@@ -304,12 +305,13 @@ async function harness({ env = io(), seed } = {}) {
   let view,
     closed = 0,
     studied = 0;
-  const store = new ProgressStore({
+  const storeOptions = {
     storage: env.storage,
     locks: env.locks,
     questions,
     onChange: () => view?.render(),
-  });
+  };
+  const store = remote ? new RemoteProgressStore({ questions, ...remote, onChange: storeOptions.onChange }) : new ProgressStore(storeOptions);
   assert.equal((await store.load()).ok, true);
   const originalOpen = store.openPack.bind(store),
     originalAction = store.collectionAction.bind(store);
@@ -319,7 +321,9 @@ async function harness({ env = io(), seed } = {}) {
   };
   store.collectionAction = (action) => {
     actions.push(copy(action));
-    return originalAction(action);
+    // The view runs in this test's VM realm; real browsers share the store's
+    // realm. Clone only that boundary so the real intent validator still runs.
+    return originalAction(remote ? copy(action) : action);
   };
   class Scene {
     constructor(options) {
@@ -340,7 +344,9 @@ async function harness({ env = io(), seed } = {}) {
       });
     }
     setOpening(opening, { intro = true } = {}) {
-      const saved = JSON.parse(env.values.get(PROGRESS_KEY));
+      assert.equal(store.dirty, false, "scene fronts may only advance after an acknowledged save");
+      assert.equal(store.issue, null);
+      const saved = remote ? store.data : JSON.parse(env.values.get(PROGRESS_KEY));
       assert.deepEqual(
         copy(opening),
         saved.collection.opening,
@@ -448,6 +454,92 @@ async function harness({ env = io(), seed } = {}) {
     },
   };
 }
+
+async function remoteHarness() {
+  const model = createProgressModel({ questions }), when = Date.UTC(2026, 9, 10, 12), owner = "collection-owner-0001";
+  let progress = model.fresh(owner, "Asia/Shanghai"), nextGate = null, failures = 0;
+  progress = model.collection(progress, { kind: "open-pack", id: "collection-opening-0001", mode: "test", createdAt: when,
+    cards: Array.from({ length: 10 }, (_, i) => ({ cardId: CARDS[i % CARDS.length].id, finish: "leaf" })) }).data;
+  const requests = [], changes = [];
+  const response = (payload, status = 200) => ({ ok: status >= 200 && status < 300, status, async json() { return copy(payload); } });
+  const success = () => response({ data: progress, playerId: progress.profileId, revision: progress.revision, serverNow: when });
+  const fetcher = async (path, options) => {
+    if (options.method !== "POST") return success();
+    const body = JSON.parse(options.body), gate = nextGate; nextGate = null;
+    requests.push({ path, body, playerId: options.headers["X-Spellwood-Player"] });
+    if (gate) await gate.promise;
+    if (options.headers["X-Spellwood-Player"] !== progress.profileId) return response({ code: "PROGRESS_IDENTITY_MISMATCH" }, 409);
+    if (failures) { failures--; return response({ code: "WRITE_FAILED" }, 503); }
+    progress = model.collection(progress, body.action).data;
+    return success();
+  };
+  const h = await harness({ remote: { playerId: owner, fetcher } });
+  const onChange = h.store.onChange;
+  h.store.onChange = (data, meta) => { changes.push({ data: copy(data), dirty: meta.dirty, issue: meta.issue }); onChange(data, meta); };
+  return { ...h, requests, changes,
+    get serverData() { return copy(progress); },
+    pause() { const gate = nextGate = defer(); return () => gate.resolve(); },
+    fail() { failures++; },
+    replaceIdentity(playerId) { progress = model.fresh(playerId, "Asia/Shanghai"); h.store.setPlayerId(playerId); },
+  };
+}
+
+test("real remote pending notification keeps the saved canvas and backs until the reveal acknowledgement", async () => {
+  const h = await remoteHarness(); h.view.open();
+  const canvas = h.root.querySelector("#pack-canvas"), scene = h.scene(), before = h.store.data.collection, calls = scene.calls.length;
+  const release = h.pause(), work = h.view.reveal(2); await tick();
+  assert.equal(h.store.dirty, true); assert.equal(h.changes.at(-1).dirty, true, "the actual RemoteProgressStore pending notification ran");
+  assert.equal(h.root.querySelector("#pack-canvas"), canvas); assert.equal(canvas.isConnected, true); assert.equal(scene.disposed, false);
+  assert.equal(scene.calls.length, calls, "no setOpening or reveal was sent before the acknowledgement");
+  assert.equal(scene.opening.revealed, 0); assert.equal(h.store.data.collection.opening.revealed, 0);
+  assert.equal(h.root.querySelector("#pack-count").textContent, "已揭开 0/10"); assert.equal(h.root.querySelector("#pack-results").textContent, "");
+  assert.equal(h.root.querySelector(".pack-stage").inert, true); assert.equal(h.root.querySelector("#pack-controls").inert, true);
+  assert.equal(h.button("collection-reveal", "2").disabled, true); assert.match(h.root.querySelector("#pack-instruction").textContent, /正在保存/);
+  for (let i = 0; i < 3; i++) h.view.render();
+  assert.equal(h.root.querySelector("#pack-canvas"), canvas); assert.equal(scene.calls.length, calls);
+  await h.view.reveal(3); assert.equal(h.requests.length, 1, "pending input cannot queue a second reveal");
+  release(); await work; await h.settle();
+  assert.equal(h.store.dirty, false); assert.equal(h.root.querySelector("#pack-canvas"), canvas); assert.equal(h.scenes.length, 1);
+  assert.equal(scene.opening.revealed, 4); assert.equal(scene.calls.filter(call => call.kind === "setOpening").at(-1).intro, false);
+  assert.equal(h.root.querySelector("#pack-count").textContent, "已揭开 1/10"); assert.equal(h.root.querySelector(".pack-stage").inert, false);
+  assert.deepEqual(h.store.data.collection.opening.cards, before.opening.cards); assert.deepEqual(h.store.data.collection.test, before.test);
+});
+
+test("a failed remote reveal disposes the backs safely and retries the original request without revealing early", async () => {
+  const h = await remoteHarness(); h.view.open();
+  const scene = h.scene(), before = h.store.data.collection, release = h.pause(); h.fail();
+  const work = h.view.reveal(2); await tick(); assert.equal(scene.disposed, false); assert.equal(scene.opening.revealed, 0);
+  release(); await work;
+  assert.equal(h.store.issue.code, "WRITE_FAILED"); assert.equal(h.store.dirty, true); assert.equal(scene.disposed, true);
+  assert.equal(scene.calls.filter(call => call.kind === "setOpening").every(call => call.opening.revealed === 0), true);
+  assert.equal(h.root.querySelector("#pack-canvas"), null); assert.equal(h.root.querySelector("#pack-results"), null); assert.match(h.html(), /先保管好你的记录/);
+  assert.equal(h.serverData.collection.opening.revealed, 0);
+  await h.click("collection-retry");
+  assert.equal(h.requests.length, 2); assert.equal(h.requests[0].body.requestId, h.requests[1].body.requestId);
+  assert.equal(h.scene().opening.revealed, 4); assert.deepEqual(h.store.data.collection.test, before.test);
+  assert.deepEqual(h.store.data.collection.opening.cards, before.opening.cards);
+});
+
+test("identity reset while a remote reveal waits removes old results and ignores the late completion", async () => {
+  const h = await remoteHarness(); h.view.open();
+  const scene = h.scene(), canvas = h.root.querySelector("#pack-canvas"), release = h.pause(), work = h.view.reveal(2);
+  await tick(); h.view.reset(); h.replaceIdentity("collection-owner-0002");
+  assert.equal(scene.disposed, true); assert.equal(canvas.isConnected, false); assert.equal(h.view.pendingReveal, null);
+  assert.equal((await h.store.load()).ok, true); h.view.open();
+  assert.equal(h.root.querySelector("#pack-canvas"), null); assert.equal(h.store.data.collection.opening, null);
+  release(); await work; await h.settle();
+  assert.equal(h.store.playerId, "collection-owner-0002"); assert.equal(h.store.data.collection.opening, null);
+  assert.equal(h.root.querySelector("#pack-canvas"), null); assert.equal(h.view.busy, false); assert.equal(h.notices.length, 0);
+  assert.equal(h.scenes.length, 1, "a stale old-owner acknowledgement cannot construct another scene");
+});
+
+test("an unrelated dirty notification is still hidden rather than retaining an opening", async () => {
+  const h = await remoteHarness(); h.view.open(); const scene = h.scene(), release = h.pause();
+  const work = h.store.collectionAction({ kind: "equip-finish", mode: "test", cardId: CARDS[0].id, finish: "base" }); await tick();
+  assert.equal(h.store.dirty, true);
+  assert.equal(scene.disposed, true); assert.equal(h.root.querySelector("#pack-canvas"), null);
+  assert.match(h.html(), /先保管好你的记录/); release(); await work;
+});
 
 test("UI creates presentation only after the ten-card transaction is durable", async () => {
   const h = await harness();

@@ -701,13 +701,21 @@ export class ArenaScene {
     const lanes = this.floatLanes.get(targetKey) || new Set();
     this.floatLanes.set(targetKey, lanes);
     let lane = 0; while (lanes.has(lane)) lane++; lanes.add(lane);
-    const canvas = document.createElement("canvas"); canvas.width = 384; canvas.height = 160;
-    const ctx = canvas.getContext("2d"); ctx.textAlign = "center"; ctx.font = "bold 78px 'Noto Sans CJK SC',Georgia,serif";
+    const canvas = document.createElement("canvas"); canvas.height = 160;
+    const ctx = canvas.getContext("2d"), font = "bold 78px 'Noto Sans CJK SC',Georgia,serif";
+    ctx.font = font;
+    const metrics = ctx.measureText(String(text));
+    // Keep the established letter size. Long localized feedback gets enough
+    // texture and world-space width for its ink plus the 10px outline.
+    const inkWidth = Math.max(metrics.width, (metrics.actualBoundingBoxLeft || 0) + (metrics.actualBoundingBoxRight || 0));
+    canvas.width = Math.max(384, Math.ceil((inkWidth + 24) / 32) * 32);
+    ctx.textAlign = "center"; ctx.font = font;
     ctx.lineWidth = 10; ctx.strokeStyle = "#142922"; ctx.lineJoin = "round";
-    ctx.strokeText(String(text), 192, 105); ctx.fillStyle = color; ctx.fillText(String(text), 192, 105);
+    ctx.strokeText(String(text), canvas.width / 2, 105); ctx.fillStyle = color; ctx.fillText(String(text), canvas.width / 2, 105);
     const texture = new CanvasTexture(canvas); texture.colorSpace = SRGBColorSpace;
     const sprite = new Sprite(new SpriteMaterial({ map: texture, transparent: true, depthTest: false, depthWrite: false }));
-    sprite.scale.set(2.45, 1.02, 1); sprite.position.copy(at); sprite.renderOrder = 20; this.containSprite(sprite); this.temporary.add(sprite);
+    sprite.scale.set(2.45 * canvas.width / 384, 1.02, 1); sprite.position.copy(at); sprite.position.y += lane * .7;
+    sprite.renderOrder = 20; this.containSprite(sprite); this.temporary.add(sprite);
     return this.addJob(this.reduced ? 500 : duration, (t) => {
       const current = this.anchor(targetKey, 2.35) || at;
       sprite.position.copy(current); sprite.position.y += lane * .7 + (this.reduced ? 0 : t * .8);

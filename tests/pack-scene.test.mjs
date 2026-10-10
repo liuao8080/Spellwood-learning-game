@@ -8,11 +8,13 @@ import { PackScene } from "../src/arena3d/pack-scene.mjs";
 function harness(t, options = {}) {
   const names = ["window", "document", "Image", "requestAnimationFrame", "cancelAnimationFrame", "devicePixelRatio", "ResizeObserver"];
   const originals = Object.fromEntries(names.map(name => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
-  const raf = new Map(), listeners = new Map(); let id = 0, draws = 0, disposed = 0;
+  const raf = new Map(), listeners = new Map(), windowListeners = new Map(), documentListeners = new Map(), captures = new Set(); let id = 0, draws = 0, disposed = 0, releases = 0;
   const context = new Proxy({}, { get(o, key) { if (key === "measureText") return text => ({ width: text.length * 20 }); if (String(key).startsWith("create")) return () => ({ addColorStop() {} }); return o[key] || (() => {}); } });
   const box = { width: options.width || 760, height: options.height || 580, left: 0, top: 0 };
-  const canvas = { dataset: {}, style: {}, getBoundingClientRect: () => box, addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: name => listeners.delete(name) };
-  const values = { window: { addEventListener() {}, removeEventListener() {} }, document: { createElement: () => ({ width: 0, height: 0, getContext: () => context }), addEventListener() {}, removeEventListener() {} }, Image: class {}, devicePixelRatio: 1, ResizeObserver: undefined,
+  const canvas = { dataset: {}, style: {}, getBoundingClientRect: () => box, addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: name => listeners.delete(name),
+    setPointerCapture: pointerId => captures.add(pointerId), hasPointerCapture: pointerId => captures.has(pointerId),
+    releasePointerCapture: pointerId => { captures.delete(pointerId); releases++; if (options.synchronousCaptureLoss) listeners.get("lostpointercapture")?.({ pointerId }); } };
+  const values = { window: { addEventListener: (name, fn) => windowListeners.set(name, fn), removeEventListener: name => windowListeners.delete(name) }, document: { hidden: false, createElement: () => ({ width: 0, height: 0, getContext: () => context }), addEventListener: (name, fn) => documentListeners.set(name, fn), removeEventListener: name => documentListeners.delete(name) }, Image: class {}, devicePixelRatio: 1, ResizeObserver: undefined,
     requestAnimationFrame: fn => { raf.set(++id, fn); return id; }, cancelAnimationFrame: key => raf.delete(key) };
   for (const [name, value] of Object.entries(values)) Object.defineProperty(globalThis, name, { configurable: true, writable: true, value });
   const renderer = { isSoftwareRenderer: !!options.software, setPixelRatio() {}, setSize(w,h) { this.width=w;this.height=h; }, render(scene,camera) { draws++;scene.updateMatrixWorld(true);camera.updateMatrixWorld(true); }, dispose() { disposed++; } };
@@ -22,17 +24,90 @@ function harness(t, options = {}) {
   const scene = new TestScene({ canvas, reduced: !!options.reduced, onReveal: i => intents.push(i), onReady: () => ready++, onOpenRequested: () => opens++, onStatus: s => statuses.push(s), onSound: s => sounds.push(s) });
   t.after(() => { scene.dispose(); for (const [name, descriptor] of Object.entries(originals)) descriptor ? Object.defineProperty(globalThis,name,descriptor) : delete globalThis[name]; });
   const frame = (now = performance.now() + 100) => { const entry=raf.entries().next().value;assert(entry,"a frame is scheduled");raf.delete(entry[0]);entry[1](now); };
+  const fire = (name, values = {}) => {
+    const event = { clientX: 30, clientY: 30, pointerId: 1, pointerType: "mouse", isPrimary: true, button: 0,
+      buttons: name === "pointerup" ? 0 : 1, preventDefault() {}, ...values };
+    listeners.get(name)?.(event); return event;
+  };
   frame();
-  return { scene, renderer, canvas, box, raf, frame, listeners, intents, sounds, statuses, get ready() {return ready;}, get opens() {return opens;}, get draws() {return draws;}, get disposed(){return disposed;} };
+  return { scene, renderer, canvas, box, raf, frame, fire, listeners, windowListeners, documentListeners, captures, intents, sounds, statuses,
+    get ready() {return ready;}, get opens() {return opens;}, get draws() {return draws;}, get disposed(){return disposed;}, get releases(){return releases;} };
 }
 const opening = (id = "saved-opening", revealed = 0) => ({id, revealed,cards:Array.from({length:10},(_,i)=>({cardId:["fox","turtle","owl","spark","bloom"][i%5],finish:["leaf","silver","star","gold"][i%4],duplicate:i%2===0,dust:0}))});
 const allMeshes = scene => { const nodes=[];scene.traverse(n=>{if(n.isMesh)nodes.push(n);});return nodes; };
 
 test("a saved batch is required and open gestures express intent without creating rewards", t=>{
   const h=harness(t);assert.equal(h.scene.launch(),false);assert.equal(h.scene.cards.length,0);
-  h.listeners.get("pointerdown")({clientX:30,clientY:30});h.listeners.get("pointerup")({clientX:30,clientY:30});
+  h.fire("pointerdown");h.fire("pointerup");
   assert.equal(h.opens,1);assert.equal(h.scene.opening,null);assert.equal(h.scene.revealed,0);
   assert.throws(()=>h.scene.setOpening({id:"bad",cards:[]}),/exactly ten/);
+});
+
+for (const pointerType of ["mouse", "touch", "pen"]) test(`${pointerType} primary taps and drags request opening without changing saved rewards`, t => {
+  const h = harness(t), saved = opening(), before = JSON.stringify(saved); h.scene.setOpening(saved);
+  for (const distance of [0, 40, 20]) {
+    h.fire("pointerdown", { pointerType }); h.fire("pointerup", { pointerType, clientX: 30 + distance });
+  }
+  assert.equal(h.opens, 2, "the existing tap and long drag work; the middle drag remains inert");
+  assert.deepEqual(h.intents, []); assert.equal(h.scene.revealed, 0); assert.equal(JSON.stringify(saved), before);
+  assert.equal(h.scene.phase, "sealed"); assert.equal(h.scene.down, null); assert.equal(h.captures.size, 0);
+});
+
+for (const [name, values] of [
+  ["right mouse button", { button: 2, buttons: 2 }], ["middle mouse button", { button: 1, buttons: 4 }],
+  ["secondary pointer", { isPrimary: false }], ["button chord", { buttons: 3 }],
+  ["missing pointer identity", { pointerId: undefined }], ["invalid coordinates", { clientX: NaN }],
+]) test(`opening ignores ${name} and its release`, t => {
+  const h = harness(t); h.scene.setOpening(opening());
+  h.fire("pointerdown", values); h.fire("pointerup", { ...values, buttons: 0 });
+  assert.equal(h.opens, 0); assert.deepEqual(h.intents, []); assert.equal(h.scene.down, null); assert.equal(h.captures.size, 0);
+});
+
+test("a foreign release cannot finish the owning pointer, and a second finger cancels without taking ownership", t => {
+  const h = harness(t); h.scene.setOpening(opening()); h.fire("pointerdown", { pointerType: "touch" });
+  h.fire("pointerup", { pointerId: 2, pointerType: "touch", isPrimary: false });
+  assert.equal(h.opens, 0); assert.equal(h.scene.down.id, 1); assert.equal(h.captures.size, 1);
+  h.fire("pointerdown", { pointerId: 2, pointerType: "touch", isPrimary: false });
+  h.fire("pointerup", { pointerId: 2, pointerType: "touch", isPrimary: false }); h.fire("pointerup", { pointerType: "touch" });
+  assert.equal(h.opens, 0); assert.deepEqual(h.intents, []); assert.equal(h.scene.down, null); assert.equal(h.captures.size, 0);
+});
+
+for (const [name, values] of [
+  ["wrong release button", { button: 2 }], ["nonprimary release", { isPrimary: false }],
+  ["buttons still held", { buttons: 1 }], ["invalid release coordinates", { clientY: NaN }],
+]) test(`${name} cancels an opening gesture`, t => {
+  const h = harness(t); h.scene.setOpening(opening()); h.fire("pointerdown"); h.fire("pointerup", values); h.fire("pointerup");
+  assert.equal(h.opens, 0); assert.deepEqual(h.intents, []); assert.equal(h.scene.down, null); assert.equal(h.captures.size, 0);
+});
+
+for (const interruption of ["pointercancel", "pointerleave", "lostpointercapture", "canvas-blur", "window-blur", "page-hidden", "scene-hidden", "context-loss", "resize", "replacement", "launch-and-skip", "reduced-motion", "render-fault"])
+  test(`opening gesture cannot survive ${interruption}`, t => {
+    const h = harness(t); h.scene.setOpening(opening()); h.fire("pointerdown");
+    if (interruption === "canvas-blur") h.fire("blur");
+    else if (interruption === "window-blur") h.windowListeners.get("blur")();
+    else if (interruption === "page-hidden") {
+      document.hidden = true; h.documentListeners.get("visibilitychange")();
+      document.hidden = false; h.documentListeners.get("visibilitychange")();
+    } else if (interruption === "scene-hidden") { h.scene.setHidden(true); h.scene.setHidden(false); }
+    else if (interruption === "context-loss") { h.fire("webglcontextlost"); h.fire("webglcontextrestored"); }
+    else if (interruption === "resize") h.scene.resize();
+    else if (interruption === "replacement") h.scene.setOpening(opening("replacement"));
+    else if (interruption === "launch-and-skip") { h.scene.launch(); h.scene.skip(); }
+    else if (interruption === "reduced-motion") h.scene.setReduced(true);
+    else if (interruption === "render-fault") { h.renderer.render = () => { throw new Error("test render fault"); }; h.frame(); }
+    else h.fire(interruption);
+    h.fire("pointerup");
+    assert.equal(h.opens, 0); assert.deepEqual(h.intents, []); assert.equal(h.scene.revealed, 0);
+    assert.equal(h.scene.down, null); assert.equal(h.captures.size, 0);
+  });
+
+test("synchronous lostpointercapture cleanup does not recurse or duplicate opening, and dispose removes listeners", t => {
+  const h = harness(t, { synchronousCaptureLoss: true }); h.scene.setOpening(opening());
+  h.fire("pointerdown"); h.fire("pointerup"); h.fire("pointerup");
+  assert.equal(h.opens, 1); assert.equal(h.releases, 1); assert.equal(h.scene.down, null);
+  h.fire("pointerdown"); h.scene.dispose();
+  assert.equal(h.releases, 2); assert.equal(h.opens, 1); assert.equal(h.captures.size, 0);
+  assert.equal(h.listeners.size, 0); assert.equal(h.windowListeners.size, 0); assert.equal(h.documentListeners.size, 0);
 });
 
 test("ten physical cards, gift and pooled light effects stay under the revised 7500-triangle detail budget", t=>{
@@ -57,13 +132,32 @@ test("raycast selects a card but waits for a committed reveal mask before flippi
   const h=harness(t);h.scene.setOpening(opening(),{intro:false});h.frame();
   const point=h.scene.cards[2].root.position.clone().project(h.scene.camera);
   const e={clientX:(point.x+1)*h.box.width/2,clientY:(1-point.y)*h.box.height/2};
-  assert.equal(h.scene.pick(e),2);h.listeners.get("pointerdown")(e);h.listeners.get("pointerup")(e);
+  assert.equal(h.scene.pick(e),2);h.fire("pointerdown",e);h.fire("pointerup",e);
   assert.deepEqual(h.intents,[2]);assert.equal(h.scene.revealed,0);assert.equal(h.scene.focusedIndex,2);
   assert.ok(h.scene.revealLights.every(effect=>effect.index===null),"intent alone cannot launch a reveal burst");
   h.scene.setOpening(opening("saved-opening",4));assert.equal(h.scene.revealed,4);assert.equal(h.scene.animations.size,1);
   h.frame(performance.now()+700);assert.equal(h.scene.cards[2].angle,0);
   h.scene.setOpening({...opening("saved-opening",4),cards:opening().cards.map(x=>({...x,cardId:"owl"}))});
   assert.equal(h.scene.cards[0].data.cardId,"fox");
+});
+
+test("real card raycasting reveals once per primary touch gesture and does not commit a reveal itself", t => {
+  const h = harness(t), saved = opening(), before = JSON.stringify(saved); h.scene.setOpening(saved, { intro: false }); h.frame();
+  const point = h.scene.cards[2].root.position.clone().project(h.scene.camera);
+  const values = { clientX: (point.x + 1) * h.box.width / 2, clientY: (1 - point.y) * h.box.height / 2, pointerType: "touch" };
+  h.fire("pointerdown", values); h.fire("pointerup", values); h.fire("pointerup", values);
+  assert.deepEqual(h.intents, [2]); assert.equal(h.scene.focusedIndex, 2); assert.equal(h.scene.revealed, 0);
+  assert.equal(JSON.stringify(saved), before); assert.equal(h.scene.animations.size, 0); assert.equal(h.captures.size, 0);
+});
+
+test("a press over one card cannot reveal a different card moved under its release", t => {
+  const h = harness(t); h.scene.setOpening(opening(), { intro: false }); h.frame();
+  const point = h.scene.cards[2].root.position.clone().project(h.scene.camera);
+  const values = { clientX: (point.x + 1) * h.box.width / 2, clientY: (1 - point.y) * h.box.height / 2 };
+  assert.equal(h.scene.pick(values), 2); h.fire("pointerdown", values);
+  h.scene.focus(4); h.scene.animate(performance.now() + 600);
+  assert.notEqual(h.scene.pick(values), 2, "the real focus layout changed the raycast target");
+  h.fire("pointerup", values); assert.deepEqual(h.intents, []); assert.equal(h.scene.revealed, 0);
 });
 
 test("skip/reduced motion never reveal, while restored masks immediately show committed fronts",t=>{

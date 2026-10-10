@@ -59,7 +59,7 @@ export class HandInput {
     const hit = this.pick(event), revision = this.getRevision();
     const active = this.active = { pointerId: event.pointerId, pointerType: event.pointerType,
       x: event.clientX, y: event.clientY, lastX: event.clientX, hit, revision,
-      moved: false, panning: false, consumed: false, lastEvent: event };
+      started: this.now(), moved: false, panning: false, consumed: false, lastEvent: event };
     try { this.element.setPointerCapture?.(event.pointerId); } catch { /* Capturing a just-cancelled pointer is harmless. */ }
     if (hit) this.longTimer = this.setTimer(() => {
       this.longTimer = null;
@@ -103,7 +103,13 @@ export class HandInput {
     this.active = null; this.clearLong(); this.release(active.pointerId);
     if (!this.valid(active) || active.moved || active.consumed || Math.hypot(event.clientX - active.x, event.clientY - active.y) > 10) return;
     const hit = this.pick(event);
-    if (this.same(hit, active.hit)) this.onSelect(this.intent(hit, "pointer", active.revision));
+    if (!this.same(hit, active.hit)) return;
+    // A busy frame may delay the timer until after pointerup. A completed hold
+    // still belongs to inspection, never to a short-press selection.
+    if (this.now() - active.started >= this.longPressMs) {
+      active.consumed = true; this.suppressContextUntil = this.now() + 1000; this.suppressContextHit = hit;
+      this.onInspect(this.intent(hit, "longpress", active.revision));
+    } else this.onSelect(this.intent(hit, "pointer", active.revision));
   }
 
   context(event) {

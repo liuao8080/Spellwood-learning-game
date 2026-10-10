@@ -1,10 +1,10 @@
 # 词灵对决 · Spellwood
 
-森林主题的英语卡牌游戏。当前开发源码为 **4.1.0-alpha.2（布局与人物近景打磨中）**：36张基础卡、每日学习任务、20款人物造型和额外抽牌英语助力。公开电脑试玩仍为已验证的 **4.0.0-alpha.2** 教师题库版，未更新为本分支。
+森林主题的英语卡牌游戏。当前开发源码为 **4.1.0-alpha.3（本地GPU试玩与动作连续性打磨）**：36张基础卡、每日学习任务、20款人物造型和额外抽牌英语助力。公开电脑试玩仍为已验证的 **4.0.0-alpha.2** 教师题库版，未更新为本分支。
 
-[公开电脑试玩](https://spellwood-3d-grove.hhhappygod.chatgpt.site/) · [版本记录](CHANGELOG.md) · [布局与人物打磨](docs/COMPACT-BOARD-POLISH.md) · [4.1基线验证](docs/VALIDATION-4.1.md) · [3.2.9检查点](docs/VALIDATION-3.2.9.md) · [服务端说明](server/README.md)
+[公开电脑试玩](https://spellwood-3d-grove.hhhappygod.chatgpt.site/) · [版本记录](CHANGELOG.md) · [本地试玩与证据](docs/LOCAL-PLAYTEST-2026-10-10.md) · [布局与人物打磨](docs/COMPACT-BOARD-POLISH.md) · [4.1基线验证](docs/VALIDATION-4.1.md) · [服务端说明](server/README.md)
 
-**当前公开 Site 只有电脑试玩，没有接入真人匹配服务器；公开真人匹配的部署与接入尚未完成。** 本分支提供 Node.js + WebSocket 权威服务器、SQLite 游客/账号/进度和同源网页。既有游客/教师/NAT版本的双浏览器验收已完成，4.1扩展基线6d7bb94的16个真实浏览器场景已通过；本分支的短竖屏重排与人物近景调整仍待新的17场景验收，不能继承基线的布局结论。源码功能与公开服务分开交付，CI 测试机不承担长期在线服务。
+**当前公开 Site 只有电脑试玩，没有接入真人匹配服务器；公开真人匹配的部署与接入尚未完成。** 本分支提供 Node.js + WebSocket 权威服务器、SQLite 游客/账号/进度和同源网页。PR #6接手提交fd82c1a在CI54为23/24正式浏览器项目及5/5材质项目，正常动画995ms超过原250ms门槛；本机M4/Metal Chrome未改基线28/29，另发现44px三位数标签溢出。打磨后最终本地完整 **33/33**，正常近战原片最大间隔 **36ms**，额外原生DPR2窗口 **52ms**，画质与门槛保持。完整代码回归1141/1144，3个macOS回环绑定失败仍保留。实际结果、前后原图／视频、失败历史和范围见[本轮记录](docs/LOCAL-PLAYTEST-2026-10-10.md)。源码、本地试玩和公开服务分开交付，CI测试机不承担长期在线服务。
 
 ## 托管边界
 
@@ -64,6 +64,8 @@ node scripts/smoke-running-server.mjs
 
 配置、origin、超时和部署边界见 [server/README.md](server/README.md)，消息格式见 [server/PROTOCOL.md](server/PROTOCOL.md)。Docker 模板尚未实际构建或部署；公开服务还需要 HTTPS/WSS、正确 origin、监控及容量验证。
 
+本地浏览器验收使用明确的 `playwright.local.config.mjs`；补充正常动效取证使用独立的 `playwright.motion.config.mjs`、专用端口 4185 和每次运行的固定客户端快照。采集范围、SHA-256 归因、真实英语作答与复跑方法见 [本地动效取证说明](tests/local/MOTION-README.md)。补充取证不替代原有 250 ms 验收门槛；手机尺寸模拟和两个本机会话分别不代表手机真机或公网真人联机通过。
+
 ### 保留的旧离线入口
 
 ```sh
@@ -83,6 +85,15 @@ npm run check
 npm run build:network
 npm run build:practice
 ```
+
+经明确授权的本地浏览器路径独立于官方GitHub CI：
+
+```sh
+npm run test:browser:local
+npm run test:motion:local
+```
+
+使用已安装有头Chrome、独立回环端口和临时SQLite，真实renderer/画质与原始动作证据另存。不要伪造CI标志；静态尺寸模拟与本地双浏览器不代表物理手机或公网真人验收。[配置说明](tests/local/README.md)与[正常速采集说明](tests/local/MOTION-README.md)包含复跑步骤。
 
 npm test 默认最多同时运行2个测试文件；共享或低内存环境建议使用上面的串行命令。typecheck 主要覆盖旧核心的 JSDoc 接口，不是全工程静态类型证明。场景测试使用真实 Three.js 对象和射线，但模拟 Canvas/renderer，不证明 GPU 像素、触屏或设备帧率。部分离线图像审查脚本另需 @napi-rs/canvas 或 Blender；运行游戏无需这些可选工具。
 

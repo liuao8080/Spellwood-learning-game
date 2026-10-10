@@ -1,0 +1,1695 @@
+{
+  "schema": 1,
+  "date": "2026-10-10",
+  "scope": "Supplemental actual UI normal-motion evidence; not a full acceptance-suite result",
+  "environment": {
+    "browser": "Installed Google Chrome; headed",
+    "browserVersion": "154.0.8037.99",
+    "host": {
+      "platform": "darwin",
+      "release": "27.0.0",
+      "architecture": "arm64",
+      "cpu": "Apple M4",
+      "logicalCpus": 10,
+      "memoryGiB": 16
+    },
+    "unmaskedRenderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+    "hardwareAccelerationConfirmed": true,
+    "arenaViewport": {
+      "width": 844,
+      "height": 390
+    },
+    "packViewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "screenScope": "Browser DPR1/screen dimensions are emulated; no physical-monitor-resolution or physical-phone claim"
+  },
+  "runs": [
+    {
+      "runId": "after-final",
+      "testedBundleSha256": "c49e8b2c4a9f225f7130fe92c0cdd998d136d3aeecb732a4a9ea679e3568db70",
+      "testsPassed": 3,
+      "testsSelected": 3,
+      "hashIntegrityAllTrue": true,
+      "scope": "Original alpha3 supplemental3cases including fixed same-canvas reveal, before final first-lane correction"
+    },
+    {
+      "runId": "after-lanes",
+      "testedBundleSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+      "testsPassed": 1,
+      "testsSelected": 1,
+      "hashIntegrityAllTrue": true,
+      "scope": "Final lane-corrected snapshot; one actual UI case covers four normal arena effects"
+    }
+  ],
+  "before": {
+    "bundleSha256": "3ba5ac4862c462672e68b2a931fa422210437ab3d58b2d3d0eb0cb457eee26da",
+    "fontMeasuredInkWidth": 407.66790771484375,
+    "originalCanvasWidth": 384,
+    "strokeWidth": 10,
+    "packReveal": {
+      "trustedPointerDownMs": 32,
+      "originalCanvasFirstDetachedMs": 43.799999988079435,
+      "observedSavedMaskChange": [
+        0,
+        1
+      ],
+      "usableNativeRevealVideo": false
+    },
+    "attribution": "Explicit preserved prebuilt client path with corroborated old fixture source SHA and timing; no retrospective HTTP bundle-hash claim"
+  },
+  "samples": [
+    {
+      "name": "ritual-spark",
+      "runId": "after-lanes",
+      "bundleSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+      "captureStatus": "complete",
+      "trustedPointerDownElapsedMs": 34.89999997615814,
+      "trustedClickElapsedMs": 35.19999998807907,
+      "rafMaximumMs": 17.799999999999272,
+      "rafOver250": 0,
+      "qualityValues": [
+        0
+      ],
+      "pixelScaleValues": [
+        1
+      ],
+      "shadowMapSizeValues": [
+        1024
+      ],
+      "reducedMotionValues": [
+        false
+      ],
+      "sameOriginalCanvasWholeSample": true,
+      "video": {
+        "file": "ritual-spark.webm",
+        "bytes": 155451,
+        "sha256": "6df20ef2687f0cfdee65e3e45bb1267d9de51be5118091521f7d35c8fc0dacb6",
+        "codec": "vp8",
+        "width": 708,
+        "height": 208,
+        "audioStreams": 0,
+        "recordedFrames": 91,
+        "firstPtsSeconds": 0,
+        "lastPtsSeconds": 3.014,
+        "maximumFrameGapSeconds": 0.047
+      },
+      "commands": [
+        {
+          "type": "ritual.answer",
+          "action": null,
+          "accepted": true
+        }
+      ],
+      "events": [
+        {
+          "kind": "ritual",
+          "seat": 0
+        }
+      ],
+      "outcome": "correct",
+      "savedRevealMaskBefore": null,
+      "savedRevealMaskAfter": null,
+      "network": []
+    },
+    {
+      "name": "heal",
+      "runId": "after-lanes",
+      "bundleSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+      "captureStatus": "complete",
+      "trustedPointerDownElapsedMs": 28.599999964237213,
+      "trustedClickElapsedMs": 28.899999976158142,
+      "rafMaximumMs": 17.80000000000291,
+      "rafOver250": 0,
+      "qualityValues": [
+        0
+      ],
+      "pixelScaleValues": [
+        1
+      ],
+      "shadowMapSizeValues": [
+        1024
+      ],
+      "reducedMotionValues": [
+        false
+      ],
+      "sameOriginalCanvasWholeSample": true,
+      "video": {
+        "file": "heal.webm",
+        "bytes": 186401,
+        "sha256": "07ae6405672030243b5776262c7963ae9ebcacbc1d5f8b2c6d1c2ba8a491300b",
+        "codec": "vp8",
+        "width": 708,
+        "height": 208,
+        "audioStreams": 0,
+        "recordedFrames": 91,
+        "firstPtsSeconds": 0,
+        "lastPtsSeconds": 2.999,
+        "maximumFrameGapSeconds": 0.05
+      },
+      "commands": [
+        {
+          "type": "battle.action",
+          "action": "play",
+          "accepted": true
+        }
+      ],
+      "events": [
+        {
+          "kind": "play",
+          "seat": 0
+        }
+      ],
+      "outcome": null,
+      "savedRevealMaskBefore": null,
+      "savedRevealMaskAfter": null,
+      "network": []
+    },
+    {
+      "name": "shield",
+      "runId": "after-lanes",
+      "bundleSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+      "captureStatus": "complete",
+      "trustedPointerDownElapsedMs": 28.399999976158142,
+      "trustedClickElapsedMs": null,
+      "rafMaximumMs": 17.80000000000291,
+      "rafOver250": 0,
+      "qualityValues": [
+        0
+      ],
+      "pixelScaleValues": [
+        1
+      ],
+      "shadowMapSizeValues": [
+        1024
+      ],
+      "reducedMotionValues": [
+        false
+      ],
+      "sameOriginalCanvasWholeSample": true,
+      "video": {
+        "file": "shield.webm",
+        "bytes": 184808,
+        "sha256": "962947528a414ce2d7a2d0d0e3fde44dc4d46f1eda5f0342b1269eb03ccc5f32",
+        "codec": "vp8",
+        "width": 708,
+        "height": 208,
+        "audioStreams": 0,
+        "recordedFrames": 91,
+        "firstPtsSeconds": 0,
+        "lastPtsSeconds": 2.999,
+        "maximumFrameGapSeconds": 0.056
+      },
+      "commands": [
+        {
+          "type": "battle.action",
+          "action": "play",
+          "accepted": true
+        }
+      ],
+      "events": [
+        {
+          "kind": "play",
+          "seat": 0
+        }
+      ],
+      "outcome": null,
+      "savedRevealMaskBefore": null,
+      "savedRevealMaskAfter": null,
+      "network": []
+    },
+    {
+      "name": "maximum-health",
+      "runId": "after-lanes",
+      "bundleSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+      "captureStatus": "complete",
+      "trustedPointerDownElapsedMs": 26.899999976158142,
+      "trustedClickElapsedMs": null,
+      "rafMaximumMs": 17.700000000004366,
+      "rafOver250": 0,
+      "qualityValues": [
+        0
+      ],
+      "pixelScaleValues": [
+        1
+      ],
+      "shadowMapSizeValues": [
+        1024
+      ],
+      "reducedMotionValues": [
+        false
+      ],
+      "sameOriginalCanvasWholeSample": true,
+      "video": {
+        "file": "maximum-health.webm",
+        "bytes": 189041,
+        "sha256": "52c3e834afd9f3adfe84b23551520bb602f3b776b1b3d05cab321cb5967b58d3",
+        "codec": "vp8",
+        "width": 708,
+        "height": 208,
+        "audioStreams": 0,
+        "recordedFrames": 91,
+        "firstPtsSeconds": 0,
+        "lastPtsSeconds": 2.997,
+        "maximumFrameGapSeconds": 0.05
+      },
+      "commands": [
+        {
+          "type": "battle.action",
+          "action": "play",
+          "accepted": true
+        }
+      ],
+      "events": [
+        {
+          "kind": "play",
+          "seat": 0
+        }
+      ],
+      "outcome": null,
+      "savedRevealMaskBefore": null,
+      "savedRevealMaskAfter": null,
+      "network": []
+    },
+    {
+      "name": "pack-opening",
+      "runId": "after-final",
+      "bundleSha256": "c49e8b2c4a9f225f7130fe92c0cdd998d136d3aeecb732a4a9ea679e3568db70",
+      "captureStatus": "complete",
+      "trustedPointerDownElapsedMs": 39.80000001192093,
+      "trustedClickElapsedMs": 42.69999998807907,
+      "rafMaximumMs": 18.800000000000182,
+      "rafOver250": 0,
+      "qualityValues": [
+        null
+      ],
+      "pixelScaleValues": [
+        null
+      ],
+      "shadowMapSizeValues": [
+        null
+      ],
+      "reducedMotionValues": [
+        null
+      ],
+      "sameOriginalCanvasWholeSample": true,
+      "video": {
+        "file": "pack-opening.webm",
+        "bytes": 456403,
+        "sha256": "cd10e303f33398bbb04fd9534ad4b3285a46966efc256dcc49c339044bb2ae58",
+        "codec": "vp8",
+        "width": 1280,
+        "height": 520,
+        "audioStreams": 0,
+        "recordedFrames": 100,
+        "firstPtsSeconds": 0,
+        "lastPtsSeconds": 3.606,
+        "maximumFrameGapSeconds": 0.069
+      },
+      "commands": [],
+      "events": [],
+      "outcome": null,
+      "savedRevealMaskBefore": 0,
+      "savedRevealMaskAfter": 0,
+      "network": []
+    },
+    {
+      "name": "pack-reveal",
+      "runId": "after-final",
+      "bundleSha256": "c49e8b2c4a9f225f7130fe92c0cdd998d136d3aeecb732a4a9ea679e3568db70",
+      "captureStatus": "complete",
+      "trustedPointerDownElapsedMs": 33.60000002384186,
+      "trustedClickElapsedMs": 37.200000047683716,
+      "rafMaximumMs": 18.699999999999818,
+      "rafOver250": 0,
+      "qualityValues": [
+        null
+      ],
+      "pixelScaleValues": [
+        null
+      ],
+      "shadowMapSizeValues": [
+        null
+      ],
+      "reducedMotionValues": [
+        null
+      ],
+      "sameOriginalCanvasWholeSample": true,
+      "video": {
+        "file": "pack-reveal.webm",
+        "bytes": 127092,
+        "sha256": "f3131c24980e762a22f847bd7b4bba3c4e36424a1f4b56e7e05cf1ef8b044bd2",
+        "codec": "vp8",
+        "width": 1280,
+        "height": 520,
+        "audioStreams": 0,
+        "recordedFrames": 18,
+        "firstPtsSeconds": 0,
+        "lastPtsSeconds": 0.532,
+        "maximumFrameGapSeconds": 0.051
+      },
+      "commands": [],
+      "events": [],
+      "outcome": null,
+      "savedRevealMaskBefore": 0,
+      "savedRevealMaskAfter": 1,
+      "network": [
+        {
+          "kind": "request",
+          "action": "reveal-pack",
+          "elapsedMs": 41
+        },
+        {
+          "kind": "response",
+          "ok": true,
+          "elapsedMs": 56,
+          "savedRevealMask": 1,
+          "revision": 4
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "pre-lane-first-float.png",
+      "source": "test-results/motion-evidence/after-final/maximum-health-frames/maximum-health-frame-02.png",
+      "sha256": "17d82d55c7acd26da1bbdc6dfc87660d43c578c4c1894f4272c16f8db3c3ff3c",
+      "bytes": 135040,
+      "unalteredCopy": true
+    },
+    {
+      "file": "final-first-float.png",
+      "source": "test-results/motion-evidence/after-lanes/maximum-health-frames/maximum-health-frame-02.png",
+      "sha256": "9026ebb0a8c323c943284d3fb211a0ed12c538ff5cd41ca45c72cb8f523aa8be",
+      "bytes": 143541,
+      "unalteredCopy": true
+    },
+    {
+      "file": "final-next-float.png",
+      "source": "test-results/motion-evidence/after-lanes/maximum-health-frames/maximum-health-frame-03.png",
+      "sha256": "6274923d39843485fcfd6ef570fe5c7a8de9887e89fbbb48b1562452521f7916",
+      "bytes": 147270,
+      "unalteredCopy": true
+    },
+    {
+      "file": "pack-reveal-side.png",
+      "source": "test-results/motion-evidence/after-final/pack-reveal-frames/pack-reveal-frame-02.png",
+      "sha256": "575578a6eb050bef4ef801828618fe6d70a4cd2823d6d89de7806333acd07346",
+      "bytes": 267654,
+      "unalteredCopy": true
+    },
+    {
+      "file": "pack-reveal-front.png",
+      "source": "test-results/motion-evidence/after-final/pack-reveal-frames/pack-reveal-frame-06.png",
+      "sha256": "5cf633b00ab7abffe25c5a5204820589bed1da55eb6d93113513a926dac14758",
+      "bytes": 341543,
+      "unalteredCopy": true
+    },
+    {
+      "file": "pack-lid-lift.png",
+      "source": "test-results/motion-evidence/after-final/pack-opening-frames/pack-opening-frame-05.png",
+      "sha256": "1b347e312428a2936f52aca1ea94930557aa59b1bafdec80f4d65044726814d9",
+      "bytes": 274044,
+      "unalteredCopy": true
+    },
+    {
+      "file": "final-ritual-spark.webm",
+      "source": "test-results/motion-evidence/after-lanes/ritual-spark.webm",
+      "sha256": "6df20ef2687f0cfdee65e3e45bb1267d9de51be5118091521f7d35c8fc0dacb6",
+      "bytes": 155451,
+      "unalteredCopy": true
+    },
+    {
+      "file": "final-heal.webm",
+      "source": "test-results/motion-evidence/after-lanes/heal.webm",
+      "sha256": "07ae6405672030243b5776262c7963ae9ebcacbc1d5f8b2c6d1c2ba8a491300b",
+      "bytes": 186401,
+      "unalteredCopy": true
+    },
+    {
+      "file": "final-shield.webm",
+      "source": "test-results/motion-evidence/after-lanes/shield.webm",
+      "sha256": "962947528a414ce2d7a2d0d0e3fde44dc4d46f1eda5f0342b1269eb03ccc5f32",
+      "bytes": 184808,
+      "unalteredCopy": true
+    },
+    {
+      "file": "final-maximum-health.webm",
+      "source": "test-results/motion-evidence/after-lanes/maximum-health.webm",
+      "sha256": "52c3e834afd9f3adfe84b23551520bb602f3b776b1b3d05cab321cb5967b58d3",
+      "bytes": 189041,
+      "unalteredCopy": true
+    },
+    {
+      "file": "pack-opening.webm",
+      "source": "test-results/motion-evidence/after-final/pack-opening.webm",
+      "sha256": "cd10e303f33398bbb04fd9534ad4b3285a46966efc256dcc49c339044bb2ae58",
+      "bytes": 456403,
+      "unalteredCopy": true
+    },
+    {
+      "file": "pack-reveal.webm",
+      "source": "test-results/motion-evidence/after-final/pack-reveal.webm",
+      "sha256": "f3131c24980e762a22f847bd7b4bba3c4e36424a1f4b56e7e05cf1ef8b044bd2",
+      "bytes": 127092,
+      "unalteredCopy": true
+    }
+  ],
+  "independentVisualReview": {
+    "reviewer": "source_review",
+    "pack": "Original18VP8frames show back→side→front/halo→stable. Same original canvas stays connected across182RAF samples; real collection request41ms/cleanack56ms/mask0→1.",
+    "finalInitialLanes": "Final maximum-health source16 at0.538s shows complete +2生命上限 above separate +2 immediately; sources25/33 at0.831/1.095s stay separated with no horizontal crop.",
+    "priorInitialLanes": "Pre-lane-correction source16 at0.542s had two newly-created floating values at the same starting position.",
+    "pixelComparisonLimit": "Natural boards/seat/targetHP/shield/deck differ; these are not seeded or exact-pixel A/B frames"
+  },
+  "limits": [
+    "No whole-session FPS, physical-phone, public-human-matchmaking or low-end-device acceptance claim",
+    "Original official250ms gate remains separate and unchanged; these supplemental native clips/RAF observations do not replace it",
+    "All clips are lossy VP8, anonymous canvas only, no audio/display/DOM/whole-session capture; original decoder selected real frames without interpolation/scaling/speed change",
+    "Pack reveal emits18dynamic native frames over0.532s then stops drawing when idle; the passive RAF window lasts3s. Do not impute zero delay to the unrecorded static tail",
+    "Arena shield/maximum-health click markers are null; genuine trusted pointerdown and one accepted authoritative action/event are retained, with no fabricated click marker",
+    "Pack quality/reduced-motion canvas fields are unavailable; normal mode was selected and saved through the actual Settings UI",
+    "No statement here claims the main33-case or fullNode suite was one uniformly green run; consult the separate global test record"
+  ],
+  "evidenceIndexes": [
+    {
+      "runId": "before",
+      "evidenceDirectory": "test-results/motion-before-evidence",
+      "sourceManifest": "test-results/motion-before-evidence/bundle-manifest.json",
+      "bundleSha256": "3ba5ac4862c462672e68b2a931fa422210437ab3d58b2d3d0eb0cb457eee26da",
+      "sourceHashes": [
+        {
+          "file": "src/arena3d/scene.mjs",
+          "sha256": "821f9b2a54ad48de47e9ad40ccc96850f0b41099f476e0e72837eaf4da2fd4db"
+        },
+        {
+          "file": "src/network/app.mjs",
+          "sha256": "edf7df1a820b8094bb1ef408be07f50b33b33dffcf98b09dd40c7428b8fdde20"
+        }
+      ],
+      "httpProofs": [],
+      "beforeHttpLimit": "Not sampled at the time. Configured immutable CLIENT_DIST path was corroborated by old fixture source SHA/timing; no retrospective HTTP check is claimed",
+      "oldServerAttribution": {
+        "oldServerSha256": "33e722204c0f68a74b09f2a2358d3ae95d5f38f423eb8c386cf9d96ae19a307c",
+        "laterOverrideAddedAt": "2026-10-10T04:22:33.417Z",
+        "lastBeforeEvidenceWrittenAt": "2026-10-10T04:19:20Z",
+        "basis": "Original server env had no CLIENT_DIST override, corroborated by baseline manifest and local_validation old source SHA; independent driver selected CLIENT_DIST snapshot before later server change",
+        "httpServedBundleHashWasChecked": false,
+        "limit": "Before attribution uses configured snapshot, old fixture source and observed timing; no retrospective claim of a served HTTP SHA probe"
+      },
+      "runResult": "Original temporary supplemental driver: layout/element/normal-canvas opening cases passed; the initial hidden semantic-reveal driver failed; original-canvas reveal discontinuity is preserved as a product finding",
+      "clips": [
+        {
+          "name": "ritual-spark",
+          "evidenceJson": "test-results/motion-before-evidence/ritual-spark.json",
+          "nativeVideo": "test-results/motion-before-evidence/ritual-spark.webm",
+          "decodedFramesDirectory": "test-results/motion-before-evidence/ritual-spark-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": null,
+          "trustedClickMs": 67.19999998807907,
+          "maximumRafIntervalMs": 17.700000000000728,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "ritual-spark.webm",
+            "bytes": 167639,
+            "sha256": "3d654f66e88ca4670f07b8ba693c99e8e16a9ab1757824fee3639d5987b66c40",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 92,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 3.033,
+            "maximumFrameGapSeconds": 0.054
+          },
+          "canvasIdentitySampled": false,
+          "sameOriginalCanvas": null,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [
+            {
+              "type": "ritual.answer",
+              "action": null,
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "ritual",
+              "seat": 0
+            }
+          ],
+          "outcome": "correct",
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "heal",
+          "evidenceJson": "test-results/motion-before-evidence/heal.json",
+          "nativeVideo": "test-results/motion-before-evidence/heal.webm",
+          "decodedFramesDirectory": "test-results/motion-before-evidence/heal-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": null,
+          "trustedClickMs": 66.30000001192093,
+          "maximumRafIntervalMs": 17.80000000000291,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "heal.webm",
+            "bytes": 168883,
+            "sha256": "1c19731a7caad6c6fe3ebfc28888a94976c276ec5bca16a03407a849224e9416",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 92,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 3.032,
+            "maximumFrameGapSeconds": 0.052
+          },
+          "canvasIdentitySampled": false,
+          "sameOriginalCanvas": null,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [
+            {
+              "type": "battle.action",
+              "action": "play",
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "play",
+              "seat": 0
+            }
+          ],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "shield",
+          "evidenceJson": "test-results/motion-before-evidence/shield.json",
+          "nativeVideo": "test-results/motion-before-evidence/shield.webm",
+          "decodedFramesDirectory": "test-results/motion-before-evidence/shield-frames",
+          "captureStatus": "hard-limit",
+          "trustedPointerDownMs": null,
+          "trustedClickMs": null,
+          "maximumRafIntervalMs": 17.799999999995634,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "shield.webm",
+            "bytes": 308928,
+            "sha256": "b469a70ba23e02c46286f8e8894b46ba325cac5b51dd90ad9b71d529222a4d4b",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 180,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 5.965,
+            "maximumFrameGapSeconds": 0.05
+          },
+          "canvasIdentitySampled": false,
+          "sameOriginalCanvas": null,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [
+            {
+              "type": "battle.action",
+              "action": "play",
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "play",
+              "seat": 0
+            }
+          ],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "maximum-health",
+          "evidenceJson": "test-results/motion-before-evidence/maximum-health.json",
+          "nativeVideo": "test-results/motion-before-evidence/maximum-health.webm",
+          "decodedFramesDirectory": "test-results/motion-before-evidence/maximum-health-frames",
+          "captureStatus": "hard-limit",
+          "trustedPointerDownMs": null,
+          "trustedClickMs": null,
+          "maximumRafIntervalMs": 17.80000000000291,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "maximum-health.webm",
+            "bytes": 303238,
+            "sha256": "139d675be0ed62ccbbc7a763dbc3fc8f082783559a319a5ae332f2f6282dab85",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 180,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 5.963,
+            "maximumFrameGapSeconds": 0.037
+          },
+          "canvasIdentitySampled": false,
+          "sameOriginalCanvas": null,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [
+            {
+              "type": "battle.action",
+              "action": "play",
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "play",
+              "seat": 0
+            }
+          ],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "pack-opening",
+          "evidenceJson": "test-results/motion-before-evidence/pack-opening.json",
+          "nativeVideo": null,
+          "decodedFramesDirectory": null,
+          "captureStatus": "hard-limit",
+          "trustedPointerDownMs": null,
+          "trustedClickMs": null,
+          "maximumRafIntervalMs": 17.700000000000728,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": null,
+          "canvasIdentitySampled": false,
+          "sameOriginalCanvas": null,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            null
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [],
+          "events": [],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "pack-reveal",
+          "evidenceJson": "test-results/motion-before-evidence/pack-reveal.json",
+          "nativeVideo": null,
+          "decodedFramesDirectory": null,
+          "captureStatus": "hard-limit",
+          "trustedPointerDownMs": null,
+          "trustedClickMs": null,
+          "maximumRafIntervalMs": 17.799999999999272,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": null,
+          "canvasIdentitySampled": false,
+          "sameOriginalCanvas": null,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            null
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [],
+          "events": [],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "pack-canvas-opening",
+          "evidenceJson": "test-results/motion-before-evidence/pack-canvas-opening.json",
+          "nativeVideo": "test-results/motion-before-evidence/pack-canvas-opening.webm",
+          "decodedFramesDirectory": "test-results/motion-before-evidence/pack-canvas-opening-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": null,
+          "trustedClickMs": 24.30000001192093,
+          "maximumRafIntervalMs": 17.699999999999818,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "pack-canvas-opening.webm",
+            "bytes": 492074,
+            "sha256": "9170d837557a3bf519c746263226c458cb42c3a76dc7382837097baf4b306b75",
+            "codec": "vp8",
+            "width": 1280,
+            "height": 520,
+            "audioStreams": 0,
+            "recordedFrames": 109,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 3.627,
+            "maximumFrameGapSeconds": 0.066
+          },
+          "canvasIdentitySampled": false,
+          "sameOriginalCanvas": null,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            null
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [],
+          "events": [],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "pack-canvas-reveal",
+          "evidenceJson": "test-results/motion-before-evidence/pack-canvas-reveal.json",
+          "nativeVideo": null,
+          "decodedFramesDirectory": null,
+          "captureStatus": "hard-limit",
+          "trustedPointerDownMs": null,
+          "trustedClickMs": null,
+          "maximumRafIntervalMs": 17.700000000000728,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": null,
+          "canvasIdentitySampled": false,
+          "sameOriginalCanvas": null,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            null
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [],
+          "events": [],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "pack-canvas-opening-repeat",
+          "evidenceJson": "test-results/motion-before-evidence/pack-canvas-opening-repeat.json",
+          "nativeVideo": "test-results/motion-before-evidence/pack-canvas-opening-repeat.webm",
+          "decodedFramesDirectory": "test-results/motion-before-evidence/pack-canvas-opening-repeat-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 21.5,
+          "trustedClickMs": 22.599999964237213,
+          "maximumRafIntervalMs": 17.799999999999727,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "pack-canvas-opening-repeat.webm",
+            "bytes": 497420,
+            "sha256": "6f962dbbc986195c21977e477613000bdad8852a6b78ebd7f79d0e676a892c1a",
+            "codec": "vp8",
+            "width": 1280,
+            "height": 520,
+            "audioStreams": 0,
+            "recordedFrames": 109,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 3.662,
+            "maximumFrameGapSeconds": 0.067
+          },
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": true,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            null
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [],
+          "events": [],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "pack-canvas-reveal-repeat",
+          "evidenceJson": "test-results/motion-before-evidence/pack-canvas-reveal-repeat.json",
+          "nativeVideo": null,
+          "decodedFramesDirectory": null,
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 32,
+          "trustedClickMs": null,
+          "maximumRafIntervalMs": 17.80000000000109,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": null,
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": false,
+          "firstDetachedSample": {
+            "elapsedMs": 43.799999988079435,
+            "intervalMs": 17.300000000000182,
+            "visibility": "visible",
+            "canvasConnected": false,
+            "currentCanvasSame": false,
+            "quality": null,
+            "pixelScale": null,
+            "frameGap": null,
+            "phase": null
+          },
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            null
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [],
+          "events": [],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        }
+      ]
+    },
+    {
+      "runId": "after-final",
+      "evidenceDirectory": "test-results/motion-evidence/after-final",
+      "sourceManifest": "test-results/motion-evidence/after-final/source-manifest.json",
+      "bundleSha256": "c49e8b2c4a9f225f7130fe92c0cdd998d136d3aeecb732a4a9ea679e3568db70",
+      "sourceHashes": [
+        {
+          "file": "src/arena3d/pack-scene.mjs",
+          "sha256": "b9aea375352eac23048dee199ca52a6f15719aa2de931437e7483b0f8839b4f5"
+        },
+        {
+          "file": "src/arena3d/scene.mjs",
+          "sha256": "c5dc3fbb28da7355571bd12e25a04d0f63ded80eaf419c81832192052b1d92ba"
+        },
+        {
+          "file": "src/arena3d/stone-surface.mjs",
+          "sha256": "73655cfe317a5e3f81876c5ea344ce414a3c5ec44db29430f474b691ca442964"
+        },
+        {
+          "file": "src/network/app.mjs",
+          "sha256": "1f94506972ddc8649c4e6f2b59c143f0078e54ff47683533f6d646ae71d66610"
+        },
+        {
+          "file": "src/network/collection-view.mjs",
+          "sha256": "abcf8b1e2ed12b431fa9cdefba5033b04b5ebe0dddeb23943525b3164295b314"
+        }
+      ],
+      "httpProofs": [
+        {
+          "file": "test-results/motion-evidence/after-final/served-bundle-element-motion-A.json",
+          "healthStatus": 200,
+          "indexStatus": 200,
+          "bundleStatus": 200,
+          "servedAppJsSha256": "c49e8b2c4a9f225f7130fe92c0cdd998d136d3aeecb732a4a9ea679e3568db70",
+          "expectedSnapshotSha256": "c49e8b2c4a9f225f7130fe92c0cdd998d136d3aeecb732a4a9ea679e3568db70",
+          "matched": true
+        },
+        {
+          "file": "test-results/motion-evidence/after-final/served-bundle-layout-A.json",
+          "healthStatus": 200,
+          "indexStatus": 200,
+          "bundleStatus": 200,
+          "servedAppJsSha256": "c49e8b2c4a9f225f7130fe92c0cdd998d136d3aeecb732a4a9ea679e3568db70",
+          "expectedSnapshotSha256": "c49e8b2c4a9f225f7130fe92c0cdd998d136d3aeecb732a4a9ea679e3568db70",
+          "matched": true
+        },
+        {
+          "file": "test-results/motion-evidence/after-final/served-bundle-pack-motion.json",
+          "healthStatus": 200,
+          "indexStatus": 200,
+          "bundleStatus": 200,
+          "servedAppJsSha256": "c49e8b2c4a9f225f7130fe92c0cdd998d136d3aeecb732a4a9ea679e3568db70",
+          "expectedSnapshotSha256": "c49e8b2c4a9f225f7130fe92c0cdd998d136d3aeecb732a4a9ea679e3568db70",
+          "matched": true
+        }
+      ],
+      "beforeHttpLimit": null,
+      "oldServerAttribution": null,
+      "runResult": {
+        "schema": 1,
+        "runId": "after-final",
+        "scope": "Supplemental local normal-motion driver; not official acceptance or a new performance gate",
+        "status": "passed",
+        "executionStatus": "passed",
+        "attributable": true,
+        "checks": {
+          "fixedBundleUnchanged": true,
+          "repositoryProductSourcesUnchanged": true,
+          "localInfrastructureUnchanged": true,
+          "sourceAndGeneratedDriverUnchanged": true,
+          "officialCIUnchanged": true
+        },
+        "officialMaximumFrameGapSeconds": 0.25,
+        "tests": [
+          {
+            "title": "passive original font and board layout evidence",
+            "status": "passed",
+            "expectedStatus": "passed",
+            "durationMs": 3554,
+            "retry": 0,
+            "errorCount": 0
+          },
+          {
+            "title": "normal fullscreen pack opening and individual reveal evidence",
+            "status": "passed",
+            "expectedStatus": "passed",
+            "durationMs": 9968,
+            "retry": 0,
+            "errorCount": 0
+          },
+          {
+            "title": "normal ritual projectile healing shield and maximum health evidence",
+            "status": "passed",
+            "expectedStatus": "passed",
+            "durationMs": 65124,
+            "retry": 0,
+            "errorCount": 0
+          }
+        ]
+      },
+      "clips": [
+        {
+          "name": "ritual-spark",
+          "evidenceJson": "test-results/motion-evidence/after-final/ritual-spark.json",
+          "nativeVideo": "test-results/motion-evidence/after-final/ritual-spark.webm",
+          "decodedFramesDirectory": "test-results/motion-evidence/after-final/ritual-spark-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 34.799999952316284,
+          "trustedClickMs": 35,
+          "maximumRafIntervalMs": 18.700000000004366,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "ritual-spark.webm",
+            "bytes": 155867,
+            "sha256": "43653c5eec5e40d7fd328e005b7bbfd00865e5930f6525bf82a1c2600f3e86c3",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 91,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 3.001,
+            "maximumFrameGapSeconds": 0.04
+          },
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": true,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            0
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            1024
+          ],
+          "reducedMotionValues": [
+            false
+          ],
+          "commands": [
+            {
+              "type": "ritual.answer",
+              "action": null,
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "ritual",
+              "seat": 1
+            }
+          ],
+          "outcome": "correct",
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "heal",
+          "evidenceJson": "test-results/motion-evidence/after-final/heal.json",
+          "nativeVideo": "test-results/motion-evidence/after-final/heal.webm",
+          "decodedFramesDirectory": "test-results/motion-evidence/after-final/heal-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 22,
+          "trustedClickMs": 22.30000001192093,
+          "maximumRafIntervalMs": 18.599999999998545,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "heal.webm",
+            "bytes": 187786,
+            "sha256": "57180ac2fd78b51e5774c300c46fc6c1598d78695123e3ef424dcb198a7b6b03",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 91,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 3,
+            "maximumFrameGapSeconds": 0.051
+          },
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": true,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            0
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            1024
+          ],
+          "reducedMotionValues": [
+            false
+          ],
+          "commands": [
+            {
+              "type": "battle.action",
+              "action": "play",
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "play",
+              "seat": 1
+            }
+          ],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "shield",
+          "evidenceJson": "test-results/motion-evidence/after-final/shield.json",
+          "nativeVideo": "test-results/motion-evidence/after-final/shield.webm",
+          "decodedFramesDirectory": "test-results/motion-evidence/after-final/shield-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 22.900000035762787,
+          "trustedClickMs": null,
+          "maximumRafIntervalMs": 18.799999999995634,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "shield.webm",
+            "bytes": 180727,
+            "sha256": "256ef3e89c7b19f774cfcaf98b8c0d12d7f9b6e625232f8e432a9603610e6a57",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 91,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 2.996,
+            "maximumFrameGapSeconds": 0.052
+          },
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": true,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            0
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            1024
+          ],
+          "reducedMotionValues": [
+            false
+          ],
+          "commands": [
+            {
+              "type": "battle.action",
+              "action": "play",
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "play",
+              "seat": 1
+            }
+          ],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "maximum-health",
+          "evidenceJson": "test-results/motion-evidence/after-final/maximum-health.json",
+          "nativeVideo": "test-results/motion-evidence/after-final/maximum-health.webm",
+          "decodedFramesDirectory": "test-results/motion-evidence/after-final/maximum-health-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 33.5,
+          "trustedClickMs": null,
+          "maximumRafIntervalMs": 18.69999999999709,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "maximum-health.webm",
+            "bytes": 171211,
+            "sha256": "08efc6ead9734620dbf8dfdb6014ed8d3a18606d26dae6147bfb17eecccccb85",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 91,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 2.998,
+            "maximumFrameGapSeconds": 0.049
+          },
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": true,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            0
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            1024
+          ],
+          "reducedMotionValues": [
+            false
+          ],
+          "commands": [
+            {
+              "type": "battle.action",
+              "action": "play",
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "play",
+              "seat": 1
+            }
+          ],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "pack-opening",
+          "evidenceJson": "test-results/motion-evidence/after-final/pack-opening.json",
+          "nativeVideo": "test-results/motion-evidence/after-final/pack-opening.webm",
+          "decodedFramesDirectory": "test-results/motion-evidence/after-final/pack-opening-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 39.80000001192093,
+          "trustedClickMs": 42.69999998807907,
+          "maximumRafIntervalMs": 18.800000000000182,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "pack-opening.webm",
+            "bytes": 456403,
+            "sha256": "cd10e303f33398bbb04fd9534ad4b3285a46966efc256dcc49c339044bb2ae58",
+            "codec": "vp8",
+            "width": 1280,
+            "height": 520,
+            "audioStreams": 0,
+            "recordedFrames": 100,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 3.606,
+            "maximumFrameGapSeconds": 0.069
+          },
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": true,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            null
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [],
+          "events": [],
+          "outcome": null,
+          "savedRevealMaskBefore": 0,
+          "savedRevealMaskAfter": 0,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "pack-reveal",
+          "evidenceJson": "test-results/motion-evidence/after-final/pack-reveal.json",
+          "nativeVideo": "test-results/motion-evidence/after-final/pack-reveal.webm",
+          "decodedFramesDirectory": "test-results/motion-evidence/after-final/pack-reveal-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 33.60000002384186,
+          "trustedClickMs": 37.200000047683716,
+          "maximumRafIntervalMs": 18.699999999999818,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "pack-reveal.webm",
+            "bytes": 127092,
+            "sha256": "f3131c24980e762a22f847bd7b4bba3c4e36424a1f4b56e7e05cf1ef8b044bd2",
+            "codec": "vp8",
+            "width": 1280,
+            "height": 520,
+            "audioStreams": 0,
+            "recordedFrames": 18,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 0.532,
+            "maximumFrameGapSeconds": 0.051
+          },
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": true,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            null
+          ],
+          "pixelScaleValues": [
+            null
+          ],
+          "shadowMapSizeValues": [
+            null
+          ],
+          "reducedMotionValues": [
+            null
+          ],
+          "commands": [],
+          "events": [],
+          "outcome": null,
+          "savedRevealMaskBefore": 0,
+          "savedRevealMaskAfter": 1,
+          "collectionRequestAck": [
+            {
+              "kind": "request",
+              "action": "reveal-pack",
+              "elapsedMs": 41
+            },
+            {
+              "kind": "response",
+              "ok": true,
+              "elapsedMs": 56,
+              "savedRevealMask": 1,
+              "revision": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "runId": "after-lanes",
+      "evidenceDirectory": "test-results/motion-evidence/after-lanes",
+      "sourceManifest": "test-results/motion-evidence/after-lanes/source-manifest.json",
+      "bundleSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+      "sourceHashes": [
+        {
+          "file": "src/arena3d/pack-scene.mjs",
+          "sha256": "b9aea375352eac23048dee199ca52a6f15719aa2de931437e7483b0f8839b4f5"
+        },
+        {
+          "file": "src/arena3d/scene.mjs",
+          "sha256": "486eb0e5a74ffae9a129ee39fc453418a1ad8e69ce7ebd2c613aedfe1a5d3bba"
+        },
+        {
+          "file": "src/arena3d/stone-surface.mjs",
+          "sha256": "73655cfe317a5e3f81876c5ea344ce414a3c5ec44db29430f474b691ca442964"
+        },
+        {
+          "file": "src/network/app.mjs",
+          "sha256": "1f94506972ddc8649c4e6f2b59c143f0078e54ff47683533f6d646ae71d66610"
+        },
+        {
+          "file": "src/network/collection-view.mjs",
+          "sha256": "abcf8b1e2ed12b431fa9cdefba5033b04b5ebe0dddeb23943525b3164295b314"
+        }
+      ],
+      "httpProofs": [
+        {
+          "file": "test-results/motion-evidence/after-lanes/served-bundle-element-motion-A.json",
+          "healthStatus": 200,
+          "indexStatus": 200,
+          "bundleStatus": 200,
+          "servedAppJsSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+          "expectedSnapshotSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+          "matched": true
+        }
+      ],
+      "beforeHttpLimit": null,
+      "oldServerAttribution": null,
+      "runResult": {
+        "schema": 1,
+        "runId": "after-lanes",
+        "scope": "Supplemental local normal-motion driver; not official acceptance or a new performance gate",
+        "status": "passed",
+        "executionStatus": "passed",
+        "attributable": true,
+        "checks": {
+          "fixedBundleUnchanged": true,
+          "repositoryProductSourcesUnchanged": true,
+          "localInfrastructureUnchanged": true,
+          "sourceAndGeneratedDriverUnchanged": true,
+          "officialCIUnchanged": true
+        },
+        "officialMaximumFrameGapSeconds": 0.25,
+        "tests": [
+          {
+            "title": "normal ritual projectile healing shield and maximum health evidence",
+            "status": "passed",
+            "expectedStatus": "passed",
+            "durationMs": 50665,
+            "retry": 0,
+            "errorCount": 0
+          }
+        ]
+      },
+      "clips": [
+        {
+          "name": "ritual-spark",
+          "evidenceJson": "test-results/motion-evidence/after-lanes/ritual-spark.json",
+          "nativeVideo": "test-results/motion-evidence/after-lanes/ritual-spark.webm",
+          "decodedFramesDirectory": "test-results/motion-evidence/after-lanes/ritual-spark-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 34.89999997615814,
+          "trustedClickMs": 35.19999998807907,
+          "maximumRafIntervalMs": 17.799999999999272,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "ritual-spark.webm",
+            "bytes": 155451,
+            "sha256": "6df20ef2687f0cfdee65e3e45bb1267d9de51be5118091521f7d35c8fc0dacb6",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 91,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 3.014,
+            "maximumFrameGapSeconds": 0.047
+          },
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": true,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            0
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            1024
+          ],
+          "reducedMotionValues": [
+            false
+          ],
+          "commands": [
+            {
+              "type": "ritual.answer",
+              "action": null,
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "ritual",
+              "seat": 0
+            }
+          ],
+          "outcome": "correct",
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "heal",
+          "evidenceJson": "test-results/motion-evidence/after-lanes/heal.json",
+          "nativeVideo": "test-results/motion-evidence/after-lanes/heal.webm",
+          "decodedFramesDirectory": "test-results/motion-evidence/after-lanes/heal-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 28.599999964237213,
+          "trustedClickMs": 28.899999976158142,
+          "maximumRafIntervalMs": 17.80000000000291,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "heal.webm",
+            "bytes": 186401,
+            "sha256": "07ae6405672030243b5776262c7963ae9ebcacbc1d5f8b2c6d1c2ba8a491300b",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 91,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 2.999,
+            "maximumFrameGapSeconds": 0.05
+          },
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": true,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            0
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            1024
+          ],
+          "reducedMotionValues": [
+            false
+          ],
+          "commands": [
+            {
+              "type": "battle.action",
+              "action": "play",
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "play",
+              "seat": 0
+            }
+          ],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "shield",
+          "evidenceJson": "test-results/motion-evidence/after-lanes/shield.json",
+          "nativeVideo": "test-results/motion-evidence/after-lanes/shield.webm",
+          "decodedFramesDirectory": "test-results/motion-evidence/after-lanes/shield-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 28.399999976158142,
+          "trustedClickMs": null,
+          "maximumRafIntervalMs": 17.80000000000291,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "shield.webm",
+            "bytes": 184808,
+            "sha256": "962947528a414ce2d7a2d0d0e3fde44dc4d46f1eda5f0342b1269eb03ccc5f32",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 91,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 2.999,
+            "maximumFrameGapSeconds": 0.056
+          },
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": true,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            0
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            1024
+          ],
+          "reducedMotionValues": [
+            false
+          ],
+          "commands": [
+            {
+              "type": "battle.action",
+              "action": "play",
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "play",
+              "seat": 0
+            }
+          ],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        },
+        {
+          "name": "maximum-health",
+          "evidenceJson": "test-results/motion-evidence/after-lanes/maximum-health.json",
+          "nativeVideo": "test-results/motion-evidence/after-lanes/maximum-health.webm",
+          "decodedFramesDirectory": "test-results/motion-evidence/after-lanes/maximum-health-frames",
+          "captureStatus": "complete",
+          "trustedPointerDownMs": 26.899999976158142,
+          "trustedClickMs": null,
+          "maximumRafIntervalMs": 17.700000000004366,
+          "rafIntervalsOver250Ms": 0,
+          "originalPts": {
+            "file": "maximum-health.webm",
+            "bytes": 189041,
+            "sha256": "52c3e834afd9f3adfe84b23551520bb602f3b776b1b3d05cab321cb5967b58d3",
+            "codec": "vp8",
+            "width": 708,
+            "height": 208,
+            "audioStreams": 0,
+            "recordedFrames": 91,
+            "firstPtsSeconds": 0,
+            "lastPtsSeconds": 2.997,
+            "maximumFrameGapSeconds": 0.05
+          },
+          "canvasIdentitySampled": true,
+          "sameOriginalCanvas": true,
+          "firstDetachedSample": null,
+          "qualityValues": [
+            0
+          ],
+          "pixelScaleValues": [
+            1
+          ],
+          "shadowMapSizeValues": [
+            1024
+          ],
+          "reducedMotionValues": [
+            false
+          ],
+          "commands": [
+            {
+              "type": "battle.action",
+              "action": "play",
+              "accepted": true
+            }
+          ],
+          "events": [
+            {
+              "kind": "play",
+              "seat": 0
+            }
+          ],
+          "outcome": null,
+          "savedRevealMaskBefore": null,
+          "savedRevealMaskAfter": null,
+          "collectionRequestAck": []
+        }
+      ]
+    }
+  ],
+  "collectorHistory": [
+    "Before temporary native recorder awaited MediaRecorder.onstart on an idle sealed canvas; launch was delayed until its6-second hard cap, yielding an empty opening clip. Later collector returns once recorder.state is recording without altering game clocks.",
+    "Before initial pack individual-reveal driver targeted a deliberately CSS-hidden semantic button and was pointer-occluded. Later tests use the actual visible canvas card.",
+    "Before shield/maxHP clips retained6-second hard-limit native video with actual one-command/one-event effect but no trusted click marker. Later collector adds genuine pointerdown marking; click markers still null where DOM/scene retargeting occurs.",
+    "Before collector read Number(dataset.qualityLevel)||null, dropping legitimate0 values. The permitted passive reader repair uses Number.isFinite; no product quality or acceptance threshold changed.",
+    "Local teardown adaptation later bounds actor diagnostics/context.close/owned server.close and retains timeout as failure; the source hash differs from earlier harness runs. Earlier formal/full-suite cleanup failures remain in their own reports.",
+    "Canvas replacement was never hidden by reconnecting the recorder: before false/detached samples and empty reveal stream are preserved; after-final actual same-canvas18-frame flip was independently reviewed.",
+    "The after-lanes final source differs from after-final only in initial arena floating-label lane placement plus its regression test/build; pack videos belong to the explicitly olderc49... bundle and are not relabelled asb059... testing."
+  ],
+  "indexGeneratedAt": "2026-10-10T05:51:40.308Z"
+}
