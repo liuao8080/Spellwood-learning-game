@@ -34,6 +34,7 @@ import {
 } from "./model-utils.mjs";
 import { EXPANSION_BUILDERS } from "./creature-expansion.mjs";
 import { V4_BUILDERS } from "./creature-expansion-v4.mjs";
+import { createStoneSurfaceTexture } from "./stone-surface.mjs";
 
 export const MODEL_VERSION = "4.0.0-models.1";
 export const SUPPORTED_SPECIES = Object.freeze([
@@ -133,7 +134,7 @@ function eye(
   );
 }
 
-function buildFox(builder, body, rig) {
+function buildFox(builder, body, rig, { foxFaceDetail = true } = {}) {
   const fur = "#d88844",
     dark = "#985022",
     light = "#f2b668";
@@ -262,16 +263,16 @@ function buildFox(builder, body, rig) {
       [0.255, 0.19, 0.19],
       { style: "fur", rotation: [0, -s * 0.28, -s * 0.16] },
     );
-    eye(builder, rig.head, [s * 0.205, 0.15, 0.32], 0.105, "amber");
+    eye(builder, rig.head, [s * 0.205, 0.15, 0.32], 0.105, foxFaceDetail ? "#785331" : "amber");
     builder.oval(
       rig.head,
-      light,
+      foxFaceDetail ? fur : light,
       [s * 0.22, 0.295, 0.29],
       [0.11, 0.037, 0.025],
       { style: "fur", rotation: [0, 0, -s * 0.16] },
     );
   }
-  builder.oval(rig.head, "cream", [0, -0.08, 0.4], [0.23, 0.12, 0.19], {
+  builder.oval(rig.head, foxFaceDetail ? "#ebd4ae" : "cream", [0, -0.08, 0.4], [0.23, 0.12, 0.19], {
     style: "fur",
   });
   builder.oval(rig.head, "eye", [0, 0.005, 0.555], [0.105, 0.065, 0.065], {
@@ -1339,7 +1340,7 @@ function makeHandle({
   return api;
 }
 
-/** All detail stays in the perimeter. Central stone remains a quiet playing surface. */
+/** Sculpted detail stays in the perimeter. Central stone remains a quiet playing surface. */
 function forestEdgeDetail(builder, body, random) {
   // Layered bevelled wood end-grain, not a background image or decal.
   for (const [y, color, depth] of [
@@ -1557,7 +1558,7 @@ function forestEdgeDetail(builder, body, random) {
   }
 }
 
-function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4 } = {}) {
+function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4, rowDepth = 2.12, frontSlots = null, backSlots = null, backRowDepth = rowDepth, heroDockZ = null, stoneSurface = null } = {}) {
   builder.add(body, roundedSlab(18, 12, 0.66, 1.05, 0.07), "bark", {
     position: [0, -0.47, 0],
     rotation: [-HALF_PI, 0, 0],
@@ -1574,10 +1575,16 @@ function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4 } = {}) {
     rotation: [-HALF_PI, 0, 0],
   });
   // Large solid inset is lower than the outer lip; sidewall remains readable.
-  builder.add(body, roundedSlab(16.35, 10.35, 0.3, 0.8, 0.02), "stone", {
-    position: [0, -0.17, 0],
-    rotation: [-HALF_PI, 0, 0],
-  });
+  const inset = roundedSlab(16.35, 10.35, 0.3, 0.8, 0.02);
+  if (stoneSurface) {
+    const positions = inset.getAttribute('position'), uv = inset.getAttribute('uv');
+    for (let i = 0; i < positions.count; i++) uv.setXY(i, clamp(positions.getX(i) / 16.35 + .5, 0, 1), clamp(positions.getY(i) / 10.35 + .5, 0, 1));
+    const mesh = builder.ownMesh(new Mesh(inset, stoneSurface));
+    mesh.name = 'forest-table:quiet-stone';
+    mesh.position.set(0, -.17, 0); mesh.rotation.x = -HALF_PI;
+    mesh.castShadow = true; mesh.receiveShadow = true;
+    body.add(mesh);
+  } else builder.add(body, inset, "stone", { position: [0, -.17, 0], rotation: [-HALF_PI, 0, 0] });
   const trim = roundedRectShape(17.5, 11.5, 0.95);
   trim.holes.push(roundedRectShape(17.33, 11.33, 0.89));
   builder.add(body, extrudeShape(trim, 0.035, 0.008), "bronze", {
@@ -1589,8 +1596,10 @@ function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4 } = {}) {
   const slotPositions = [[], []];
   for (let side = 0; side < 2; side++)
     for (let i = 0; i < slotCount; i++) {
-      const x = (i - (slotCount - 1) / 2) * 3.15,
-        z = side === 0 ? 2.12 : -2.12;
+      const rowSlots = side === 0 ? frontSlots : backSlots;
+      const x = Array.isArray(rowSlots) && Number.isFinite(rowSlots[i])
+        ? rowSlots[i] : (i - (slotCount - 1) / 2) * 3.15,
+        z = side === 0 ? clamp(rowDepth, 1.5, 3.2) : -clamp(backRowDepth, 1.5, 4.2);
       slotPositions[side].push([x, 0.026, z]);
       builder.add(
         body,
@@ -1604,6 +1613,17 @@ function arenaGeometry(builder, body, { seed = 7, slotsPerSide = 4 } = {}) {
         style: "metal",
       });
     }
+  // A carved extension gives the portrait hero real foot contact rather than
+  // leaving the figure floating in the empty gutter below the unit badges.
+  if (Number.isFinite(heroDockZ)) {
+    const z = clamp(heroDockZ - .25, 4.8, 6.1);
+    builder.add(body, new CylinderGeometry(.42, .5, .12, 20), "barkLight", {
+      position: [0, -.025, z],
+    });
+    builder.add(body, new TorusGeometry(.39, .025, 5, 24), "bronze", {
+      position: [0, .043, z], rotation: [HALF_PI, 0, 0], style: "metal",
+    });
+  }
   for (const s of [-1, 1]) {
     for (let i = -3; i <= 3; i++) {
       builder.add(body, leafSolid(0.28, 0.13, 0.025), "bronze", {
@@ -1705,6 +1725,7 @@ export function createModelLibrary({
   quality = "medium",
   palette = {},
   textures = {},
+  arenaSurface = "plain",
 } = {}) {
   if (!["low", "medium", "high"].includes(quality))
     throw new RangeError("Unsupported model quality");
@@ -1727,7 +1748,12 @@ export function createModelLibrary({
         root = new Group();
       root.name = "spellwood-arena";
       const body = builder.part("forest-table", root);
-      const slots = arenaGeometry(builder, body, options);
+      // CPU compatibility keeps the original merged vertex-color surface and
+      // avoids a large textured triangle in its per-pixel rasterizer.
+      const stoneTexture = arenaSurface === 'stone' ? createStoneSurfaceTexture(palette.stone || PALETTE.stone) : null;
+      const stoneSurface = stoneTexture ? new MeshStandardMaterial({ map: stoneTexture, color: 0xffffff, roughness: .94, metalness: 0 }) : null;
+      if (stoneSurface) stoneSurface.name = 'spellwood-quiet-stone';
+      const slots = arenaGeometry(builder, body, { ...options, stoneSurface });
       const handle = makeHandle({
         root,
         builder,
@@ -1745,9 +1771,15 @@ export function createModelLibrary({
         row.map((p, i) => anchor(root, `slot-${side}-${i}`, p)),
       );
       root.userData.tabletopY = 0;
+      root.userData.arenaSurface = stoneSurface ? 'stone' : 'plain';
+      const disposeHandle = handle.dispose;
+      handle.dispose = () => {
+        if (handle.disposed) return;
+        stoneSurface?.dispose(); stoneTexture?.dispose(); disposeHandle();
+      };
       return retain(handle);
     },
-    createCreature({ species = "fox", side = "player", variantSeed = 1 } = {}) {
+    createCreature({ species = "fox", side = "player", variantSeed = 1, faceDetail = true, foxFaceDetail = true } = {}) {
       if (!BUILDERS[species])
         throw new RangeError(`Unsupported species: ${species}`);
       const builder = makeBuilder(),
@@ -1758,7 +1790,7 @@ export function createModelLibrary({
       root.userData.variantSeed = variantSeed;
       const body = builder.part(`${species}-body`, root),
         rig = {};
-      const info = BUILDERS[species](builder, body, rig);
+      const info = BUILDERS[species](builder, body, rig, { faceDetail, foxFaceDetail });
       const handle = makeHandle({
         root,
         builder,

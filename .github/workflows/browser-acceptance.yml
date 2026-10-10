@@ -3,7 +3,7 @@ name: Browser acceptance
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, codex/import-spellwood-v3.2.9, codex/guest-online-v4, codex/teacher-academic-test, codex/nat-friendly-online]
+    branches: [main, codex/import-spellwood-v3.2.9, codex/guest-online-v4, codex/teacher-academic-test, codex/nat-friendly-online, codex/teacher-expansion-integrated]
 
 permissions:
   contents: read
@@ -31,9 +31,15 @@ jobs:
       - name: Build the real network client
         run: npm run build:network
       - name: NAT admission and real client startup
-        run: node --test --test-concurrency=1 --test-timeout=30000 tests/admission.test.mjs tests/identity-admission.test.mjs tests/nat-startup.test.mjs
+        run: node --test --test-concurrency=1 --test-timeout=30000 tests/admission.test.mjs tests/identity-admission.test.mjs tests/nat-startup.test.mjs tests/card-target-copy.test.mjs tests/target-notice.test.mjs
       - name: Install official Playwright Chromium
         run: npx --no-install playwright install --with-deps chromium
+      - name: Install the standard Ubuntu combat evidence decoder
+        run: |
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            timeout 90s sudo apt-get update -qq
+            timeout 90s sudo apt-get install -y --no-install-recommends ffmpeg
+          fi
       - name: Guest, registration and two-context smoke
         env:
           E2E_SUITE: smoke
@@ -42,11 +48,33 @@ jobs:
         env:
           E2E_SUITE: interaction
         run: npx --no-install playwright test --grep @interaction
-      - name: Remaining UI match, recovery, persistence and responsive acceptance
+      - name: Populated responsive battlefield and hand navigation
+        id: layout
+        env:
+          E2E_SUITE: layout
+        run: npx --no-install playwright test --grep @layout
+      - name: Normal-speed melee motion and safe image sequence
+        id: motion
+        env:
+          E2E_SUITE: motion
+        run: npx --no-install playwright test --grep @combat-motion
+      - name: School UI match, recovery, persistence and responsive acceptance
+        if: ${{ !cancelled() && steps.layout.outcome == 'success' }}
         env:
           E2E_SUITE: full
-        run: npx --no-install playwright test --grep-invert '@smoke|@interaction'
+        run: npx --no-install playwright test --grep-invert '@smoke|@interaction|@layout|@combat-motion|@frame-diagnostic|@draw-diagnostic|@draw-followup|@hedgehog-review|@fox-review|teacher-bank\.spec\.mjs'
+      - name: Teacher scope and reading acceptance with its own suite budget
+        if: ${{ !cancelled() && steps.layout.outcome == 'success' }}
+        env:
+          E2E_SUITE: teacher
+        run: npx --no-install playwright test tests/e2e/teacher-bank.spec.mjs
+      - name: Single-model real WebGL and neighbour attack evidence
+        if: ${{ !cancelled() && steps.layout.outcome == 'success' }}
+        env:
+          E2E_SUITE: hedgehog
+        run: npx --no-install playwright test --grep '@hedgehog-review|@fox-review'
       - name: Keep only safe evidence for three days
+        id: full-evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -54,6 +82,214 @@ jobs:
           path: |
             test-results/browser-evidence/*.json
             test-results/browser-evidence/*.png
+            test-results/browser-evidence/*-arena-only.webm
+          retention-days: 3
+          if-no-files-found: warn
+          include-hidden-files: false
+      - name: Copy this run's original evidence into bounded transfer parts
+        id: evidence-parts
+        if: ${{ always() && steps.full-evidence.outcome == 'success' }}
+        env:
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          FULL_ARTIFACT_ID: ${{ steps.full-evidence.outputs.artifact-id }}
+          FULL_ARTIFACT_SHA256: ${{ steps.full-evidence.outputs.artifact-digest }}
+        run: |
+          timeout 30s python3 tests/split-browser-evidence.test.py
+          timeout 30s python3 tests/current-evidence-source.test.py
+          timeout 30s python3 - <<'PYTHON'
+          import importlib.util, json, os, re, shutil, subprocess
+          from pathlib import Path
+          def git(*args):
+              return subprocess.check_output(['git', *args], text=True).strip()
+          checkout=git('rev-parse','HEAD'); tree=git('rev-parse','HEAD^{tree}')
+          assert checkout==os.environ['GITHUB_SHA']
+          head=os.environ.get('PR_HEAD') or checkout
+          assert re.fullmatch('[0-9a-f]{40}',head)
+          # Checkout is shallow; pretty-log ancestry may hide real parents.
+          headers=git('cat-file','-p','HEAD').split('\n\n',1)[0].splitlines()
+          parents=[line.split(' ',1)[1] for line in headers if line.startswith('parent ')]
+          assert head==checkout or head in parents
+          digest=os.environ['FULL_ARTIFACT_SHA256']
+          assert re.fullmatch('[0-9a-f]{64}',digest)
+          request={'sourceRunId':int(os.environ['GITHUB_RUN_ID']),
+                   'sourceRunAttempt':int(os.environ['GITHUB_RUN_ATTEMPT']),
+                   'sourceHead':head,'checkoutHead':checkout,'sourceTree':tree,
+                   'artifactName':f"browser-acceptance-{os.environ['GITHUB_RUN_ID']}-{os.environ['GITHUB_RUN_ATTEMPT']}",
+                   'originalArtifactId':int(os.environ['FULL_ARTIFACT_ID']),
+                   'originalArchiveSha256':digest}
+          source=Path('test-results/browser-evidence'); stage=Path('evidence-transfer-source')
+          assert source.is_dir() and not stage.exists(); stage.mkdir()
+          for item in sorted(source.iterdir()):
+              if item.suffix in {'.json','.png'} or item.name.endswith('-arena-only.webm'):
+                  assert item.is_file() and not item.is_symlink()
+                  shutil.copyfile(item,stage/item.name)
+          spec=importlib.util.spec_from_file_location('split_evidence','scripts/split-browser-evidence.py')
+          module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+          manifest=module.split_evidence(stage,'evidence-transfer-parts',request,single_limit=8*1024*1024)
+          print(json.dumps({'parts':len(manifest['parts']),'files':sum(len(p['files']) for p in manifest['parts'])}))
+          PYTHON
+      - name: Retain current-run provenance and original-byte hashes
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-manifest
+          path: evidence-transfer-parts/manifest
+          if-no-files-found: error
+          retention-days: 3
+      - name: Retain current-run original evidence part 01
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-01
+          path: evidence-transfer-parts/part-01
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 02
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-02
+          path: evidence-transfer-parts/part-02
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 03
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-03
+          path: evidence-transfer-parts/part-03
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 04
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-04
+          path: evidence-transfer-parts/part-04
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 05
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-05
+          path: evidence-transfer-parts/part-05
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 06
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-06
+          path: evidence-transfer-parts/part-06
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 07
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-07
+          path: evidence-transfer-parts/part-07
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Retain current-run original evidence part 08
+        if: ${{ always() && steps.evidence-parts.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-${{ github.run_id }}-${{ github.run_attempt }}-part-08
+          path: evidence-transfer-parts/part-08
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Check single-model evidence fits the supported transfer budget
+        id: model-evidence-size
+        if: always()
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          files=[p for p in Path('test-results/browser-evidence').iterdir() if p.is_file() and ('hedgehog' in p.name or 'fox' in p.name)]
+          size=sum(p.stat().st_size for p in files)
+          assert size<=24*1024*1024, 'Model evidence exceeds bounded transfer size; preserve full artifact without reencoding'
+          print(f'{len(files)} original model evidence files, {size} bytes')
+          PY
+      - name: Keep original model evidence in a separate small artifact
+        if: ${{ always() && steps.model-evidence-size.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: creature-review-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/browser-evidence/*hedgehog*
+            test-results/browser-evidence/*fox*
+          retention-days: 3
+          if-no-files-found: warn
+          include-hidden-files: false
+
+  frame-diagnostic:
+    # Completed first-stage control remains manually reproducible.
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      SPELLWOOD_BROWSER_CI: '1'
+      E2E_SUITE: frame-diagnostic
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: npm run build:network
+      - run: node --test tests/safe-trace-summary.test.mjs tests/frame-window-summary.test.mjs
+      - run: npx --no-install playwright install --with-deps chromium
+      - name: Paired recording and label paint diagnosis, not acceptance
+        run: npx --no-install playwright test --grep @frame-diagnostic
+      - name: Keep anonymous numeric trace summaries and arena-only clips
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: frame-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/browser-evidence/acceptance-frame-diagnostic.json
+            test-results/browser-evidence/paired-frame-diagnostics.json
+            test-results/browser-evidence/diagnostic-*-arena-only.webm
+          retention-days: 3
+          if-no-files-found: warn
+          include-hidden-files: false
+
+  draw-diagnostic:
+    # Completed isolation experiments remain manually reproducible, not gates.
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    env:
+      SPELLWOOD_BROWSER_CI: '1'
+      E2E_SUITE: draw-diagnostic
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: npm run build:network
+      - name: Build fixed diagnostic clients without changing production
+        run: |
+          sha256sum client-dist/app.js > /tmp/production.sha256
+          node scripts/build-draw-diagnostics.mjs
+          sha256sum --check /tmp/production.sha256
+      - run: npx --no-install playwright install --with-deps chromium
+      - name: Fixed-build partner controls and missing arena repeat, not acceptance
+        run: npx --no-install playwright test --grep @draw-followup
+      - name: Keep only anonymous numeric observations
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: draw-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/browser-evidence/acceptance-draw-diagnostic.json
+            test-results/browser-evidence/draw-diagnostic-*.json
           retention-days: 3
           if-no-files-found: warn
           include-hidden-files: false

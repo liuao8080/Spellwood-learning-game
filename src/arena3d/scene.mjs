@@ -17,6 +17,9 @@ import { CARD } from "../cards.mjs";
 import { SoftwareRenderer } from "./software-renderer.mjs";
 import { targetPreview } from "./targeting.mjs";
 import { createElementalCast, createElementalBurst, createBarrierBadge } from "./elemental-effects.mjs";
+import { AdaptiveQualityController } from "./adaptive-quality.mjs";
+import { createEffectWarmup, primeHiddenEffectCanvas } from "./effect-warmup.mjs";
+import { playMeleeSequence } from "./melee-sequence.mjs";
 
 const lerp = MathUtils.lerp;
 const smooth = (v) => 1 - (1 - v) ** 3;
@@ -68,6 +71,9 @@ export class ArenaScene {
     sun.shadow.mapSize.set(quality === "high" ? 2048 : 1024, quality === "high" ? 2048 : 1024);
     Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 10, bottom: -10, near: 1, far: 40 });
     sun.shadow.bias = -.0003; sun.shadow.normalBias = .025;
+    this.shadowLight = sun;
+    this.adaptiveQuality = new AdaptiveQualityController({ baseShadowSize: quality === "high" ? 2048 : 1024 });
+    this.appliedQuality = this.adaptiveQuality.profile;
     this.scene.add(sun, sun.target);
     const rim = new DirectionalLight(0x85b8cf, 2.2); rim.position.set(6, 7, -10); this.scene.add(rim);
     this.textures = new CardTextures({ onChange: () => this.requestRender() });
@@ -83,13 +89,15 @@ export class ArenaScene {
       this.contactShadowTexture = new CanvasTexture(shadowCanvas);
       this.contactShadowGeometry = new PlaneGeometry(2.2, 1.65);
     }
-    this.library = createModelLibrary({ quality: this.quality });
+    this.library = createModelLibrary({ quality: this.quality, arenaSurface: this.renderer.isSoftwareRenderer ? 'plain' : 'stone' });
+    canvas.dataset.arenaSurface = this.renderer.isSoftwareRenderer ? 'plain' : 'stone';
     this.arena = this.library.createArena({ seed: 27, slotsPerSide: 4 });
     this.arena.root.traverse(object => { object.userData.cpuStatic = true; });
     this.scene.add(this.arena.root);
     this.temporary = new Group(); this.scene.add(this.temporary);
     this.makeHeroes(); this.makeDecks(); this.makeFireflies();
     this.bind(); this.resize(); this.showGallery(); this.start();
+    this.prepareEffectPrograms();
     this.onStatus({ available: true, renderer: this.rendererName, quality: this.quality });
   }
 
@@ -100,6 +108,44 @@ export class ArenaScene {
       this.quality = "low";
       return new SoftwareRenderer(canvas);
     }
+  }
+
+  prepareEffectPrograms() {
+    if(this.renderer.isSoftwareRenderer||typeof this.renderer.compileAsync!=="function")return;
+    const epoch=this.effectWarmupEpoch=(this.effectWarmupEpoch||0)+1,started=performance.now();
+    this.canvas.dataset.effectWarmup="pending";
+    this.canvas.dataset.effectWarmupDraw="pending";
+    // Detached resources are compiled before use. A first draw is allowed only
+    // while the actual gameplay canvas is hidden; it is never evidence footage.
+    this.effectWarmupPromise=Promise.resolve().then(async()=>{
+      if(this.destroyed||this.contextLost||epoch!==this.effectWarmupEpoch)return;
+      this.effectWarmup ||= createEffectWarmup();
+      for(const texture of this.effectWarmup.textures)this.renderer.initTexture?.(texture);
+      const handle=this.effectWarmup;
+      const timer=setTimeout(()=>{
+        if(this.destroyed||epoch!==this.effectWarmupEpoch)return;
+        this.effectWarmupEpoch++;handle.dispose();this.effectWarmup=null;
+        this.canvas.dataset.effectWarmup="failed";
+      },10000);
+      try {await this.renderer.compileAsync(handle.root,this.camera,this.scene);}
+      finally {clearTimeout(timer);}
+      if(this.destroyed||this.contextLost||epoch!==this.effectWarmupEpoch)return;
+      this.canvas.dataset.effectWarmup="ready";
+      this.canvas.dataset.effectWarmupMs=String(Math.round(performance.now()-started));
+      this.primeHiddenEffects();
+    }).catch(()=>{
+      if(!this.destroyed&&epoch===this.effectWarmupEpoch)this.canvas.dataset.effectWarmup="failed";
+    });
+  }
+
+  primeHiddenEffects() {
+    if(this.destroyed||this.contextLost||!this.effectWarmup||this.canvas.dataset.effectWarmup!=="ready"||["performed","failed"].includes(this.canvas.dataset.effectWarmupDraw))return;
+    try {
+      const started=performance.now();
+      const result=primeHiddenEffectCanvas({renderer:this.renderer,scene:this.scene,camera:this.camera,canvas:this.canvas,handle:this.effectWarmup});
+      this.canvas.dataset.effectWarmupDraw=result.status;
+      this.canvas.dataset.effectWarmupDrawMs=String(Math.round(performance.now()-started));
+    } catch {this.canvas.dataset.effectWarmupDraw="failed";}
   }
 
   makeHeroes() {
@@ -140,6 +186,17 @@ export class ArenaScene {
 
   fitHeroSeats() {
     if (!this.width || !this.height) return;
+    for (const hero of this.heroes) hero.root.scale.setScalar(1);
+    this.heroes[0].root.position.set(SELF_HERO_X*(this.boardWidthScale||1),.1,4.5);
+    this.heroes[1].root.position.set(this.compactLandscape?-SELF_HERO_X*(this.boardWidthScale||1):0,.1,this.compactLandscape?4.5:-4.25);
+    if (this.portraitHeroDock) {
+      this.heroes[0].root.position.set(0, .1, this.portraitHeroDock);
+      this.heroes[0].root.scale.setScalar(this.splitFrontRow ? .78 : .85);
+      if (this.splitFrontRow) {
+        this.heroes[1].root.position.set(0,.1,-6.1);
+        this.heroes[1].root.scale.setScalar(.78);
+      } else this.heroes[1].root.position.set(0,.1,-5.5);
+    }
     this.camera.updateMatrixWorld(true);
     for (const hero of this.heroes) for (let attempt = 0; attempt < 2; attempt++) {
       hero.root.updateMatrixWorld(true);
@@ -211,8 +268,8 @@ export class ArenaScene {
         this.hover = this.pick(e); this.canvas.style.cursor = this.hover ? "pointer" : "default"; this.requestRender();
       },
       leave: () => { this.pointer.set(0, 0); this.hover = null; this.requestRender(); },
-      contextlost: (e) => { e.preventDefault(); this.contextLost = true; this.cancel(); this.stop(); this.onStatus({ available: false, renderer: "WebGL2", reason: "context-lost" }); },
-      contextrestored: () => { if (!this.destroyed) { this.contextLost = false; this.frameFault = false; this.start(); this.onStatus({ available: true, renderer: "WebGL2", restored: true }); } },
+      contextlost: (e) => { e.preventDefault(); this.contextLost = true; this.effectWarmupEpoch=(this.effectWarmupEpoch||0)+1;this.effectWarmup?.dispose();this.effectWarmup=null;this.cancel(); this.stop(); this.onStatus({ available: false, renderer: "WebGL2", reason: "context-lost" }); },
+      contextrestored: () => { if (!this.destroyed) { this.contextLost = false; this.frameFault = false; this.prepareEffectPrograms(); this.start(); this.onStatus({ available: true, renderer: "WebGL2", restored: true }); } },
     };
     this.boardInput = new BoardInput({element:this.canvas, pick:event=>this.pick(event),
       getRevision:()=>this.getInputRevision?.() ?? this.inputRevision,
@@ -240,9 +297,16 @@ export class ArenaScene {
     if (!this.renderer) return;
     const r = this.canvas.getBoundingClientRect(), w = Math.max(1, r.width), h = Math.max(1, r.height);
     this.width = w; this.height = h;
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, this.quality === "low" ? 1 : 1.5));
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, this.quality === "low" ? 1 : 1.5) * (this.appliedQuality?.pixelScale || 1));
     const scale = this.renderer.isSoftwareRenderer ? Math.min(1, Math.sqrt(720000 / (w * h))) : 1;
     this.renderer.setSize(Math.round(w * scale), Math.round(h * scale), false); this.camera.aspect = w / h;
+    const compactLandscape=this.externalHand && w/h>2.2 && h<240;
+    this.compactLandscape=compactLandscape;
+    this.splitFrontRow=this.externalHand && w<600 && !compactLandscape && h<400;
+    this.portraitHeroDock=this.externalHand && w<600 && !compactLandscape ? this.splitFrontRow?5.2:6.35 : null;
+    const rowDepth=compactLandscape||this.splitFrontRow?2.8:2;
+    this.rowDepth=rowDepth;
+    this.enemyRowDepth=this.splitFrontRow?3.8:this.portraitHeroDock?3.2:rowDepth;
     const narrow = w < 600, portrait = !narrow && this.camera.aspect < 1.1;
     this.boardWidthScale = narrow ? .72 : portrait ? .9 : 1;
     if(this.externalHand && h < 270) this.boardWidthScale = narrow ? 1.2 : 1.35;
@@ -253,6 +317,10 @@ export class ArenaScene {
     const fit = Math.max(1, (narrow ? .76 : portrait ? 1.22 : 1.48) / this.camera.aspect);
     const closeBoard = this.externalHand ? h < 270 ? .76 : .91 : 1;
     this.cameraBase = new Vector3(0, (this.externalHand ? 13.8 : 16.4) * fit * closeBoard, (this.externalHand ? 15.8 : 18.6) * fit * closeBoard);
+    // A taller overhead view separates complete figures from the next row's
+    // hit badges. Large hand cards keep their existing readable pixel size.
+    this.cameraLook.set(0,0,compactLandscape?1.1:.2);
+    if(compactLandscape)this.cameraBase.set(0,14,9);
     this.camera.position.copy(this.cameraBase); this.camera.lookAt(this.cameraLook); this.camera.updateProjectionMatrix();
     if(this.externalHand){
       this.camera.updateMatrixWorld(true);
@@ -262,8 +330,34 @@ export class ArenaScene {
       this.arena.root.scale.x=this.boardWidthScale;this.heroes[0].root.position.x=SELF_HERO_X*this.boardWidthScale;
       for(const deck of this.decks)deck.root.position.x=(deck.side?-6.8:6.8)*this.boardWidthScale;
     }
+    // Keep a real space for the hero on short portrait screens. Move figures,
+    // projected controls and carved slot rings together, never just the DOM.
+    this.frontSlotXs = this.splitFrontRow ? [.11875,.3125,.6875,.88125].map(fraction => {
+      const x=w*fraction;
+      const plane = new Vector3(0,.23,rowDepth+.63).project(this.camera);
+      plane.x=x/w*2-1;
+      return plane.unproject(this.camera).x;
+    }) : null;
+    this.backSlotXs = this.splitFrontRow ? [.11875,.3125,.6875,.88125].map(fraction => {
+      const x=w*fraction;
+      const plane = new Vector3(0,.23,-this.enemyRowDepth+.63).project(this.camera);
+      plane.x=x/w*2-1;
+      return plane.unproject(this.camera).x;
+    }) : null;
+    const arenaKey=JSON.stringify([rowDepth,this.portraitHeroDock,this.frontSlotXs,this.backSlotXs]);
+    if(this.arenaLayoutKey!==arenaKey){
+      this.arenaLayoutKey=arenaKey;
+      this.arena.root.removeFromParent();this.arena.dispose();
+      this.arena=this.library.createArena({seed:27,slotsPerSide:4,rowDepth:rowDepth+.12,
+        backRowDepth:this.enemyRowDepth+.12,
+        frontSlots:this.frontSlotXs?.map(x=>x/this.boardWidthScale),
+        backSlots:this.backSlotXs?.map(x=>x/this.boardWidthScale),heroDockZ:this.portraitHeroDock});
+      this.arena.root.scale.x=this.boardWidthScale;
+      this.arena.root.traverse(object=>{object.userData.cpuStatic=true;});
+      this.scene.add(this.arena.root);
+    }
     this.fitHeroSeats();
-    if (this.snapshot) { this.handKey = null; this.setBattle(this.snapshot, this.viewerSeat); }
+    if (this.snapshot) { this.handKey = null; this.enemyHandCount=null; this.setBattle(this.snapshot, this.viewerSeat); }
     this.requestRender();
   }
 
@@ -304,7 +398,9 @@ export class ArenaScene {
         item.unit = unit; item.seat = seat;
         this.restoreFade(item);
         const slot = state.phase === "gallery" && this.width > 900 ? (relative ? 3.2 : 1.6 + i * 3.2) : slots[i];
-        item.base.set(slot * (this.boardWidthScale || 1), .08, relative ? -2.0 : 2.0);
+        item.base.set(slot * (this.boardWidthScale || 1), .08, relative ? -(this.enemyRowDepth||2) : (this.rowDepth||2));
+        if (!relative && this.frontSlotXs) item.base.x=this.frontSlotXs[i];
+        if (relative && this.backSlotXs) item.base.x=this.backSlotXs[i];
         if (!item.animating) item.model.root.position.copy(item.base);
         if (!item.animating) item.model.root.scale.setScalar(this.scaleFor(unit.cardId));
         item.model.setVisualState?.({ selected: this.selected?.uid === unit.uid, exhausted: !unit.ready, guarded: CARD[unit.cardId]?.keyword === "guard", damaged: unit.hp < (unit.maxHp || CARD[unit.cardId]?.hp || 1) });
@@ -371,6 +467,8 @@ export class ArenaScene {
       const layout = this.handLayout(i, count, true);
       card.root.position.copy(layout.position);
       card.root.scale.setScalar(layout.scale); card.root.rotation.set(...layout.rotation.toArray());
+      if(this.splitFrontRow){card.root.position.set((i-(count-1)/2)*.6,.3,-7.7);card.root.scale.setScalar(.55);}
+      else if(this.portraitHeroDock){card.root.position.set((i-(count-1)/2)*.65,1.05,-7);card.root.scale.setScalar(.75);}
       this.scene.add(card.root); this.enemyCards.push(card);
     }
   }
@@ -504,7 +602,20 @@ export class ArenaScene {
 
   labelPoint(item) {
     const point=this.project(item.model.root.position.clone().add(new Vector3(0,.15,.63)));
-    if(this.externalHand){point.x=MathUtils.clamp(point.x,30,Math.max(30,this.width-30));point.y=MathUtils.clamp(point.y,3,Math.max(3,this.height-46));}
+    if(this.externalHand){
+      point.x=MathUtils.clamp(point.x,30,Math.max(30,this.width-30));
+      // The transparent hand canvas overlaps the field by 10px in landscape.
+      // Keep the complete 44px control above it, with a small touch gutter.
+      const nearLimit=Math.max(3,this.height-58);
+      point.y=MathUtils.clamp(point.y,3,nearLimit);
+      if(item.seat!==this.viewerSeat){
+        // Reserve two full touch rows even when perspective compresses depth.
+        // Use the stable near-row plane, not a moving/attacking neighbour.
+        const near=this.project(new Vector3(item.base.x,.23,(this.rowDepth||2)+.63));
+        const nearY=MathUtils.clamp(near.y,3,nearLimit);
+        point.y=Math.max(3,Math.min(point.y,nearY-50));
+      }
+    }
     return point;
   }
 
@@ -527,16 +638,23 @@ export class ArenaScene {
     if (!item || !to || this.reduced) return;
     const from = item.base.clone(), destination = to.clone().lerp(from, .18);
     const generation = this.generation, token = {}; item.animating = true; item.motionToken = token;
-    let hit = false; this.onSound("attack");
-    await this.addJob(740, (t) => {
-      if (item.motionToken !== token) return;
-      let travel = t < .16 ? -.08 * Math.sin(t / .16 * Math.PI) : t < .47 ? smooth((t - .16) / .31) : t < .58 ? 1 : 1 - easeInOut((t - .58) / .42);
-      item.model.root.position.copy(from).lerp(destination, travel);
-      item.model.root.position.y = from.y + Math.sin(Math.max(0, travel) * Math.PI) * .62;
-      item.model.applyPose?.({ idlePhase: 0, lean: Math.sin(t * Math.PI) * .3, attackProgress: t });
-      if (t >= .47 && !hit) { hit = true; impact(); }
-    });
-    if (generation === this.generation && item.motionToken === token && !this.destroyed) { item.animating = false; item.motionToken = null; item.model.root.position.copy(item.base); }
+    this.onSound("attack");
+    try { await playMeleeSequence({
+      runPhase: (duration, update) => this.addJob(duration, update),
+      isCurrent: () => generation === this.generation && item.motionToken === token &&
+        !this.destroyed && !this.hidden && !this.contextLost && !this.frameFault,
+      setPose: ({ travel, progress }) => {
+        item.model.root.position.copy(from).lerp(destination, travel);
+        item.model.root.position.y = from.y + Math.sin(Math.max(0, travel) * Math.PI) * .62;
+        item.model.applyPose?.({ idlePhase: 0, lean: Math.sin(progress * Math.PI) * .3, attackProgress: progress });
+      },
+      impact,
+    }); } finally {
+      if (generation === this.generation && item.motionToken === token && !this.destroyed) {
+        item.animating = false; item.motionToken = null; item.model.root.position.copy(item.base);
+        item.model.applyPose?.({ idlePhase: 0, lean: 0, attackProgress: 0 });
+      }
+    }
   }
 
   async pulse(targetKey, kind = "damage") {
@@ -801,7 +919,7 @@ export class ArenaScene {
     const areaEffect = sourceCard?.target?.startsWith("all-");
     const hit = () => { if (!didHit && generation === this.generation) { didHit = true; onImpact(); impact = this.impacts(event.changes || [], element, areaEffect || (!rangedAttack && sourceCard?.type !== "spell")); } };
     if (event.kind === "attack" && event.sourceUid && target && !this.reduced) {
-      // A removed unit's number/fade end before the row can rearrange at 740ms.
+      // A removed unit's number/fade end before the attack's return settles.
       // Longer surviving labels follow their own UID and need not lock input.
       if (rangedAttack) await this.projectile(event.sourceUid, target, hit, element);
       else await this.attack(event.sourceUid, target, hit);
@@ -819,11 +937,12 @@ export class ArenaScene {
   }
 
   setReduced(value) { if (value && !this.reduced) this.cancel(); this.reduced = !!value;if(this.canvas?.dataset)this.canvas.dataset.reducedMotion=String(this.reduced); this.requestRender(); }
-  setHidden(value) { if(this.hidden===!!value)return;this.hidden = !!value; if (value) { this.cancel(); this.stop(); } else {this.resize();this.start();} }
+  setHidden(value) { if(this.hidden===!!value){if(value)this.primeHiddenEffects();return;}this.hidden = !!value; if (value) { this.cancel(); this.stop(); this.primeHiddenEffects(); } else {this.resize();this.start();} }
   requestRender() { this.needsRender = true; if (this.renderer && !this.hidden) this.start(); }
   start() {
     if (!this.renderer || this.running || this.destroyed || this.hidden || this.contextLost || this.frameFault) return;
     this.running = true;
+    this.lastSoftwareFrame = null;
     this.metricCallbacks=0;this.metricMaxRafGap=0;this.metricLastRaf=null;
     if(this.canvas?.dataset){this.canvas.dataset.sceneState='running';this.canvas.dataset.reducedMotion=String(this.reduced);}
     const frame = (now) => {
@@ -833,9 +952,12 @@ export class ArenaScene {
       if (this.renderer.isSoftwareRenderer && this.lastSoftwareFrame && now - this.lastSoftwareFrame < (this.cpuRenderCost > 45 ? 66 : this.cpuRenderCost > 26 ? 49 : 32)) { this.frame = requestAnimationFrame(frame); return; }
       this.lastFrameInterval = this.lastSoftwareFrame ? now - this.lastSoftwareFrame : 0; this.lastSoftwareFrame = now; this.needsRender = false;
       try {
+      const updateStarted=performance.now();
       const delta = Math.min(.05, Math.max(0, (now - this.lastTime) / 1000)); this.lastTime = now;
       if (!this.reduced) {
-        const cameraX = this.renderer.isSoftwareRenderer ? 0 : (this.pointer.x || 0) * .6;
+        // Packed portrait seats keep fixed screen-space gutters while swiping
+        // the hand. Pointer parallax is retained on wider battlefields.
+        const cameraX = this.renderer.isSoftwareRenderer || this.portraitHeroDock ? 0 : (this.pointer.x || 0) * .6;
         this.camera.position.x = lerp(this.camera.position.x, cameraX, Math.min(1, delta * 4));
         this.camera.lookAt(this.cameraLook);
         this.fireflies.rotation.y = Math.sin(now * .00005) * .06;
@@ -868,14 +990,52 @@ export class ArenaScene {
         shadow.position.set(item.model.root.position.x + .12, .035, item.model.root.position.z + .13);
         shadow.scale.setScalar(this.scaleFor(item.unit.cardId) / 1.3);
       }
+        // Keep the target frame and effect timing stable; apply only once the
+        // current animation jobs have settled, without recreating game objects.
+      let qualityApplied=false;
+      if(this.pendingQuality&&!this.jobs.size){
+        const previous=this.appliedQuality;
+        this.appliedQuality=this.pendingQuality;this.pendingQuality=null;
+        if(previous.shadowMapSize!==this.appliedQuality.shadowMapSize){
+          this.shadowLight.shadow.mapSize.set(this.appliedQuality.shadowMapSize,this.appliedQuality.shadowMapSize);
+          this.shadowLight.shadow.needsUpdate=true;
+        }
+        // Three's setPixelRatio already updates the drawing buffer. A shadow-
+        // only adjustment must leave that buffer untouched.
+        if(previous.pixelScale!==this.appliedQuality.pixelScale)
+          this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,this.quality==="low"?1:1.5)*this.appliedQuality.pixelScale);
+        this.adaptiveQuality.resetSamples({appliedAt:now});
+        qualityApplied=true;
+      }
+      const renderStarted=performance.now();
       this.renderer.render(this.scene, this.camera);
+      const renderFinished=performance.now();
       if (this.renderer.isSoftwareRenderer) this.cpuRenderCost = this.cpuRenderCost ? this.cpuRenderCost * .8 + this.renderer.lastRenderMs * .2 : this.renderer.lastRenderMs;
       const anchors = [...this.units.entries()].map(([uid, item]) => ({ uid, seat: item.seat, ...this.labelPoint(item) }));
       this.onAnchors(anchors);
+      const anchorFinished=performance.now();
+      this.frameTimings={updateMs:renderStarted-updateStarted,submitMs:renderFinished-renderStarted,anchorMs:anchorFinished-renderFinished};
+      if(this.canvas?.dataset){
+        this.canvas.dataset.renderUpdateMs=this.frameTimings.updateMs.toFixed(2);
+        this.canvas.dataset.renderSubmitMs=this.frameTimings.submitMs.toFixed(2);
+        this.canvas.dataset.renderAnchorMs=this.frameTimings.anchorMs.toFixed(2);
+        this.canvas.dataset.frameGapMs=String(Math.round(this.lastFrameInterval||0));
+      }
+      if(!this.renderer.isSoftwareRenderer&&!this.pendingQuality&&!qualityApplied){
+        const profile=this.adaptiveQuality.sample({now,frameIntervalMs:this.lastFrameInterval,
+          renderMs:this.frameTimings.submitMs,active:!this.reduced&&!this.hidden&&globalThis.document?.visibilityState!=="hidden"});
+        if(profile)this.pendingQuality=profile;
+
+      }
+      if(this.canvas?.dataset){
+        this.canvas.dataset.qualityLevel=String(this.appliedQuality.level);
+        this.canvas.dataset.pixelScale=String(this.appliedQuality.pixelScale);
+        this.canvas.dataset.shadowMapSize=String(this.appliedQuality.shadowMapSize);
+      }
       this.metricFrames++;
       if (now - this.metricStart >= 1500) {
         if(this.canvas?.dataset){this.canvas.dataset.sampleTime=String(Date.now());this.canvas.dataset.sampleWindowMs=String(Math.round(now-this.metricStart));this.canvas.dataset.rafCallbacks=String(this.metricCallbacks);this.canvas.dataset.paintedFrames=String(this.metricFrames);this.canvas.dataset.maxRafGapMs=String(Math.round(this.metricMaxRafGap));this.canvas.dataset.pageVisibility=globalThis.document?.visibilityState||'unknown';}
-        this.onStatus({ available: true, renderer: this.rendererName || "WebGL2", quality: this.quality, fps: Math.round(this.metricFrames * 1000 / (now - this.metricStart)), triangles: this.renderer.info.render.triangles, drawCalls: this.renderer.info.render.calls, renderMs: Math.round(this.renderer.lastRenderMs || 0), frameIntervalMs: Math.round(this.lastFrameInterval || 0) });
+        this.onStatus({ available: true, renderer: this.rendererName || "WebGL2", quality: this.quality, fps: Math.round(this.metricFrames * 1000 / (now - this.metricStart)), triangles: this.renderer.info.render.triangles, drawCalls: this.renderer.info.render.calls, renderMs: Math.round(this.renderer.lastRenderMs ?? this.frameTimings.submitMs), frameIntervalMs: Math.round(this.lastFrameInterval || 0) });
         this.metricStart = now; this.metricFrames = 0;this.metricCallbacks=0;this.metricMaxRafGap=0;
       }
       if (this.running && !this.destroyed && !this.hidden && !this.contextLost && (!this.reduced || this.jobs.size || this.needsRender)) this.frame = requestAnimationFrame(frame);
@@ -889,6 +1049,7 @@ export class ArenaScene {
       }
     };
     this.lastTime = performance.now(); this.metricStart = this.lastTime; this.metricFrames = 0;
+    this.adaptiveQuality?.resetSamples();
     this.frame = requestAnimationFrame(frame);
   }
 
@@ -910,6 +1071,8 @@ export class ArenaScene {
   dispose() {
     if (this.destroyed) return;
     this.stop(); this.cancel(); this.destroyed = true; this.boardInput?.dispose();
+    this.effectWarmupEpoch=(this.effectWarmupEpoch||0)+1;
+    this.effectWarmup?.dispose();this.effectWarmup=null;
     if (this.handlers) {
       window.removeEventListener("resize", this.handlers.resize);
       for (const [event, fn] of [["pointermove", "move"], ["pointerleave", "leave"], ["webglcontextlost", "contextlost"], ["webglcontextrestored", "contextrestored"]]) this.canvas.removeEventListener(event, this.handlers[fn]);

@@ -1,6 +1,7 @@
 /** Cosmetic catalogue only. Learning rewards and ownership live on the server. */
 export const DEFAULT_HERO_SKIN = "forest_apprentice";
 export const HERO_SKIN_VERSION = "hero-2026-10-08-v1";
+const RANGER_MATERIAL_VERSION = "ranger-seams-2026-10-09-r2";
 const entries = [
   [
     "forest_apprentice",
@@ -183,9 +184,9 @@ export const ALL_HERO_SKINS = Object.freeze(
         themeGroup,
         description,
         modelKey: id,
-        assetVersion: HERO_SKIN_VERSION,
-        thumb: `/assets/heroes/${id}/thumb.webp`,
-        portrait: `/assets/heroes/${id}/portrait.webp`,
+        assetVersion: id === 'leaf_ranger' ? RANGER_MATERIAL_VERSION : HERO_SKIN_VERSION,
+        thumb: `/assets/heroes/${id}/thumb.webp${id === 'leaf_ranger' ? `?v=${RANGER_MATERIAL_VERSION}` : ''}`,
+        portrait: `/assets/heroes/${id}/portrait.webp${id === 'leaf_ranger' ? `?v=${RANGER_MATERIAL_VERSION}` : ''}`,
         budgets: Object.freeze({ high, medium, low }),
       }),
   ),

@@ -55,14 +55,22 @@ test('external hand removes the old perspective cards and routes only owner draw
 test('short immersive fields leave separate hit badges for all four allied and enemy slots',t=>{
  const h=harness(t,{externalHand:true});const next=state();
  for(const [seat,player]of next.players.entries())player.board=Array.from({length:4},(_,i)=>({uid:`${seat}:${i}`,cardId:'fox',atk:2,hp:2,maxHp:2,ready:true}));
- for(const [w,hgt]of[[320,138],[320,160],[390,292],[708,184],[604,154]]){
+ for(const [w,hgt]of[[320,138],[320,160],[320,198],[390,292],[708,208],[604,178],[708,184],[604,154]]){
   h.canvas.getBoundingClientRect=()=>({width:w,height:hgt,left:0,top:0});h.scene.resize();h.scene.setBattle(next,0);h.scene.camera.updateMatrixWorld(true);
   for(const seat of[0,1]){const labels=next.players[seat].board.map(u=>h.scene.labelPoint(h.scene.units.get(u.uid)));const points=labels.map(point=>point.x);
    for(let i=1;i<4;i++)assert.ok(points[i]-points[i-1]>=56,`${w}x${hgt}, seat${seat}, spacing${points[i]-points[i-1]}`);
    assert.ok(points[0]>=28&&points[3]<=w-28,`${w}x${hgt}: four label centers fit`);
-   assert.ok(labels.every(point=>point.y>=2&&point.y+44<=hgt),`${w}x${hgt}: near-row state fits inside the field`);
+   assert.ok(labels.every(point=>point.y>=2&&point.y+44<=hgt-12),`${w}x${hgt}: full controls clear the overlapping hand canvas`);
   }
+  const near=next.players[0].board.map(u=>h.scene.labelPoint(h.scene.units.get(u.uid)));
+  const far=next.players[1].board.map(u=>h.scene.labelPoint(h.scene.units.get(u.uid)));
+  for(const a of near)for(const b of far)if(Math.abs(a.x-b.x)<56)
+   assert.ok(a.y-b.y>=50-1e-6,`${w}x${hgt}: opposing touch rows have a 6px gutter`);
  }
+ const before=h.scene.heroes.map(hero=>hero.root.position.toArray());
+ h.scene.setHeroSkins({self:'butterfly_scholar',opponent:'aurora_storyteller'});
+ assert.equal(h.scene.heroes[1].root.position.z,before[1][2],'cosmetic replacement preserves the compact hero seat');
+ assert.ok(h.scene.heroes[1].root.position.x>0,'opposing compact hero remains beside its side of the field');
 });
 
 test("elemental cast commits impact once and cancelled casts never commit", async t => {
@@ -133,14 +141,20 @@ test("perspective scene builds volumetric figures and raycasts a real model", (t
   assert.equal(scene.pick({ clientX: p.x, clientY: p.y })?.uid, "attacker");
 });
 
-test("attack travels from source toward target, contacts once, and returns in 740ms", async (t) => {
+test("attack renders anticipation contact and return with a nominal 740ms phase budget", async (t) => {
   const { scene, frame } = harness(t); scene.setBattle(state(), 0);
   const item = scene.units.get("attacker"), from = item.base.clone(); let impacts = 0;
   const motion = scene.attack("attacker", "defender", () => impacts++), start = [...scene.jobs][0].start;
   frame(start + 100); assert.equal(impacts, 0);
-  frame(start + 360); assert.equal(impacts, 1); assert(item.model.root.position.distanceTo(from) > 2.5);
-  frame(start + 500); assert.equal(impacts, 1);
-  frame(start + 741); await motion;
+  frame(start + 2000); await tick(); assert.equal(impacts, 0, 'late wind-up cannot skip travel');
+  let phase = [...scene.jobs][0]; assert.equal(phase.duration, 230);
+  frame(phase.start + 2000); await tick();
+  assert.equal(impacts, 1); assert(item.model.root.position.distanceTo(from) > 2.5);
+  const contact = item.model.root.position.clone();
+  phase = [...scene.jobs][0]; assert.equal(phase.duration, 82);
+  frame(phase.start + 2000); await tick(); assert(item.model.root.position.equals(contact));
+  phase = [...scene.jobs][0]; assert.equal(phase.duration, 310);
+  frame(phase.start + 2000); await motion; assert.equal(impacts, 1);
   assert(item.model.root.position.distanceTo(from) < 1e-8); assert.equal(item.animating, false);
   assert.equal(scene.jobs.size, 0);
 });
@@ -149,7 +163,8 @@ test("canceling a lethal hit restores opacity and scale before a fresh snapshot"
   const { scene, frame } = harness(t); const initial = state(); scene.setBattle(initial, 0);
   const next = structuredClone(initial); next.players[1].board.shift();
   const motion = scene.present(next, { kind: "attack", sourceUid: "attacker", targetUid: "defender", changes: [{ seat: 1, uid: "defender", hpDelta: -2, removed: true }] });
-  const start = [...scene.jobs][0].start; frame(start + 360);
+  const start = [...scene.jobs][0].start; frame(start + 118); await tick();
+  const travel = [...scene.jobs][0]; frame(travel.start + 230); await tick();
   const fadeStart = [...scene.jobs].find((j) => j.duration === 320).start;
   frame(fadeStart + 170);
   const item = scene.units.get("defender"); assert(item.fadeMaterials.some((x) => x.material.opacity < x.opacity));
@@ -158,6 +173,15 @@ test("canceling a lethal hit restores opacity and scale before a fresh snapshot"
   item.model.root.traverse((o) => { if (o.material && o.material.visible !== false) assert.equal(o.material.opacity, 1); });
   assert.equal(scene.temporary.children.length, 0); assert.equal(scene.jobs.size, 0);
   assert.equal(scene.units.get("neighbor").base.x, -1.6, "cancel did not compact the old row");
+});
+
+test('rejected melee phase releases the motion token and restores the figure', async t => {
+  const { scene } = harness(t); scene.setBattle(state(), 0);
+  const item = scene.units.get('attacker');
+  scene.addJob = async (_duration, update) => { update(.5); throw new Error('rejected phase'); };
+  await assert.rejects(scene.attack('attacker', 'defender'), /rejected phase/);
+  assert.equal(item.animating, false); assert.equal(item.motionToken, null);
+  assert(item.model.root.position.equals(item.base));
 });
 
 test("summon cancellation removes the flying card and keeps the accepted unit", async (t) => {
@@ -512,4 +536,92 @@ for(const software of [true,false])test(`large ${software?'CPU':'GPU'} canvas ke
  assert.equal(scene.camera.aspect,1920/1080);
  if(software)assert.ok(render.outputSize[0]*render.outputSize[1]<=722000);
  else assert.deepEqual(render.outputSize,[1920,1080]);
+});
+
+test('adaptive quality waits for effects and samples only the newly applied profile', async t => {
+  const { scene, frame, render } = harness(t);
+  let samples = 0, ratios = 0, sizes = 0;
+  scene.adaptiveQuality.sample = () => { samples++; return null; };
+  render.setPixelRatio = () => { ratios++; };
+  render.setSize = () => { sizes++; };
+  scene.pendingQuality = scene.adaptiveQuality.profiles[1];
+  const animation = scene.addJob(5000, () => {});
+  const started = [...scene.jobs][0].start;
+  frame(started + 100);
+  assert.equal(scene.appliedQuality.level, 0);
+  assert.equal(samples, 0, 'pending work cannot skip to another unsampled quality tier');
+  frame(started + 5001);
+  await animation;
+  assert.equal(scene.appliedQuality.level, 1);
+  assert.equal(scene.shadowLight.shadow.mapSize.x, 512);
+  assert.equal(samples, 0, 'the apply frame interval belongs to the previous quality');
+  assert.equal(ratios, 0, 'shadow-only changes do not resize the drawing buffer');
+  assert.equal(sizes, 0);
+  scene.pendingQuality = scene.adaptiveQuality.profiles[2];
+  frame(started + 5018);
+  assert.equal(ratios, 1);
+  assert.equal(sizes, 0, 'setPixelRatio already performs the Three drawing-buffer resize');
+  assert.equal(scene.appliedQuality.pixelScale, .8);
+  frame(started + 5035);
+  assert.equal(samples, 1);
+});
+
+test('render-loop restart does not report paused time as a frame gap', t => {
+  const { scene, frame, canvas } = harness(t);
+  scene.stop();
+  scene.lastSoftwareFrame = 10;
+  scene.start();
+  frame(100000);
+  assert.equal(canvas.dataset.frameGapMs, '0');
+});
+
+test('detached effect precompilation survives context loss without publishing stale readiness', async t => {
+  const { scene, render, handlers, canvas } = harness(t);
+  let finish, calls = 0, uploads = 0;
+  t.after(() => finish?.());
+  render.compileAsync = (root, camera, target) => {
+    calls++;
+    assert.equal(root.parent, null); assert.equal(root.visible, false);
+    assert.equal(camera, scene.camera); assert.equal(target, scene.scene);
+    return new Promise(resolve => { finish = resolve; });
+  };
+  render.initTexture = () => { uploads++; };
+  scene.prepareEffectPrograms();
+  await tick();
+  const first = scene.effectWarmup, firstPromise = scene.effectWarmupPromise;
+  assert.equal(canvas.dataset.effectWarmup, 'pending');
+  handlers.get('webglcontextlost')({ preventDefault() {} });
+  assert.equal(first.disposed, true); assert.equal(scene.effectWarmup, null);
+  finish(); await firstPromise;
+  assert.notEqual(canvas.dataset.effectWarmup, 'ready');
+  render.compileAsync = async root => { calls++; assert.equal(root.parent, null); };
+  handlers.get('webglcontextrestored')();
+  await scene.effectWarmupPromise;
+  assert.equal(canvas.dataset.effectWarmup, 'ready');
+  assert.equal(calls, 2); assert.equal(uploads, 2);
+  const restored = scene.effectWarmup;
+  scene.dispose(); assert.equal(restored.disposed, true);
+});
+
+test('hidden first-draw preparation retries only after the DOM canvas becomes hidden', async t => {
+  const { scene, render, canvas } = harness(t);
+  let draws = 0;
+  canvas.hidden = false;
+  render.compileAsync = async () => {};
+  render.getRenderTarget = () => null;
+  render.getSize = into => into.set(1280, 800);
+  render.getViewport = into => into.set(0, 0, 1280, 800);
+  render.getScissor = into => into.set(0, 0, 1280, 800);
+  render.getScissorTest = () => false;
+  render.setViewport = () => {}; render.setScissor = () => {}; render.setScissorTest = () => {};
+  render.getContext = () => ({ isContextLost: () => false, flush: () => { draws++; } });
+  scene.prepareEffectPrograms(); await scene.effectWarmupPromise;
+  assert.equal(canvas.dataset.effectWarmupDraw, 'skipped'); assert.equal(draws, 0);
+  scene.setHidden(true);
+  assert.equal(draws, 0, 'logical hiding alone cannot authorize a visible-canvas warm draw');
+  canvas.hidden = true;
+  scene.setHidden(true);
+  assert.equal(canvas.dataset.effectWarmupDraw, 'performed'); assert.equal(draws, 1);
+  scene.setHidden(true);
+  assert.equal(draws, 1, 'ordinary repeated lobby rendering never repeats the preload');
 });
