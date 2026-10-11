@@ -1,0 +1,300 @@
+{
+  "schema": 1,
+  "scope": "Formal CI source-manifest and selected original part03 only; not all313files downloaded",
+  "source": {
+    "sourceRunId": 38110136254,
+    "sourceRunAttempt": 1,
+    "sourceHead": "2f3779c4f749f674346cb97d270567aef789e7ad",
+    "checkoutHead": "1cf24e9472d26f79f1dd58f0f63285f26a17c4af",
+    "sourceTree": "69379f380fa87b0e33e2bf3ee951bd08e662bb7a",
+    "artifactName": "browser-acceptance-38110136254-1",
+    "originalArtifactId": 11691696170,
+    "originalArchiveSha256": "e86c5de02c9d31d7c6ea4851db23a7f9ff7c9d0b115599f2ecea0e15e172b63b"
+  },
+  "githubOriginalFullZipSha256": "e86c5de02c9d31d7c6ea4851db23a7f9ff7c9d0b115599f2ecea0e15e172b63b",
+  "fullZipDownloaded": false,
+  "manifestArchiveSha256": "d0ddc0369da8ee0ea1a2316cbab537ea72a3f2490f61d7ac901c6c82d98d22fd",
+  "part03ArchiveSha256": "b210b28c5a3a839d41c92107b47308e5a2c7dca6e0de492192ef3f61806cb284",
+  "verifiedPartFiles": [
+    {
+      "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-camp.png",
+      "bytes": 292799,
+      "sha256": "34f04e61ace79231e62fedac9f288be276371630ef33eb4e5f635b1d22c39236"
+    },
+    {
+      "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-english-choices.png",
+      "bytes": 118826,
+      "sha256": "540e6a2b6a63c184b36c195591386587d1540b53ac4825e3b159275146e9241d"
+    },
+    {
+      "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-english-prompt.png",
+      "bytes": 153144,
+      "sha256": "b79e5dd126fd6e16e309130d3b318a03f43c6b5653f7e254bdbfdc09f9ac8575"
+    },
+    {
+      "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-match-options.png",
+      "bytes": 137629,
+      "sha256": "37a78a48263151af47e9d04b76cecfca05b4458dce6a12ecafec2e7fdda0976c"
+    },
+    {
+      "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-registration-continue.png",
+      "bytes": 100477,
+      "sha256": "c98c09fbb509548b3e542138f7ae95ac65713553769f591ceca0089f86c021c0"
+    },
+    {
+      "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-registration-form.png",
+      "bytes": 115641,
+      "sha256": "f2708318befb8ce5e23393761b728274d1776ab11a0a744f082e945b9532fc77"
+    },
+    {
+      "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-observations.json",
+      "bytes": 4091,
+      "sha256": "a19cd6d091ae756af32ea14c04e45ea581b343bc41a5e42de5c0a067cffa9416"
+    },
+    {
+      "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-observations.json",
+      "bytes": 3973,
+      "sha256": "cda817c14baa78f5ac6e0fcfd09ee7401604e142cf471a18c262bd37d8bac844"
+    },
+    {
+      "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-A-1-sunseed_blessing-friendly-320x568-legal-target-copy.png",
+      "bytes": 95348,
+      "sha256": "a8a988de2279edd055b576c427f6029e7b687f38554a000c7d7806e6fecc8cc5"
+    },
+    {
+      "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-A-1-sunseed_blessing-friendly-390x844-legal-target-copy.png",
+      "bytes": 160533,
+      "sha256": "388886a234bd6d566221771379e1eb2c57f10c52b3ae3511b9d792b20760412c"
+    },
+    {
+      "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-A-1-sunseed_blessing-friendly-844x390-legal-target-copy.png",
+      "bytes": 165046,
+      "sha256": "43badddc8c06e1a4c8fded2ffac100d956f120aa29f284fd632943be2c21cec9"
+    },
+    {
+      "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-A-1-sunseed_blessing-friendly-accepted-effect.png",
+      "bytes": 146236,
+      "sha256": "668a739bba311c943b78b1a07f9a6d0374825933f1fa3df026637a5addbc67ba"
+    },
+    {
+      "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-B-1-reed_frog-enemy-320x568-legal-target-copy.png",
+      "bytes": 109852,
+      "sha256": "de195ceba9852711d57930953afcfebcada97a1198595e23ae7231e06ee5b886"
+    },
+    {
+      "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-B-1-reed_frog-enemy-390x844-legal-target-copy.png",
+      "bytes": 158854,
+      "sha256": "8d4cb4287b48fec070b4d202a103e261488171464db3bebedd33caabd102f850"
+    },
+    {
+      "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-B-1-reed_frog-enemy-844x390-legal-target-copy.png",
+      "bytes": 186915,
+      "sha256": "5be1cf4ca09f1b157ffef9a45bd44db9e1cd5137e68d9bc7e95df79391e621d3"
+    },
+    {
+      "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-B-1-reed_frog-enemy-accepted-effect.png",
+      "bytes": 170397,
+      "sha256": "6bbc51f332c5f108c32642ab720ce362a0ebb0cc7ec42ce0c8f4055e18484b46"
+    },
+    {
+      "path": "acceptance-full.json",
+      "bytes": 11468,
+      "sha256": "ed14657fd8d40d4ef5c28ee5c7ac837085a39b300ea3be858a563630614ea4d4"
+    },
+    {
+      "path": "acceptance-hedgehog.json",
+      "bytes": 2874,
+      "sha256": "f87657065d872d12df722df5d4de09c84e946629de818e7f5e92a92808624394"
+    },
+    {
+      "path": "acceptance-interaction.json",
+      "bytes": 1323,
+      "sha256": "06f24dd179a7644658f9651f3ede0c5553336d47c23680f9cfe53d9c94b2261d"
+    },
+    {
+      "path": "acceptance-layout.json",
+      "bytes": 1758,
+      "sha256": "3cbd8136a63d026a30e3712dff6624be531399c15a91ea82fe05f11b3cb8bfe2"
+    },
+    {
+      "path": "acceptance-motion.json",
+      "bytes": 1281,
+      "sha256": "ef10369e222764a9689c837acaa3c9b6693d1f8543e042eb317685c6c3a18cbf"
+    },
+    {
+      "path": "acceptance-smoke.json",
+      "bytes": 936,
+      "sha256": "f3d4cfa41d01c2c09587b40657e3a0f306af6082954d3f11afa31a73e6e90358"
+    },
+    {
+      "path": "acceptance-teacher.json",
+      "bytes": 2870,
+      "sha256": "c466d8e802b337e6d1b55685c62b204359bf1bda67e18ee1e1a03cf4d6763fcc"
+    },
+    {
+      "path": "account-and-guest-progress-stay-separate-across-login-logout-and-a-real-SQLite-server-restart-account-after-process-restart.png",
+      "bytes": 871934,
+      "sha256": "622928dc79076f9d8c9fb11099e5a4c85cc7a2a12e649c8539f38dc3de6bd750"
+    },
+    {
+      "path": "account-and-guest-progress-stay-separate-across-login-logout-and-a-real-SQLite-server-restart-durable-learning-in-fresh-context.png",
+      "bytes": 335207,
+      "sha256": "99d32fe474c5f2d6cd9678b688640b6e56c7a6fe728816d6b58b918b8c7b8907"
+    },
+    {
+      "path": "account-and-guest-progress-stay-separate-across-login-logout-and-a-real-SQLite-server-restart-observations.json",
+      "bytes": 4419,
+      "sha256": "280bda7827603077185c10a3fd63ce37816b62c9fd663d37d53233ac99dd7bea"
+    },
+    {
+      "path": "account-and-guest-progress-stay-separate-across-login-logout-and-a-real-SQLite-server-restart-test-gift-ten-revealed.png",
+      "bytes": 550725,
+      "sha256": "bbfcee7cbf4d0ad25973482eae9e083525e493cb9bba0f5ead658f2e18952bb0"
+    },
+    {
+      "path": "an-unmatched-guest-waits-the-real-default-ten-seconds-before-the-declared-AI-fallback-honestly-labeled-ai-opponent.png",
+      "bytes": 290933,
+      "sha256": "df9bc482975dd0eab79d303433f1d8f6f9d8b0838d9b96ae9c56af6467ebd684"
+    },
+    {
+      "path": "an-unmatched-guest-waits-the-real-default-ten-seconds-before-the-declared-AI-fallback-observations.json",
+      "bytes": 1534,
+      "sha256": "64c83b5ca64b163cc69efdd06497d4c02b36519db96c867bc4f5d4c74f8a8f79"
+    },
+    {
+      "path": "an-unmatched-guest-waits-the-real-default-ten-seconds-before-the-declared-AI-fallback-waiting-for-a-real-opponent.png",
+      "bytes": 313607,
+      "sha256": "fd18b1046b444367ba80952239143bb07d6f970866073182f65ade6717770cb6"
+    },
+    {
+      "path": "card-relief-A-B-keeps-texture-size-submissions-and-legible-faces-across-five-finishes-480-card-relief-after.png",
+      "bytes": 195883,
+      "sha256": "af09bab2a32088d47e131f30748fc7fcd069ebf410c9b92cc5365c686f7e4cc7"
+    },
+    {
+      "path": "card-relief-A-B-keeps-texture-size-submissions-and-legible-faces-across-five-finishes-480-card-relief-before.png",
+      "bytes": 197154,
+      "sha256": "20ef8fc6ec889193a167227972fd548b98d651eef9afbe93a86f3d770feede64"
+    },
+    {
+      "path": "card-relief-A-B-keeps-texture-size-submissions-and-legible-faces-across-five-finishes-800-card-relief-after.png",
+      "bytes": 463590,
+      "sha256": "d5cf37802f06f93dc23203648a19e23c720ba478d7e3db8c974c0baee189f2ba"
+    },
+    {
+      "path": "card-relief-A-B-keeps-texture-size-submissions-and-legible-faces-across-five-finishes-800-card-relief-before.png",
+      "bytes": 461181,
+      "sha256": "c91249ddb0334b885ec7025e01f80507635d0e1bd663ed8adb6a1b8d241eb4ba"
+    },
+    {
+      "path": "card-relief-submissions.json",
+      "bytes": 983,
+      "sha256": "67abe70b48ae9972f3bffedfa77ac58badfd327400e77f6af03e3aa7d560cf4d"
+    },
+    {
+      "path": "combat-motion-anonymous-arena-only.webm",
+      "bytes": 49248,
+      "sha256": "8a345c2b408ba6113f76be674d452d1177383cd37d983fb4435e8f6855019173"
+    },
+    {
+      "path": "combat-motion-arena-frame-00.png",
+      "bytes": 62483,
+      "sha256": "d9c45a9ec0fe01328fee014e0fd7a62b49bde19b079ce7407004fd0805727f30"
+    },
+    {
+      "path": "combat-motion-arena-frame-01.png",
+      "bytes": 62764,
+      "sha256": "e55154ad8962e3a495a29da2146f4333c6a98416770293649f7db891c0423cd1"
+    },
+    {
+      "path": "combat-motion-arena-frame-02.png",
+      "bytes": 63289,
+      "sha256": "3d09595d342db8e4b5947c86306af4c0c1678ccaa28101f5b82e797a6f7c95f2"
+    },
+    {
+      "path": "combat-motion-arena-frame-03.png",
+      "bytes": 67251,
+      "sha256": "1321780c5453b1ae397eea51482ce3d53566164768529ce5318ffc2b78274616"
+    },
+    {
+      "path": "combat-motion-arena-frame-04.png",
+      "bytes": 63936,
+      "sha256": "9298491a5eb034659e5b48ffea37929c9fd93feda9f866c273a4f8b88465ad81"
+    },
+    {
+      "path": "combat-motion-arena-frame-05.png",
+      "bytes": 64680,
+      "sha256": "de3435ce4e5e27e3f68a130630b65f15a2eb8d095335a1298836b223d3c7ad53"
+    },
+    {
+      "path": "combat-motion-arena-frame-06.png",
+      "bytes": 64530,
+      "sha256": "050eb0ca0b1bec0cb560eb6d691030f8d13bac79291cdea667197d6be357eb7c"
+    },
+    {
+      "path": "combat-motion-arena-frame-07.png",
+      "bytes": 65911,
+      "sha256": "811d438bb989fedb41a242e7e1a52e909e148cdd5d46922098815e1f2dac311e"
+    },
+    {
+      "path": "combat-motion-arena-frame-08.png",
+      "bytes": 65317,
+      "sha256": "473d3357095ca7ba78759395db5aeccadab032ad52ca335548bd0eecc7371124"
+    },
+    {
+      "path": "combat-motion-arena-frame-09.png",
+      "bytes": 65102,
+      "sha256": "097693641f6666d89838d697031e110902063144ffd6dafab075a31d9d884cce"
+    },
+    {
+      "path": "combat-motion-arena-frame-10.png",
+      "bytes": 64918,
+      "sha256": "31398f4c2aca926aaa067f296fe200b627ad8f499f5c46c1710ab71af0310527"
+    },
+    {
+      "path": "combat-motion-arena-frame-11.png",
+      "bytes": 65011,
+      "sha256": "605d89157f0b6554eeeb3690ba041460831d606446777630575627f41e50307f"
+    },
+    {
+      "path": "combat-motion-checkpoints.json",
+      "bytes": 75080,
+      "sha256": "857ebea23e5bf1422158eaf764c38481c4031524c207c835dae45571e9c8e35b"
+    },
+    {
+      "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-glass_snail-320x568-conditioned-reason.png",
+      "bytes": 127005,
+      "sha256": "b965701c668c3f4dcf4d03c5827c4d99c6103b4437c0b233d1279ad2c4699621"
+    },
+    {
+      "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-glass_snail-390x844-conditioned-reason.png",
+      "bytes": 199461,
+      "sha256": "8faed8db72f8e86b0b3420a959fb1ba0b84c74b73fd6395432789a6c678817c9"
+    },
+    {
+      "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-glass_snail-844x390-conditioned-reason.png",
+      "bytes": 180839,
+      "sha256": "c1b0c0fcaf03f2af8a80b0f99bbc7e4285c0313996ab8f5bea42cf174745c072"
+    },
+    {
+      "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-glass_snail-accepted-condition-effect.png",
+      "bytes": 410542,
+      "sha256": "e7b961d62f2424d42ef4f172e8ccee1969a575ae4ee1dd778f56aa5800545993"
+    },
+    {
+      "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-glass_snail-invalid-target-warning.png",
+      "bytes": 447422,
+      "sha256": "83c02f9eb1d5b1b47a8ef0098742803a6b2377fc2a4b7a1d9c4e2130b60aa562"
+    },
+    {
+      "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-mushroom_medic-320x568-conditioned-reason.png",
+      "bytes": 111873,
+      "sha256": "479ec2e765db7efd22f171d226163a24fa40098a50b30676f98d20262b14e9d3"
+    },
+    {
+      "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-mushroom_medic-390x844-conditioned-reason.png",
+      "bytes": 166313,
+      "sha256": "0bfdff69c8a411ad6e5616355170e7f61f7ac5efa9e1958f1dd4fd9c49287bbc"
+    }
+  ]
+}

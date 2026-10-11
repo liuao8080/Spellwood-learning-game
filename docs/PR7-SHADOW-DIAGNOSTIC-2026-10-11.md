@@ -1,6 +1,6 @@
 # PR #7 云端近战与静止阴影诊断（2026-10-11）
 
-当前阶段是验证候选原因，产品仍为 `1eb618b` / 4.1.0-alpha.3。静止阴影重复绘制已在真实本地场景确认；是否造成云端977ms卡顿尚未确认。实验不替代正式验收，不降低画质或250ms门槛，不合并或部署。
+真实云端对照未支持把静止阴影重复绘制当成本次卡顿的已确认主因或可用修复：候选有效跳过B的深度绘制时，A约632ms的停顿仍存在，四段原250ms判定全部失败。重复绘制确实存在，但有限贡献仍未知。产品保持 `1eb618b` / 4.1.0-alpha.3的源码，不安装实验缓存；画质、正式测试和250ms门槛保留，不合并或部署。
 
 ## 原始失败已核实
 
@@ -87,3 +87,40 @@ SPELLWOOD_SHARED_SHADOW_LOCAL=1 SPELLWOOD_SHARED_SHADOW_MODE=hardware-headed npx
 最终冻结运行 `hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8` 四段53/36/36/49ms，RAF19.9/19.6/20.8/19.1ms、尾部均括住，10项来源完整性true。本轮自然抽到Rabbit，键内caster36/38/40/42、实际depth36/0/0/42、完整color66/70/74/78，各31浮字帧；不能与前轮Acorn场景强行归一性能。最终baseline SHA `d6f340fdd23732b2c38e73ec164dff3b65652fbdf3f9414aa5a258564f01ae72`、candidate `e7ecb7a40be5af30fc24b8aaa52bd3d2cd88052c4a7e508019fa5361668385aa`，正式b059/控制器8150保持。新运行原片、checkpoint和归因manifest在local-abba-final；所有原PNG另在本地忽略目录保留。
 
 本轮Rabbit实际atk2/hp1，每段一条accepted攻击、revision+1、目标HP18→16→14→12→10；不是此前Acorn的atk1/hp2。报告与原始数值分别独立核实；所有本地contexts/专用server清理通过，4191已释放。保留的原TAP红输出含空行尾空格，只对这个归档文本路径关闭行尾空格提示以保存原字节，代码检查和性能门槛未变。
+
+## 真实云端对照：候选不能作为修复
+
+诊断提交 `2f3779c4f749f674346cb97d270567aef789e7ad` 已推送。[run38110136254的shared-shadow job](https://github.com/liuao8080/Spellwood-learning-game/actions/runs/38110136254/job/114383815060)完成四段真实UI对照；job success只表示实验执行完成，原250ms判定逐段保留为失败。该run的原正式chromium job最终失败，完整日志/原片结果见下方正式验收记录。
+
+| B模式 | 原片最大PTS间隔 | A同钟最大RAF间隔 | B浮字帧实际depth | 键内caster | 完整color |
+| --- | --- | --- | --- | --- | --- |
+| baseline1 | **780ms** | **646.1ms** | 39 | 39 | 71 |
+| candidate2 | **983ms** | **631.3ms** | 0 | 41 | 75 |
+| candidate3 | **738ms** | **631.6ms** | 0 | 43 | 79 |
+| baseline4 | **992ms** | **643.0ms** | 43 | 43 | 79 |
+
+实际是官方Chromium的SwiftShader。四段A均level3/.65/512、buffer460×135，B均level0/1/1024、buffer1280×546。各段B的8条scene-frame观测行可见且减少动作，另保留1条点击前约8–9s的hidden/normal external warmup行；9条均无drop，没有抹去预热边界。没有人工质量切换。各段一次accepted攻击、revision+1、HP-1；自然turn4/6/8/10、手牌5/6/7/7、caster数量变化仍是混杂。每段仅2个浮字帧，少于原设的3帧观测要求；report仍写reuse-not-established，不降低该要求来宣称覆盖完成。
+
+在候选2/3已有的浮字帧以及后续无浮字帧里，输入/map一致、postcommit/reused=true、实际depth=0且完整color继续。两个document都记录了timeOrigin，因此可按 `(Borigin-Aorigin)+Babs-A可信clickabs` 对齐浏览器采样：候选2的B零depth在点击后12.8/369.4/709.3ms，A631.3ms gap覆盖+92.4→723.7ms；候选3的B零depth在+11.0/370.0/720.8ms，A631.6ms gap覆盖+93.6→725.2ms。大停顿发生时B重复阴影已被移除。这里没有把视频PTS与浏览器原点混为一谈。
+
+四份原WebM的17/18/18/18个全部PTS经独立ffprobe核实，视频SHA与checkpoint一致；所有RAF尾部有实际样本括住。应用CPU采样仍不能说明GPU完成/排队在哪里。两次候选、普通回合/重载与不同caster的实验不构成统计充分的收益测量，也不排除有限贡献，但足以拒绝把该cache当作当前CI解决方案。准确卡顿根因仍未定位，GPU完成/队列未直接测量；下一候选应另立计划和真实对照，本轮不扩成其他渲染重写。
+
+原始safe ZIP为5,025,308bytes、67文件，GitHub与实际下载SHA均 `8f3706197b86e512ea6ef848535b0205e2ecce1f1ef2758e45efb493d0b2f60c`。checkout `1cf24e9472d26f79f1dd58f0f63285f26a17c4af` 的直接父含真实head2f377；tree `69379f380fa87b0e33e2bf3ee951bd08e662bb7a`与该本地提交相同。实际HTTP baseline d6f340/candidate e7ecb7、控制器8150、正式b059全部一致。10项remote来源完整性true；独立重读124项正式/原验收/诊断/清理引用、176项副本和6份bundle/HTML均匹配。build-manifest仅builtAt/commit/tree环境元数据不同；远端生成suite和work文件未在本地存在，不冒称本地逐项验证。
+
+完整ZIP、root独立重读67文件的SHA索引、四份原片、原checkpoint及独立带时钟参数的验证JSON保留在 [cloud-abba](../evidence/pr7-shadow-2026-10-11/cloud-abba/archive-files.json)。没有重新编码、插帧、加速或隐藏失败。
+
+另行准备的像素fixture/pipeline只完成静态核查、构建和list；没有启动GPU，不记像素通过，也不发布到产品。候选未成为CI修复，所以保留准备稿以便恢复，不继续扩大实验。
+
+本次临时PR诊断触发固定到已完成的2f377提交，后续记录推送继续运行原完整正式CI，不自动重复这项已否定的候选。原run可通过GitHub的rerun重新执行同一份实验；独立本地配置保留。main仍没有workflow，新的manual dispatch目前不作为已验证复跑入口。
+
+## 原正式CI已完成：近战仍失败
+
+[同run的chromium job114383815006](https://github.com/liuao8080/Spellwood-learning-game/actions/runs/38110136254/job/114383815006)已完成，29项浏览器28通过、1失败，零重试。各步实际通过数1 smoke + 1 gesture + 2 layout + 16 school + 4 teacher + 4 model = 28；唯一失败是原正常近战最大原生帧间隔 **828ms/250ms**。32项NAT/身份/启动等Node通过、0失败/0跳过。完整log的安全数值摘录与原失败分开保留，没有拿本地33/33覆盖云端结论。
+
+正式原片21帧、49,248bytes，SHA `8a345c2b408ba6113f76be674d452d1177383cd37d983fb4435e8f6855019173`。root再次调用原解码器得到828ms、同钟点击窗口RAF535.6ms/3个>250ms间隔，尾部已括住，exit1保留。977ms→828ms来自不同未改产品的实际CI运行，不当作本轮修复收益。
+
+正式manifest记录313份safe文件，完整ZIP的GitHub摘要 `e86c5de02c9d31d7c6ea4851db23a7f9ff7c9d0b115599f2ecea0e15e172b63b`。本轮只下载并核实包含近战的part03：其原ZIP摘要 `b210b28c5a3a839d41c92107b47308e5a2c7dca6e0de492192ef3f61806cb284`及56份文件的大小/SHA逐一匹配；manifest自身原ZIP摘要d0ddc036…匹配。没有声称本轮独立下载核完全部313份。正式原片/checkpoint、原part03/manifest ZIP、来源及复核结果保留在 [formal-ci](../evidence/pr7-shadow-2026-10-11/formal-ci/root-verification.json)。
+
+产品`src`、server、原E2E/官方配置、lockfile、画质及dist/assets相对1eb618b均0差异；仅诊断和文档/证据交付。像素准备稿及原哈希另在忽略的`test-results/shadow-pixels-not-applied-2026-10-11`，没有GPU通过声明。精确卡顿根因仍未定位，GPU完成/队列未直接测量；本轮结论仅是该候选不能作为已确认修复。后续记录提交会另外触发未改产品的原CI，其状态不被本记录预先写为通过。
+
+本地原可玩客户端已恢复 `http://127.0.0.1:4173`，health确认protocol2/net-2.3/combat2.3、实际HTTP app仍b059，使用原`.data/spellwood.sqlite`，缓存未安装。恢复运行/哈希核实不是新一轮实际游戏/手机/公网验收。

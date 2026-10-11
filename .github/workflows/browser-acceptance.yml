@@ -306,11 +306,12 @@ jobs:
     # Full-scene causal lab only. Its results never replace the PR's unchanged
     # normal-motion test or 250 ms native-frame-gap acceptance requirement.
     # main does not contain this workflow, so dispatch is currently unavailable.
-    # A push to this existing draft PR supplies a real official Actions context
-    # without changing main; its full acceptance job still runs independently.
+    # The recorded diagnostic commit supplied a real official Actions context
+    # without changing main. Later record-only pushes retain full acceptance
+    # without automatically repeating the completed, rejected candidate lab.
     if: >-
       (github.event_name == 'workflow_dispatch' && inputs.diagnostic_scope == 'shared-shadow') ||
-      (github.event_name == 'pull_request' && github.event.pull_request.number == 7 && github.head_ref == 'codex/local-gpu-refinement')
+      (github.event_name == 'pull_request' && github.event.pull_request.number == 7 && github.head_ref == 'codex/local-gpu-refinement' && github.event.pull_request.head.sha == '2f3779c4f749f674346cb97d270567aef789e7ad')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:

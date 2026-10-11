@@ -1,0 +1,14 @@
+chromium	NAT admission and real client startup	2026-10-11T03:59:43.8461575Z ℹ tests 32
+chromium	NAT admission and real client startup	2026-10-11T03:59:43.8462331Z ℹ pass 32
+chromium	NAT admission and real client startup	2026-10-11T03:59:43.8462727Z ℹ fail 0
+chromium	NAT admission and real client startup	2026-10-11T03:59:43.8463085Z ℹ cancelled 0
+chromium	NAT admission and real client startup	2026-10-11T03:59:43.8463455Z ℹ skipped 0
+chromium	Guest, registration and two-context smoke	2026-10-11T04:01:03.1130964Z   1 passed (42.5s)
+chromium	Board inspection and cancelled gestures	2026-10-11T04:01:33.2288839Z   1 passed (29.4s)
+chromium	Populated responsive battlefield and hand navigation	2026-10-11T04:02:27.7847332Z   2 passed (53.9s)
+chromium	Normal-speed melee motion and safe image sequence	2026-10-11T04:03:08.0251222Z     Expected: <= 0.25
+chromium	Normal-speed melee motion and safe image sequence	2026-10-11T04:03:08.0251470Z     Received:    0.828
+chromium	Normal-speed melee motion and safe image sequence	2026-10-11T04:03:08.0259941Z   1 failed
+chromium	School UI match, recovery, persistence and responsive acceptance	2026-10-11T04:13:23.4475339Z   16 passed (10.2m)
+chromium	Teacher scope and reading acceptance with its own suite budget	2026-10-11T04:15:26.2771451Z   4 passed (2.0m)
+chromium	Single-model real WebGL and neighbour attack evidence	2026-10-11T04:18:07.9063757Z   4 passed (2.7m)

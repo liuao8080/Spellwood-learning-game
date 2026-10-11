@@ -1,0 +1,1625 @@
+{
+  "schema": 1,
+  "source": {
+    "sourceRunId": 38110136254,
+    "sourceRunAttempt": 1,
+    "sourceHead": "2f3779c4f749f674346cb97d270567aef789e7ad",
+    "checkoutHead": "1cf24e9472d26f79f1dd58f0f63285f26a17c4af",
+    "sourceTree": "69379f380fa87b0e33e2bf3ee951bd08e662bb7a",
+    "artifactName": "browser-acceptance-38110136254-1",
+    "originalArtifactId": 11691696170,
+    "originalArchiveSha256": "e86c5de02c9d31d7c6ea4851db23a7f9ff7c9d0b115599f2ecea0e15e172b63b"
+  },
+  "unchangedBytes": true,
+  "partByteLimit": 8388608,
+  "singleFileByteLimit": 8388608,
+  "parts": [
+    {
+      "name": "part-01",
+      "bytes": 8155318,
+      "files": [
+        {
+          "path": "-combat-motion-normal-melee-leaves-its-slot-changes-hero-HP-once-and-returns-00-selected-before-single-attack.png",
+          "bytes": 216099,
+          "sha256": "ee7fb466daf63d60bc53bac4efcd1297113bf0f0a0b8e0d7bd15f9866f38d09a"
+        },
+        {
+          "path": "-combat-motion-normal-melee-leaves-its-slot-changes-hero-HP-once-and-returns-01-settled-after-single-attack.png",
+          "bytes": 212625,
+          "sha256": "6267c16fcb7f700c7eb2ca16238b36a5895e894293ed894a57313d4bed7d444d"
+        },
+        {
+          "path": "-combat-motion-normal-melee-leaves-its-slot-changes-hero-HP-once-and-returns-failure-motion-guest-A.png",
+          "bytes": 212672,
+          "sha256": "f0bdfe5d8bffba40de2b157873a9173e8e902109aacdfe1639f7116fc6cebd61"
+        },
+        {
+          "path": "-combat-motion-normal-melee-leaves-its-slot-changes-hero-HP-once-and-returns-failure-motion-guest-B.png",
+          "bytes": 441366,
+          "sha256": "49e9a85a49a2a06c34b6edd03448e0200a1363a7170d55089f0d0771d074f884"
+        },
+        {
+          "path": "-combat-motion-normal-melee-leaves-its-slot-changes-hero-HP-once-and-returns-observations.json",
+          "bytes": 94953,
+          "sha256": "4a517e7adde973b506d5bf61799c9dadfc8fb84caf25109cef31082149b0ac6c"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-384-attack-after.png",
+          "bytes": 45407,
+          "sha256": "5d2e971313bbf79e339844cf351546195c2c04ecf7183d06aa24681f38f55e41"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-384-attack-before.png",
+          "bytes": 45311,
+          "sha256": "4c06acaec9690944c4962df2722ebcc6d877d74ba56a3a130fd0b17bfc4b22c8"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-384-idle-after.png",
+          "bytes": 45883,
+          "sha256": "1b2ee55866b2ff55e40cbe8a2685d7468bfbf3ed9aeaf35b9944c76bd5adc266"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-384-idle-before.png",
+          "bytes": 45663,
+          "sha256": "b082ffd06378101e5a928d3b03d2bc7e36fc94a1714d350faf5b08a30872c344"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-96-attack-after.png",
+          "bytes": 11026,
+          "sha256": "ad39741f14ea5289c076b7c90c83bda8604b1d3bdb8d2cb1d59e4de91b08f992"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-96-attack-before.png",
+          "bytes": 11013,
+          "sha256": "23c466f5be9e5729a16ae45410436fd3dd631049fea1f4be64460acfd7f25485"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-96-idle-after.png",
+          "bytes": 11037,
+          "sha256": "b24ac18c73e86221a976a16b6f0285aedbd79d675553922a4f7f86524a29b3f8"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-96-idle-before.png",
+          "bytes": 11015,
+          "sha256": "6969d0a04901fdf880d8d78fcdc2dc0e78c94b90dbfff5a32dfe841eae024fed"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-384-attack-after.png",
+          "bytes": 45394,
+          "sha256": "b0e5696f6feced0927bcfe1f7cc5d5238c37b65c071df4dc5931ec9af13ddee1"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-384-attack-before.png",
+          "bytes": 45420,
+          "sha256": "1dab6ad5aa208d5291b567be03faf9638300bee385f7480548acf4f7d5526dcc"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-384-idle-after.png",
+          "bytes": 45681,
+          "sha256": "e1b15227680c789129d3717ca099b26ad51736a22fa8ece3a75f2d6f444a8702"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-384-idle-before.png",
+          "bytes": 45503,
+          "sha256": "b3ec89acf47a69e197e30776ab893fa5921f241afbc01d69362eab5928fdfdb1"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-96-attack-after.png",
+          "bytes": 10998,
+          "sha256": "dcd06dda2aa5d4d48ff7a4bcc999298b2ac874900e5dd36ab3254f5bc2edaada"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-96-attack-before.png",
+          "bytes": 10976,
+          "sha256": "fdfe97a535f7058dd410a24b3c45c08eb56bb524b7051af04008236956daf1f9"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-96-idle-after.png",
+          "bytes": 10964,
+          "sha256": "1f2936fd7d50d2b6c82ed8261d5ea22a4202e08eb42285f77af4dda56f828766"
+        },
+        {
+          "path": "-fox-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-96-idle-before.png",
+          "bytes": 10952,
+          "sha256": "f14399e7c6c098e9f1454e0314df71405a8c35d5696df210c33e9eee7c4574b5"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-live-1280x800-idle.png",
+          "bytes": 488008,
+          "sha256": "73d9111048e48dc1a4487fd39873f48ac3941318ce43b176eb0be5ed53b9274f"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-live-320x568-idle.png",
+          "bytes": 123139,
+          "sha256": "54dd43f0ea6784a89725ccc99129bb113172514b4a9d243060b530ff887ef9e6"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-live-390x844-idle.png",
+          "bytes": 177595,
+          "sha256": "76214b023d50b836478bf6d97ced8d382d9f375cca278e343afec725aab38b1d"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-live-844x390-idle.png",
+          "bytes": 182290,
+          "sha256": "01eb17dfabdd1449dc4be5e284ff1dfb7a45edc1ad1e0122ad115e6a27bcecba"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-live-returned-after-attack.png",
+          "bytes": 180982,
+          "sha256": "8092edf42338f4dede5da78b37f30125323e37e82963259e2692458c0171a721"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-observations.json",
+          "bytes": 3084,
+          "sha256": "2827e4186e8f3f7063201b15dbba06e0e4b5164091e30e876e271cd528ef294f"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-still-1280x800-10s.png",
+          "bytes": 488104,
+          "sha256": "d1fd3a8611a5dcadc67ba28c0341f856e31d233cc581563272389447eff48d4e"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-still-1280x800-2s.png",
+          "bytes": 488012,
+          "sha256": "a06df4b08e4e47082aa750c71bae043bcb5408c43cb6ff65e908edadaafeb623"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-still-1280x800-5s.png",
+          "bytes": 487797,
+          "sha256": "464df0f5297ee5a6418c5554d2dae1e5f622ee000cf9ca8b69318160d136f48d"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-still-390x844-10s.png",
+          "bytes": 177622,
+          "sha256": "cf87dca9a35ff4b39f0dfeabe383fb2f417b80541be3d850fccdeae091c788d5"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-still-390x844-2s.png",
+          "bytes": 177539,
+          "sha256": "1e3a1706c88ae016f9ee4a396407be8d1bedb8eceaa89f3e71437dbc27f1ac84"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-still-390x844-5s.png",
+          "bytes": 177883,
+          "sha256": "450e2cd0ea93c21218ee993c4c2b3abfea6636e5ba8dc27fbb307955ec6b1750"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-still-844x390-10s.png",
+          "bytes": 182157,
+          "sha256": "0565eb3b5531f2b3a84b187523e79d10491acb28d814acbe5fbf6c93e1d557db"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-still-844x390-2s.png",
+          "bytes": 182245,
+          "sha256": "8666c15bb0fcc707d0e245730893663de6e6b2a00e5d756cb6e541c8c83461ca"
+        },
+        {
+          "path": "-fox-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-still-844x390-5s.png",
+          "bytes": 182257,
+          "sha256": "971665ece6426f3626e8b3f06786d36a2efb67e7c3ffaf119f9a9daa15109c6b"
+        },
+        {
+          "path": "-hand-revision-normal-motion-attack-preserves-fresh-hand-intents-and-subsequent-legal-play-normal-attack-current-hand-selection.png",
+          "bytes": 206072,
+          "sha256": "125d22e74d97e93979efb524130c3643728ea2e6247f3c2053e195adfb758bb8"
+        },
+        {
+          "path": "-hand-revision-normal-motion-attack-preserves-fresh-hand-intents-and-subsequent-legal-play-normal-attack-subsequent-legal-summon.png",
+          "bytes": 177642,
+          "sha256": "7c70b44f34714f8d252ebdb0b589fb858d4d3df6a9a2b108b9ced07f2bebdb84"
+        },
+        {
+          "path": "-hand-revision-normal-motion-attack-preserves-fresh-hand-intents-and-subsequent-legal-play-observations.json",
+          "bytes": 3375,
+          "sha256": "93ac5dae5b5f298e2f3effde617620fc6658c16f1fd20979fdf3ea929d180329"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-384-attack-after.png",
+          "bytes": 43389,
+          "sha256": "bb5cd04cce9ce0ffe81feb8a96a9dba2b63d27bfa07f21cedc62862a9f42200c"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-384-attack-before.png",
+          "bytes": 43474,
+          "sha256": "cd455a8a3b67dcc99d6da2da5682cf88ebf74a78165047dbc334f12f808497fa"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-384-idle-after.png",
+          "bytes": 42991,
+          "sha256": "dfffb4d37c3591a38bb87089bd8af923c824a2343cfec7a0d241c446e1cb7238"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-384-idle-before.png",
+          "bytes": 42993,
+          "sha256": "4a7b0c75726d287b528d78d68ccfa22022d6fbb18bff67e2ff5544c155de8f59"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-96-attack-after.png",
+          "bytes": 10322,
+          "sha256": "9d022abba398e06015a50bf2f464819fcf9fb1a4702921c32e5421fdb11779c0"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-96-attack-before.png",
+          "bytes": 10378,
+          "sha256": "67f03a8771446e4470f8bf887475e3bb85a5c41b68ad267323bf5427e79d43ca"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-96-idle-after.png",
+          "bytes": 10220,
+          "sha256": "7fa543245a275863ad4e3ba1a95cfe5e7a160cf5e28d5ee4fe05da4325eaa7e3"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-low-96-idle-before.png",
+          "bytes": 10282,
+          "sha256": "8258e8f648ff4e16b9e58ed6e65dc02352f7e154ce7744dec857360baf321c51"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-384-attack-after.png",
+          "bytes": 43258,
+          "sha256": "b72f07dd3b0de797a4646d89f0ebcc2bd49cf282d041953c7a2b9caa5ceb67cc"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-384-attack-before.png",
+          "bytes": 43207,
+          "sha256": "5d16fa6249690da3d72322d60b801f5513a8909ae2f75610ef022c47ad5bca49"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-384-idle-after.png",
+          "bytes": 42962,
+          "sha256": "c6c7dc9cbd380e04a9844bf7f143a9c211eb0fd8cd92743b27e9e3c662825ddd"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-384-idle-before.png",
+          "bytes": 43119,
+          "sha256": "1311c3540a787a23c7b3aadea899487020d2b7fad369d21befeef780bc047448"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-96-attack-after.png",
+          "bytes": 10248,
+          "sha256": "c51358a47d9af02f308b2e5a1d488a3fd00217bc6003037d3200f058898d20a5"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-96-attack-before.png",
+          "bytes": 10382,
+          "sha256": "63bc45455e72dd86c3dc22c60894108a6a9edaaf3aba7924b0b49f5c5f7c6da7"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-96-idle-after.png",
+          "bytes": 10224,
+          "sha256": "ec7e12c71b1f194efb9560b94339d3a6b1beaa8b95f3b0f4bff9496a26387d6d"
+        },
+        {
+          "path": "-hedgehog-review-face-A-B-fixture-preserves-geometry-and-submissions-in-idle-and-attack-poses-medium-96-idle-before.png",
+          "bytes": 10363,
+          "sha256": "45f6bbf5cd3f594f048017f5c1b4ac5ab77fc7b08d44e01d10b828ed9ea00e6d"
+        },
+        {
+          "path": "-hedgehog-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-live-1280x800-idle.png",
+          "bytes": 443410,
+          "sha256": "0fa50c4eb1efab5308578c5d3e1090a97c088fdd5caa43faf5a59e4c0ba50486"
+        },
+        {
+          "path": "-hedgehog-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-live-320x568-idle.png",
+          "bytes": 122899,
+          "sha256": "3cfe2cfa4bf320530414d4d3a343dbea36878b5ffdb26141614aeae17390fd37"
+        },
+        {
+          "path": "-hedgehog-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-live-390x844-idle.png",
+          "bytes": 196454,
+          "sha256": "3d74b37fa80459464c83ba41f8abd83c2980532725417eb3ec0c104330da2a25"
+        },
+        {
+          "path": "-hedgehog-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-live-844x390-idle.png",
+          "bytes": 193265,
+          "sha256": "b119a19d13aa9c6d453196e534dbc5d73f6717e5558b679a70d091dbf6bd49e6"
+        },
+        {
+          "path": "-hedgehog-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-live-returned-after-attack.png",
+          "bytes": 194485,
+          "sha256": "ba28029d6fb4fb376dd1788863904303ce2cdab1a6abcf145fa32fc628dadb12"
+        },
+        {
+          "path": "-hedgehog-review-live-face-with-a-real-neighbour-and-ordinary-normal-motion-attack-observations.json",
+          "bytes": 3096,
+          "sha256": "e3a8cda3073d665b88acb78f49053e006f68f2e175005871017f2c4c61341327"
+        },
+        {
+          "path": "-interaction-armed-unit-inspection-by-right-click-native-touch-and-keyboard-never-spends-an-action-ContextMenu-enemy-unit-details.png",
+          "bytes": 161135,
+          "sha256": "8f16b1cecf4e676e93ad2aa44677e9bf05ac5f24317f7c16128c5510ed572413"
+        },
+        {
+          "path": "-interaction-armed-unit-inspection-by-right-click-native-touch-and-keyboard-never-spends-an-action-escape-cancelled-attack-from-hand-focus.png",
+          "bytes": 189801,
+          "sha256": "e898e81d6cb627a2a1bcaedf435d628262b0d4c76f38cf1e57655b2347638eca"
+        },
+        {
+          "path": "-interaction-armed-unit-inspection-by-right-click-native-touch-and-keyboard-never-spends-an-action-i-own-unit-details.png",
+          "bytes": 161618,
+          "sha256": "5a5f9386bd0f6705a6a811928cabea3724955db48d9ed1ad060d10204cb3074d"
+        },
+        {
+          "path": "-interaction-armed-unit-inspection-by-right-click-native-touch-and-keyboard-never-spends-an-action-observations.json",
+          "bytes": 10993,
+          "sha256": "fcfb8fc1de89a560e53d0d3b8b1279db0acb786e7c60ffd9be2b1afe4b89b864"
+        },
+        {
+          "path": "-interaction-armed-unit-inspection-by-right-click-native-touch-and-keyboard-never-spends-an-action-right-enemy-unit-details.png",
+          "bytes": 334589,
+          "sha256": "1dd9b569f20a91fc219465834f02f69d3e0a3614feae5f2dc43d76c1a8f5cad4"
+        }
+      ]
+    },
+    {
+      "name": "part-02",
+      "bytes": 8254605,
+      "files": [
+        {
+          "path": "-interaction-armed-unit-inspection-by-right-click-native-touch-and-keyboard-never-spends-an-action-right-own-unit-details.png",
+          "bytes": 335109,
+          "sha256": "0df3f6cee0750244d43c624a128e0a1225ac110f8399426c9a177632fe0d2d45"
+        },
+        {
+          "path": "-interaction-armed-unit-inspection-by-right-click-native-touch-and-keyboard-never-spends-an-action-touch-enemy-unit-details.png",
+          "bytes": 161992,
+          "sha256": "f5f62052b6f6e8e66924f9e30154c0b667c120bb3a4e7381ec1dc2bdb0dfa33a"
+        },
+        {
+          "path": "-interaction-armed-unit-inspection-by-right-click-native-touch-and-keyboard-never-spends-an-action-touch-own-unit-details.png",
+          "bytes": 162380,
+          "sha256": "2eddcd229e716b89486a5a4d16820a40331ffeec12e51a54440f1b2d1d8dfbf4"
+        },
+        {
+          "path": "-layout-desktop-label-component-keeps-long-names-shields-and-three-digit-stats-inside-narrow-slots-desktop-label-component-widths-44-to-128.png",
+          "bytes": 37311,
+          "sha256": "1375d258507b7f8ce621dcf007f847e391e0d6d5ee48799db98812f50494c464"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-1280x800-eight-units-seven-card-hand.png",
+          "bytes": 599462,
+          "sha256": "4c958335fabd29cebbf0a665811810f6327af5155ab2f9b80719490435d2ef22"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-320x568-eight-units-seven-card-hand.png",
+          "bytes": 140520,
+          "sha256": "2ae8932539d7bdf91a95046654a5c89206b1559d5f1be24fa7e4488b21043a80"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-320x568-hand-after-chromium-touch-swipe.png",
+          "bytes": 147203,
+          "sha256": "62c64627305043452efbba523d6d1d3dff098d15e1453e82798016c69adaf8d9"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-320x568-hand-wheel-window-0.png",
+          "bytes": 140520,
+          "sha256": "2ae8932539d7bdf91a95046654a5c89206b1559d5f1be24fa7e4488b21043a80"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-320x568-hand-wheel-window-1.png",
+          "bytes": 147850,
+          "sha256": "7d2c53283bf63a38d4fe29c52dfc94aa9eb9cfdcb0a983a20b6f265bb12822c4"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-320x568-hand-wheel-window-2.png",
+          "bytes": 152267,
+          "sha256": "7a78822a7c00fafb95cd7b395625193a56056b4c5c5f98e4fb0b8b64a243c495"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-320x568-hand-wheel-window-3.png",
+          "bytes": 145368,
+          "sha256": "a7600118de938ec24f06fbce7e82900a017b7851dff40f22b96eacfa121d49a2"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-320x568-hand-wheel-window-4.png",
+          "bytes": 121811,
+          "sha256": "be68bf13828ffcc5801331adc6a8c9cf1fc54ad1c9db064d6a25477c93ea7e23"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-390x844-eight-units-seven-card-hand.png",
+          "bytes": 219709,
+          "sha256": "b150edf670c364df47ad3360362f9e23f92bb5f90d7265f90df67308e8894c0a"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-740x360-eight-units-seven-card-hand.png",
+          "bytes": 195277,
+          "sha256": "489ba3964c9d416c07cc3ff1dbb0c8eb98ad747a0ae5a7767c9213a027d773e7"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-844x390-eight-units-seven-card-hand.png",
+          "bytes": 237337,
+          "sha256": "5260c3f6f5587e0ee002a5010d32bd99a0ef3692ae7dc70da0aec332c0b27660"
+        },
+        {
+          "path": "-layout-populated-compact-field-keeps-eight-units-separate-and-a-natural-seven-card-hand-scrolls-saf-observations.json",
+          "bytes": 55898,
+          "sha256": "9f1d13209984b70d593091043caf27733945767a794ea43c95e09cf3dad5e14d"
+        },
+        {
+          "path": "-portrait-command-compact-card-commands-native-inspection-and-orientation-preserve-the-live-board-320x568-cancelled-selection.png",
+          "bytes": 120444,
+          "sha256": "a00900b704c33ab6eb0be490cd8236bc92c9b9230c6204f4e4cb1170d1ec2051"
+        },
+        {
+          "path": "-portrait-command-compact-card-commands-native-inspection-and-orientation-preserve-the-live-board-320x568-expanded-rules-above-fixed-return.png",
+          "bytes": 110114,
+          "sha256": "27bc3123e6d39009b3f7f3d442f9d6934e0493436e1bd5a6d9374876b48d724a"
+        },
+        {
+          "path": "-portrait-command-compact-card-commands-native-inspection-and-orientation-preserve-the-live-board-320x568-final-cancelled.png",
+          "bytes": 120355,
+          "sha256": "c657c8f20b00623f947f6f6b06731e57d92d146e871e1a5f6a4b2e591692eff3"
+        },
+        {
+          "path": "-portrait-command-compact-card-commands-native-inspection-and-orientation-preserve-the-live-board-320x568-native-hand-details.png",
+          "bytes": 105229,
+          "sha256": "be09e3256138e21b98c20d6d54ac802168daf81966a79a9ce3d0bd962b99cb70"
+        },
+        {
+          "path": "-portrait-command-compact-card-commands-native-inspection-and-orientation-preserve-the-live-board-320x568-native-unit-details.png",
+          "bytes": 93250,
+          "sha256": "0a687143ed0fec804719fc38714edbe397b1c82220be63371f9c82d4197b711e"
+        },
+        {
+          "path": "-portrait-command-compact-card-commands-native-inspection-and-orientation-preserve-the-live-board-320x568-selected-after-return.png",
+          "bytes": 123217,
+          "sha256": "2bf6583e4b30059500f6d9be8f5356feff6c1d8b07021c62e6e923abe9de811c"
+        },
+        {
+          "path": "-portrait-command-compact-card-commands-native-inspection-and-orientation-preserve-the-live-board-320x568-selected-card-command.png",
+          "bytes": 123260,
+          "sha256": "3b9b24eea350c07462b5d990f81b6e95f2e49481bebadfd5a3fb4e6e669cbbf0"
+        },
+        {
+          "path": "-portrait-command-compact-card-commands-native-inspection-and-orientation-preserve-the-live-board-320x568-unselected.png",
+          "bytes": 120445,
+          "sha256": "91dcc1cd28af5a259e448d82065693a6f9ddb67c6d8348f3648dc79af9558e64"
+        },
+        {
+          "path": "-portrait-command-compact-card-commands-native-inspection-and-orientation-preserve-the-live-board-844x390-reading-state-after-opponent-turn.png",
+          "bytes": 152485,
+          "sha256": "ccb78f901cfdffdcbea991c74aee06e1b9339df9b90545ee1613f0f116dc2070"
+        },
+        {
+          "path": "-portrait-command-compact-card-commands-native-inspection-and-orientation-preserve-the-live-board-844x390-selected-after-orientation.png",
+          "bytes": 203686,
+          "sha256": "3e245554388008ffd3101f5606d1e76ea72cd8ef62197138e6260b21c77b35bb"
+        },
+        {
+          "path": "-portrait-command-compact-card-commands-native-inspection-and-orientation-preserve-the-live-board-observations.json",
+          "bytes": 28365,
+          "sha256": "fb604224453644b4c5f95d04fe5ddbc1053f8359c3498cda75ca74b911dd5f18"
+        },
+        {
+          "path": "-smoke-guest-learning-and-visible-registration-preserve-identity-account-and-guest-match-account-matched-opening.png",
+          "bytes": 486551,
+          "sha256": "b800b7f1811aa4d9b693fdbaf4eb3822c584790e705e2b04741f92871667c06c"
+        },
+        {
+          "path": "-smoke-guest-learning-and-visible-registration-preserve-identity-account-and-guest-match-guest-matched-opening.png",
+          "bytes": 475248,
+          "sha256": "2e98e941ca1e632052fabf150cb3332364a87106c31e43b9ac304ceec7633f3b"
+        },
+        {
+          "path": "-smoke-guest-learning-and-visible-registration-preserve-identity-account-and-guest-match-observations.json",
+          "bytes": 2953,
+          "sha256": "4c32c1bc370ddb143c5b11a856bd6e60322c6a1d4ff2376c8ae23098eeae233a"
+        },
+        {
+          "path": "-smoke-guest-learning-and-visible-registration-preserve-identity-account-and-guest-match-registered-camp.png",
+          "bytes": 867759,
+          "sha256": "3079796567d705b48969359be82e99b829c004452f419a345746ca065d96d6ec"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-320x740-camp.png",
+          "bytes": 293541,
+          "sha256": "f7f1c61845929efaf29e3ff887fbad3e6c555fb3f242b93f384b52c6cf4dc950"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-320x740-english-choices.png",
+          "bytes": 118585,
+          "sha256": "d13b2197a72315bd80bf6305164af82b5a55afac1e6379bb62ca3dec1be2caf9"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-320x740-english-prompt.png",
+          "bytes": 118585,
+          "sha256": "d13b2197a72315bd80bf6305164af82b5a55afac1e6379bb62ca3dec1be2caf9"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-320x740-match-options.png",
+          "bytes": 121779,
+          "sha256": "01b8df130076d6ab676177ab5c6cabbe253fe01ebf0d09b0d9c1d2cf1d93823e"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-320x740-registration-continue.png",
+          "bytes": 133948,
+          "sha256": "b137a2b8124cde7b0fcf4226a0759b3d900ab0643c14042c12ff6eebf66a648b"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-320x740-registration-form.png",
+          "bytes": 133948,
+          "sha256": "b137a2b8124cde7b0fcf4226a0759b3d900ab0643c14042c12ff6eebf66a648b"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-390x844-camp.png",
+          "bytes": 389578,
+          "sha256": "ca405ce429ec3a6b7fc06253069ddbc737abaa096ed28e4fd02652a4d6e8d0bc"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-390x844-english-choices.png",
+          "bytes": 149281,
+          "sha256": "d77a98860e04891fd3141b27d8e430dfcadbd4e2264a0098b84938cd3f0e91ba"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-390x844-english-prompt.png",
+          "bytes": 149281,
+          "sha256": "d77a98860e04891fd3141b27d8e430dfcadbd4e2264a0098b84938cd3f0e91ba"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-390x844-match-options.png",
+          "bytes": 152292,
+          "sha256": "2e87050f7fe55add7637dd01c1c2e954b7b4cab32b6ac52f471595c73b19587a"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-390x844-registration-continue.png",
+          "bytes": 180206,
+          "sha256": "f5dc1c360eba1aeb44b20012fa487c908a155d7535483f80163797635d660b08"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-390x844-registration-form.png",
+          "bytes": 180206,
+          "sha256": "f5dc1c360eba1aeb44b20012fa487c908a155d7535483f80163797635d660b08"
+        }
+      ]
+    },
+    {
+      "name": "part-03",
+      "bytes": 8372396,
+      "files": [
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-camp.png",
+          "bytes": 292799,
+          "sha256": "34f04e61ace79231e62fedac9f288be276371630ef33eb4e5f635b1d22c39236"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-english-choices.png",
+          "bytes": 118826,
+          "sha256": "540e6a2b6a63c184b36c195591386587d1540b53ac4825e3b159275146e9241d"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-english-prompt.png",
+          "bytes": 153144,
+          "sha256": "b79e5dd126fd6e16e309130d3b318a03f43c6b5653f7e254bdbfdc09f9ac8575"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-match-options.png",
+          "bytes": 137629,
+          "sha256": "37a78a48263151af47e9d04b76cecfca05b4458dce6a12ecafec2e7fdda0976c"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-registration-continue.png",
+          "bytes": 100477,
+          "sha256": "c98c09fbb509548b3e542138f7ae95ac65713553769f591ceca0089f86c021c0"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-844x390-registration-form.png",
+          "bytes": 115641,
+          "sha256": "f2708318befb8ce5e23393761b728274d1776ab11a0a744f082e945b9532fc77"
+        },
+        {
+          "path": "320-and-390-portrait-plus-844-by-390-landscape-expose-readable-real-UI-screenshots-observations.json",
+          "bytes": 4091,
+          "sha256": "a19cd6d091ae756af32ea14c04e45ea581b343bc41a5e42de5c0a067cffa9416"
+        },
+        {
+          "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-observations.json",
+          "bytes": 3973,
+          "sha256": "cda817c14baa78f5ac6e0fcfd09ee7401604e142cf471a18c262bd37d8bac844"
+        },
+        {
+          "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-A-1-sunseed_blessing-friendly-320x568-legal-target-copy.png",
+          "bytes": 95348,
+          "sha256": "a8a988de2279edd055b576c427f6029e7b687f38554a000c7d7806e6fecc8cc5"
+        },
+        {
+          "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-A-1-sunseed_blessing-friendly-390x844-legal-target-copy.png",
+          "bytes": 160533,
+          "sha256": "388886a234bd6d566221771379e1eb2c57f10c52b3ae3511b9d792b20760412c"
+        },
+        {
+          "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-A-1-sunseed_blessing-friendly-844x390-legal-target-copy.png",
+          "bytes": 165046,
+          "sha256": "43badddc8c06e1a4c8fded2ffac100d956f120aa29f284fd632943be2c21cec9"
+        },
+        {
+          "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-A-1-sunseed_blessing-friendly-accepted-effect.png",
+          "bytes": 146236,
+          "sha256": "668a739bba311c943b78b1a07f9a6d0374825933f1fa3df026637a5addbc67ba"
+        },
+        {
+          "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-B-1-reed_frog-enemy-320x568-legal-target-copy.png",
+          "bytes": 109852,
+          "sha256": "de195ceba9852711d57930953afcfebcada97a1198595e23ae7231e06ee5b886"
+        },
+        {
+          "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-B-1-reed_frog-enemy-390x844-legal-target-copy.png",
+          "bytes": 158854,
+          "sha256": "8d4cb4287b48fec070b4d202a103e261488171464db3bebedd33caabd102f850"
+        },
+        {
+          "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-B-1-reed_frog-enemy-844x390-legal-target-copy.png",
+          "bytes": 186915,
+          "sha256": "5be1cf4ca09f1b157ffef9a45bd44db9e1cd5137e68d9bc7e95df79391e621d3"
+        },
+        {
+          "path": "UI-built-expansion-decks-apply-one-real-friendly-and-one-real-enemy-targeted-effect-targets-B-1-reed_frog-enemy-accepted-effect.png",
+          "bytes": 170397,
+          "sha256": "6bbc51f332c5f108c32642ab720ce362a0ebb0cc7ec42ce0c8f4055e18484b46"
+        },
+        {
+          "path": "acceptance-full.json",
+          "bytes": 11468,
+          "sha256": "ed14657fd8d40d4ef5c28ee5c7ac837085a39b300ea3be858a563630614ea4d4"
+        },
+        {
+          "path": "acceptance-hedgehog.json",
+          "bytes": 2874,
+          "sha256": "f87657065d872d12df722df5d4de09c84e946629de818e7f5e92a92808624394"
+        },
+        {
+          "path": "acceptance-interaction.json",
+          "bytes": 1323,
+          "sha256": "06f24dd179a7644658f9651f3ede0c5553336d47c23680f9cfe53d9c94b2261d"
+        },
+        {
+          "path": "acceptance-layout.json",
+          "bytes": 1758,
+          "sha256": "3cbd8136a63d026a30e3712dff6624be531399c15a91ea82fe05f11b3cb8bfe2"
+        },
+        {
+          "path": "acceptance-motion.json",
+          "bytes": 1281,
+          "sha256": "ef10369e222764a9689c837acaa3c9b6693d1f8543e042eb317685c6c3a18cbf"
+        },
+        {
+          "path": "acceptance-smoke.json",
+          "bytes": 936,
+          "sha256": "f3d4cfa41d01c2c09587b40657e3a0f306af6082954d3f11afa31a73e6e90358"
+        },
+        {
+          "path": "acceptance-teacher.json",
+          "bytes": 2870,
+          "sha256": "c466d8e802b337e6d1b55685c62b204359bf1bda67e18ee1e1a03cf4d6763fcc"
+        },
+        {
+          "path": "account-and-guest-progress-stay-separate-across-login-logout-and-a-real-SQLite-server-restart-account-after-process-restart.png",
+          "bytes": 871934,
+          "sha256": "622928dc79076f9d8c9fb11099e5a4c85cc7a2a12e649c8539f38dc3de6bd750"
+        },
+        {
+          "path": "account-and-guest-progress-stay-separate-across-login-logout-and-a-real-SQLite-server-restart-durable-learning-in-fresh-context.png",
+          "bytes": 335207,
+          "sha256": "99d32fe474c5f2d6cd9678b688640b6e56c7a6fe728816d6b58b918b8c7b8907"
+        },
+        {
+          "path": "account-and-guest-progress-stay-separate-across-login-logout-and-a-real-SQLite-server-restart-observations.json",
+          "bytes": 4419,
+          "sha256": "280bda7827603077185c10a3fd63ce37816b62c9fd663d37d53233ac99dd7bea"
+        },
+        {
+          "path": "account-and-guest-progress-stay-separate-across-login-logout-and-a-real-SQLite-server-restart-test-gift-ten-revealed.png",
+          "bytes": 550725,
+          "sha256": "bbfcee7cbf4d0ad25973482eae9e083525e493cb9bba0f5ead658f2e18952bb0"
+        },
+        {
+          "path": "an-unmatched-guest-waits-the-real-default-ten-seconds-before-the-declared-AI-fallback-honestly-labeled-ai-opponent.png",
+          "bytes": 290933,
+          "sha256": "df9bc482975dd0eab79d303433f1d8f6f9d8b0838d9b96ae9c56af6467ebd684"
+        },
+        {
+          "path": "an-unmatched-guest-waits-the-real-default-ten-seconds-before-the-declared-AI-fallback-observations.json",
+          "bytes": 1534,
+          "sha256": "64c83b5ca64b163cc69efdd06497d4c02b36519db96c867bc4f5d4c74f8a8f79"
+        },
+        {
+          "path": "an-unmatched-guest-waits-the-real-default-ten-seconds-before-the-declared-AI-fallback-waiting-for-a-real-opponent.png",
+          "bytes": 313607,
+          "sha256": "fd18b1046b444367ba80952239143bb07d6f970866073182f65ade6717770cb6"
+        },
+        {
+          "path": "card-relief-A-B-keeps-texture-size-submissions-and-legible-faces-across-five-finishes-480-card-relief-after.png",
+          "bytes": 195883,
+          "sha256": "af09bab2a32088d47e131f30748fc7fcd069ebf410c9b92cc5365c686f7e4cc7"
+        },
+        {
+          "path": "card-relief-A-B-keeps-texture-size-submissions-and-legible-faces-across-five-finishes-480-card-relief-before.png",
+          "bytes": 197154,
+          "sha256": "20ef8fc6ec889193a167227972fd548b98d651eef9afbe93a86f3d770feede64"
+        },
+        {
+          "path": "card-relief-A-B-keeps-texture-size-submissions-and-legible-faces-across-five-finishes-800-card-relief-after.png",
+          "bytes": 463590,
+          "sha256": "d5cf37802f06f93dc23203648a19e23c720ba478d7e3db8c974c0baee189f2ba"
+        },
+        {
+          "path": "card-relief-A-B-keeps-texture-size-submissions-and-legible-faces-across-five-finishes-800-card-relief-before.png",
+          "bytes": 461181,
+          "sha256": "c91249ddb0334b885ec7025e01f80507635d0e1bd663ed8adb6a1b8d241eb4ba"
+        },
+        {
+          "path": "card-relief-submissions.json",
+          "bytes": 983,
+          "sha256": "67abe70b48ae9972f3bffedfa77ac58badfd327400e77f6af03e3aa7d560cf4d"
+        },
+        {
+          "path": "combat-motion-anonymous-arena-only.webm",
+          "bytes": 49248,
+          "sha256": "8a345c2b408ba6113f76be674d452d1177383cd37d983fb4435e8f6855019173"
+        },
+        {
+          "path": "combat-motion-arena-frame-00.png",
+          "bytes": 62483,
+          "sha256": "d9c45a9ec0fe01328fee014e0fd7a62b49bde19b079ce7407004fd0805727f30"
+        },
+        {
+          "path": "combat-motion-arena-frame-01.png",
+          "bytes": 62764,
+          "sha256": "e55154ad8962e3a495a29da2146f4333c6a98416770293649f7db891c0423cd1"
+        },
+        {
+          "path": "combat-motion-arena-frame-02.png",
+          "bytes": 63289,
+          "sha256": "3d09595d342db8e4b5947c86306af4c0c1678ccaa28101f5b82e797a6f7c95f2"
+        },
+        {
+          "path": "combat-motion-arena-frame-03.png",
+          "bytes": 67251,
+          "sha256": "1321780c5453b1ae397eea51482ce3d53566164768529ce5318ffc2b78274616"
+        },
+        {
+          "path": "combat-motion-arena-frame-04.png",
+          "bytes": 63936,
+          "sha256": "9298491a5eb034659e5b48ffea37929c9fd93feda9f866c273a4f8b88465ad81"
+        },
+        {
+          "path": "combat-motion-arena-frame-05.png",
+          "bytes": 64680,
+          "sha256": "de3435ce4e5e27e3f68a130630b65f15a2eb8d095335a1298836b223d3c7ad53"
+        },
+        {
+          "path": "combat-motion-arena-frame-06.png",
+          "bytes": 64530,
+          "sha256": "050eb0ca0b1bec0cb560eb6d691030f8d13bac79291cdea667197d6be357eb7c"
+        },
+        {
+          "path": "combat-motion-arena-frame-07.png",
+          "bytes": 65911,
+          "sha256": "811d438bb989fedb41a242e7e1a52e909e148cdd5d46922098815e1f2dac311e"
+        },
+        {
+          "path": "combat-motion-arena-frame-08.png",
+          "bytes": 65317,
+          "sha256": "473d3357095ca7ba78759395db5aeccadab032ad52ca335548bd0eecc7371124"
+        },
+        {
+          "path": "combat-motion-arena-frame-09.png",
+          "bytes": 65102,
+          "sha256": "097693641f6666d89838d697031e110902063144ffd6dafab075a31d9d884cce"
+        },
+        {
+          "path": "combat-motion-arena-frame-10.png",
+          "bytes": 64918,
+          "sha256": "31398f4c2aca926aaa067f296fe200b627ad8f499f5c46c1710ab71af0310527"
+        },
+        {
+          "path": "combat-motion-arena-frame-11.png",
+          "bytes": 65011,
+          "sha256": "605d89157f0b6554eeeb3690ba041460831d606446777630575627f41e50307f"
+        },
+        {
+          "path": "combat-motion-checkpoints.json",
+          "bytes": 75080,
+          "sha256": "857ebea23e5bf1422158eaf764c38481c4031524c207c835dae45571e9c8e35b"
+        },
+        {
+          "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-glass_snail-320x568-conditioned-reason.png",
+          "bytes": 127005,
+          "sha256": "b965701c668c3f4dcf4d03c5827c4d99c6103b4437c0b233d1279ad2c4699621"
+        },
+        {
+          "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-glass_snail-390x844-conditioned-reason.png",
+          "bytes": 199461,
+          "sha256": "8faed8db72f8e86b0b3420a959fb1ba0b84c74b73fd6395432789a6c678817c9"
+        },
+        {
+          "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-glass_snail-844x390-conditioned-reason.png",
+          "bytes": 180839,
+          "sha256": "c1b0c0fcaf03f2af8a80b0f99bbc7e4285c0313996ab8f5bea42cf174745c072"
+        },
+        {
+          "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-glass_snail-accepted-condition-effect.png",
+          "bytes": 410542,
+          "sha256": "e7b961d62f2424d42ef4f172e8ccee1969a575ae4ee1dd778f56aa5800545993"
+        },
+        {
+          "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-glass_snail-invalid-target-warning.png",
+          "bytes": 447422,
+          "sha256": "83c02f9eb1d5b1b47a8ef0098742803a6b2377fc2a4b7a1d9c4e2130b60aa562"
+        },
+        {
+          "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-mushroom_medic-320x568-conditioned-reason.png",
+          "bytes": 111873,
+          "sha256": "479ec2e765db7efd22f171d226163a24fa40098a50b30676f98d20262b14e9d3"
+        },
+        {
+          "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-mushroom_medic-390x844-conditioned-reason.png",
+          "bytes": 166313,
+          "sha256": "0bfdff69c8a411ad6e5616355170e7f61f7ac5efa9e1958f1dd4fd9c49287bbc"
+        }
+      ]
+    },
+    {
+      "name": "part-04",
+      "bytes": 8296233,
+      "files": [
+        {
+          "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-mushroom_medic-844x390-conditioned-reason.png",
+          "bytes": 172291,
+          "sha256": "6af9e7c275b85b484f80958539759467e6416713f08a082a178de0b40b1f299f"
+        },
+        {
+          "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-mushroom_medic-accepted-condition-effect.png",
+          "bytes": 379685,
+          "sha256": "991731227ed11e4829aa87ecb958327b1fad60bf70b9390e5ac3de10013ed7b8"
+        },
+        {
+          "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-mushroom_medic-invalid-target-warning.png",
+          "bytes": 413467,
+          "sha256": "7561df2dd1385d32752b96346486589c0586acb9eb8b92a7224ae3fcd0041803"
+        },
+        {
+          "path": "conditioned-friendly-target-copy-guides-one-wounded-heal-and-one-unshielded-shield-in-a-real-match-observations.json",
+          "bytes": 28547,
+          "sha256": "9e041cbda582796a82009f75a9e18ccd2d4de356890836931f004b764c620e28"
+        },
+        {
+          "path": "fox-face-submissions.json",
+          "bytes": 1817,
+          "sha256": "6d7afa0973bc234986ed05b3fdcb8d1779788dcb15614709c8db5f3b45c8508d"
+        },
+        {
+          "path": "fox-live-arena-frame-00.png",
+          "bytes": 61257,
+          "sha256": "89dc268b028117675d173cd28a607bb98f635a679999ced413e3da69c66ebed5"
+        },
+        {
+          "path": "fox-live-arena-frame-01.png",
+          "bytes": 61589,
+          "sha256": "241d50b14ba3ca10fccc49995021e5a3d1df318adbf2d1f27ee40290214ca172"
+        },
+        {
+          "path": "fox-live-arena-frame-02.png",
+          "bytes": 61929,
+          "sha256": "464d565858606bc88a5b97c3b56621762b9adad47fdcc2dda0b061fbbfab27cc"
+        },
+        {
+          "path": "fox-live-arena-frame-03.png",
+          "bytes": 65556,
+          "sha256": "b48bb6986de4a6c2a5824ec21802c49f68856193072b247f9add5c99ee8ea079"
+        },
+        {
+          "path": "fox-live-arena-frame-04.png",
+          "bytes": 65743,
+          "sha256": "bc256f4366e89b357b129c03110a3714aed54d12bd8d25101946eff11711e6c4"
+        },
+        {
+          "path": "fox-live-arena-frame-05.png",
+          "bytes": 65813,
+          "sha256": "c70ba6e04ec50030f03842653a669e8c985fc273f0b9f309369df52c44715cb4"
+        },
+        {
+          "path": "fox-live-arena-frame-06.png",
+          "bytes": 65476,
+          "sha256": "3aa4104d77c6f3c6ad05f9b88ebcd4fc34f4ee6cc6ecfb8db446d38793b689e5"
+        },
+        {
+          "path": "fox-live-arena-frame-07.png",
+          "bytes": 65240,
+          "sha256": "7df7331839e28030d8a738fdcd6f02caa2cf8d64a1e91e3694dc5877985a59c5"
+        },
+        {
+          "path": "fox-live-arena-frame-08.png",
+          "bytes": 64641,
+          "sha256": "b420e6e7a62f76230be95fec16d686f620d7ec0fc70ae33f42b5fc5e45d2d7df"
+        },
+        {
+          "path": "fox-live-arena-frame-09.png",
+          "bytes": 64375,
+          "sha256": "f3f60f9c26b9e45d159d8474a3c83f53c26930e044bcd00cd7d2241348e46150"
+        },
+        {
+          "path": "fox-live-arena-frame-10.png",
+          "bytes": 64559,
+          "sha256": "6b84d2738568085181181cd99a66646345a218afd14afc4f7dd533c5f0df9972"
+        },
+        {
+          "path": "fox-live-arena-frame-11.png",
+          "bytes": 64490,
+          "sha256": "d76d781b9695a16c9bae689d42b2016979864b947116e26fe7900fba802c06c5"
+        },
+        {
+          "path": "fox-live-arena-only.webm",
+          "bytes": 53984,
+          "sha256": "5be503a79e935bca9774a14063f637b913156368d6293757ad4eec47cc15e427"
+        },
+        {
+          "path": "fox-live-checkpoints.json",
+          "bytes": 327290,
+          "sha256": "8576a9e2c781eb6aeddcc847a2cefcc9ae630692ec2c1d56f1b9843e8dcfa94a"
+        },
+        {
+          "path": "hedgehog-face-submissions.json",
+          "bytes": 1817,
+          "sha256": "afe0ea0db5fb54004979b042fc6eb83dab9e3d4de742efaae982a801b51faf1e"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-00.png",
+          "bytes": 62222,
+          "sha256": "dbdbfdce26a489030d4b8d228d13091c3ac978cc7e967ef897b5974281b53a59"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-01.png",
+          "bytes": 62908,
+          "sha256": "af0cbb4de74af5c8046d63d3de9a9f6afda3945e8a138bf87218538a58841102"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-02.png",
+          "bytes": 63977,
+          "sha256": "717e5b8eb34c64f64959704b163205b1aa6acfe04f5bfc2f1a4e328071724212"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-03.png",
+          "bytes": 69768,
+          "sha256": "06fd9a7856fdd091eceff7a4f9d9960a112392776889e1464ba522e11221f8d7"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-04.png",
+          "bytes": 70381,
+          "sha256": "6e65de019253b81c5f49d931de8a22d21fafd801abc1f750aff5c50b3bb5efb7"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-05.png",
+          "bytes": 70911,
+          "sha256": "ee4a34e455b8bb8086c83e97b3e53f1e0b3c06239d3b13c46103ccd43e06a8d1"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-06.png",
+          "bytes": 70660,
+          "sha256": "21d35ddb0276ff23f6d7b69ff31bdb9660d771c8fec7b8ac34567a0f70b2d29a"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-07.png",
+          "bytes": 70129,
+          "sha256": "7d32e296baa530f0da2ca28a5d277d67ce9fc5944574cd8411e8aa3864e5de78"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-08.png",
+          "bytes": 69516,
+          "sha256": "f3f3c5a1f031a330ea71e8c7b6230daa933647bad5655dc66d301edce800d12b"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-09.png",
+          "bytes": 69238,
+          "sha256": "459e2ea5ba28aebfb18c12f745832cf301c269418f96add09b6955f7d8d71d82"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-10.png",
+          "bytes": 69401,
+          "sha256": "8e5362b72dc3b29e9c794e920875631dc7fc72a2c93921447967335bb40f8b1b"
+        },
+        {
+          "path": "hedgehog-live-arena-frame-11.png",
+          "bytes": 69436,
+          "sha256": "efd6916f37412947ac2f3cf80fec734d23f1481ab22a0bbb3947b41fb016b62d"
+        },
+        {
+          "path": "hedgehog-live-arena-only.webm",
+          "bytes": 50724,
+          "sha256": "f80cc4d891d33bc3b560b78a5be84846de7aacf55a16f96d95d5bb6c2de61244"
+        },
+        {
+          "path": "hedgehog-live-checkpoints.json",
+          "bytes": 65272,
+          "sha256": "8b80d87162e67b3008d8b2b89b6dc459d0d9feba31540e6da3f5d724d1b8103b"
+        },
+        {
+          "path": "low-geometry-stone-material-A-B-fixture-preserves-geometry-and-bounded-render-submissions-low-geometry-plain-before.png",
+          "bytes": 57771,
+          "sha256": "13414eba823f73bbdab538f635f39c6f0ed26dc9fd553c21b732310db6f54a34"
+        },
+        {
+          "path": "low-geometry-stone-material-A-B-fixture-preserves-geometry-and-bounded-render-submissions-low-geometry-stone-after.png",
+          "bytes": 73988,
+          "sha256": "6db42c88615747e7ab9d1371632f6f3bc293d493dc23b2ce02b2dc1b32afa360"
+        },
+        {
+          "path": "ranger-clothing-A-B-fixture-preserves-submissions-at-preview-and-thumbnail-sizes-low-384-garment-after.png",
+          "bytes": 56925,
+          "sha256": "997ad5c4a60749fc09d57196bfac4a22e51df3123b69214443df12049c78fad3"
+        },
+        {
+          "path": "ranger-clothing-A-B-fixture-preserves-submissions-at-preview-and-thumbnail-sizes-low-384-garment-before.png",
+          "bytes": 55845,
+          "sha256": "6700d781aef629324ef85a1f0c9ba628017097b6ffc8584f62a7f759b63b7e36"
+        },
+        {
+          "path": "ranger-clothing-A-B-fixture-preserves-submissions-at-preview-and-thumbnail-sizes-low-96-garment-after.png",
+          "bytes": 13145,
+          "sha256": "b8dfeb7ef78cd8864483120f347b5687e12a2a6612657970c643db12b6be233e"
+        },
+        {
+          "path": "ranger-clothing-A-B-fixture-preserves-submissions-at-preview-and-thumbnail-sizes-low-96-garment-before.png",
+          "bytes": 13076,
+          "sha256": "c3f6249f12120d76a223eb79e80e00292acc8b5e8a4b4e1a0f282d289edf9dd1"
+        },
+        {
+          "path": "ranger-clothing-A-B-fixture-preserves-submissions-at-preview-and-thumbnail-sizes-medium-384-garment-after.png",
+          "bytes": 58915,
+          "sha256": "483dae3c3cc75d811d7337282999da89a4e7542c7da63e13bc4a96b56d67793f"
+        },
+        {
+          "path": "ranger-clothing-A-B-fixture-preserves-submissions-at-preview-and-thumbnail-sizes-medium-384-garment-before.png",
+          "bytes": 57919,
+          "sha256": "c1150116dc1d5940c5cc539f9f8b86a21cb5a19550048713d5010d6bb0785191"
+        },
+        {
+          "path": "ranger-material-submissions.json",
+          "bytes": 664,
+          "sha256": "2d287f016dc1923fec854b8aec536b4b420a946d5361fc1f93ecbc67a64b08ee"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-canvas-card-selected.png",
+          "bytes": 179690,
+          "sha256": "a9459804a78eff35fc3327682d11baa556d6e1f792178514578fa3c7a1364a9f"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-cpu-last-card-canvas-keyboard-focus.png",
+          "bytes": 175844,
+          "sha256": "1bcc6c21dfe23d31f99c7076ff655a69ecc9b9477b9630f95193c4542bb6bf9b"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-cpu-last-card-canvas-keyboard-return-focus.png",
+          "bytes": 175738,
+          "sha256": "3beef6640c27e52ffa1f14af05e6429965763e588b307ad6f5a98e8353b396a8"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-cpu-last-card-keyboard-details.png",
+          "bytes": 216745,
+          "sha256": "1f55afe8d8443f5650c87cec7dcbac23e5126ed68f964f69bf5f5eeeba965b29"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-cpu-last-card-keyboard-return-focus.png",
+          "bytes": 164014,
+          "sha256": "a6d5e05038befd2a2678ed065f57e8c231d4d5729ccd008f638af1c5f4454b17"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-cpu-last-card-keyboard-visible.png",
+          "bytes": 164278,
+          "sha256": "a71d5dccc0f29e4d60f9f30295b05339e9e04c1894f1b1b46ba8ad742e866d4e"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-cpu-last-card-native-touch-details.png",
+          "bytes": 216743,
+          "sha256": "ea5a2cbeb9c88b942bf9c64e55f7eda938cbbb7ab305f52b1960d441c217c243"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-cpu-last-card-native-touch-visible.png",
+          "bytes": 162622,
+          "sha256": "55a340b93a51f908bbaeeaac11fc486d1486783c5047f8ec111cdc40d8370624"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-cpu-last-card-wheel-pointer-details.png",
+          "bytes": 216721,
+          "sha256": "7b2994c40a882e49ff3faecf543f541875ab7a145e5fea83fb3e4794b35d0f4c"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-cpu-last-card-wheel-visible.png",
+          "bytes": 162622,
+          "sha256": "55a340b93a51f908bbaeeaac11fc486d1486783c5047f8ec111cdc40d8370624"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-cpu-live-match-hand.png",
+          "bytes": 166852,
+          "sha256": "389e3a1e70b9e2a44a106637548a6d6822a215990cd7e96535ffc17ac9d80945"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-cpu-skin-revealed.png",
+          "bytes": 60870,
+          "sha256": "c61011ecf861212f630d0782be21fce0b1dcbefa53ffca5edeb063c16cae9e50"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-keyboard-card-description.png",
+          "bytes": 214618,
+          "sha256": "046cd60843ae6ffdacc76cf245005bfbef9fb441f24ae3ae7b2fe3052924f569"
+        },
+        {
+          "path": "simulated-unavailable-WebGL-uses-the-real-CPU-wardrobe-and-responsive-live-hand-observations.json",
+          "bytes": 14608,
+          "sha256": "ff5902981f90f7208074b28e88ed03f077b8f6003edd34a55af8aaf4b680242a"
+        },
+        {
+          "path": "stone-material-submissions.json",
+          "bytes": 215,
+          "sha256": "814e2c845c7ebfcfd2ef4c89c6b32e3efb07cf34cc56bfa8b538be9d199ff353"
+        },
+        {
+          "path": "teacher-and-school-queues-stay-separate-before-their-real-default-AI-fallbacks-observations.json",
+          "bytes": 3045,
+          "sha256": "40330bbb12e86ed14c5b258467b0c9bdbf0deb097e023f25784647def5acdbd7"
+        },
+        {
+          "path": "teacher-and-school-queues-stay-separate-before-their-real-default-AI-fallbacks-unmatched-school-declared-computer-opponent.png",
+          "bytes": 273497,
+          "sha256": "bb0662740d6ceeefb758ce111c4c6573ced46a85079e55f59cb379ad94976b38"
+        },
+        {
+          "path": "teacher-and-school-queues-stay-separate-before-their-real-default-AI-fallbacks-unmatched-school-separate-waiting-pool.png",
+          "bytes": 313655,
+          "sha256": "6cd745e356d627b0f621df0f470ae02ecbdb784fa61a988c408c68d8b13a4470"
+        },
+        {
+          "path": "teacher-and-school-queues-stay-separate-before-their-real-default-AI-fallbacks-unmatched-teacher-declared-computer-opponent.png",
+          "bytes": 273877,
+          "sha256": "c0669dfb9913a9143f7f2fc78fc9a8d27a7ec9ce53f9b633b1db7b19ea4aeec5"
+        },
+        {
+          "path": "teacher-and-school-queues-stay-separate-before-their-real-default-AI-fallbacks-unmatched-teacher-separate-waiting-pool.png",
+          "bytes": 328763,
+          "sha256": "9a91a9cb280271421381c27090b4f8b856f2ca2643464584b7febfcc85019e48"
+        },
+        {
+          "path": "teacher-preference-reload-preserves-school-scope-mastery-and-account-isolation-observations.json",
+          "bytes": 2774,
+          "sha256": "821338996850c79613db65322c3d306e86a6c75f3faf9f797fbb3f14ab9f0844"
+        },
+        {
+          "path": "teacher-preference-reload-preserves-school-scope-mastery-and-account-isolation-retained-sixth-grade-learning.png",
+          "bytes": 299370,
+          "sha256": "32ab92aa1a6f6e7ab92a8dc00d4016c92b429562183cd8f9c6a8575913b23887"
+        },
+        {
+          "path": "teacher-preference-reload-preserves-school-scope-mastery-and-account-isolation-separate-guest-restored.png",
+          "bytes": 311483,
+          "sha256": "a5cd44fc0b8e3b4f3b85fbde251c48ebe1bea683cf3e022a6e6ae634e0a0f81d"
+        },
+        {
+          "path": "teacher-preference-reload-preserves-school-scope-mastery-and-account-isolation-teacher-scope-after-reload.png",
+          "bytes": 322517,
+          "sha256": "eb8d2b30c62bc88412ed61cb2e43de814d7d22b54c35c5a89846c65325df07ec"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-320x740-academic-answer-choices.png",
+          "bytes": 110245,
+          "sha256": "1d098b07ced607418cc629d65482d53493cda04c60fd679dac6fb6fdd182efa5"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-320x740-academic-feedback-controls.png",
+          "bytes": 145510,
+          "sha256": "022e9297ad977db12961cc23027b7892b45dca187d441f346e73fd12897a76c7"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-320x740-academic-passage.png",
+          "bytes": 146960,
+          "sha256": "bae4eb9cc953001c25aef275f0bbfea46f23731c2d94cf3f09d005013f75a974"
+        }
+      ]
+    },
+    {
+      "name": "part-05",
+      "bytes": 8178639,
+      "files": [
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-320x740-academic-prompt.png",
+          "bytes": 141715,
+          "sha256": "9e38243c27e2da3277b040dfdd49016cf4e14d393d0ff204b18bcf731e39d0d3"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-320x740-academic-wrong-answer-explanation.png",
+          "bytes": 142599,
+          "sha256": "34621b554f67ae4f413330dcf4f8c00a455e67f7780e522b3da3e3cc8d26dd77"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-320x740-teacher-match-options.png",
+          "bytes": 126309,
+          "sha256": "e3da62e453c3cc2bedae05c10ff18399b1c20cc57544f315486256e243016d79"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-844x390-academic-answer-choices.png",
+          "bytes": 118367,
+          "sha256": "a2fdec9a4a54a86edb45a8c28dcf8c7c20f6c47a1ae7fdb61687361a3bd66edd"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-844x390-academic-feedback-controls.png",
+          "bytes": 156726,
+          "sha256": "cc1569ce540a2f92d213d3339967b47534d49c60858e3df5fca5a04505c23ff8"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-844x390-academic-passage.png",
+          "bytes": 180210,
+          "sha256": "f1e7422bc742547b7c3f384b2bf1e1d232bf600f65d2e48041ed30fb25d5e879"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-844x390-academic-prompt.png",
+          "bytes": 155396,
+          "sha256": "ae7b766fb8bd718ab568068f53eaa22f0e495249ccbe6cbd23fc580de0bb79af"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-844x390-academic-wrong-answer-explanation.png",
+          "bytes": 158677,
+          "sha256": "da0346ea9769fb94202853b8b2496a884e79eb69df184ffa59cf0805cc54e091"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-844x390-teacher-match-options.png",
+          "bytes": 137548,
+          "sha256": "f6733b0277fd7b4f1861658dba6ffe8670e5a20314c3abb17db63bacbcd0d297"
+        },
+        {
+          "path": "teacher-reading-passage-choices-and-wrong-answer-explanation-fit-narrow-portrait-and-landscape-observations.json",
+          "bytes": 2771,
+          "sha256": "851c4606dfa60ea5806665f0e86754b75d85a5f5fdef9cffd64c15834d902600"
+        },
+        {
+          "path": "three-one-click-presets-and-a-two-click-custom-swap-retain-all-thirty-six-free-card-details-desktop-presets-and-deck-slots.png",
+          "bytes": 436912,
+          "sha256": "1fb6d2b2dbd233ac316045fc19f5d7d4111f2b83894e6c86910e06b921c2d723"
+        },
+        {
+          "path": "three-one-click-presets-and-a-two-click-custom-swap-retain-all-thirty-six-free-card-details-last-deck-slot-after-real-wheel.png",
+          "bytes": 646813,
+          "sha256": "7b901037645e1d8fac14b25185af5902a21810a8fa8492b3ec2fb49c385be19e"
+        },
+        {
+          "path": "three-one-click-presets-and-a-two-click-custom-swap-retain-all-thirty-six-free-card-details-new-card-complete-rule-detail.png",
+          "bytes": 931799,
+          "sha256": "eab1681e56c619686c4b68da303a22f6fd5024c8822690f347f6d56788234689"
+        },
+        {
+          "path": "three-one-click-presets-and-a-two-click-custom-swap-retain-all-thirty-six-free-card-details-observations.json",
+          "bytes": 5608,
+          "sha256": "00f56f31a7a37fc31d6c21730b251ec7e0fc252b0998d3c15e962a168a13a1ac"
+        },
+        {
+          "path": "three-visible-study-questions-earn-daily-gifts-and-one-official-skin-survives-registration-desktop-earned-daily-gifts.png",
+          "bytes": 227663,
+          "sha256": "fa8f4820aad8ebbee90906ebcbec98edc4a7f6918065989104a24e0c27e86a9c"
+        },
+        {
+          "path": "three-visible-study-questions-earn-daily-gifts-and-one-official-skin-survives-registration-observations.json",
+          "bytes": 1531,
+          "sha256": "f5d64c7ff80b18ed2d0b341d1143e72dec7bfb747d2903eb0b0f4d464177c9ea"
+        },
+        {
+          "path": "three-visible-study-questions-earn-daily-gifts-and-one-official-skin-survives-registration-official-skin-revealed-after-save.png",
+          "bytes": 116840,
+          "sha256": "fe7f5b7ded0ad822657b7d0f98f191c6c4d71cfa4b5aa55b62a12ba2511be9b4"
+        },
+        {
+          "path": "three-visible-study-questions-earn-daily-gifts-and-one-official-skin-survives-registration-registered-official-skin-retained.png",
+          "bytes": 311755,
+          "sha256": "db23a2dab1d856da498ad5157922dff450023aaaa35b9cfc1a7df6ded5d2aace"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-1280x800-redeemed-ranger-real-match.png",
+          "bytes": 402946,
+          "sha256": "209cfa7273a475748b8be0fd0a2f0386d3e9b9d7fa56fa501795a66f8ed29248"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-320x568-redeemed-ranger-real-match.png",
+          "bytes": 93000,
+          "sha256": "4770de4ed5f3b4196f75a179714ee26c9e769277c1cdc87cd3d014717d8bfbc8"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-320x740-daily.png",
+          "bytes": 89223,
+          "sha256": "9746e0e4d022b853c0ebf41ba57d0825a4c7365937a076110d71b4ae16d52470"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-320x740-same-partial-batch.png",
+          "bytes": 82179,
+          "sha256": "2032637f660dc5478a72ef89e76423597bbdd87a2bb6fa7b13171df569a9a9b2"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-320x740-wardrobe.png",
+          "bytes": 107608,
+          "sha256": "72c854a765b82397321769da06c1a2284f49a04df175b5492af531a6d57bffe6"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-390x844-daily.png",
+          "bytes": 114947,
+          "sha256": "4783979506bf93167c0f4f90d562cbd7cddfea21082dece21404b9447a734db9"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-390x844-same-partial-batch.png",
+          "bytes": 104360,
+          "sha256": "07edcde7ec0f56d2cfa4bfa10a1a38a8bc005c02d822730b97fec5b24a9b75cd"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-390x844-wardrobe.png",
+          "bytes": 133297,
+          "sha256": "3d43523314d6e36dbf4f78d2851207e779ec3d559ba23790eb1c4571ec6fb716"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-844x390-daily.png",
+          "bytes": 97944,
+          "sha256": "aa94163b0c67d392f5643de70a947fb90515c44959886321576e894a481c1772"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-844x390-redeemed-ranger-real-match.png",
+          "bytes": 172814,
+          "sha256": "cf43a7266da375cd928b6942c99c37b27c8233155dc645ee2d85ac67dd3496e7"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-844x390-same-partial-batch.png",
+          "bytes": 86291,
+          "sha256": "79310e5ce9207f29958ff34610a5cfdf9ed27119f81bd72ed57af91efc0768e8"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-844x390-wardrobe.png",
+          "bytes": 125125,
+          "sha256": "979132bcaf2af4c9107770fd52ced7feaee923a7b4daaa530aac6b7ee9b2ba86"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-01-leaf_ranger.png",
+          "bytes": 321374,
+          "sha256": "d1efd1b79cd30efe1ceb4880cbba3331c198c788dc2643689a591a476850ad2e"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-02-mushroom_keeper.png",
+          "bytes": 313269,
+          "sha256": "134e9ab6c54d9fe14fc2ac3b0ecd11b5f57edbf789ca722f4d2f3a1dd5cdc065"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-03-acorn_captain.png",
+          "bytes": 313982,
+          "sha256": "bde11b7ee524fc58ecd42ca2caf09c4b6a05f455861b56a76bf835a19fc58349"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-04-butterfly_scholar.png",
+          "bytes": 323671,
+          "sha256": "b850d588f98e6b20bc6f218de6bae120c607e18dbeb6686c4f6991ec87302dc3"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-05-rain_traveler.png",
+          "bytes": 320831,
+          "sha256": "5c7abe4a55d51d86c7a3f8309c1ef2d27c3e663c98775f92d189dc83191014c6"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-06-coral_listener.png",
+          "bytes": 329628,
+          "sha256": "9b18ab223e7682890dd8fddb01132984f061a829c90e6e239f8f62ef2df6d4ff"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-07-river_boatkeeper.png",
+          "bytes": 320739,
+          "sha256": "fb79ab55939abad8c136c45aa03f2eb90831830187a46c1aa06194f9ec760cbf"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-08-snow_postkeeper.png",
+          "bytes": 326172,
+          "sha256": "37b5190791b2ab2a473a2751a755b9b447f8d505a8882fd01335618ef6ea49d2"
+        }
+      ]
+    },
+    {
+      "name": "part-06",
+      "bytes": 8065932,
+      "files": [
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-09-ember_apprentice.png",
+          "bytes": 324754,
+          "sha256": "aa4b0840178b3a8e9bb1ff2314d3e7bfebb362cce900303f38f0d570aaf4ca0a"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-10-lantern_festival.png",
+          "bytes": 325380,
+          "sha256": "40f0b943e1802354b158e7477560e6313eb34dbeb66bfac285d311640f67f5bb"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-11-sun_clockmaker.png",
+          "bytes": 321904,
+          "sha256": "f12f7681cc1fc401226ed7d9a90fb6ab8ac45910ca1b24d3b533ed67111d6eb5"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-12-phoenix_courier.png",
+          "bytes": 328652,
+          "sha256": "b3cd39e32b83dac417295af17a63e2c3a0bba2d82915091339aa8bc38c146dfa"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-13-moon_librarian.png",
+          "bytes": 322362,
+          "sha256": "012a59f7c259fb28b0467e7985c19af141ed53365d1099b5d7c91829f6b58f0f"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-14-star_cartographer.png",
+          "bytes": 321966,
+          "sha256": "4b143fd14a35c2fd09407899fb21a93fbd48d6d8bdf39477330426bd085156af"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-15-cloud_pilot.png",
+          "bytes": 324414,
+          "sha256": "6f25c1392f128dece4520fdb54b52a443284d89596fb23a3ef98eef47b989d8a"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-16-crystal_mason.png",
+          "bytes": 327556,
+          "sha256": "c117a732d28f191ea7cc500bf4a3548f269f10ef78704d135ea3f7486a6efdb1"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-17-paper_adventurer.png",
+          "bytes": 335410,
+          "sha256": "5af17aba22f82d452251cb5d9927cf8da7199a556f343780591bee850d418b33"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-18-tea_alchemist.png",
+          "bytes": 335541,
+          "sha256": "320815e7388e6512a8e6c1f8f8803a561fb2dd839085417165c02369ac8b9788"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-19-copper_gardener.png",
+          "bytes": 334175,
+          "sha256": "c57cba0d68382f6a6cb298c6f104fc23322f2ab8b68ff474c3428e432ea11334"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-catalogue-20-aurora_storyteller.png",
+          "bytes": 303846,
+          "sha256": "ff6b77bdad43ae8d25c7d149dd13780a209d19059e75734a8d9924eef1a9ca54"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-observations.json",
+          "bytes": 7066,
+          "sha256": "d3c7ac9658f5beb9f6bfde94c6c99fcbecf77265505334541069d14767aa7e71"
+        },
+        {
+          "path": "twenty-sequential-wardrobe-previews-and-a-resumable-test-ten-pull-fit-compact-viewports-test-ten-revealed.png",
+          "bytes": 53033,
+          "sha256": "ff499a483cc0bbd4f9d4ee55c4a838ddd78f9430948a5766d13022f454b40ef5"
+        },
+        {
+          "path": "two-isolated-browsers-finish-a-human-UI-match-with-summons-attacks-English-and-reconnect-account-A-english-question.png",
+          "bytes": 270091,
+          "sha256": "dc848bf2351b3779422f2265069b48d71ca623c6c65c95141a46e20edad309bb"
+        },
+        {
+          "path": "two-isolated-browsers-finish-a-human-UI-match-with-summons-attacks-English-and-reconnect-account-A-normal-result.png",
+          "bytes": 254968,
+          "sha256": "48d8cebf7b3b4f0dfc83a2362ce1c4d5222ef05910b3fe89b673fcc0f9370735"
+        },
+        {
+          "path": "two-isolated-browsers-finish-a-human-UI-match-with-summons-attacks-English-and-reconnect-canvas-card-selected.png",
+          "bytes": 395840,
+          "sha256": "14ef4bd5f5a5684b16e4f7261a4eb8d9866df029c2565341a8b583a605b0896d"
+        },
+        {
+          "path": "two-isolated-browsers-finish-a-human-UI-match-with-summons-attacks-English-and-reconnect-guest-B-english-question.png",
+          "bytes": 298241,
+          "sha256": "e798ae86d2a6722f05e1794f76d35fee8d43771777ec7d45f76e2e7b26cbdc1b"
+        },
+        {
+          "path": "two-isolated-browsers-finish-a-human-UI-match-with-summons-attacks-English-and-reconnect-guest-B-normal-result.png",
+          "bytes": 246958,
+          "sha256": "49cbf3f96153c4a5d1a23359b32573eb92b8f5ef329bf9c43328398416b9b6d0"
+        },
+        {
+          "path": "two-isolated-browsers-finish-a-human-UI-match-with-summons-attacks-English-and-reconnect-keyboard-card-description.png",
+          "bytes": 340920,
+          "sha256": "375a7fd9fc72e09d39f939a5b7fdc45dcc1db0cbaaa9f39a36ede74ad265acea"
+        },
+        {
+          "path": "two-isolated-browsers-finish-a-human-UI-match-with-summons-attacks-English-and-reconnect-observations.json",
+          "bytes": 3901,
+          "sha256": "30a149502f584cafaf3cde8e9526c5da2362122ad540d3cfc26a26065e7e1299"
+        },
+        {
+          "path": "two-isolated-browsers-finish-a-human-UI-match-with-summons-attacks-English-and-reconnect-same-seat-after-offline-reload.png",
+          "bytes": 435953,
+          "sha256": "6f436bf05ada441194336bc3209c03ac0ceb20e0d93e566f98b55b82e181ed24"
+        },
+        {
+          "path": "two-real-players-charge-only-their-own-natural-draw-twice-with-correct-wrong-cancel-and-reconnect-320x568-hand-and-card-actions.png",
+          "bytes": 118554,
+          "sha256": "642d407b0cc29aaa409aa32b18d16c883ace8cebc9cfa2db435109d9d5f6c0b3"
+        },
+        {
+          "path": "two-real-players-charge-only-their-own-natural-draw-twice-with-correct-wrong-cancel-and-reconnect-320x568-optional-draw-action.png",
+          "bytes": 119036,
+          "sha256": "18895b5370fe90600e960f5a94055e20a5608a4de6d88e92c9e17bf15d73bd3a"
+        },
+        {
+          "path": "two-real-players-charge-only-their-own-natural-draw-twice-with-correct-wrong-cancel-and-reconnect-320x740-hand-and-card-actions.png",
+          "bytes": 141449,
+          "sha256": "50060142ac62ef22f40089d337526d71d812818b1d472470ba6cdb4912ee5c17"
+        },
+        {
+          "path": "two-real-players-charge-only-their-own-natural-draw-twice-with-correct-wrong-cancel-and-reconnect-320x740-optional-draw-action.png",
+          "bytes": 138259,
+          "sha256": "52367071fc37879f5a231bd76c1ac5135c4a7958d603e71dca8cbd9d5fca1e71"
+        },
+        {
+          "path": "two-real-players-charge-only-their-own-natural-draw-twice-with-correct-wrong-cancel-and-reconnect-390x844-hand-and-card-actions.png",
+          "bytes": 186322,
+          "sha256": "45ea5eaf3941930c1daaaf6003d20ccc9ba51f9c46baf7e2d9ac8f82dc05dd00"
+        },
+        {
+          "path": "two-real-players-charge-only-their-own-natural-draw-twice-with-correct-wrong-cancel-and-reconnect-390x844-optional-draw-action.png",
+          "bytes": 184838,
+          "sha256": "e512c59a657eb71e5b600eaaedf5e332b876969322b5243deb71f450517bfcaa"
+        },
+        {
+          "path": "two-real-players-charge-only-their-own-natural-draw-twice-with-correct-wrong-cancel-and-reconnect-844x390-hand-and-card-actions.png",
+          "bytes": 190223,
+          "sha256": "1370aaaf9f0e18537166e7ac83c38476979990ac5267bbd99fcd270b588fd017"
+        },
+        {
+          "path": "two-real-players-charge-only-their-own-natural-draw-twice-with-correct-wrong-cancel-and-reconnect-844x390-optional-draw-action.png",
+          "bytes": 190402,
+          "sha256": "874205ebec204a5a655e475238ab21a23b2dfea1d5b51d5701a3f4545732b402"
+        },
+        {
+          "path": "two-real-players-charge-only-their-own-natural-draw-twice-with-correct-wrong-cancel-and-reconnect-draw-correct-feedback.png",
+          "bytes": 583918,
+          "sha256": "4511d72028b92cb9db0e95d8ea2329146731477dcbede525f6991a0545d364d8"
+        }
+      ]
+    },
+    {
+      "name": "part-07",
+      "bytes": 3050774,
+      "files": [
+        {
+          "path": "two-real-players-charge-only-their-own-natural-draw-twice-with-correct-wrong-cancel-and-reconnect-draw-wrong-feedback.png",
+          "bytes": 551769,
+          "sha256": "9b35ffb14ebc6617cc0156132b854b99bb2e02ab663afa16c2dc0d74a584be36"
+        },
+        {
+          "path": "two-real-players-charge-only-their-own-natural-draw-twice-with-correct-wrong-cancel-and-reconnect-observations.json",
+          "bytes": 3957,
+          "sha256": "641f83e31c5282eea2314cbfe44cd7b47fd6c23b9f91dfc273dd01bfda260b3a"
+        },
+        {
+          "path": "two-teacher-browsers-pair-by-academic-scope-and-use-real-cards-and-teacher-rituals-observations.json",
+          "bytes": 3537,
+          "sha256": "b8f8c29d5ba0b89cf7a4fc8866c1eda44754373409e5ead33d38993e72541256"
+        },
+        {
+          "path": "two-teacher-browsers-pair-by-academic-scope-and-use-real-cards-and-teacher-rituals-teacher-A-english-question.png",
+          "bytes": 375755,
+          "sha256": "b8c8af6bda4c2ffac1a6d4c413e1e63e842c1a9426d65995c054b0a78e9b1b86"
+        },
+        {
+          "path": "two-teacher-browsers-pair-by-academic-scope-and-use-real-cards-and-teacher-rituals-teacher-A-teacher-board-after-actions.png",
+          "bytes": 416346,
+          "sha256": "373fff94af31c35f8f41609907676809161373f0ec7d37e5cd7985b5a3467a10"
+        },
+        {
+          "path": "two-teacher-browsers-pair-by-academic-scope-and-use-real-cards-and-teacher-rituals-teacher-A-teacher-matched-opening.png",
+          "bytes": 436153,
+          "sha256": "66eb03b61c24a8b61ffced252e00e5397d40269c442abfc0e0f85e78d60afe12"
+        },
+        {
+          "path": "two-teacher-browsers-pair-by-academic-scope-and-use-real-cards-and-teacher-rituals-teacher-B-english-question.png",
+          "bytes": 381961,
+          "sha256": "9c498c1af1159426d969c255569e3374c7c0f35d40d2884c827ab339569991c5"
+        },
+        {
+          "path": "two-teacher-browsers-pair-by-academic-scope-and-use-real-cards-and-teacher-rituals-teacher-B-teacher-board-after-actions.png",
+          "bytes": 445807,
+          "sha256": "ecdea0f654a8856c63407f5abf2c0e77f314b64265f9814d7bd7381dd31bc1f0"
+        },
+        {
+          "path": "two-teacher-browsers-pair-by-academic-scope-and-use-real-cards-and-teacher-rituals-teacher-B-teacher-matched-opening.png",
+          "bytes": 435489,
+          "sha256": "a71e1dcbbaab8af756af973ad88908f9f7bf2ad35178530bcf6510e3f895907b"
+        }
+      ]
+    }
+  ]
+}

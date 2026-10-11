@@ -631,6 +631,146 @@
       "sha256": "13e4e883a0eca263aa00c2e1283e2c684a00c23ab62272749b74b4b007e04ad6",
       "bytes": 170197,
       "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "cloud-abba/artifact.zip",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/artifact.zip",
+      "sha256": "8f3706197b86e512ea6ef848535b0205e2ecce1f1ef2758e45efb493d0b2f60c",
+      "bytes": 5025308,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/independent-verification.json",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/independent-verification.json",
+      "sha256": "d2f840add23c41a083e3532db15b9558e790ac36e3e92fa3585f37f860390726",
+      "bytes": 22386,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-report.json",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-report.json",
+      "sha256": "a30ebd1d76f8c680863a9bd32d7dff624181b6dda5b166f2cbc356ea33e69f49",
+      "bytes": 3099,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-manifest.json",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-manifest.json",
+      "sha256": "01228345c4e85439e8e796ebb0d2d0da4178fb618978c666e2ef7eedf543fced",
+      "bytes": 132889,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-checkpoints.json",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-checkpoints.json",
+      "sha256": "4dd3d6b6ebd61756b25c88c1c94e97fc5f095caa48377f1b1e05e707e2e3cddb",
+      "bytes": 2300821,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-environment.json",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-environment.json",
+      "sha256": "62b30d66a76c9403d5d750f0f11a6e0e47ad99c85a3607a6b9d4727322d41df8",
+      "bytes": 1757,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-arena-only.webm",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-arena-only.webm",
+      "sha256": "31fe805e8f8695eeba968fee89651762903742f1d392c7b0c74abb6f0ae6f5f1",
+      "bytes": 45432,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-arena-only.webm",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-arena-only.webm",
+      "sha256": "df04899c6cbf3cd2d469cda274ddb980b99edb4ac5224ef47af9a77f23e4eaee",
+      "bytes": 45456,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-arena-only.webm",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-arena-only.webm",
+      "sha256": "03b24cba6a36edefb02d3d15d6a7af819c3cfe4c42358e1ea2786b3bae2c2cff",
+      "bytes": 47495,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-arena-only.webm",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-arena-only.webm",
+      "sha256": "9ee0a379b2a028a9e58db3b1291eafb4a0f2cfdc1b2f6d66b759913a769ce368",
+      "bytes": 45056,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/archive-files.json",
+      "originalPath": "New root readback of byte-identical original ZIP67entries",
+      "sha256": "4f3b6c56f7986b23d763ee245edb4aeb4d9b7365a7f8b00169ab7acd2a55bb07",
+      "bytes": 17103,
+      "scope": "File hashes computed independently from original ZIP and compared with extracted bytes"
+    },
+    {
+      "file": "cloud-abba/root-redecode.json",
+      "originalPath": "test-results/ci-38110136254/root-redecode/report.json",
+      "sha256": "f757ebb8e330d0e7ebd61863fa8d899e0cac7cf31cf025d3fcc52c035ec7c527",
+      "bytes": 1099,
+      "scope": "Root reran original decoder on all four raw cloud videos; all250ms gates remain failed; no game rerun"
+    },
+    {
+      "file": "formal-ci/manifest-original.zip",
+      "originalPath": "test-results/ci-38110136254/formal-manifest.zip",
+      "sha256": "d0ddc0369da8ee0ea1a2316cbab537ea72a3f2490f61d7ac901c6c82d98d22fd",
+      "bytes": 18247,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/part03-original.zip",
+      "originalPath": "test-results/ci-38110136254/formal-part03.zip",
+      "sha256": "b210b28c5a3a839d41c92107b47308e5a2c7dca6e0de492192ef3f61806cb284",
+      "bytes": 8280168,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/source-and-file-hashes.json",
+      "originalPath": "test-results/ci-38110136254/formal-manifest/source-and-file-hashes.json",
+      "sha256": "a48a39ea41891868ac251a4932d84185c21aa60bb07d565e4d654e762da5f455",
+      "bytes": 82460,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/root-verification.json",
+      "originalPath": "test-results/ci-38110136254/formal-manifest/root-verification.json",
+      "sha256": "614a98592d23d86fea36125e11f69fc60ea0146c6392ac170e97c6cc00492e99",
+      "bytes": 13461,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/safe-log-excerpt.txt",
+      "originalPath": "test-results/ci-38110136254/formal-manifest/safe-log-excerpt.txt",
+      "sha256": "7504efd20e72f848e5893b9be5053989b5e3dde04e3d23cb313a6943ed647230",
+      "bytes": 1424,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/combat-motion-checkpoints.json",
+      "originalPath": "test-results/ci-38110136254/formal-part03/combat-motion-checkpoints.json",
+      "sha256": "857ebea23e5bf1422158eaf764c38481c4031524c207c835dae45571e9c8e35b",
+      "bytes": 75080,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/combat-motion-anonymous-arena-only.webm",
+      "originalPath": "test-results/ci-38110136254/formal-part03/combat-motion-anonymous-arena-only.webm",
+      "sha256": "8a345c2b408ba6113f76be674d452d1177383cd37d983fb4435e8f6855019173",
+      "bytes": 49248,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/recheck.json",
+      "originalPath": "test-results/ci-38110136254/formal-recheck/recheck.json",
+      "sha256": "46b7f8ebd22a512d137245bb7a57e7199d4312a992e5f7e23d73ef2b3382cd37",
+      "bytes": 2512,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
     }
   ]
 }
