@@ -1,0 +1,52 @@
+Original prompt: 接手词灵对决 Spellwood PR #6 的实际最新版本，先建立真实本地运行、GPU和交互基线，再精细打磨原创三维人物/棋盘、手牌、元素攻击、回血护盾和全屏开包；保留英语学习、权威匹配与旧存档；每轮浏览器操作和独立复核；完成后提交并推送独立分支，不合并或公网部署。dist/assets 是源素材，必须保留；先读两份诊断文档。
+
+## 2026-10-10 takeover
+
+- Empty initial workspace, no existing local modifications. PR #6 read via GitHub: draft/open/unmerged, head fd82c1aa8bfc381d6a6a298197a93945206ea5e7, base codex/teacher-expansion-integrated (6d7bb94).
+- Independent branch: codex/local-gpu-refinement. Node 24.14.1, locked npm ci completed; ordinary network build; local persistent authority at http://127.0.0.1:4173, health protocol2/net-2.3/combat2.3.
+- Read README, server/E2E docs, COMPACT-BOARD-POLISH, ARENA-CLARITY-DIAGNOSTIC, FRAME-DIAGNOSTIC; no project-local AGENTS/skills/DeepSeek router present.
+- Device: MacBook Air Mac16,12, Apple M4 (10 CPU / 8 GPU cores), 16GiB, macOS27.0.1. Isolated headed Chrome154.0.8037.99 reports ANGLE Metal Apple M4 and hardware WebGL. Original production defaults unchanged.
+- First local smoke + normal-motion 2/2 passed. Original 250ms recording-gap assertion: max38ms / 92frames / 3.032s. Attack HP18→17 once, return displacement0. Evidence: test-results/local-browser-evidence/2026-10-10T04-04-04-413Z-c77e3d12. This is local desktop evidence, not a physical phone/public-network pass.
+- Independent full baseline pending. First full run exposed a local test transport origin omission (hardcoded4173 versus isolated4184); it is a harness failure, not a product failure. Retain it and rerun from the beginning after explicit origin adaptation.
+- Native Chrome actual UI: camp, custom-deck slot replacement/save, matching/10-second computer fallback, opening, I details, Escape focus return, keyboard selection, English ritual/feedback. Native screenshot shows own guest name overruns hero-panel width. Independent 844x390 image shows hand-introduction notice covering unit attributes.
+
+## Priority plan before product edits
+
+1. Input safety: fix independently reproduced delayed hand long-press becoming selection; constrain pack gestures to one primary left/touch pointer and clear stale gestures on blur/cancel/context loss. Preserve authority-only ownership and reward save-before-reveal.
+2. Legibility: fit long localized effect text and hero names without clipping; clear introductory hand notice when a real selection needs board visibility. Keep unit click areas and hand size.
+3. Motion: inspect normal-speed elemental/heal/shield/pack presentation, then make narrowly evidenced improvements to charge→flight→contact and readable effects. Do not reduce quality or change250ms gate.
+4. Rebuild once after the first coherent batch, play through browser and retain original evidence; independent review and full local suite, meaningful unit/protocol checks. Document exact limits and remaining real-phone/public-network work.
+
+## Evidence rules
+
+- Code/Three geometry fixtures, real browser UI, continuous motion metrics, independent image review and publication are separate records.
+- Existing official GitHub CI guards untouched; tests/local and playwright.local.config.mjs explicitly handle this authorized local path. No fake CI variables.
+- No secrets, cookies, databases or saved browser profiles in committed evidence. dist/assets untouched; public services and main/base branches untouched.
+
+## Completed local refinement
+
+- Complete unmodified baseline28/29: original24 gameplay23/24,5 materials5/5; actual44px999 label overflow. Original cloud995ms failure not rewritten. Original local motion47ms under unchanged250ms.
+- Fixed delayed long-hold selection, primary pack pointer ownership/cancel, same saved-batch canvas continuity across remote reveal dirty/ack, long hero name/numeric/float text bounds, stale introductory hand notice, first-frame dual-float lanes and original corner leaf stone texture. Existing timing/quality/authority/old save/assets kept. Three build entries and typecheck/check pass.
+- Actual native Chrome and dedicated Codex browser manual actions covered camp/deck/save/matching/AI/English/card/details/wardrobe/pack. Final reload retained pack1/10, physical next-card click saved2/10, continued later and returned to connected camp; no final page console errors. Assisted manual game distinguished from automated real-browser complete match.
+- Final full local run2026-10-10T06-00-44-822Z-b7d72d4e:33/33,zero retries/skips,all5 source integrity checks true, bundle b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be. Native normal-motion max36ms/250; extra OS-native DPR2 window52ms,level0/pixel1/shadow1024. Before and candidate failures remain.
+- Supplemental after-final3/3 (c49 pack continuous original canvas,mask0→1,maxPTS51ms); after-lanes1/1 covers spark/heal/shield/maxHP (final b059 PTS47/50/56/50ms). Independent source/5viewport/first-float/pack-frame review ready, no blocking findings.
+- Final Node1144:1141pass/3fail/no skip,all3EADDRNOTAVAIL127.0.0.2 macOS real multi-IP cases. Original tests retained for Linux CI. Targeted scene/effect64 and local cleanup4pass separately.
+- Dedicated local helpers have bounded cleanup and reliable server finally. Pack about:blank only after original game assertions/screenshots/diagnostics;5second close failure limit kept. First-name status metadata trim bug fixed locally. OfficialCI unchanged/no fake env.
+- Durable reportdocs/LOCAL-PLAYTEST-2026-10-10.md and evidence/local-gpu-2026-10-10:13 archives/1213 original files, SHA readback checked;25 selected/manual screenshots/videos with separate hash manifest and responsive review.html. Internal Playwright error contexts/profiles/secrets/DB excluded. Intermediate safe reports selected, full originals retained locally.
+
+## Remaining boundaries
+
+- Physical-phone/public human matchmaking/low-end GPU/audio/long whole-session FPS and adaptive recovery under pressure unverified.320 far hero and short landscape units still small.
+- Source delivery uses independent codex/local-gpu-refinement and a draft PR against codex/teacher-expansion-integrated; merge/public deployment require a separate user instruction.
+
+## 2026-10-11 PR7 cloud melee follow-up
+
+- Official run38030577115: head1eb618b, checkout0773964, tree matches406e337.313 safe original files SHA/bytes verified.28/29 browsers and32/32 scoped Node; original250ms received977ms. Actual official Headless Shell156/r1248 with SwiftShader Subzero. Same-clock trusted+3s RAF632.4/341.8/346.9ms confirms browser stall; CPU submission is not GPU completion. Original failure retained.
+- Three original-case controls on M4 Chrome154: Metal36ms, headedSwiftShader199ms, headlessSwiftShader163ms. Product/default quality unchanged; LLVM vs Subzero/ARM vs x86/environment differences prevent cloud parity. Two software RAF tails10/38.3ms unknown.
+- Real read-only copied-source Metal probe confirms B31 static-shadow-input float frames ×37 actual depth draws=1147 over493ms; A normal attack60 distinct keys. Probe max.5ms float CPU overhead is not GPU time. Software25s startup failure and interrupted hardware run remain red history.
+- Lab-only conservative cache + full-scene ABBA baseline/candidate/candidate/baseline, same A room/source via real UI/reloads, is being reviewed/frozen. Complete color counters include all native paths; sprites use renderBufferDirect in Three0.186.1. Stock matrix updater safety and warmup/context invalidation are audited. No product src changes or quality/gate changes before actual cloud causal/pixel evidence.
+- New dedicated real PR7 Actions job preserves original complete acceptance; main workflow is absent so manual dispatch presently unavailable without forbidden main changes. Safe selected originals in evidence/pr7-shadow-2026-10-11, source hashes in retained-files.json; source push is distinct from merge/deploy.
+- Fresh local ABBA hardware-headed-2026-10-11T03-44-34-014Z-e02ed921 completed4:51/38/49/51ms,all10sourceIntegrity true,31Bfloat frames each. Baseline depth37→candidate0→candidate0→baseline43 with fullcolor67/71/75/79; input-key casters37/39/41/43 reflect natural turn/hand growth. No cloud cause/pixel claim. Prior pre-body20s red caused chosen4190 Fetch bad port; strict port4191 transport fix reviewed, all budgets kept. Original formalb059/src0diff.
+- Final comment-corrected freeze e30c2dc8:53/36/36/49ms/all10true/cleanup passed; naturalRabbit atk2/hp1,casters36/38/40/42,color66/70/74/78,depth36/0/0/42. Commit2f3779c pushed via existing system proxy1087 after direct GitHub timeout; original fullCI and dedicated job actualrun38110136254 started. No global proxy or product change.
+- Real cloud ABBA negative: originalnative780/983/738/992ms andRAF646.1/631.3/631.6/643ms allred; successful B0depth during A631msstall does not solve/establish solecause.2float<original3 coverage requirement preserved; natural turns/hands/casters39/41/43/43 confounded. ActualAppd6f340/e7ecb7/formalb059/helper8150,source2f/checkout1cf/tree69379 verified.67file ZIP digest8f370619... locally recomputed, allPTS independently decoded, per-document alignment not mediaPTS. No product cache applied; exact stall cause and finite contribution remain unknown; GPU completion/queues are not directly measured.
+- Independent pixel preparation only static/build/list, zeroGPU/no pixelpass/neverstage. NewGPU work stopped when negative cloud evidence arrived;11source drafts with rawSHA archived test-results/shadow-pixels-not-applied-2026-10-11. Original formal completed38110136254:28/29browser,solemotion828ms/250ms;32Nodepassed0skip.56part03original files+manifest/ZIP digests verified; original decoder0.079s exit1 video21frames/828ms,RAF535.6ms/3gaps/tailbracketed.313manifest indexed files not all redownloaded this round.1eb product/src/server/originalE2E/CIconfig/assets0diff. Local4173 ownedserver restored with existing.data+b059verified; this restart/hash check not newplaytest. Record-only laterpush fullCI not preclaimed passed; no merge/deploy.

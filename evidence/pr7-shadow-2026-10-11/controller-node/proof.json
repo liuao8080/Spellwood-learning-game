@@ -1,0 +1,45 @@
+{
+  "scope": "Lab only; original production src and original CI body untouched; actual37caster eligibility and CI977 causality require real browser evidence",
+  "command": "node --test tests/diagnostics/shared-shadow/shadow-cache.test.mjs",
+  "red": {
+    "tests": 1,
+    "pass": 0,
+    "fail": 1,
+    "file": "test-results/shadow-candidate/red-output.txt"
+  },
+  "green": {
+    "tests": 79,
+    "pass": 79,
+    "fail": 0,
+    "file": "test-results/shadow-candidate/persistent-green-matrixguard-output.txt"
+  },
+  "matrixGuard": "prospective stock UV without mutation; whole-tree stock matrix synchronizer preflight including hidden nodes; renderer-matched conditional stock sync; no detached target sync; visible LOD rejected",
+  "fakeRendererScope": "Only scheduling dirty consumption/map state and color/depth invocation counts; input nodes are real Three, no real GPU execution claimed.",
+  "files": [
+    {
+      "file": "tests/diagnostics/shared-shadow/shadow-cache.mjs",
+      "sha256": "8150dae434043fc209df42cfcda00688734f92c02c993870b434e5fb03f0cfa6",
+      "bytes": 20449
+    },
+    {
+      "file": "tests/diagnostics/shared-shadow/shadow-cache.test.mjs",
+      "sha256": "23974c55af2a123b30557ca79e0fba33f6136228b781f7a2cd14fadb56d16182",
+      "bytes": 23020
+    },
+    {
+      "file": "test-results/shadow-candidate/red-output.txt",
+      "sha256": "72b7968ef6e08a77162606473ad2c239cf7fbc468235fc5f3342d3ccfc03f1b8",
+      "bytes": 1105
+    },
+    {
+      "file": "test-results/shadow-candidate/persistent-green-matrixguard-output.txt",
+      "sha256": "6bd79d8be2545905e78a212408917ccbfae61de3b3ae08ba58af5708bf69c1ac",
+      "bytes": 7030
+    },
+    {
+      "file": "test-results/shadow-candidate/shadow-cache-preview75.mjs",
+      "sha256": "6b63b74d8885ba6ead6b4166842f5912c7448988f889917d08022d3e9c2b8ea6",
+      "bytes": 18272
+    }
+  ]
+}

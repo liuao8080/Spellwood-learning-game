@@ -1,0 +1,42 @@
+{
+  "scope": "Root original-decoder readback; no game rerun",
+  "sourceRunId": 38110136254,
+  "segments": [
+    {
+      "index": 1,
+      "variant": "baseline",
+      "frames": 17,
+      "maxGapMs": 780,
+      "unchangedLimitMs": 250,
+      "gate": "failed",
+      "videoSha256": "31fe805e8f8695eeba968fee89651762903742f1d392c7b0c74abb6f0ae6f5f1"
+    },
+    {
+      "index": 2,
+      "variant": "candidate",
+      "frames": 18,
+      "maxGapMs": 983,
+      "unchangedLimitMs": 250,
+      "gate": "failed",
+      "videoSha256": "df04899c6cbf3cd2d469cda274ddb980b99edb4ac5224ef47af9a77f23e4eaee"
+    },
+    {
+      "index": 3,
+      "variant": "candidate",
+      "frames": 18,
+      "maxGapMs": 738,
+      "unchangedLimitMs": 250,
+      "gate": "failed",
+      "videoSha256": "03b24cba6a36edefb02d3d15d6a7af819c3cfe4c42358e1ea2786b3bae2c2cff"
+    },
+    {
+      "index": 4,
+      "variant": "baseline",
+      "frames": 18,
+      "maxGapMs": 992,
+      "unchangedLimitMs": 250,
+      "gate": "failed",
+      "videoSha256": "9ee0a379b2a028a9e58db3b1291eafb4a0f2cfdc1b2f6d66b759913a769ce368"
+    }
+  ]
+}

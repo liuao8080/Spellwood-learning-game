@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "origin": "http://127.0.0.1:4191",
+  "starts": 1,
+  "records": [
+    {
+      "route": "/app.js",
+      "expectedSha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31",
+      "actualSha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "route": "/",
+      "expectedSha256": "6fcfce84f31d001c2e6a2e5f7f211f71df707b99093a1033211329ab7d4863b2",
+      "actualSha256": "6fcfce84f31d001c2e6a2e5f7f211f71df707b99093a1033211329ab7d4863b2",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "route": "/lab-baseline.html",
+      "expectedSha256": "8adc040d5451f1c447b36b9dea5101aa1d7e6e33942fc5457440fbb80bbb0e26",
+      "actualSha256": "8adc040d5451f1c447b36b9dea5101aa1d7e6e33942fc5457440fbb80bbb0e26",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "route": "/lab-baseline.js",
+      "expectedSha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31",
+      "actualSha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "route": "/lab-candidate.html",
+      "expectedSha256": "b0a43c1532a04d6f4df29bb54e1c5442d60c8febe659d531adaeeaebd5d9325b",
+      "actualSha256": "b0a43c1532a04d6f4df29bb54e1c5442d60c8febe659d531adaeeaebd5d9325b",
+      "status": 200,
+      "matched": true
+    },
+    {
+      "route": "/lab-candidate.js",
+      "expectedSha256": "6b5f3a9348cf3f0f8c0b39f9d2f6ba5fa049330661ccf63a371073b16cc2566c",
+      "actualSha256": "6b5f3a9348cf3f0f8c0b39f9d2f6ba5fa049330661ccf63a371073b16cc2566c",
+      "status": 200,
+      "matched": true
+    }
+  ]
+}

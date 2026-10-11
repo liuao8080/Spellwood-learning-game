@@ -1,0 +1,134 @@
+{
+  "browser/2026-10-10T04-04-04-413Z-c77e3d12": "test-results/local-browser-evidence/2026-10-10T04-04-04-413Z-c77e3d12",
+  "browser/2026-10-10T04-07-46-479Z-1402ac6b": "test-results/local-browser-evidence/2026-10-10T04-07-46-479Z-1402ac6b",
+  "browser/2026-10-10T06-00-44-822Z-b7d72d4e": "test-results/local-browser-evidence/2026-10-10T06-00-44-822Z-b7d72d4e",
+  "browser/native-dpr-2026-10-10T05-59-17-030Z-9896134a": "test-results/local-browser-evidence/native-dpr-2026-10-10T05-59-17-030Z-9896134a",
+  "browser-history/2026-10-10T04-05-09-789Z-6fc285bb": {
+    "path": "test-results/local-browser-evidence/2026-10-10T04-05-09-789Z-6fc285bb",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T04-05-27-325Z-f0686ee6": {
+    "path": "test-results/local-browser-evidence/2026-10-10T04-05-27-325Z-f0686ee6",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T04-07-22-556Z-0ecaa599": {
+    "path": "test-results/local-browser-evidence/2026-10-10T04-07-22-556Z-0ecaa599",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T04-18-46-079Z-97eac3e0": {
+    "path": "test-results/local-browser-evidence/2026-10-10T04-18-46-079Z-97eac3e0",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T04-29-33-076Z-9fc2c5ab": {
+    "path": "test-results/local-browser-evidence/2026-10-10T04-29-33-076Z-9fc2c5ab",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T04-34-16-162Z-06581adb": {
+    "path": "test-results/local-browser-evidence/2026-10-10T04-34-16-162Z-06581adb",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T04-42-41-087Z-4c5ab32c": {
+    "path": "test-results/local-browser-evidence/2026-10-10T04-42-41-087Z-4c5ab32c",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T04-45-47-885Z-52f62e90": {
+    "path": "test-results/local-browser-evidence/2026-10-10T04-45-47-885Z-52f62e90",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T05-01-02-386Z-eec9e6d5": {
+    "path": "test-results/local-browser-evidence/2026-10-10T05-01-02-386Z-eec9e6d5",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T05-04-09-351Z-e1da96a1": {
+    "path": "test-results/local-browser-evidence/2026-10-10T05-04-09-351Z-e1da96a1",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T05-08-34-401Z-37fe34e5": {
+    "path": "test-results/local-browser-evidence/2026-10-10T05-08-34-401Z-37fe34e5",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T05-33-19-524Z-869e3dac": {
+    "path": "test-results/local-browser-evidence/2026-10-10T05-33-19-524Z-869e3dac",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T05-38-05-783Z-d7708afa": {
+    "path": "test-results/local-browser-evidence/2026-10-10T05-38-05-783Z-d7708afa",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T05-47-23-209Z-67a406d8": {
+    "path": "test-results/local-browser-evidence/2026-10-10T05-47-23-209Z-67a406d8",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/2026-10-10T05-50-32-750Z-9d708f5c": {
+    "path": "test-results/local-browser-evidence/2026-10-10T05-50-32-750Z-9d708f5c",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "browser-history/native-dpr-2026-10-10T05-54-27-138Z-dad0f582": {
+    "path": "test-results/local-browser-evidence/native-dpr-2026-10-10T05-54-27-138Z-dad0f582",
+    "extensions": [
+      ".json"
+    ]
+  },
+  "motion/before": "test-results/motion-before-evidence",
+  "motion/after-final": "test-results/motion-evidence/after-final",
+  "motion/after-lanes": "test-results/motion-evidence/after-lanes",
+  "device": "test-results/device-evidence",
+  "unit-final": "test-results/unit-release-final.txt",
+  "lane-targeted": "test-results/lane-final.txt",
+  "design-scan": "test-results/design-detector.json",
+  "client-smoke": "test-results/web-game-final",
+  "failure-images/2026-10-10T04-34-16-162Z-06581adb/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--normal-primary-opened-same-saved-batch": "test-results/local-browser-evidence/2026-10-10T04-34-16-162Z-06581adb/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--normal-primary-opened-same-saved-batch.png",
+  "failure-images/2026-10-10T04-34-16-162Z-06581adb/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--secondary-and-multiple-touch-kept-sealed": "test-results/local-browser-evidence/2026-10-10T04-34-16-162Z-06581adb/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--secondary-and-multiple-touch-kept-sealed.png",
+  "failure-images/2026-10-10T04-34-16-162Z-06581adb/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-failure-hand-hint-A": "test-results/local-browser-evidence/2026-10-10T04-34-16-162Z-06581adb/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-failure-hand-hint-A.png",
+  "failure-images/2026-10-10T04-34-16-162Z-06581adb/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-failure-hand-hint-B": "test-results/local-browser-evidence/2026-10-10T04-34-16-162Z-06581adb/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-failure-hand-hint-B.png",
+  "failure-images/2026-10-10T04-34-16-162Z-06581adb/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-selected-hand-hint-cleared": "test-results/local-browser-evidence/2026-10-10T04-34-16-162Z-06581adb/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-selected-hand-hint-cleared.png",
+  "failure-images/2026-10-10T04-34-16-162Z-06581adb/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-1280x800-long-real-account-names": "test-results/local-browser-evidence/2026-10-10T04-34-16-162Z-06581adb/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-1280x800-long-real-account-names.png",
+  "failure-images/2026-10-10T04-34-16-162Z-06581adb/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-failure-long-name-A": "test-results/local-browser-evidence/2026-10-10T04-34-16-162Z-06581adb/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-failure-long-name-A.png",
+  "failure-images/2026-10-10T04-34-16-162Z-06581adb/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-failure-long-name-B": "test-results/local-browser-evidence/2026-10-10T04-34-16-162Z-06581adb/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-failure-long-name-B.png",
+  "failure-images/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--normal-primary-opened-same-saved-batch": "test-results/local-browser-evidence/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--normal-primary-opened-same-saved-batch.png",
+  "failure-images/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--secondary-and-multiple-touch-kept-sealed": "test-results/local-browser-evidence/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--secondary-and-multiple-touch-kept-sealed.png",
+  "failure-images/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-detail-closed-exact-hand-focus": "test-results/local-browser-evidence/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-detail-closed-exact-hand-focus.png",
+  "failure-images/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-selected-hand-hint-cleared": "test-results/local-browser-evidence/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-selected-hand-hint-cleared.png",
+  "failure-images/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-1280x800-long-real-account-names": "test-results/local-browser-evidence/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-1280x800-long-real-account-names.png",
+  "failure-images/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-1600x900-long-real-account-names": "test-results/local-browser-evidence/2026-10-10T04-45-47-885Z-52f62e90/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-1600x900-long-real-account-names.png",
+  "failure-images/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--normal-primary-opened-same-saved-batch": "test-results/local-browser-evidence/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--normal-primary-opened-same-saved-batch.png",
+  "failure-images/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--secondary-and-multiple-touch-kept-sealed": "test-results/local-browser-evidence/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--secondary-and-multiple-touch-kept-sealed.png",
+  "failure-images/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-detail-closed-exact-hand-focus": "test-results/local-browser-evidence/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-detail-closed-exact-hand-focus.png",
+  "failure-images/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-selected-hand-hint-cleared": "test-results/local-browser-evidence/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-first-hand-selection-clears-the-introductory-hint-and-detail-close-restores-keyboard-f-selected-hand-hint-cleared.png",
+  "failure-images/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-1280x800-long-real-account-names": "test-results/local-browser-evidence/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-1280x800-long-real-account-names.png",
+  "failure-images/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-1600x900-long-real-account-names": "test-results/local-browser-evidence/2026-10-10T05-08-34-401Z-37fe34e5/-local-polish-wide-real-battle-HUD-contains-long-account-names-and-preserves-complete-accessible-ide-1600x900-long-real-account-names.png",
+  "failure-images/2026-10-10T05-33-19-524Z-869e3dac/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--normal-primary-opened-same-saved-batch": "test-results/local-browser-evidence/2026-10-10T05-33-19-524Z-869e3dac/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--normal-primary-opened-same-saved-batch.png",
+  "failure-images/2026-10-10T05-33-19-524Z-869e3dac/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--secondary-and-multiple-touch-kept-sealed": "test-results/local-browser-evidence/2026-10-10T05-33-19-524Z-869e3dac/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--secondary-and-multiple-touch-kept-sealed.png",
+  "failure-images/2026-10-10T05-38-05-783Z-d7708afa/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--normal-primary-opened-same-saved-batch": "test-results/local-browser-evidence/2026-10-10T05-38-05-783Z-d7708afa/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--normal-primary-opened-same-saved-batch.png",
+  "failure-images/2026-10-10T05-38-05-783Z-d7708afa/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--secondary-and-multiple-touch-kept-sealed": "test-results/local-browser-evidence/2026-10-10T05-38-05-783Z-d7708afa/-local-polish-a-saved-real-pack-ignores-right-click-and-multiple-touch-but-still-opens-from-primary--secondary-and-multiple-touch-kept-sealed.png"
+}

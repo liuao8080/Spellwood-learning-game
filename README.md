@@ -1,10 +1,16 @@
 # 词灵对决 · Spellwood
 
-森林主题的英语卡牌游戏。当前开发源码为 **4.1.0-alpha.1（整体验收中）**：36张基础卡、每日学习任务、20款人物造型和额外抽牌英语助力。公开电脑试玩仍为已验证的 **4.0.0-alpha.2** 教师题库版，未更新为本分支。
+森林主题的英语卡牌游戏。当前开发源码为 **4.1.0-alpha.3（本地GPU试玩与动作连续性打磨）**：36张基础卡、每日学习任务、20款人物造型和额外抽牌英语助力。公开电脑试玩仍为已验证的 **4.0.0-alpha.2** 教师题库版，未更新为本分支。
 
-[公开电脑试玩](https://spellwood-3d-grove.hhhappygod.chatgpt.site/) · [版本记录](CHANGELOG.md) · [本轮验证范围](docs/VALIDATION-4.1.md) · [3.2.9检查点](docs/VALIDATION-3.2.9.md) · [服务端说明](server/README.md)
+[公开电脑试玩](https://spellwood-3d-grove.hhhappygod.chatgpt.site/) · [版本记录](CHANGELOG.md) · [本地试玩与证据](docs/LOCAL-PLAYTEST-2026-10-10.md) · [布局与人物打磨](docs/COMPACT-BOARD-POLISH.md) · [4.1基线验证](docs/VALIDATION-4.1.md) · [服务端说明](server/README.md)
 
-**当前公开 Site 只有电脑试玩，没有接入真人匹配服务器；公开真人匹配的部署与接入尚未完成。** 本分支提供 Node.js + WebSocket 权威服务器、SQLite 游客/账号/进度和同源网页。既有游客/教师/NAT版本的双浏览器验收已完成，本次扩展的实际浏览器验收仍待对应提交运行，不能继承旧版通过结论。源码功能与公开服务分开交付，CI 测试机不承担长期在线服务。
+**当前公开 Site 只有电脑试玩，没有接入真人匹配服务器；公开真人匹配的部署与接入尚未完成。** 本分支提供 Node.js + WebSocket 权威服务器、SQLite 游客/账号/进度和同源网页。PR #6接手提交fd82c1a在CI54为23/24正式浏览器项目及5/5材质项目，正常动画995ms超过原250ms门槛；本机M4/Metal Chrome未改基线28/29，另发现44px三位数标签溢出。打磨后最终本地完整 **33/33**，正常近战原片最大间隔 **36ms**，额外原生DPR2窗口 **52ms**，画质与门槛保持。完整代码回归1141/1144，3个macOS回环绑定失败仍保留。实际结果、前后原图／视频、失败历史和范围见[本轮记录](docs/LOCAL-PLAYTEST-2026-10-10.md)。源码、本地试玩和公开服务分开交付，CI测试机不承担长期在线服务。
+
+2026-10-11跟进PR #7：官方run38030577115在head1eb618b仍为28/29，唯一近战失败977ms/250ms，原失败与原片保留。实际云端renderer为SwiftShader Subzero；本地两个SwiftShader对照199ms/163ms通过，不能把软件渲染直接当原因。只读探针确认静止B浮字31帧重复1147次阴影深度绘制；本地最终ABBA实验候选两段均复用map、深度draw为0而完整color继续，原片53/36/36/49ms。自然回合caster/手牌变化明确记录；本地机制、云端结果与未运行的GPU像素验证分别记录，缓存未安装到产品。完整画质、全场景与原门槛保持，原正式CI独立运行。来源、限制与复跑见[PR #7阴影诊断](docs/PR7-SHADOW-DIAGNOSTIC-2026-10-11.md)。
+
+实际云端run38110136254对照原片 **780/983/738/992ms**，四段均未达到250ms。候选成功移除B深度绘制时A约632ms停顿仍在，不能当作本次卡顿的已确认主因或修复；有限贡献/准确卡顿根因仍未知，GPU完成/队列未直接测量。产品缓存未安装、正式源码/画质/门槛保持，原片与否定结果独立归档。最新来源、时钟对齐及覆盖限制以[该诊断记录](docs/PR7-SHADOW-DIAGNOSTIC-2026-10-11.md)的云端章节为准；像素实验未运行，不写成通过。
+
+该run原完整CI已完成：**28/29**浏览器通过，唯一近战 **828ms/250ms**失败；32项NAT/身份/启动检查通过。产品相对1eb618b仍未改变，本轮只提交诊断、原始证据与否定记录。旧977ms与本轮828ms分别保留，不能解释为修复收益；本地4173已恢复原b059与原存档。
 
 ## 托管边界
 
@@ -64,6 +70,8 @@ node scripts/smoke-running-server.mjs
 
 配置、origin、超时和部署边界见 [server/README.md](server/README.md)，消息格式见 [server/PROTOCOL.md](server/PROTOCOL.md)。Docker 模板尚未实际构建或部署；公开服务还需要 HTTPS/WSS、正确 origin、监控及容量验证。
 
+本地浏览器验收使用明确的 `playwright.local.config.mjs`；补充正常动效取证使用独立的 `playwright.motion.config.mjs`、专用端口 4185 和每次运行的固定客户端快照。采集范围、SHA-256 归因、真实英语作答与复跑方法见 [本地动效取证说明](tests/local/MOTION-README.md)。补充取证不替代原有 250 ms 验收门槛；手机尺寸模拟和两个本机会话分别不代表手机真机或公网真人联机通过。
+
 ### 保留的旧离线入口
 
 ```sh
@@ -83,6 +91,15 @@ npm run check
 npm run build:network
 npm run build:practice
 ```
+
+经明确授权的本地浏览器路径独立于官方GitHub CI：
+
+```sh
+npm run test:browser:local
+npm run test:motion:local
+```
+
+使用已安装有头Chrome、独立回环端口和临时SQLite，真实renderer/画质与原始动作证据另存。不要伪造CI标志；静态尺寸模拟与本地双浏览器不代表物理手机或公网真人验收。[配置说明](tests/local/README.md)与[正常速采集说明](tests/local/MOTION-README.md)包含复跑步骤。
 
 npm test 默认最多同时运行2个测试文件；共享或低内存环境建议使用上面的串行命令。typecheck 主要覆盖旧核心的 JSDoc 接口，不是全工程静态类型证明。场景测试使用真实 Three.js 对象和射线，但模拟 Canvas/renderer，不证明 GPU 像素、触屏或设备帧率。部分离线图像审查脚本另需 @napi-rs/canvas 或 Blender；运行游戏无需这些可选工具。
 

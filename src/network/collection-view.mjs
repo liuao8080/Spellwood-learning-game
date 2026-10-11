@@ -9,7 +9,7 @@ const bits=n=>n.toString(2).replace(/0/g,'').length;
 export class CollectionView {
  constructor({root,store,preferences,onClose,onStudy,onNotice,onSound,onMuteChange=()=>{}}){
   Object.assign(this,{root,store,preferences,onClose,onStudy,onNotice,onSound,onMuteChange});this.muted=false;
-  this.opened=false;this.busy=false;this.view='home';this.mode=COLLECTION_TEST_MODE?'test':'earned';this.selected='sprout';this.packScene=null;this.openingId=null;this.status={};this.exitPrompt=false;this.summaryExpanded=false;
+  this.opened=false;this.busy=false;this.view='home';this.mode=COLLECTION_TEST_MODE?'test':'earned';this.selected='sprout';this.packScene=null;this.openingId=null;this.status={};this.exitPrompt=false;this.summaryExpanded=false;this.pendingReveal=null;this.mutationToken=null;
   this.clickHandler=e=>{const b=e.target.closest('[data-action]');if(b&&!b.disabled)void this.click(b.dataset.action,b.dataset.value,b.dataset.finish);};
   this.changeHandler=e=>{if(e.target.id==='collection-card'){this.selected=e.target.value;this.render();}};
   root.addEventListener('click',this.clickHandler);root.addEventListener('change',this.changeHandler);
@@ -18,20 +18,25 @@ export class CollectionView {
   this.focusHandler=e=>{const b=e.target.closest?.('.pack-index button');if(b&&this.opened)this.packScene?.focus(Number(b.dataset.value));};root.addEventListener('focusin',this.focusHandler);
  }
  open(){this.opener=document.activeElement;this.opened=true;this.root.hidden=false;this.view=this.store()?.data?.collection?.opening?'opening':'home';this.render();this.root.querySelector('.collection-panel')?.focus({preventScroll:true});}
- reset(){this.setMuted(false);this.opened=false;this.exitPrompt=false;this.summaryExpanded=false;this.disposeScene();this.root.replaceChildren();this.root.hidden=true;this.renderedView=null;}
+ reset(){this.setMuted(false);this.opened=false;this.busy=false;this.mutationToken=null;this.exitPrompt=false;this.summaryExpanded=false;this.disposeScene();this.root.replaceChildren();this.root.hidden=true;this.renderedView=null;}
  close(force=false){if(this.busy)return;if(!force&&this.view==='opening'&&this.store()?.data?.collection?.opening){if(this.exitPrompt){this.exitPrompt=false;this.packScene?.setHidden(false);}else{this.exitPrompt=true;this.packScene?.setHidden(true);}this.paintExitPrompt();return;}this.reset();this.onClose();const target=this.opener?.isConnected?this.opener:document.querySelector('[data-action="collection"]');target?.focus({preventScroll:true});}
  paintExitPrompt(){const panel=this.root.querySelector('.collection-panel');if(panel)panel.inert=this.exitPrompt;const old=this.root.querySelector('.pack-exit-confirm');if(old)old.remove();if(!this.exitPrompt){this.root.querySelector('.collection-panel')?.focus({preventScroll:true});return;}const overlay=document.createElement('div');overlay.className='pack-exit-confirm';overlay.innerHTML='<section role="alertdialog" aria-modal="true" aria-labelledby="pack-exit-title" tabindex="-1"><h2 id="pack-exit-title">把这份礼物留到稍后？</h2><p>十张结果已经保存。回来继续揭开，会看到同一份礼物。</p><button class="primary" data-action="collection-cancel-close">继续揭卡</button><button data-action="collection-confirm-close">保存并回营地</button></section>';this.root.appendChild(overlay);overlay.querySelector('section')?.focus({preventScroll:true});}
  preserveFocus(fn){const active=document.activeElement,owned=this.root.contains(active),key=owned?{id:active.id,action:active.dataset?.action,value:active.dataset?.value,finish:active.dataset?.finish}:null;try{return fn();}finally{if(owned&&!active.isConnected&&this.opened){const target=[...this.root.querySelectorAll('button:not(:disabled),select,[tabindex="0"]')].find(x=>key.id?x.id===key.id:key.action&&x.dataset.action===key.action&&x.dataset.value===key.value&&x.dataset.finish===key.finish);(target||this.root.querySelector('.collection-panel'))?.focus({preventScroll:true});}}}
  setMuted(value){const changed=this.muted!==!!value;this.muted=!!value;if(changed)this.onMuteChange(this.muted);this.paintMute();}
  paintMute(){const b=this.root.querySelector('[data-action="collection-mute"]');if(b){b.textContent=this.muted?'恢复声音':'礼盒静音';b.setAttribute('aria-pressed',String(this.muted));b.setAttribute('aria-label',this.muted?'恢复礼盒音乐和音效':'暂停礼盒音乐和音效');b.title='仅在礼盒内生效，返回营地后恢复原声音设置';}}
  visibility(hidden){this.packScene?.setHidden(hidden||this.exitPrompt);}
- disposeScene(){this.resizeObserver?.disconnect();this.resizeObserver=null;this.packScene?.dispose();this.packScene=null;this.openingId=null;this.status={};}
+ disposeScene(){this.pendingReveal=null;this.resizeObserver?.disconnect();this.resizeObserver=null;this.packScene?.dispose();this.packScene=null;this.openingId=null;this.status={};}
+ retainedReveal(store,data=store?.data){
+  const p=this.pendingReveal,o=data?.collection?.opening;
+  if(!p||!this.opened||this.view!=='opening'||p.store!==store||p.scene!==this.packScene||!store.loaded||store.issue||data?.profileId!==p.profileId||store.epoch!==p.epoch)return null;
+  return this.openingId===p.opening.id&&o?.id===p.opening.id&&o.mode===p.opening.mode&&JSON.stringify(o.cards)===JSON.stringify(p.opening.cards)?p:null;
+ }
  shell(){if(this.root.querySelector('.collection-panel'))return;this.root.innerHTML=`<div class="collection-shade"><section class="collection-panel" role="dialog" aria-modal="true" aria-labelledby="collection-title" tabindex="-1"><header class="collection-heading"><div><p class="eyebrow">GIFTS OF THE GROVE</p><h2 id="collection-title">森林礼盒</h2></div><div class="collection-heading-actions"><button data-action="collection-mute" aria-pressed="false">礼盒静音</button><button data-action="collection-close">返回营地</button></div></header><div class="collection-content"></div></section></div>`;}
  render(options={}){if(!this.opened)return;const changed=this.renderedView!==this.view;const value=this.preserveFocus(()=>this.renderContent(options));if(changed){const panel=this.root.querySelector('.collection-panel');if(panel)panel.scrollTop=0;this.renderedView=this.view;}return value;}
  renderContent({intro=false}={}){
   if(!this.opened)return;this.shell();const store=this.store(),data=store?.data,content=this.root.querySelector('.collection-content');
   this.root.classList.toggle('opening-immersive',this.view==='opening'&&!!data?.collection?.opening);this.paintMute();
-  if(!data||!store.loaded||store.dirty||store.issue){this.disposeScene();content.innerHTML=`<div class="collection-empty"><h3>先保管好你的记录</h3><p>这次内容还没有可靠保存，礼盒结果会在保存完成后展示。请重试保存；仍失败时可返回“记录与备份”下载抢救副本。</p><button class="primary" data-action="collection-retry" ${this.busy?'disabled':''}>重试保存</button></div>`;return;}
+  if(!data||!store.loaded||store.dirty||store.issue){if(store?.dirty&&!store.issue&&this.retainedReveal(store,data)){this.paintControls();return;}this.disposeScene();content.innerHTML=`<div class="collection-empty"><h3>先保管好你的记录</h3><p>这次内容还没有可靠保存，礼盒结果会在保存完成后展示。请重试保存；仍失败时可返回“记录与备份”下载抢救副本。</p><button class="primary" data-action="collection-retry" ${this.busy?'disabled':''}>重试保存</button></div>`;return;}
   const s=data.collection;
   if(this.view==='opening'&&s.opening){this.renderOpening(s.opening,intro);return;}
   this.disposeScene();if(this.view==='opening')this.view='home';
@@ -56,17 +61,20 @@ export class CollectionView {
  paintControls(){return this.preserveFocus(()=>this.paintControlsContent());}
  paintControlsContent(){
   if(!this.opened||this.view!=='opening')return;
-  const store=this.store();if(!store||store.dirty||store.issue)return;
-  const o=store.data?.collection?.opening;if(!o)return;const count=bits(o.revealed),phase=this.status.phase;
+  const store=this.store(),pending=this.retainedReveal(store);if(!store||store.issue||store.dirty&&!pending)return;
+  // During a reveal request, keep the already saved backs and reveal mask. Only
+  // a clean acknowledged snapshot may advance the persistent scene's fronts.
+  const o=store.dirty?pending.opening:store.data?.collection?.opening;if(!o)return;const count=bits(o.revealed),phase=this.status.phase;
   const title=this.root.querySelector('.opening-source');if(!title)return;title.textContent=o.mode==='test'?'体验十连 · 测试收藏':'学习奖励 · 正式收藏';
   this.root.querySelector('#pack-count').textContent=`已揭开 ${count}/10`;
   this.root.querySelector('#pack-renderer').textContent=this.status.renderer?.startsWith('CPU')?'兼容三维':'';
-  this.root.querySelector('#pack-instruction').textContent=phase==='sealed'?'点击礼盒，或轻轻向上拖动':this.status.available===false?'画面暂不可用，可以用下方按钮查看已保存结果':phase==='ready'?'点击一张卡，看看森林送来的礼物':phase==='complete'?'十张外观都已收入收藏':'';
-  this.root.querySelector('.pack-stage')?.classList.toggle('focused',Number.isInteger(this.status.focusedIndex));
+  this.root.querySelector('#pack-instruction').textContent=pending&&this.busy?'正在保存揭晓进度…':phase==='sealed'?'点击礼盒，或轻轻向上拖动':this.status.available===false?'画面暂不可用，可以用下方按钮查看已保存结果':phase==='ready'?'点击一张卡，看看森林送来的礼物':phase==='complete'?'十张外观都已收入收藏':'';
+  const stage=this.root.querySelector('.pack-stage');if(stage){stage.classList.toggle('focused',Number.isInteger(this.status.focusedIndex));stage.inert=this.busy;stage.setAttribute('aria-busy',String(this.busy));}
   const allowReveal=['ready','complete'].includes(phase)||this.status.available===false;
   this.root.querySelector('#pack-controls').innerHTML=`<div class="pack-primary-actions">${Number.isInteger(this.status.focusedIndex)?'<button data-action="collection-unfocus">返回十卡</button>':''}${phase==='sealed'?'<button class="primary" data-action="collection-launch">打开礼盒</button>':''}<button data-action="collection-reveal-all" ${this.busy||count===10?'disabled':''}>${allowReveal?'全部揭示':'跳过动画并揭示'}</button><button data-action="collection-album" ${this.busy?'disabled':''}>稍后继续</button>${count===10?`<button class="primary" data-action="collection-finish" ${this.busy?'disabled':''}>收好这份礼物</button>`:''}</div><div class="pack-index ${this.status.available===false?'pack-index-fallback':''}" role="group" aria-label="逐张揭示或放大">${o.cards.map((c,i)=>`<button data-action="collection-reveal" data-value="${i}" ${this.busy||!allowReveal?'disabled':''} class="${o.revealed&(1<<i)?'revealed':''}" aria-label="${o.revealed&(1<<i)?`${esc(CARD[c.cardId].name)}，${FINISH[c.finish].name}，放大查看`:`揭开第${i+1}张`}">${o.revealed&(1<<i)?'✓':i+1}</button>`).join('')}</div>`;
+  this.root.querySelector('#pack-controls').inert=this.busy;
   const shown=o.cards.map((c,i)=>({...c,i})).filter(c=>o.revealed&(1<<c.i));
-  const results=this.root.querySelector('#pack-results');results.classList.toggle('summary-expanded',this.summaryExpanded);results.innerHTML=shown.length?`<button class="pack-summary-toggle" data-action="collection-summary">${this.summaryExpanded?'收起礼物清单':`查看已揭开的${shown.length}张`}</button>${this.summaryExpanded?`<div class="pack-summary">${shown.map(c=>`<button data-action="collection-focus" data-value="${c.i}" style="--finish:${FINISH[c.finish].color}">${artThumb(c.cardId)}<strong>${esc(CARD[c.cardId].name)}</strong><span>${FINISH[c.finish].name}${c.duplicate?` · 重复 +${c.dust}叶屑`:' · 新收藏'}</span></button>`).join('')}</div>`:''}`:'';
+  const results=this.root.querySelector('#pack-results');results.inert=this.busy;results.classList.toggle('summary-expanded',this.summaryExpanded);results.innerHTML=shown.length?`<button class="pack-summary-toggle" data-action="collection-summary">${this.summaryExpanded?'收起礼物清单':`查看已揭开的${shown.length}张`}</button>${this.summaryExpanded?`<div class="pack-summary">${shown.map(c=>`<button data-action="collection-focus" data-value="${c.i}" style="--finish:${FINISH[c.finish].color}">${artThumb(c.cardId)}<strong>${esc(CARD[c.cardId].name)}</strong><span>${FINISH[c.finish].name}${c.duplicate?` · 重复 +${c.dust}叶屑`:' · 新收藏'}</span></button>`).join('')}</div>`:''}`:'';
  }
  albumHTML(s){
   const card=CARD[this.selected]||CARDS[0],w=s[this.mode],equipped=s.equipped[card.id];
@@ -78,7 +86,11 @@ export class CollectionView {
   if(o.revealed&(1<<index)){this.packScene?.focus(index);return;}
   await this.mutate({kind:'reveal-pack',id:o.id,index});
  }
- async mutate(action){this.busy=true;this.paintControls();try{const r=await this.store().collectionAction(action);if(!r.ok)this.onNotice('这次内容尚未保存，请重试或下载备份');return r;}finally{this.busy=false;this.render();}}
+ async mutate(action){
+  const store=this.store(),opening=store?.data?.collection?.opening,token={};this.mutationToken=token;
+  this.pendingReveal=action.kind==='reveal-pack'&&opening?.id===action.id&&this.openingId===action.id&&this.packScene&&!store.dirty&&!store.issue&&store.loaded?{store,scene:this.packScene,profileId:store.data.profileId,epoch:store.epoch,opening:{...opening,cards:opening.cards.map(card=>({...card}))}}:null;
+  this.busy=true;this.paintControls();try{const r=await store.collectionAction(action);if(this.mutationToken===token&&!r.ok)this.onNotice('这次内容尚未保存，请重试或下载备份');return r;}finally{if(this.mutationToken===token){this.mutationToken=null;this.pendingReveal=null;this.busy=false;this.render();}}
+ }
  async click(action,value,finish){
   if(action==='collection-mute'){this.setMuted(!this.muted);return;}
   if(action==='collection-close'){this.close();return;}

@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "runId": "hardware-headed-2026-10-11T03-44-34-014Z-e02ed921",
+  "executionEnvironment": "explicit-local-diagnostic",
+  "launch": {
+    "browserName": "chromium",
+    "channel": "chrome",
+    "headless": false,
+    "launchOptions": {
+      "chromiumSandbox": true,
+      "args": [],
+      "ignoreDefaultArgs": [
+        "--enable-unsafe-swiftshader",
+        "--unsafely-disable-devtools-self-xss-warnings"
+      ]
+    }
+  },
+  "browserVersion": "154.0.8037.99",
+  "host": {
+    "platform": "darwin",
+    "release": "27.0.0",
+    "architecture": "arm64",
+    "cpu": "Apple M4",
+    "logicalCpus": 10,
+    "memoryGiB": 16
+  },
+  "formalAcceptance": false,
+  "resourceScope": "Host facts only; process utilization and GPU completion are unmeasured",
+  "factsScope": "Actual game renderer, buffer, quality and per-document clocks are collected per segment; no pre-attack capability prewarm",
+  "postBodyGpuDevices": [
+    {
+      "vendorId": 4203,
+      "deviceId": 0,
+      "vendorString": "Google Inc. (Apple)",
+      "deviceString": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Version 27.0.1 (Build 26A434))",
+      "driverVendor": "Apple",
+      "driverVersion": "27.0.1"
+    }
+  ],
+  "postBodyGpuFeatures": {
+    "2d_canvas": "enabled",
+    "direct_rendering_display_compositor": "disabled_off_ok",
+    "gpu_compositing": "enabled",
+    "multiple_raster_threads": "enabled_on",
+    "opengl": "enabled_on",
+    "rasterization": "enabled",
+    "raw_draw": "disabled_off_ok",
+    "skia_graphite": "enabled_on",
+    "trees_in_viz": "disabled_off",
+    "video_decode": "enabled",
+    "video_encode": "enabled",
+    "webgl": "enabled",
+    "webgpu": "enabled",
+    "webnn": "disabled_off"
+  }
+}

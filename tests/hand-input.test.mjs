@@ -22,9 +22,10 @@ function harness(t) {
       preventDefault() { this.prevented = true; }, stopPropagation() { this.stopped = true; }, ...values };
     element.listeners.get(name)?.(event); return event;
   };
-  const advance = ms => { clock += ms; for (const [id, timer] of [...timers]) if (timer.at <= clock) { timers.delete(id); timer.fn(); } };
+  const elapse = ms => { clock += ms; };
+  const advance = ms => { elapse(ms); for (const [id, timer] of [...timers]) if (timer.at <= clock) { timers.delete(id); timer.fn(); } };
   t.after(() => input.dispose());
-  return { input, element, windowTarget, documentTarget, timers, selected, inspected, hovered, panned, fire, advance,
+  return { input, element, windowTarget, documentTarget, timers, selected, inspected, hovered, panned, fire, advance, elapse,
     revise: () => revision++, disable: () => { enabled = false; } };
 }
 
@@ -43,6 +44,25 @@ test("420ms inspects once without selecting, including release and a native long
   h.fire("pointerdown", { button: 2 }); h.fire("contextmenu", { button: 2 });
   assert.equal(h.inspected.length, 2, "a later real right click remains available");
 });
+for (const elapsed of [420, 700]) test(`${elapsed}ms hold with a delayed timer inspects on release once and never selects`, t => {
+  const h = harness(t); h.fire("pointerdown"); h.elapse(elapsed);
+  assert.equal(h.inspected.length, 0, "the timer deliberately has not run");
+  h.fire("pointerup"); h.fire("click"); h.fire("contextmenu"); h.advance(0);
+  assert.deepEqual(h.inspected, [{ kind: "card", index: 0, cardId: "fox", revision: 1, source: "longpress" }]);
+  assert.deepEqual(h.selected, []); assert.equal(h.timers.size, 0); assert.equal(h.element.captures.size, 0);
+});
+for (const interruption of ["card-boundary", "revision", "disabled", "moved-back", "distant-release", "cancelled"])
+  test(`a delayed long hold cannot inspect or select after ${interruption}`, t => {
+    const h = harness(t), start = interruption === "card-boundary" ? { clientX: 99 } : {};
+    h.fire("pointerdown", start); h.elapse(700);
+    if (interruption === "revision") h.revise();
+    else if (interruption === "disabled") h.disable();
+    else if (interruption === "moved-back") { h.fire("pointermove", { clientX: 41 }); h.fire("pointermove", { clientX: 30 }); }
+    else if (interruption === "cancelled") h.fire("pointercancel");
+    h.fire("pointerup", interruption === "card-boundary" ? { clientX: 101 } : interruption === "distant-release" ? { clientY: 31 } : {});
+    h.advance(0);
+    assert.deepEqual(h.inspected, []); assert.deepEqual(h.selected, []); assert.equal(h.timers.size, 0);
+  });
 test("crossing 10px permanently cancels even after returning to the start", t => {
   const h = harness(t); h.fire("pointerdown"); h.fire("pointermove", { clientX: 41 });
   h.fire("pointermove", { clientX: 30 }); h.advance(800); h.fire("pointerup");
@@ -60,9 +80,10 @@ test("press/release card identity, pointer id and current revision must all agre
   h.revise(); h.advance(420); h.fire("pointerup");
   assert.equal(h.selected.length, 0); assert.equal(h.inspected.length, 0);
 });
-for (const cancellation of ["pointercancel", "lostpointercapture", "blur", "hidden", "manual", "multitouch"]) test(`${cancellation} clears every pending gesture`, t => {
+for (const cancellation of ["pointercancel", "lostpointercapture", "blur", "element-blur", "hidden", "manual", "multitouch"]) test(`${cancellation} clears every pending gesture`, t => {
   const h = harness(t); h.fire("pointerdown");
   if (cancellation === "blur") h.windowTarget.listeners.get("blur")();
+  else if (cancellation === "element-blur") h.element.listeners.get("blur")?.();
   else if (cancellation === "hidden") { h.documentTarget.hidden = true; h.documentTarget.listeners.get("visibilitychange")(); }
   else if (cancellation === "manual") h.input.cancel();
   else if (cancellation === "multitouch") h.fire("pointerdown", { pointerId: 2, isPrimary: false });

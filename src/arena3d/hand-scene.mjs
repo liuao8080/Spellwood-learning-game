@@ -94,7 +94,8 @@ export class HandScene {
     const key = ids.map((id,index) => `${id}:${finishes?.[id] || "base"}:${nextCosts[index]}`).join("|");
     const changed = key !== this.handKey, revised = revision !== this.revision;
     const nextSelected = Number.isInteger(selectedIndex) && selectedIndex >= 0 && selectedIndex < ids.length ? selectedIndex : null;
-    if (!changed && !revised && nextSelected === this.selectedIndex) return;
+    const selectionChanged = nextSelected !== this.selectedIndex;
+    if (!changed && !revised && !selectionChanged) return;
     if (changed || revised) { this.inputRevision++; this.input.cancel(); }
     this.revision = revision; this.ids = [...ids]; this.costs=nextCosts; this.finishes = { ...finishes };
     if (changed) {
@@ -107,7 +108,11 @@ export class HandScene {
       if (this.focusedIndex != null && this.focusedIndex >= ids.length) this.focusedIndex = ids.length ? ids.length - 1 : null;
     }
     this.selectedIndex = nextSelected;
-    this.layout(!changed); this.status();
+    // A fresh authority revision still invalidates old gestures and updates new
+    // intents. It does not move identical cards. Hover cancellation, resize,
+    // focus and hidden-state restoration schedule their own necessary redraws.
+    if (changed || selectionChanged) this.layout(!changed);
+    this.status();
   }
 
   layout(animate = false) {
@@ -191,9 +196,12 @@ export class HandScene {
     return null;
   }
 
-  enabled() { return !!this.renderer && !this.destroyed && !this.hidden && !this.pageHidden && !this.contextLost && !this.frameFault && !this.pendingSize && this.interactive; }
+  enabled({ coordinateFree = false } = {}) { return !!this.renderer && !this.destroyed && !this.hidden && !this.pageHidden && !this.contextLost && !this.frameFault && (coordinateFree || !this.pendingSize) && this.interactive; }
   emit(kind, index, source) {
-    const card = this.cards[index]; if (!this.enabled() || !card) return false;
+    // Semantic controls address a known current card index. They need no stale
+    // pixel hit test and must not lose Enter while a resize awaits its paint.
+    const coordinateFree = ['keyboard', 'accessible-button', 'button'].includes(source);
+    const card = this.cards[index]; if (!this.enabled({ coordinateFree }) || !card) return false;
     const intent = { kind: "card", index, cardId: card.cardId, revision: this.revision, source };
     (kind === "inspect" ? this.onInspect : this.onSelect)(intent); return true;
   }
@@ -209,6 +217,7 @@ export class HandScene {
     if (this.destroyed) return;
     index = this.cards[index] ? index : null;
     const changed = index !== this.focusedIndex;
+    if (index !== null && source === "keyboard") this.canvas.dataset.inputModality = "keyboard";
     this.focusedIndex = index;
     if (changed) this.input?.cancel();
     this.layout(true);
@@ -227,17 +236,18 @@ export class HandScene {
     this.scrollBy(scrollForHandIndex(this.layoutInfo, index) - this.scroll);
   }
   handleKey(event) {
-    if (!this.enabled() || !this.cards.length || event.altKey || event.ctrlKey || event.metaKey) return false;
+    if (!this.enabled({ coordinateFree: true }) || !this.cards.length || event.altKey || event.ctrlKey || event.metaKey) return false;
     const current = this.focusedIndex ?? this.selectedIndex ?? 0, last = this.cards.length - 1;
     let next = null;
     if (event.key === "ArrowRight") next = Math.min(last, current + 1);
     else if (event.key === "ArrowLeft") next = Math.max(0, current - 1);
     else if (event.key === "Home") next = 0;
     else if (event.key === "End") next = last;
-    else if (event.key === "Enter" || event.key === " ") { if (!event.repeat) this.select(current); }
+    else if (event.key === "Enter" || event.key === " ") { if (!event.repeat) this.select(current, "keyboard"); }
     else if (event.key?.toLowerCase() === "i" || (event.key === "F10" && event.shiftKey) || event.key === "ContextMenu") { if (!event.repeat) this.inspect(current, "keyboard"); }
     else if (event.key === "Escape") this.focus(null);
     else return false;
+    this.canvas.dataset.inputModality = "keyboard";
     if (next !== null) this.focus(next);
     event.preventDefault?.(); return true;
   }

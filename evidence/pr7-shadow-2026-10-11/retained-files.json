@@ -1,0 +1,776 @@
+{
+  "schema": 1,
+  "scope": "Selected anonymous original bytes and explicit new recheck; no sessions, trace, HAR, DB or profiles",
+  "files": [
+    {
+      "file": "original-ci/source-and-file-hashes.json",
+      "originalPath": "test-results/ci-38030577115/manifest/source-and-file-hashes.json",
+      "sha256": "41fe33e4c403fa0aa2ca528fa0ebc6ae57cf772465f4dc3552428b369adadb0c",
+      "bytes": 82462,
+      "scope": "Original official CI313-file manifest; all bytes verified locally"
+    },
+    {
+      "file": "original-ci/combat-motion-checkpoints.json",
+      "originalPath": "test-results/ci-38030577115/original-safe-evidence/combat-motion-checkpoints.json",
+      "sha256": "febe8b62a9150e80ffc744b41d55a6214124fcb4bd64d4764d6616bb9b0d614e",
+      "bytes": 65744,
+      "scope": "Original failed official melee checkpoint, not rewritten"
+    },
+    {
+      "file": "original-ci/combat-motion-anonymous-arena-only.webm",
+      "originalPath": "test-results/ci-38030577115/original-safe-evidence/combat-motion-anonymous-arena-only.webm",
+      "sha256": "50093303a2fd68ada10422eae1d2abf088661c9b1f9eb3d745da3ef1c530ea49",
+      "bytes": 45249,
+      "scope": "Original arena-only silent18-frame clip"
+    },
+    {
+      "file": "original-ci/recheck.json",
+      "originalPath": "test-results/ci-38030577115/recheck/recheck.json",
+      "sha256": "954152b6ffcdbd4ed9b6977c01687455dd44084b2ee6f515bb2de7379d947786",
+      "bytes": 2542,
+      "scope": "New decoder recheck of original retained bytes, not gameplay replay"
+    },
+    {
+      "file": "software-controls/control-matrix.json",
+      "originalPath": "test-results/software-control/control-matrix.json",
+      "sha256": "fcd55977f8bec2143d5e9c21bfeba5249c40b22f87db1387f8db3236e08023ff",
+      "bytes": 17972,
+      "scope": "Three explicit local original-case controls, not Ubuntu parity"
+    },
+    {
+      "file": "software-controls/RESULTS.md",
+      "originalPath": "test-results/software-control/RESULTS.md",
+      "sha256": "f7cb46364b318afe7a6ad9e2e72355f7181fc4e0b8e8d4b96c0d2907acbdccf6",
+      "bytes": 3844,
+      "scope": "Limits and original rule results"
+    },
+    {
+      "file": "read-only-probe/PLAN-AND-RESULT.md",
+      "originalPath": "test-results/shadow-control/PLAN-AND-RESULT.md",
+      "sha256": "960209532f2eb85715918890228eba9c91b95e0c2f5bca483beb09c747422ebf",
+      "bytes": 7026,
+      "scope": "Retains software timeout and interrupted hardware history"
+    },
+    {
+      "file": "read-only-probe/shadow-probe-summary.json",
+      "originalPath": "test-results/shadow-control/runs/hardware-headed-2026-10-11T03-02-33-699Z-9b8f23a6/shadow-probe-summary.json",
+      "sha256": "fbdb05c21cce5c3276436537468f5cd0ff31944ce68f3bb01fbdacc4b68987d2",
+      "bytes": 38397,
+      "scope": "Actual37-depth-draw witness, not cloud causality"
+    },
+    {
+      "file": "controller-node/proof.json",
+      "originalPath": "test-results/shadow-candidate/proof-matrixguard.json",
+      "sha256": "d2662dfc2946b4718a130ebaa7734747b66d4fe0e677e5a63fb2c83868116e74",
+      "bytes": 1859,
+      "scope": "Lab79 realThree-input/mockrenderer checks, not GPU proof"
+    },
+    {
+      "file": "controller-node/red-stub-output.txt",
+      "originalPath": "test-results/shadow-candidate/red-output.txt",
+      "sha256": "72b7968ef6e08a77162606473ad2c239cf7fbc468235fc5f3342d3ccfc03f1b8",
+      "bytes": 1105,
+      "scope": "Deliberately always-update lab stub regression fails; not product GPU reproduction"
+    },
+    {
+      "file": "controller-node/green-output.txt",
+      "originalPath": "test-results/shadow-candidate/persistent-green-matrixguard-output.txt",
+      "sha256": "6bd79d8be2545905e78a212408917ccbfae61de3b3ae08ba58af5708bf69c1ac",
+      "bytes": 7030,
+      "scope": "79/79 controller boundary checks before browser experiment"
+    },
+    {
+      "file": "local-abba/pre-body-bad-port-report.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-39-46-180Z-3433fcbb-report.json",
+      "sha256": "bd6ba6d96997e8a8325d91215e76462443e1837a0dc3ca43153ee8acf8ca3aca",
+      "bytes": 1520,
+      "scope": "Retained pre-body lab transport failure; zero gameplay/cached-shadow measurements"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-1-baseline-after.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-1-baseline-after.png",
+      "sha256": "f9eba4d76ecfc11a290c22294e6833eb482b37c7bfe06005398bf4d3e0de9e0e",
+      "bytes": 166165,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-1-baseline-before.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-1-baseline-before.png",
+      "sha256": "85ee914a508179679c94714b50802a5858185ca710936cee515e6350b4d42040",
+      "bytes": 167477,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-2-candidate-after.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-2-candidate-after.png",
+      "sha256": "b923c65a1c9f1abc5d1904eaea3a3f3f57f621b40ccf73a1a50b09892b19ed32",
+      "bytes": 185075,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-2-candidate-before.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-2-candidate-before.png",
+      "sha256": "c6b0d9640ad6cd198834110aba9fd0a3780259ce66941de73ee40e2188498e13",
+      "bytes": 187253,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-3-candidate-after.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-3-candidate-after.png",
+      "sha256": "15a0b75a988ca2e7724bfc5185129d08ff709f81e1be25357455c84efe474599",
+      "bytes": 185695,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-3-candidate-before.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-3-candidate-before.png",
+      "sha256": "84bd917ac32675159b6d55e7868d59bdc31302609321b62d47553d2d1cbbf9fd",
+      "bytes": 187918,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-4-baseline-after.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-4-baseline-after.png",
+      "sha256": "cf73f85ede16976258e571404a021857bb2e525202849933716542b2373b36e9",
+      "bytes": 185848,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-4-baseline-before.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-4-baseline-before.png",
+      "sha256": "ff23e085d20394978dd40a72884625808f5e642608fcb2491a28a8ae87d726ce",
+      "bytes": 187966,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-checkpoints.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-checkpoints.json",
+      "sha256": "1406eb433ff9676465eb9ccc34a2920cfda1280261fbea35f4479a3fb3b0bb9a",
+      "bytes": 3271084,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-environment.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-environment.json",
+      "sha256": "eea41a6ad981416fcd8d37cc2e0f483d655b6337b738ca89bc2d010b9d3602a9",
+      "bytes": 1711,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-http.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-http.json",
+      "sha256": "fab4cb5f364a72ab5b8b548ed4c4ac0cff231014ee21cf944b7e8aa5b7dffb43",
+      "bytes": 1708,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-manifest.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-manifest.json",
+      "sha256": "227b70e5113dd312916427e8af5b67b846b0784e87adacae20176f87783203d1",
+      "bytes": 133126,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-observations.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-observations.json",
+      "sha256": "bd6066ed6805ba6ddcdd3ff24cef74d9b001791dd28bd2e2de3d4d720e976a80",
+      "bytes": 545068,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-report.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-report.json",
+      "sha256": "cc11d911a2e69b69221868380ef0a0a165d82e7cfa35e69106aa9f54a9850d91",
+      "bytes": 3077,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-arena-only.webm",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-arena-only.webm",
+      "sha256": "e36ee3ba2844c7d1e08b9b2db79e3255311a027db8cbac780946e379ced60c03",
+      "bytes": 161705,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-00.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-00.png",
+      "sha256": "4b8ff3227ea9f19a1a2dd82d5d72e7b5aa18cf3e629a3e9f1493540b3a9de89c",
+      "bytes": 100266,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-01.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-01.png",
+      "sha256": "49c49d8181354404cf7c035a8f5ba1fb3c9d73d033d4cf6cb43f20ec70d68cdd",
+      "bytes": 113664,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-02.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-02.png",
+      "sha256": "c312461192495e780c202583257e6e6d1ba51b8379e032d42fec8761c54f4122",
+      "bytes": 128186,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-03.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-03.png",
+      "sha256": "4876d12ab0f2b49bc83b6dbfe97ff7257cec693146028beea46d4e7c50c9440f",
+      "bytes": 130511,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-04.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-04.png",
+      "sha256": "021d0a796a91b98ded9f488bac8c12870e7bd52a0e282d2d191f68e106f35230",
+      "bytes": 133187,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-05.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-05.png",
+      "sha256": "b9798ca1aba7435dabb6feaabb54cdb541e69c61065a6daea7aa1ae8430991ac",
+      "bytes": 132901,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-06.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-06.png",
+      "sha256": "e341a5ba6824181484335e953f112d9e22de54a4608b6b42cd7e40e32eef514c",
+      "bytes": 132766,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-07.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-07.png",
+      "sha256": "7a9289d0887bda645a73d1486b508faff20847d1522c64460e1544bbf6d5facc",
+      "bytes": 132619,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-08.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-08.png",
+      "sha256": "f95a3608c86e4fa38d2da306f1f32dec85edbafee9f14598318d9529b5ab1b82",
+      "bytes": 132511,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-09.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-09.png",
+      "sha256": "e3431e2299f38cf1450abcae821f2f67c3e26ec617669b1ddc614f628a9edfba",
+      "bytes": 132565,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-10.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-10.png",
+      "sha256": "231a68809ef75501815a494e97bba6a5f9250aefd836fcc80e31f15024668788",
+      "bytes": 132466,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-11.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-1-baseline-frame-frame-11.png",
+      "sha256": "6f08b6f120c1722827fc5b0ac73ebd2e542cbae5c0b7e000f59e9d1189743d28",
+      "bytes": 132334,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-arena-only.webm",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-arena-only.webm",
+      "sha256": "b519d1bce0141ec90aa2f010ac28d5ec5a3eac89e2f714c87b26d1d5f82cbe86",
+      "bytes": 169943,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-00.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-00.png",
+      "sha256": "d5d434b281e1db1d9b16c20190b9c11f4fda28ad72bf3b2991163f22bbd4b482",
+      "bytes": 101204,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-01.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-01.png",
+      "sha256": "680f6dff186721ed7b94f85e252f394c209feddd9a3391ea493e903e879345f5",
+      "bytes": 124566,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-02.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-02.png",
+      "sha256": "63d479134f94f57fe97bc23d7369e30f449691d95b3db5e181a9101f42fd023f",
+      "bytes": 134972,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-03.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-03.png",
+      "sha256": "229937ec318c2389cd117db46992f7b6ce0083c72dc0bbb74503f8b14afa1b94",
+      "bytes": 138445,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-04.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-04.png",
+      "sha256": "306baae27d37fdebda68a30fc55e3dbd6781f570143655c2e99774480e148f19",
+      "bytes": 140840,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-05.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-05.png",
+      "sha256": "85a63f51c26cbaef5f631d737ee637d69f8a0410bd167081a58cc6734e224236",
+      "bytes": 139773,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-06.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-06.png",
+      "sha256": "3cd612b252084fad9f41a5966dcd26017ecadea42ece90124ee358d59dd5639f",
+      "bytes": 139738,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-07.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-07.png",
+      "sha256": "5b45e1e34900848f26f5c9003fb93cc606f40c73f58ade7d1d52d87e7b25c611",
+      "bytes": 139497,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-08.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-08.png",
+      "sha256": "4a1d54d008772fcc277dcc591f7fbf34bc8211dda4277127a2a9f867aa984688",
+      "bytes": 139319,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-09.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-09.png",
+      "sha256": "1cdfbc9ff149e3cd2ac3fb6fc686781c302e3f89d6937a616c8030a01e9e2167",
+      "bytes": 139287,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-10.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-10.png",
+      "sha256": "a2916faadf41f038108b8f875842c7d494d76c65f3beed2f43cc11aa78c9086c",
+      "bytes": 139246,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-11.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-2-candidate-frame-frame-11.png",
+      "sha256": "8cf48f2200e559f1ee19f7c469229f713188f9c0c094ea4015ae10d7e7ad8124",
+      "bytes": 139235,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-arena-only.webm",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-arena-only.webm",
+      "sha256": "53ea66bbd8cd07497e606364e6890ee04771ce134ae283edf222246e30bbcb28",
+      "bytes": 167541,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-00.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-00.png",
+      "sha256": "7649157fadc79075429f199396c011aacd118777ad0d7c43a058dab35d9c6f38",
+      "bytes": 101198,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-01.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-01.png",
+      "sha256": "65a9a7c4566d9be48465e114523249dcb0be8d3c7f92db6bb9e1c18d966bf6f6",
+      "bytes": 125582,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-02.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-02.png",
+      "sha256": "b0cc1ffcaa58cf03c03193d3c0d7d884a1f8a57220d0ff4700006e69f09a36c7",
+      "bytes": 134926,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-03.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-03.png",
+      "sha256": "1e167ed04548c6ca70a8e25beca12f41d22dcf3f0e554f456833f0eb2d1fa437",
+      "bytes": 138398,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-04.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-04.png",
+      "sha256": "8d061d0cadbbd49072cad57f9c608eb6725b1f88b373e9a569f711b569935fff",
+      "bytes": 137594,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-05.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-05.png",
+      "sha256": "b322cc0ee0a6716dfe988341b57bbb7a35c343d5aebc325926c96bd83fb9b839",
+      "bytes": 137865,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-06.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-06.png",
+      "sha256": "c4a3ca94ab123bdcc893dbc084e37cd80e8198aebb0075de3e262258bae3b842",
+      "bytes": 137498,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-07.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-07.png",
+      "sha256": "0d810c83a3ce258f7202af93f87a19ab512c9fc11a94f53a8691ab501985cc43",
+      "bytes": 137587,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-08.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-08.png",
+      "sha256": "d171c72126b72d563a8b46c6103c32993c21e2ddf4c94689c78cf283c3d75114",
+      "bytes": 137524,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-09.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-09.png",
+      "sha256": "afc92717b67401542b97164640e6858b9d59197d16246b3865960b0d1bf9f230",
+      "bytes": 137271,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-10.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-10.png",
+      "sha256": "350039f777c1bece864535c93a65ff59e50b077733cd0251d862016c17473019",
+      "bytes": 137440,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-11.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-3-candidate-frame-frame-11.png",
+      "sha256": "dccb42c0791bf8e6521c09c03a3ca863d2d8ebac27199d5a11e4b653ef8d99d8",
+      "bytes": 137423,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-arena-only.webm",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-arena-only.webm",
+      "sha256": "0fe3e7c855bfbea24d06742f98dd4112878edc2410293a8785a754d16fe3f04a",
+      "bytes": 168671,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-00.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-00.png",
+      "sha256": "c65e82f04cfc4040efdd6a389efdbe5d6d8c02e075aedefbecfe1d90a5b548bf",
+      "bytes": 101597,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-01.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-01.png",
+      "sha256": "8a029209ab0894a7d4e61bb9da709a0d9cc686c93f30ac40a0cd6650949d1d24",
+      "bytes": 124578,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-02.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-02.png",
+      "sha256": "1b4185f4309154d3637e14da0cae30b73ee07b7dba3cd2d67769a0c383d98088",
+      "bytes": 138096,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-03.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-03.png",
+      "sha256": "a10984c223d5b8361ae841447203713cd3a4cea40a69fb12ac17627270beefc7",
+      "bytes": 140479,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-04.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-04.png",
+      "sha256": "2cf55bf62966da9a5b13b433d90e0bd52f39fe0a1cd5096881433a1c47fdb64a",
+      "bytes": 143246,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-05.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-05.png",
+      "sha256": "3c8a135aea602243d0e7a001f904ee1ee7eb4b38cf9ba46ea2c026b46a9374ce",
+      "bytes": 142261,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-06.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-06.png",
+      "sha256": "826f58b693cb8ca16a19e0674f531d20ab016fc8e20c5ffd607a4cc71f1aff79",
+      "bytes": 142251,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-07.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-07.png",
+      "sha256": "ff32146e8a9075112ff677ed7ad97ec3f38099d20304029c371a603e722b4c59",
+      "bytes": 142142,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-08.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-08.png",
+      "sha256": "72b932dd2534a6d312a63a4243132a674d8c55661e739c45bf6e9d2bfb902671",
+      "bytes": 141946,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-09.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-09.png",
+      "sha256": "6806fdc675e56d22a51c9839fb5e568a0456705f0aa8c68276fae0760dc383b5",
+      "bytes": 141959,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-10.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-10.png",
+      "sha256": "f47ea4a720cdd4973a850be76c6e6080a277557dd404619c39ecff5e26e5fe96",
+      "bytes": 141922,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-11.png",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-segment-4-baseline-frame-frame-11.png",
+      "sha256": "d20654f593135ea8a05592e9b19b24a7d23d6fdd004696e5058aff0949999468",
+      "bytes": 141935,
+      "scope": "Fresh local real-UI ABBA: original safe bytes, not cloud causality or GPU pixel proof"
+    },
+    {
+      "file": "local-abba/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-overview.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921-overview.json",
+      "sha256": "01ea64408079bd5c9cc2a6e3c272edae4f94a43be3cf589bccd0ce7390a199d4",
+      "bytes": 21764,
+      "scope": "Agent summary of fresh real Metal ABBA, natural workload confounds and successful scoped cleanup"
+    },
+    {
+      "file": "local-abba-final/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-checkpoints.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-checkpoints.json",
+      "sha256": "6912a5d5702b6cda821545db46e6722bdbd68826cfddc266bb98b4c5061aba97",
+      "bytes": 3273871,
+      "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "local-abba-final/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-environment.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-environment.json",
+      "sha256": "8bb21810fcf98f733b49acc808071af7bacbbd3baab69f6de1d2989f9ab03688",
+      "bytes": 1711,
+      "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "local-abba-final/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-http.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-http.json",
+      "sha256": "e12b45521f29088daa82868bef551b9b60900e692686fc063eb3bae482fd0bf3",
+      "bytes": 1708,
+      "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "local-abba-final/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-manifest.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-manifest.json",
+      "sha256": "745c94d44051564a5831aac6ba054d8611f207a391a1bb70c25f44a454e939cb",
+      "bytes": 145300,
+      "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "local-abba-final/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-observations.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-observations.json",
+      "sha256": "77eb4bac97c5b2404b6ec410eee1b5f0b7faee21e94a7226e2e03bdb125d3429",
+      "bytes": 544993,
+      "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "local-abba-final/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-overview.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-overview.json",
+      "sha256": "46f7d772e971981425eaf74e960d8259fc53e26dad852e7657696495772a7bd3",
+      "bytes": 22864,
+      "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "local-abba-final/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-report.json",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-report.json",
+      "sha256": "f13dc0e7b00d621b2c4e763289aad536a37d464340b4424ec5698da311c81d70",
+      "bytes": 3077,
+      "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "local-abba-final/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-1-baseline-arena-only.webm",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-1-baseline-arena-only.webm",
+      "sha256": "3f15d0296e455500ecf7f7e816b2b2a46760f1ddec3d1825efd4ac58034d87d4",
+      "bytes": 161295,
+      "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "local-abba-final/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-2-candidate-arena-only.webm",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-2-candidate-arena-only.webm",
+      "sha256": "9a5de152e56d822a29340b7825157b74600bfd2d2d5a87095d26eb5e9426a440",
+      "bytes": 169805,
+      "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "local-abba-final/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-3-candidate-arena-only.webm",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-3-candidate-arena-only.webm",
+      "sha256": "aa49360a4657e676ba8580786ebbff6613aeaa4b83acd777aeb63d5306918ed1",
+      "bytes": 172266,
+      "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "local-abba-final/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-4-baseline-arena-only.webm",
+      "originalPath": "test-results/shared-shadow-evidence/shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-4-baseline-arena-only.webm",
+      "sha256": "13e4e883a0eca263aa00c2e1283e2c684a00c23ab62272749b74b4b007e04ad6",
+      "bytes": 170197,
+      "scope": "Latest comment-corrected freeze: four native silent clips and provenance/checkpoint. PNG originals retained locally; no reencoding or FPS inference"
+    },
+    {
+      "file": "cloud-abba/artifact.zip",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/artifact.zip",
+      "sha256": "8f3706197b86e512ea6ef848535b0205e2ecce1f1ef2758e45efb493d0b2f60c",
+      "bytes": 5025308,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/independent-verification.json",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/independent-verification.json",
+      "sha256": "d2f840add23c41a083e3532db15b9558e790ac36e3e92fa3585f37f860390726",
+      "bytes": 22386,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-report.json",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-report.json",
+      "sha256": "a30ebd1d76f8c680863a9bd32d7dff624181b6dda5b166f2cbc356ea33e69f49",
+      "bytes": 3099,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-manifest.json",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-manifest.json",
+      "sha256": "01228345c4e85439e8e796ebb0d2d0da4178fb618978c666e2ef7eedf543fced",
+      "bytes": 132889,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-checkpoints.json",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-checkpoints.json",
+      "sha256": "4dd3d6b6ebd61756b25c88c1c94e97fc5f095caa48377f1b1e05e707e2e3cddb",
+      "bytes": 2300821,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-environment.json",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-environment.json",
+      "sha256": "62b30d66a76c9403d5d750f0f11a6e0e47ad99c85a3607a6b9d4727322d41df8",
+      "bytes": 1757,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-arena-only.webm",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-arena-only.webm",
+      "sha256": "31fe805e8f8695eeba968fee89651762903742f1d392c7b0c74abb6f0ae6f5f1",
+      "bytes": 45432,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-arena-only.webm",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-arena-only.webm",
+      "sha256": "df04899c6cbf3cd2d469cda274ddb980b99edb4ac5224ef47af9a77f23e4eaee",
+      "bytes": 45456,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-arena-only.webm",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-arena-only.webm",
+      "sha256": "03b24cba6a36edefb02d3d15d6a7af819c3cfe4c42358e1ea2786b3bae2c2cff",
+      "bytes": 47495,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-arena-only.webm",
+      "originalPath": "test-results/ci-38110136254/shared-shadow/shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-arena-only.webm",
+      "sha256": "9ee0a379b2a028a9e58db3b1291eafb4a0f2cfdc1b2f6d66b759913a769ce368",
+      "bytes": 45056,
+      "scope": "Real Actions38110136254 original full-scene ABBA negative result; native250ms allfailed; archive byte-identical"
+    },
+    {
+      "file": "cloud-abba/archive-files.json",
+      "originalPath": "New root readback of byte-identical original ZIP67entries",
+      "sha256": "4f3b6c56f7986b23d763ee245edb4aeb4d9b7365a7f8b00169ab7acd2a55bb07",
+      "bytes": 17103,
+      "scope": "File hashes computed independently from original ZIP and compared with extracted bytes"
+    },
+    {
+      "file": "cloud-abba/root-redecode.json",
+      "originalPath": "test-results/ci-38110136254/root-redecode/report.json",
+      "sha256": "f757ebb8e330d0e7ebd61863fa8d899e0cac7cf31cf025d3fcc52c035ec7c527",
+      "bytes": 1099,
+      "scope": "Root reran original decoder on all four raw cloud videos; all250ms gates remain failed; no game rerun"
+    },
+    {
+      "file": "formal-ci/manifest-original.zip",
+      "originalPath": "test-results/ci-38110136254/formal-manifest.zip",
+      "sha256": "d0ddc0369da8ee0ea1a2316cbab537ea72a3f2490f61d7ac901c6c82d98d22fd",
+      "bytes": 18247,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/part03-original.zip",
+      "originalPath": "test-results/ci-38110136254/formal-part03.zip",
+      "sha256": "b210b28c5a3a839d41c92107b47308e5a2c7dca6e0de492192ef3f61806cb284",
+      "bytes": 8280168,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/source-and-file-hashes.json",
+      "originalPath": "test-results/ci-38110136254/formal-manifest/source-and-file-hashes.json",
+      "sha256": "a48a39ea41891868ac251a4932d84185c21aa60bb07d565e4d654e762da5f455",
+      "bytes": 82460,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/root-verification.json",
+      "originalPath": "test-results/ci-38110136254/formal-manifest/root-verification.json",
+      "sha256": "614a98592d23d86fea36125e11f69fc60ea0146c6392ac170e97c6cc00492e99",
+      "bytes": 13461,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/safe-log-excerpt.txt",
+      "originalPath": "test-results/ci-38110136254/formal-manifest/safe-log-excerpt.txt",
+      "sha256": "7504efd20e72f848e5893b9be5053989b5e3dde04e3d23cb313a6943ed647230",
+      "bytes": 1424,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/combat-motion-checkpoints.json",
+      "originalPath": "test-results/ci-38110136254/formal-part03/combat-motion-checkpoints.json",
+      "sha256": "857ebea23e5bf1422158eaf764c38481c4031524c207c835dae45571e9c8e35b",
+      "bytes": 75080,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/combat-motion-anonymous-arena-only.webm",
+      "originalPath": "test-results/ci-38110136254/formal-part03/combat-motion-anonymous-arena-only.webm",
+      "sha256": "8a345c2b408ba6113f76be674d452d1177383cd37d983fb4435e8f6855019173",
+      "bytes": 49248,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    },
+    {
+      "file": "formal-ci/recheck.json",
+      "originalPath": "test-results/ci-38110136254/formal-recheck/recheck.json",
+      "sha256": "46b7f8ebd22a512d137245bb7a57e7199d4312a992e5f7e23d73ef2b3382cd37",
+      "bytes": 2512,
+      "scope": "Actual completed formal run38110136254:29browser28pass1nativefail828ms.32Node pass; original ZIP digests+part56 files checked, safe derived log excerpt separate"
+    }
+  ]
+}

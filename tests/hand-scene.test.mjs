@@ -116,6 +116,25 @@ test("keyboard focus scrolls to card seven, has a visible frame and exposes equi
   assert.equal(h.selected[0].index, 6); assert.equal(h.inspected[0].index, 6); assert.equal(h.scene.selectedIndex, null);
   h.scene.handleKey(key("Escape")); assert.equal(h.scene.focusedIndex, null);
 });
+test('pointer focus transfer from semantic controls precedes the new hand gesture',t=>{
+ const h=harness(t,{width:350,height:200,software:true});h.scene.setHand(ids,{revision:42});h.frame();
+ h.scene.focus(0);h.scene.scrollToIndex(6);h.frame();
+ let semanticFocused=true;
+ h.canvas.focus=options=>{assert.equal(options.preventScroll,true);if(semanticFocused){semanticFocused=false;h.scene.focus(null);}};
+ const event={...point(h,6),pointerType:'mouse'};
+ h.listeners.get('pointerdown')(event);
+ // The browser's default pointer focus transfer follows pointerdown handlers.
+ // It must already have happened before HandInput captured this new intent.
+ if(semanticFocused)h.canvas.focus({preventScroll:true});
+ h.listeners.get('pointerup')(event);
+ assert.equal(h.selected.length,1);assert.equal(h.selected[0].cardId,ids[6]);assert.equal(h.selected[0].revision,42);
+ assert.equal(h.canvas.dataset.inputModality,'pointer');
+ h.scene.handleKey({key:'End',preventDefault(){}});assert.equal(h.canvas.dataset.inputModality,'keyboard');
+ assert.equal(h.scene.focusedIndex,6);assert.equal(h.scene.cards[6].focus.visible,true);
+ h.scene.focus(0);h.frame();const next=point(h,0);h.listeners.get('pointerdown')(next);
+ h.scene.focus(null);h.listeners.get('pointerup')(next);
+ assert.equal(h.selected.length,1,'a later real focus departure still cancels the pending gesture');
+});
 test("hand revisions, resize, modal disable and hidden states cancel captured input", t => {
   const h = harness(t); h.scene.setHand(ids, { revision: 1 }); h.frame();
   for (const cancel of [() => h.scene.setHand(ids, { revision: 2 }), () => h.scene.resize(), () => h.scene.setInteractive(false), () => h.scene.setHidden(true)]) {
@@ -161,9 +180,27 @@ test("hidden zero-size hand measurements preserve the last useful camera and scr
 test("hand resize retains its backing image until painting and blocks stale-frame selection",t=>{
   const h=harness(t,{software:true,width:390,height:190});h.scene.setHand(ids);h.frame();
   const before=h.renderer.resizes;Object.assign(h.box,{width:430,height:190});h.scene.resize();
-  assert.equal(h.renderer.resizes,before);assert.equal(h.renderer.width,390);assert.equal(h.scene.select(0),false);
+  assert.equal(h.renderer.resizes,before);assert.equal(h.renderer.width,390);assert.equal(h.scene.select(0,'pointer'),false);
   h.frame();assert.equal(h.renderer.width,430);assert.equal(h.renderer.resizes,before+1);assert.equal(h.scene.select(0),true);
   h.scene.resize();h.frame();assert.equal(h.renderer.resizes,before+1);
+});
+
+test('semantic Enter and button selection survive a pending resize without admitting stale pointer hits', t => {
+  const h = harness(t, { width: 390, height: 190 }); h.scene.setHand(ids, { revision: 9 }); h.frame();
+  Object.assign(h.box, { width: 828, height: 168 }); h.scene.resize();
+  assert(h.scene.pendingSize); assert.equal(h.scene.enabled(), false); h.scene.focus(4);
+  const event = { key: 'Enter', repeat: false, preventDefault() { this.prevented = true; } };
+  assert.equal(h.scene.handleKey(event), true); assert(event.prevented);
+  assert.equal(h.selected.length, 1); assert.equal(h.selected[0].index, 4); assert.equal(h.selected[0].revision, 9);
+  assert.equal(h.selected[0].cardId, ids[4]); assert.equal(h.selected[0].source, 'keyboard');
+  assert.equal(h.scene.select(3, 'accessible-button'), true);
+  assert.equal(h.scene.select(0, 'pointer'), false); assert.equal(h.scene.pick({ clientX: 20, clientY: 230 }), null);
+  h.scene.handleKey({ ...event, repeat: true }); assert.equal(h.selected.length, 2);
+  for (const field of ['hidden', 'pageHidden', 'contextLost', 'frameFault', 'destroyed']) {
+    h.scene[field] = true; assert.equal(h.scene.handleKey(event), false); assert.equal(h.scene.select(4, 'accessible-button'), false); h.scene[field] = false;
+  }
+  h.scene.setInteractive(false); assert.equal(h.scene.handleKey(event), false);
+  h.scene.setInteractive(true); h.frame(); assert.equal(h.scene.select(0, 'pointer'), true);
 });
 test("disposing twice removes listeners and releases shared resources exactly once", t => {
   const h = harness(t); h.scene.setHand(ids); const resources = [...h.scene.resources]; const counts = new Map();
@@ -182,4 +219,25 @@ test("same-name hand instances show their own saved costs and reset without grow
  h.scene.setHand(['fox','fox'],{revision:2,costs:[CARD.fox.cost,CARD.fox.cost-1]});assert.equal(h.scene.cards[1].frontTexture,discounted);assert.equal(h.scene.textures.entries.size,2);
  h.scene.setHand(['fox','fox'],{revision:3,costs:[CARD.fox.cost,CARD.fox.cost]});assert.equal(disposed,1);assert.equal(h.scene.cards[0].frontTexture,h.scene.cards[1].frontTexture);assert.equal(h.scene.textures.entries.size,1);
  h.scene.setHand(['fox'],{revision:4,costs:[-1]});assert.deepEqual(h.scene.costs,[CARD.fox.cost]);h.scene.setHand([]);assert.equal(h.scene.textures.entries.size,0);
+});
+
+test('an authority-only revision cancels old gestures without repainting an unchanged hand',t=>{
+ const h=harness(t,{reduced:false});h.scene.setHand(ids,{revision:1});h.frame();
+ const draws=h.draws,inputRevision=h.scene.inputRevision,event=point(h,0);
+ h.listeners.get('pointerdown')(event);assert.ok(h.scene.input.active);
+ h.scene.setHand(ids,{revision:2});
+ assert.equal(h.scene.revision,2);assert.equal(h.scene.inputRevision,inputRevision+1);
+ assert.equal(h.scene.input.active,null);assert.equal(h.raf.size,0);assert.equal(h.draws,draws);
+ h.listeners.get('pointerup')(event);assert.equal(h.selected.length,0);
+ h.scene.select(0,'keyboard');assert.equal(h.selected.length,1);assert.equal(h.selected[0].revision,2);assert.equal(h.selected[0].cardId,ids[0]);
+});
+test('selection cost finish hover and resize still schedule the necessary hand redraw',t=>{
+ const h=harness(t,{reduced:false});h.scene.setHand(ids,{revision:1});h.frame();
+ h.scene.setHand(ids,{revision:2,selectedIndex:1});assert.equal(h.raf.size,1);h.frame();
+ h.scene.setHand(ids,{revision:3,selectedIndex:1,costs:[CARD.fox.cost-1]});assert.equal(h.raf.size,1);h.frame();
+ h.scene.setHand(ids,{revision:4,selectedIndex:1,costs:[CARD.fox.cost-1],finishes:{fox:'leaf'}});assert.equal(h.raf.size,1);h.frame();
+ h.scene.hover(2);assert.equal(h.raf.size,1);h.frame();
+ h.box.width-=10;h.scene.resize();assert.equal(h.raf.size,1);h.frame();
+ h.scene.setInteractive(false);assert.equal(h.scene.select(0,'keyboard'),false);
+ h.scene.setInteractive(true);h.scene.select(0,'keyboard');assert.equal(h.selected.at(-1).revision,4);
 });

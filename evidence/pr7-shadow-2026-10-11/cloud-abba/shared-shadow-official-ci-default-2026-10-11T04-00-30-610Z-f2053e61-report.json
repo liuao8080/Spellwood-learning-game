@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "runId": "official-ci-default-2026-10-11T04-00-30-610Z-f2053e61",
+  "formalAcceptance": false,
+  "playwrightExecutionStatus": "passed",
+  "attributable": true,
+  "sourceIntegrity": {
+    "productSources": true,
+    "formalApp": true,
+    "formalHtml": true,
+    "originals": true,
+    "diagnosticCode": true,
+    "sharedOwnership": true,
+    "fixedSources": true,
+    "fixedBuild": true,
+    "generatedSuite": true,
+    "servedSnapshot": true
+  },
+  "tests": [
+    {
+      "title": "@shared-shadow diagnostic ABBA repeats four real hero attacks with baseline A and reloaded baseline/cache B",
+      "playwrightStatus": "passed",
+      "expectedStatus": "passed",
+      "durationMs": 106225,
+      "retry": 0,
+      "errorCount": 0,
+      "coverage": [
+        "Independent diagnostic only. ABBA B bundles switch through actual fixed public HTML navigation and genuine same-room reconnect. A is always baseline with normal motion. Real UI, ordinary turns and default adaptive quality; no state/clock injection. Original native250ms gap is reported per segment without replacing or silencing formal acceptance."
+      ]
+    }
+  ],
+  "diagnosticOutcome": "diagnostic-completed-with-original-gap-failures",
+  "originalGapRuleMs": 250,
+  "nativeGapFailureSegments": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "completeSegments": 4,
+  "cacheObservations": [
+    {
+      "index": 1,
+      "variant": "baseline",
+      "floatFrames": 2,
+      "validMapReuseWithFullColorFrames": 0,
+      "repeatedInputWithActualDepthFrames": 2,
+      "ticketReasons": [
+        "baseline-disabled"
+      ],
+      "verdict": "baseline-repeat-not-established"
+    },
+    {
+      "index": 2,
+      "variant": "candidate",
+      "floatFrames": 2,
+      "validMapReuseWithFullColorFrames": 2,
+      "repeatedInputWithActualDepthFrames": 0,
+      "ticketReasons": [
+        "same-successful-key"
+      ],
+      "verdict": "reuse-not-established"
+    },
+    {
+      "index": 3,
+      "variant": "candidate",
+      "floatFrames": 2,
+      "validMapReuseWithFullColorFrames": 2,
+      "repeatedInputWithActualDepthFrames": 0,
+      "ticketReasons": [
+        "same-successful-key"
+      ],
+      "verdict": "reuse-not-established"
+    },
+    {
+      "index": 4,
+      "variant": "baseline",
+      "floatFrames": 2,
+      "validMapReuseWithFullColorFrames": 0,
+      "repeatedInputWithActualDepthFrames": 2,
+      "ticketReasons": [
+        "baseline-disabled"
+      ],
+      "verdict": "baseline-repeat-not-established"
+    }
+  ],
+  "caveat": "A diagnostic completing is not green acceptance. Original formal CI and its prior failure remain independent; natural-turn/reload state confounds are recorded.",
+  "sourceHead": "2f3779c4f749f674346cb97d270567aef789e7ad",
+  "checkoutHead": "1cf24e9472d26f79f1dd58f0f63285f26a17c4af",
+  "sourceTree": "69379f380fa87b0e33e2bf3ee951bd08e662bb7a",
+  "sourceTreeScope": "Actual checked-out content tree; may be the merge tree",
+  "formalAppSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+  "executionEnvironment": "actual-github-actions-pull_request"
+}

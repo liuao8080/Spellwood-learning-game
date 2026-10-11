@@ -1,0 +1,795 @@
+{
+  "schema": 1,
+  "runId": "hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8",
+  "diagnosticOutcome": "diagnostic-completed-within-recorded-gap-rule",
+  "formalAcceptance": false,
+  "sourceIntegrity": {
+    "productSources": true,
+    "formalApp": true,
+    "formalHtml": true,
+    "originals": true,
+    "diagnosticCode": true,
+    "sharedOwnership": true,
+    "fixedSources": true,
+    "fixedBuild": true,
+    "generatedSuite": true,
+    "servedSnapshot": true
+  },
+  "sourceHead": "1eb618be87023ebdb9c2e4fb7f2587b881e80a29",
+  "checkoutHead": "1eb618be87023ebdb9c2e4fb7f2587b881e80a29",
+  "sourceTree": "406e3371819900434a3fc52e094bb77df9042734",
+  "formalAppSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+  "fixedBundleHashes": [
+    {
+      "route": "/app.js",
+      "expected": "d6f340fdd23732b2c38e73ec164dff3b65652fbdf3f9414aa5a258564f01ae72",
+      "actual": "d6f340fdd23732b2c38e73ec164dff3b65652fbdf3f9414aa5a258564f01ae72",
+      "matched": true
+    },
+    {
+      "route": "/",
+      "expected": "6fcfce84f31d001c2e6a2e5f7f211f71df707b99093a1033211329ab7d4863b2",
+      "actual": "6fcfce84f31d001c2e6a2e5f7f211f71df707b99093a1033211329ab7d4863b2",
+      "matched": true
+    },
+    {
+      "route": "/lab-baseline.html",
+      "expected": "8adc040d5451f1c447b36b9dea5101aa1d7e6e33942fc5457440fbb80bbb0e26",
+      "actual": "8adc040d5451f1c447b36b9dea5101aa1d7e6e33942fc5457440fbb80bbb0e26",
+      "matched": true
+    },
+    {
+      "route": "/lab-baseline.js",
+      "expected": "d6f340fdd23732b2c38e73ec164dff3b65652fbdf3f9414aa5a258564f01ae72",
+      "actual": "d6f340fdd23732b2c38e73ec164dff3b65652fbdf3f9414aa5a258564f01ae72",
+      "matched": true
+    },
+    {
+      "route": "/lab-candidate.html",
+      "expected": "b0a43c1532a04d6f4df29bb54e1c5442d60c8febe659d531adaeeaebd5d9325b",
+      "actual": "b0a43c1532a04d6f4df29bb54e1c5442d60c8febe659d531adaeeaebd5d9325b",
+      "matched": true
+    },
+    {
+      "route": "/lab-candidate.js",
+      "expected": "e7ecb7a40be5af30fc24b8aaa52bd3d2cd88052c4a7e508019fa5361668385aa",
+      "actual": "e7ecb7a40be5af30fc24b8aaa52bd3d2cd88052c4a7e508019fa5361668385aa",
+      "matched": true
+    }
+  ],
+  "host": {
+    "platform": "darwin",
+    "release": "27.0.0",
+    "architecture": "arm64",
+    "cpu": "Apple M4",
+    "logicalCpus": 10,
+    "memoryGiB": 16
+  },
+  "browserVersion": "154.0.8037.99",
+  "launch": {
+    "browserName": "chromium",
+    "channel": "chrome",
+    "headless": false,
+    "launchOptions": {
+      "chromiumSandbox": true,
+      "args": [],
+      "ignoreDefaultArgs": [
+        "--enable-unsafe-swiftshader",
+        "--unsafely-disable-devtools-self-xss-warnings"
+      ]
+    }
+  },
+  "cleanup": {
+    "state": "passed",
+    "operations": [
+      {
+        "stage": "diagnostics",
+        "label": "shared-shadow-A",
+        "startedAt": "2026-10-11T03:52:31.477Z",
+        "status": "passed",
+        "durationMs": 42
+      },
+      {
+        "stage": "contextClose",
+        "label": "shared-shadow-A",
+        "startedAt": "2026-10-11T03:52:31.522Z",
+        "status": "passed",
+        "durationMs": 21
+      },
+      {
+        "stage": "diagnostics",
+        "label": "shared-shadow-B",
+        "startedAt": "2026-10-11T03:52:31.549Z",
+        "status": "passed",
+        "durationMs": 45
+      },
+      {
+        "stage": "contextClose",
+        "label": "shared-shadow-B",
+        "startedAt": "2026-10-11T03:52:31.596Z",
+        "status": "passed",
+        "durationMs": 14
+      },
+      {
+        "stage": "serverClose",
+        "label": "owned-server",
+        "startedAt": "2026-10-11T03:52:31.611Z",
+        "status": "passed",
+        "durationMs": 7
+      }
+    ],
+    "failures": []
+  },
+  "pageErrors": [
+    {
+      "label": "shared-shadow-A",
+      "pageErrorCount": 0
+    },
+    {
+      "label": "shared-shadow-B",
+      "pageErrorCount": 0
+    }
+  ],
+  "rows": [
+    {
+      "index": 1,
+      "variant": "baseline",
+      "source": {
+        "uidFingerprint": "6ca202c88e549dff",
+        "cardId": "rabbit",
+        "atk": 2,
+        "hp": 1,
+        "ready": true
+      },
+      "revisionBefore": 4,
+      "turn": 2,
+      "hpBefore": [
+        18,
+        18
+      ],
+      "hpAfter": [
+        16,
+        18
+      ],
+      "handCountsBefore": [
+        4,
+        4
+      ],
+      "aVisibleHandCards": [
+        "fox",
+        "wolf",
+        "fox",
+        "wolf"
+      ],
+      "bOwnVisibleHandCount": 4,
+      "floatFrames": 31,
+      "ticketCasterCounts": [
+        36
+      ],
+      "actualDepthDraws": [
+        36
+      ],
+      "actualDrawnCasters": [
+        36
+      ],
+      "fullColorDraws": [
+        66
+      ],
+      "bufferDirectColorDraws": [
+        66
+      ],
+      "unclassifiedColorDraws": [
+        0
+      ],
+      "allCompleteColorCountersValid": true,
+      "allInputSame": true,
+      "allHelperCommitted": true,
+      "allHelperReused": false,
+      "allMapPresent": true,
+      "reason": [
+        "baseline-disabled"
+      ],
+      "opacityMin": 0.03888888902134408,
+      "opacityMax": 1,
+      "nativeFrames": 91,
+      "nativeMaxGapMs": 53,
+      "raf": {
+        "clickMs": 42.7,
+        "endMs": 3042.7,
+        "durationMs": 3000,
+        "sampleCount": 180,
+        "maximumOverlappingRafGapMs": 19.900000000000006,
+        "over250ms": 0,
+        "boundarySpanningGaps": [
+          {
+            "from": 38.8,
+            "to": 57.1,
+            "ms": 18.300000000000004
+          },
+          {
+            "from": 3039.6,
+            "to": 3056.4,
+            "ms": 16.800000000000182
+          }
+        ],
+        "lastSampleBeforeEndMs": 3039.6,
+        "firstSampleAtOrAfterEndMs": 3056.4,
+        "uncoveredTailMs": 3.099999999999909,
+        "tailBracketed": true,
+        "maximumUpdateMs": 2.4,
+        "maximumSubmitMs": 1.7,
+        "beforeClickSampleCount": 4,
+        "afterWindowSampleCount": 1,
+        "caveat": "RAF gaps touching the fixed window retain their full duration; boundary gaps can include time outside it. Unbracketed tail is an unknown stall, never zero. Trace totals cover setup and cleanup and are not comparable wall time."
+      },
+      "quality": {
+        "hpChanged": true,
+        "turn": 2,
+        "aHandCards": [
+          "fox",
+          "wolf",
+          "fox",
+          "wolf"
+        ],
+        "bHandCount": 4,
+        "actualAQuality": {
+          "level": 0,
+          "pixelScale": 1,
+          "shadowMapSize": 1024
+        },
+        "actualBQuality": {
+          "level": 0,
+          "pixelScale": 1,
+          "shadowMapSize": 1024
+        },
+        "BDocumentTimeOrigin": 1791690731632,
+        "actualCasterCounts": [
+          36
+        ],
+        "caveat": "Native turn/reload/preparation and caches are observable confounds, not normalized by hidden state or quality overrides"
+      },
+      "actualRenderers": {
+        "A": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+        "B": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)"
+      },
+      "buffers": {
+        "A": {
+          "width": 708,
+          "height": 208
+        },
+        "B": {
+          "width": 1280,
+          "height": 546
+        }
+      },
+      "dpr": {
+        "A": 1,
+        "B": 1
+      },
+      "probes": {
+        "A": {
+          "timeOrigin": 1791690726624,
+          "retained": 240,
+          "dropped": 103
+        },
+        "B": {
+          "timeOrigin": 1791690731632,
+          "retained": 38,
+          "dropped": 0
+        }
+      },
+      "overhead": {
+        "observerMedianMs": 0.19999998807907104,
+        "observerP95Ms": 0.30000001192092896,
+        "observerMaxMs": 0.30000007152557373,
+        "helperPreMedianMs": 0.5,
+        "helperPostMedianMs": 0.3999999761581421
+      },
+      "nativeFile": "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-1-baseline-arena-only.webm",
+      "screenshots": [
+        "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-1-baseline-before.png",
+        "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-1-baseline-after.png"
+      ]
+    },
+    {
+      "index": 2,
+      "variant": "candidate",
+      "source": {
+        "uidFingerprint": "6ca202c88e549dff",
+        "cardId": "rabbit",
+        "atk": 2,
+        "hp": 1,
+        "ready": true
+      },
+      "revisionBefore": 7,
+      "turn": 4,
+      "hpBefore": [
+        16,
+        18
+      ],
+      "hpAfter": [
+        14,
+        18
+      ],
+      "handCountsBefore": [
+        5,
+        5
+      ],
+      "aVisibleHandCards": [
+        "fox",
+        "wolf",
+        "fox",
+        "wolf",
+        "acorn_squirrel"
+      ],
+      "bOwnVisibleHandCount": 5,
+      "floatFrames": 31,
+      "ticketCasterCounts": [
+        38
+      ],
+      "actualDepthDraws": [
+        0
+      ],
+      "actualDrawnCasters": [
+        0
+      ],
+      "fullColorDraws": [
+        70
+      ],
+      "bufferDirectColorDraws": [
+        70
+      ],
+      "unclassifiedColorDraws": [
+        0
+      ],
+      "allCompleteColorCountersValid": true,
+      "allInputSame": true,
+      "allHelperCommitted": true,
+      "allHelperReused": true,
+      "allMapPresent": true,
+      "reason": [
+        "same-successful-key"
+      ],
+      "opacityMin": 0.03388888895511613,
+      "opacityMax": 1,
+      "nativeFrames": 91,
+      "nativeMaxGapMs": 36,
+      "raf": {
+        "clickMs": 58.2,
+        "endMs": 3058.2,
+        "durationMs": 3000,
+        "sampleCount": 180,
+        "maximumOverlappingRafGapMs": 19.600000000000136,
+        "over250ms": 0,
+        "boundarySpanningGaps": [
+          {
+            "from": 56.6,
+            "to": 74.2,
+            "ms": 17.6
+          },
+          {
+            "from": 3057,
+            "to": 3074.2,
+            "ms": 17.199999999999818
+          }
+        ],
+        "lastSampleBeforeEndMs": 3057,
+        "firstSampleAtOrAfterEndMs": 3074.2,
+        "uncoveredTailMs": 1.199999999999818,
+        "tailBracketed": true,
+        "maximumUpdateMs": 2.1,
+        "maximumSubmitMs": 2.4,
+        "beforeClickSampleCount": 5,
+        "afterWindowSampleCount": 1,
+        "caveat": "RAF gaps touching the fixed window retain their full duration; boundary gaps can include time outside it. Unbracketed tail is an unknown stall, never zero. Trace totals cover setup and cleanup and are not comparable wall time."
+      },
+      "quality": {
+        "hpChanged": true,
+        "turn": 4,
+        "aHandCards": [
+          "fox",
+          "wolf",
+          "fox",
+          "wolf",
+          "acorn_squirrel"
+        ],
+        "bHandCount": 5,
+        "actualAQuality": {
+          "level": 0,
+          "pixelScale": 1,
+          "shadowMapSize": 1024
+        },
+        "actualBQuality": {
+          "level": 0,
+          "pixelScale": 1,
+          "shadowMapSize": 1024
+        },
+        "BDocumentTimeOrigin": 1791690736712.4,
+        "actualCasterCounts": [
+          0
+        ],
+        "caveat": "Native turn/reload/preparation and caches are observable confounds, not normalized by hidden state or quality overrides"
+      },
+      "actualRenderers": {
+        "A": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+        "B": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)"
+      },
+      "buffers": {
+        "A": {
+          "width": 708,
+          "height": 208
+        },
+        "B": {
+          "width": 1280,
+          "height": 546
+        }
+      },
+      "dpr": {
+        "A": 1,
+        "B": 1
+      },
+      "probes": {
+        "A": {
+          "timeOrigin": 1791690726624,
+          "retained": 240,
+          "dropped": 420
+        },
+        "B": {
+          "timeOrigin": 1791690736712.4,
+          "retained": 38,
+          "dropped": 0
+        }
+      },
+      "overhead": {
+        "observerMedianMs": 0.19999998807907104,
+        "observerP95Ms": 0.30000001192092896,
+        "observerMaxMs": 0.30000007152557373,
+        "helperPreMedianMs": 0.6000000238418579,
+        "helperPostMedianMs": 0.5
+      },
+      "nativeFile": "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-2-candidate-arena-only.webm",
+      "screenshots": [
+        "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-2-candidate-before.png",
+        "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-2-candidate-after.png"
+      ]
+    },
+    {
+      "index": 3,
+      "variant": "candidate",
+      "source": {
+        "uidFingerprint": "6ca202c88e549dff",
+        "cardId": "rabbit",
+        "atk": 2,
+        "hp": 1,
+        "ready": true
+      },
+      "revisionBefore": 10,
+      "turn": 6,
+      "hpBefore": [
+        14,
+        18
+      ],
+      "hpAfter": [
+        12,
+        18
+      ],
+      "handCountsBefore": [
+        6,
+        6
+      ],
+      "aVisibleHandCards": [
+        "fox",
+        "wolf",
+        "fox",
+        "wolf",
+        "acorn_squirrel",
+        "turtle"
+      ],
+      "bOwnVisibleHandCount": 6,
+      "floatFrames": 31,
+      "ticketCasterCounts": [
+        40
+      ],
+      "actualDepthDraws": [
+        0
+      ],
+      "actualDrawnCasters": [
+        0
+      ],
+      "fullColorDraws": [
+        74
+      ],
+      "bufferDirectColorDraws": [
+        74
+      ],
+      "unclassifiedColorDraws": [
+        0
+      ],
+      "allCompleteColorCountersValid": true,
+      "allInputSame": true,
+      "allHelperCommitted": true,
+      "allHelperReused": true,
+      "allMapPresent": true,
+      "reason": [
+        "same-successful-key"
+      ],
+      "opacityMin": 0.030555555423100424,
+      "opacityMax": 1,
+      "nativeFrames": 92,
+      "nativeMaxGapMs": 36,
+      "raf": {
+        "clickMs": 79.4,
+        "endMs": 3079.4,
+        "durationMs": 3000,
+        "sampleCount": 180,
+        "maximumOverlappingRafGapMs": 20.799999999999955,
+        "over250ms": 0,
+        "boundarySpanningGaps": [
+          {
+            "from": 77.9,
+            "to": 94.6,
+            "ms": 16.69999999999999
+          },
+          {
+            "from": 3078,
+            "to": 3095.4,
+            "ms": 17.40000000000009
+          }
+        ],
+        "lastSampleBeforeEndMs": 3078,
+        "firstSampleAtOrAfterEndMs": 3095.4,
+        "uncoveredTailMs": 1.400000000000091,
+        "tailBracketed": true,
+        "maximumUpdateMs": 1.8,
+        "maximumSubmitMs": 1.4,
+        "beforeClickSampleCount": 6,
+        "afterWindowSampleCount": 1,
+        "caveat": "RAF gaps touching the fixed window retain their full duration; boundary gaps can include time outside it. Unbracketed tail is an unknown stall, never zero. Trace totals cover setup and cleanup and are not comparable wall time."
+      },
+      "quality": {
+        "hpChanged": true,
+        "turn": 6,
+        "aHandCards": [
+          "fox",
+          "wolf",
+          "fox",
+          "wolf",
+          "acorn_squirrel",
+          "turtle"
+        ],
+        "bHandCount": 6,
+        "actualAQuality": {
+          "level": 0,
+          "pixelScale": 1,
+          "shadowMapSize": 1024
+        },
+        "actualBQuality": {
+          "level": 0,
+          "pixelScale": 1,
+          "shadowMapSize": 1024
+        },
+        "BDocumentTimeOrigin": 1791690741990.2,
+        "actualCasterCounts": [
+          0
+        ],
+        "caveat": "Native turn/reload/preparation and caches are observable confounds, not normalized by hidden state or quality overrides"
+      },
+      "actualRenderers": {
+        "A": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+        "B": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)"
+      },
+      "buffers": {
+        "A": {
+          "width": 708,
+          "height": 208
+        },
+        "B": {
+          "width": 1280,
+          "height": 546
+        }
+      },
+      "dpr": {
+        "A": 1,
+        "B": 1
+      },
+      "probes": {
+        "A": {
+          "timeOrigin": 1791690726624,
+          "retained": 240,
+          "dropped": 720
+        },
+        "B": {
+          "timeOrigin": 1791690741990.2,
+          "retained": 38,
+          "dropped": 0
+        }
+      },
+      "overhead": {
+        "observerMedianMs": 0.19999998807907104,
+        "observerP95Ms": 0.30000001192092896,
+        "observerMaxMs": 0.30000007152557373,
+        "helperPreMedianMs": 0.5,
+        "helperPostMedianMs": 0.5
+      },
+      "nativeFile": "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-3-candidate-arena-only.webm",
+      "screenshots": [
+        "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-3-candidate-before.png",
+        "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-3-candidate-after.png"
+      ]
+    },
+    {
+      "index": 4,
+      "variant": "baseline",
+      "source": {
+        "uidFingerprint": "6ca202c88e549dff",
+        "cardId": "rabbit",
+        "atk": 2,
+        "hp": 1,
+        "ready": true
+      },
+      "revisionBefore": 13,
+      "turn": 8,
+      "hpBefore": [
+        12,
+        18
+      ],
+      "hpAfter": [
+        10,
+        18
+      ],
+      "handCountsBefore": [
+        7,
+        7
+      ],
+      "aVisibleHandCards": [
+        "fox",
+        "wolf",
+        "fox",
+        "wolf",
+        "acorn_squirrel",
+        "turtle",
+        "rabbit"
+      ],
+      "bOwnVisibleHandCount": 7,
+      "floatFrames": 31,
+      "ticketCasterCounts": [
+        42
+      ],
+      "actualDepthDraws": [
+        42
+      ],
+      "actualDrawnCasters": [
+        42
+      ],
+      "fullColorDraws": [
+        78
+      ],
+      "bufferDirectColorDraws": [
+        78
+      ],
+      "unclassifiedColorDraws": [
+        0
+      ],
+      "allCompleteColorCountersValid": true,
+      "allInputSame": true,
+      "allHelperCommitted": true,
+      "allHelperReused": false,
+      "allMapPresent": true,
+      "reason": [
+        "baseline-disabled"
+      ],
+      "opacityMin": 0.032222222089767834,
+      "opacityMax": 1,
+      "nativeFrames": 92,
+      "nativeMaxGapMs": 49,
+      "raf": {
+        "clickMs": 77.4,
+        "endMs": 3077.4,
+        "durationMs": 3000,
+        "sampleCount": 180,
+        "maximumOverlappingRafGapMs": 19.09999999999991,
+        "over250ms": 0,
+        "boundarySpanningGaps": [
+          {
+            "from": 76,
+            "to": 90.6,
+            "ms": 14.599999999999994
+          },
+          {
+            "from": 3074.1,
+            "to": 3093.2,
+            "ms": 19.09999999999991
+          }
+        ],
+        "lastSampleBeforeEndMs": 3074.1,
+        "firstSampleAtOrAfterEndMs": 3093.2,
+        "uncoveredTailMs": 3.300000000000182,
+        "tailBracketed": true,
+        "maximumUpdateMs": 1.5,
+        "maximumSubmitMs": 1.3,
+        "beforeClickSampleCount": 6,
+        "afterWindowSampleCount": 2,
+        "caveat": "RAF gaps touching the fixed window retain their full duration; boundary gaps can include time outside it. Unbracketed tail is an unknown stall, never zero. Trace totals cover setup and cleanup and are not comparable wall time."
+      },
+      "quality": {
+        "hpChanged": true,
+        "turn": 8,
+        "aHandCards": [
+          "fox",
+          "wolf",
+          "fox",
+          "wolf",
+          "acorn_squirrel",
+          "turtle",
+          "rabbit"
+        ],
+        "bHandCount": 7,
+        "actualAQuality": {
+          "level": 0,
+          "pixelScale": 1,
+          "shadowMapSize": 1024
+        },
+        "actualBQuality": {
+          "level": 0,
+          "pixelScale": 1,
+          "shadowMapSize": 1024
+        },
+        "BDocumentTimeOrigin": 1791690746995.6,
+        "actualCasterCounts": [
+          42
+        ],
+        "caveat": "Native turn/reload/preparation and caches are observable confounds, not normalized by hidden state or quality overrides"
+      },
+      "actualRenderers": {
+        "A": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+        "B": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)"
+      },
+      "buffers": {
+        "A": {
+          "width": 708,
+          "height": 208
+        },
+        "B": {
+          "width": 1280,
+          "height": 546
+        }
+      },
+      "dpr": {
+        "A": 1,
+        "B": 1
+      },
+      "probes": {
+        "A": {
+          "timeOrigin": 1791690726624,
+          "retained": 240,
+          "dropped": 1028
+        },
+        "B": {
+          "timeOrigin": 1791690746995.6,
+          "retained": 38,
+          "dropped": 0
+        }
+      },
+      "overhead": {
+        "observerMedianMs": 0.19999998807907104,
+        "observerP95Ms": 0.30000001192092896,
+        "observerMaxMs": 0.30000001192092896,
+        "helperPreMedianMs": 0.6000000238418579,
+        "helperPostMedianMs": 0.5
+      },
+      "nativeFile": "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8-segment-4-baseline-arena-only.webm",
+      "screenshots": [
+        "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-4-baseline-before.png",
+        "shared-shadow-hardware-headed-2026-10-11T03-52-05-469Z-e30c2dc8--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-4-baseline-after.png"
+      ]
+    }
+  ],
+  "finding": "Two candidate segments retain effective map with exact inputSame/postcommit reuse, zero depth draws during floating opacity changes, and full native color draws. M4 native clips already meet the unchanged250ms rule in every variant.",
+  "limits": [
+    "Natural end turns change hand-card geometry and caster/color counts; four scenes are not equal workloads",
+    "CurrentThree0.186.1Sprite usesbuffer-direct; unclassified0 is normal. Complete counters and opacity do not alone prove visible glyph or shadow-pixel preservation",
+    "Bookkeeping/helper timings are CPU, not GPU completion or inferred software speedup",
+    "No change to production b059. This local mechanism result cannot resolve originalCI977ms failure; pixel and official software evidence are separate",
+    "Old pre-review builds,4190prebodyred,software red/interrupted red and prior actually tested comment version all remain retained"
+  ]
+}

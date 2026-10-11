@@ -1,0 +1,347 @@
+{
+  "schema": 1,
+  "sourceRunId": 38110136254,
+  "sourceRunAttempt": 1,
+  "artifactId": 11691488580,
+  "sourceHead": "2f3779c4f749f674346cb97d270567aef789e7ad",
+  "checkoutHead": "1cf24e9472d26f79f1dd58f0f63285f26a17c4af",
+  "sourceTree": "69379f380fa87b0e33e2bf3ee951bd08e662bb7a",
+  "archiveSha256": "8f3706197b86e512ea6ef848535b0205e2ecce1f1ef2758e45efb493d0b2f60c",
+  "files": [
+    {
+      "file": "served-build-spellwood-local-browser-dKL9zm.json",
+      "sha256": "9bf54227ecf49de65bc3674127daec04b893c67ea6dc2645d358c9527012c390",
+      "bytes": 592
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-1-baseline-after.png",
+      "sha256": "cfbc679e0503418cccbf15b194a0d1a77f70fbe2ac7dd3e6c20ffc15c553985e",
+      "bytes": 197332
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-1-baseline-before.png",
+      "sha256": "ff369aa442dcf4cfd691c299e011db91c131107736d868f4515ab2e017b22d80",
+      "bytes": 200876
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-2-candidate-after.png",
+      "sha256": "d13bd4eb4b6778b43c1d2bb3c8007f36aeeaa00c07ca9aa155010adb44feba75",
+      "bytes": 198419
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-2-candidate-before.png",
+      "sha256": "71c3b56b4f27b3ceba66ef6909e8c1e42e9ca3bf3c327318b1e2fe20bbb23140",
+      "bytes": 202029
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-3-candidate-after.png",
+      "sha256": "853973d13c68abee6b771b976d951572a8bf941319f8ae2be876caa34075db30",
+      "bytes": 198576
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-3-candidate-before.png",
+      "sha256": "3b7734f597825337b62a7e1111503996426b1990f156486d7ae8e6946eedcef0",
+      "bytes": 202132
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-4-baseline-after.png",
+      "sha256": "125d9e5eed6760040db7ce5d70e5eafd6cdce28a9e64a1cf56cd4b958025d007",
+      "bytes": 198480
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61--shared-shadow-diagnostic-ABBA-repeats-four-real-hero-attacks-with-baseline-A-and-reloaded-baseline--segment-4-baseline-before.png",
+      "sha256": "dbe7f8b5ccf83249b19a0bf110898afdf3413922a22d4cb2c5e3dba582280b17",
+      "bytes": 202183
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-checkpoints.json",
+      "sha256": "4dd3d6b6ebd61756b25c88c1c94e97fc5f095caa48377f1b1e05e707e2e3cddb",
+      "bytes": 2300821
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-environment.json",
+      "sha256": "62b30d66a76c9403d5d750f0f11a6e0e47ad99c85a3607a6b9d4727322d41df8",
+      "bytes": 1757
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-http.json",
+      "sha256": "e12b45521f29088daa82868bef551b9b60900e692686fc063eb3bae482fd0bf3",
+      "bytes": 1708
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-manifest.json",
+      "sha256": "01228345c4e85439e8e796ebb0d2d0da4178fb618978c666e2ef7eedf543fced",
+      "bytes": 132889
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-observations.json",
+      "sha256": "5c0e65cd0a45e677323af884d552f82c0752397cc591f4aef3fbfe401bd6a9a6",
+      "bytes": 488096
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-report.json",
+      "sha256": "a30ebd1d76f8c680863a9bd32d7dff624181b6dda5b166f2cbc356ea33e69f49",
+      "bytes": 3099
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-arena-only.webm",
+      "sha256": "31fe805e8f8695eeba968fee89651762903742f1d392c7b0c74abb6f0ae6f5f1",
+      "bytes": 45432
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-00.png",
+      "sha256": "6197e63e7010f4db83318953003519ef96422d8933e7987c2a2e04576e3b0892",
+      "bytes": 62860
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-01.png",
+      "sha256": "59eaa94349c27271cfa0749b2fe8d4da669cfe5a154b003fff8b2313bde4f9f0",
+      "bytes": 63251
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-02.png",
+      "sha256": "c0890bb2e86acf6e2d0e257576c6f21fdd25cbc7aa85b0bf79f0c1908a98b54f",
+      "bytes": 63911
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-03.png",
+      "sha256": "b1f451cdd80b537ad87d3568a9de373b960f9fc98cf8fa6b963b389e81d30140",
+      "bytes": 66892
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-04.png",
+      "sha256": "1a3db75fe3ca6fd98ee5248c8621e2b84ba240c9e4f61a706cb61475bae4155f",
+      "bytes": 67213
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-05.png",
+      "sha256": "fe7ca9fb80e37829f2c7f6d8e640e38e4c08dd086ee9808bb8702d2b30a061bf",
+      "bytes": 64931
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-06.png",
+      "sha256": "d870861c9e14b6a71e848c7dfc43927ad3960e12c80b1b55f66273b13f4460b6",
+      "bytes": 65060
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-07.png",
+      "sha256": "d6916bfe954f62db4379ad922e40db68a57e4aaab1f6a97265203d22ce29c755",
+      "bytes": 64487
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-08.png",
+      "sha256": "a34c8486c6096b637037654572c9a5f0dd7d924f2eeb1d9492f71a07303c3067",
+      "bytes": 65143
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-09.png",
+      "sha256": "1f04470b901db028e217ba0ac1c47b3611727cd22c8b47cf2c8fad90dd1bb160",
+      "bytes": 65296
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-10.png",
+      "sha256": "cffdb7ac32ceba39de61b49417fba1222a650287889cb78c9ed3f3c758547495",
+      "bytes": 64757
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-frame-frame-11.png",
+      "sha256": "3c40c4f24344c27f421f5b6973e29d3e0d28fdb0a6a997ae65a61c409c88547f",
+      "bytes": 64924
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-arena-only.webm",
+      "sha256": "df04899c6cbf3cd2d469cda274ddb980b99edb4ac5224ef47af9a77f23e4eaee",
+      "bytes": 45456
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-00.png",
+      "sha256": "2f352832be1caf57b0aee9a2f6e5821de799253ad72f7076f9b3061fc7d30f2b",
+      "bytes": 62762
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-01.png",
+      "sha256": "0ca9d76e8213f577dc1f07fa061a2a061ee6763169938761fe786d508d633518",
+      "bytes": 63314
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-02.png",
+      "sha256": "a48068b5450bee01c579538754924841f1cebe9c66423dc812b2e227df7dbe75",
+      "bytes": 64282
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-03.png",
+      "sha256": "6f846a342600d8b09d9248458a2e8ab25c76b9f7d3512bdbf8619ef908c886d4",
+      "bytes": 68044
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-04.png",
+      "sha256": "6b61662c8d5f29354abc2805b344b3355bb840a8faf3e204c2789585e33d8df0",
+      "bytes": 69072
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-05.png",
+      "sha256": "ccbff132719246ca5fd547b10948e7a3cf2609a73153e1404d2bec42f31d835e",
+      "bytes": 67673
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-06.png",
+      "sha256": "7d51136991f01c51e39ce9111e4e2bc1ea83ba0899f55f5c70055b1742c0c3fd",
+      "bytes": 68106
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-07.png",
+      "sha256": "0b6ec475e148544f9a503f7279ab6f75852c93fceccc720a45c2acac90821258",
+      "bytes": 67330
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-08.png",
+      "sha256": "eccb8b621e3c5f17db41b2ee28016f6ee3a689ec634ef032ed76781e3b325f96",
+      "bytes": 67864
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-09.png",
+      "sha256": "4169c581226c200f1abff4c506143a56cb6ffb105dd4669cb1a36dc72a313f2b",
+      "bytes": 67550
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-10.png",
+      "sha256": "da547c9319538d0aecd1e8895b7fd26f48ea9e33feab3e26a4596687f5c61c12",
+      "bytes": 67229
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-arena-only.webm",
+      "sha256": "03b24cba6a36edefb02d3d15d6a7af819c3cfe4c42358e1ea2786b3bae2c2cff",
+      "bytes": 47495
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-frame-frame-11.png",
+      "sha256": "74b1dc9ab5c991c08380e444e2903954199e8083bfd9a0fecc75dcc9db44c529",
+      "bytes": 67441
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-00.png",
+      "sha256": "87246b8fece78b5ba6a2e0561999dee8627705292091e5948095eef5f991b2e3",
+      "bytes": 62458
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-01.png",
+      "sha256": "d9ecdcbccf7a9547ee55a6870d3cfd687612825875c0305c33a060caaa09eb9c",
+      "bytes": 62819
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-02.png",
+      "sha256": "6b9c33fd8c00726d5aa1b94b031dc7c4f202ecbc50322bc3eb83862abcae4a8c",
+      "bytes": 63092
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-03.png",
+      "sha256": "b5752ed7ced7b153b1fe53f99fa574b937c5d9fa2eb813dc6f21fb23b438bcb3",
+      "bytes": 66288
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-04.png",
+      "sha256": "9b598e01c7f6c172cd6ed7d1a1ca2b4ea4fa56bf697987c982441e52cefeac8f",
+      "bytes": 66730
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-05.png",
+      "sha256": "74592aa3c57df90791dfe4e2e885a62d710153893dfe81871cf45255f602ed4b",
+      "bytes": 64521
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-06.png",
+      "sha256": "c19e3c21670c2a4de581b6bc2fdbdd2202913329a97ed88458518b00ecb2f1d6",
+      "bytes": 64932
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-07.png",
+      "sha256": "78380815a60e0bc7121523b8579fbd0b517b551395b18b93c8f387e9136a1c00",
+      "bytes": 65106
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-08.png",
+      "sha256": "767b92cacee47322141af0c9a92f61dd0eda395793acdcb205f5dc7e9719629e",
+      "bytes": 64868
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-09.png",
+      "sha256": "c9ab4bb3265a9848299169db3b4242d53750e272fca1cac946f6396e55cb4b5e",
+      "bytes": 65864
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-10.png",
+      "sha256": "5213dae7a106fdc7ebcd9f4f9b631915474865ffc3e1be113497bab1e0be244c",
+      "bytes": 65289
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-frame-frame-11.png",
+      "sha256": "437555a46625e3a9c83d99add50d4b9a58a3962681775022ae29084f4ae08b5c",
+      "bytes": 65430
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-arena-only.webm",
+      "sha256": "9ee0a379b2a028a9e58db3b1291eafb4a0f2cfdc1b2f6d66b759913a769ce368",
+      "bytes": 45056
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-00.png",
+      "sha256": "1ccf6993dc8d4084a195e2aaec82d48a61424d8faf0cd145f8399ccef9f64f9f",
+      "bytes": 62366
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-01.png",
+      "sha256": "98600ffbac32748dbe48b61d6412963ac35c24a58481e2b090ecb4dbede1483e",
+      "bytes": 62761
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-02.png",
+      "sha256": "01299aa1cab57f858c39ecb159aea931c1098fc698f476dbe07a93b0b97eaffe",
+      "bytes": 63160
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-04.png",
+      "sha256": "5b467f3efd4a3cc7bc7788be6d4d1535d57fbe5a6676bab9f10f47cb9fa6744f",
+      "bytes": 67378
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-03.png",
+      "sha256": "0574247e58ae6be1c2a0d0d8aa8eda8cc7b4b88f799fa5fc7c8fe18304b28399",
+      "bytes": 66151
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-05.png",
+      "sha256": "4ba166816dcf8a3e1bba7ca9b86e6ef8ac37d3ac4f5df058ffb91de17513996d",
+      "bytes": 64601
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-06.png",
+      "sha256": "0c0709c4c6689c01281cc4c01aba5cfeadfb8cf43f12cd7d3b2e87d019a75d19",
+      "bytes": 64635
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-07.png",
+      "sha256": "2ed18cc8a98208d18eb8e3e2117398c72e4d7848daf7af288ab7cc8d5174ad59",
+      "bytes": 64223
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-08.png",
+      "sha256": "165942caf7d6b706c3e7436549975b4a9e98f2f353721a38ae482de52ffa1fef",
+      "bytes": 64580
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-09.png",
+      "sha256": "c5462687c240a27ec4302b1ec336ad7011b0d4ca40d37d215204fde46bf36f6a",
+      "bytes": 64427
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-10.png",
+      "sha256": "f55b71e76c1f33d4c08771f441c63782a0dee5d88b18771919f434cc7d0ce2a7",
+      "bytes": 64127
+    },
+    {
+      "file": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-frame-frame-11.png",
+      "sha256": "3233aca8fc4503f97ada650f3e1d4e60dc0f29475a0f0b4738d341ee8253e870",
+      "bytes": 64321
+    }
+  ]
+}

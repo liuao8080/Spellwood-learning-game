@@ -1,0 +1,798 @@
+{
+  "schema": 1,
+  "scope": "Independent read-only verification; no product/fixture mutation and no browser/GPU run",
+  "runId": 38110136254,
+  "jobId": 114383815060,
+  "jobConclusion": "success",
+  "artifactId": 11691488580,
+  "artifactName": "shared-shadow-38110136254-1",
+  "archiveBytes": 5025308,
+  "githubArchiveDigest": "sha256:8f3706197b86e512ea6ef848535b0205e2ecce1f1ef2758e45efb493d0b2f60c",
+  "downloadedArchiveSha256": "8f3706197b86e512ea6ef848535b0205e2ecce1f1ef2758e45efb493d0b2f60c",
+  "archiveDigestMatched": true,
+  "originalArtifactFiles": 67,
+  "sourceHead": "2f3779c4f749f674346cb97d270567aef789e7ad",
+  "checkoutHead": "1cf24e9472d26f79f1dd58f0f63285f26a17c4af",
+  "sourceTree": "69379f380fa87b0e33e2bf3ee951bd08e662bb7a",
+  "githubMergeCommitTreeAndDirectParentsIndependentlyMatched": true,
+  "checkoutParents": [
+    "6d7bb941218a5ad097fbd44100e67794f0d88db8",
+    "2f3779c4f749f674346cb97d270567aef789e7ad"
+  ],
+  "formalSha": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+  "helperSha": "8150dae434043fc209df42cfcda00688734f92c02c993870b434e5fb03f0cfa6",
+  "staticBundleHashes": [
+    {
+      "variant": "baseline",
+      "sha256": "d6f340fdd23732b2c38e73ec164dff3b65652fbdf3f9414aa5a258564f01ae72"
+    },
+    {
+      "variant": "candidate",
+      "sha256": "e7ecb7a40be5af30fc24b8aaa52bd3d2cd88052c4a7e508019fa5361668385aa"
+    }
+  ],
+  "sourceIntegrityReported": {
+    "productSources": true,
+    "formalApp": true,
+    "formalHtml": true,
+    "originals": true,
+    "diagnosticCode": true,
+    "sharedOwnership": true,
+    "fixedSources": true,
+    "fixedBuild": true,
+    "generatedSuite": true,
+    "servedSnapshot": true
+  },
+  "localReferenceReadback": [
+    {
+      "group": "productSources",
+      "expectedReferences": 104,
+      "locallyAvailable": 104,
+      "matching": 104,
+      "mismatches": []
+    },
+    {
+      "group": "formalApp",
+      "expectedReferences": 1,
+      "locallyAvailable": 1,
+      "matching": 1,
+      "mismatches": []
+    },
+    {
+      "group": "formalHtml",
+      "expectedReferences": 1,
+      "locallyAvailable": 1,
+      "matching": 1,
+      "mismatches": []
+    },
+    {
+      "group": "originals",
+      "expectedReferences": 5,
+      "locallyAvailable": 5,
+      "matching": 5,
+      "mismatches": []
+    },
+    {
+      "group": "diagnosticCode",
+      "expectedReferences": 11,
+      "locallyAvailable": 11,
+      "matching": 11,
+      "mismatches": []
+    },
+    {
+      "group": "sharedOwnership",
+      "expectedReferences": 2,
+      "locallyAvailable": 2,
+      "matching": 2,
+      "mismatches": []
+    },
+    {
+      "group": "fixedSources",
+      "expectedReferences": 176,
+      "locallyAvailable": 176,
+      "matching": 176,
+      "mismatches": []
+    },
+    {
+      "group": "fixedBuild",
+      "expectedReferences": 7,
+      "locallyAvailable": 7,
+      "matching": 6,
+      "mismatches": [
+        "test-results/shared-shadow-fixed/build-manifest.json"
+      ]
+    },
+    {
+      "group": "generatedSuite",
+      "expectedReferences": 3,
+      "locallyAvailable": 0,
+      "matching": 0,
+      "mismatches": []
+    },
+    {
+      "group": "servedSnapshot",
+      "expectedReferences": 6,
+      "locallyAvailable": 0,
+      "matching": 0,
+      "mismatches": []
+    }
+  ],
+  "buildManifestDifferenceScope": [
+    "builtAt",
+    "commit",
+    "tree"
+  ],
+  "unavailableLocalReferences": "Generated CI suite and runtime served work files are not local artifact contents; remote sourceIntegrity plus HTTP exact hashes are retained, not mislabeled as independent local file readback.",
+  "diagnosticOutcome": "diagnostic-completed-with-original-gap-failures",
+  "formalAcceptance": false,
+  "originalGapRuleMs": 250,
+  "segments": [
+    {
+      "index": 1,
+      "variant": "baseline",
+      "nativeFile": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-1-baseline-arena-only.webm",
+      "nativeSha256": "31fe805e8f8695eeba968fee89651762903742f1d392c7b0c74abb6f0ae6f5f1",
+      "nativeShaMatched": true,
+      "sourceFramePTSSeconds": [
+        0,
+        0.156,
+        0.322,
+        0.478,
+        0.635,
+        0.801,
+        0.98,
+        1.76,
+        2.44,
+        2.592,
+        2.748,
+        2.903,
+        3.059,
+        3.212,
+        3.368,
+        3.521,
+        3.677
+      ],
+      "maximumSourcePTSGapMs": 780,
+      "original250msGatePassed": false,
+      "sameClockRafOver250ms": [
+        {
+          "fromClickMs": 100.70000000000005,
+          "toClickMs": 746.8000000000002,
+          "gapMs": 646.1000000000001
+        },
+        {
+          "fromClickMs": 881.1000000000001,
+          "toClickMs": 1478.1,
+          "gapMs": 596.9999999999998
+        }
+      ],
+      "tailBracketed": true,
+      "bRetainedRows": 9,
+      "bDroppedRows": 0,
+      "floatRows": 2,
+      "floatRowsActualDepth": [
+        39
+      ],
+      "floatRowsFullColor": [
+        71
+      ],
+      "ticketCasterCounts": [
+        39
+      ],
+      "bSceneRowsClickRelativeUsingRecordedDocumentTimeOrigins": [
+        {
+          "clickRelativeMs": -7352.2998046875,
+          "actualDepthDraws": 39,
+          "actualColorDraws": 70,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": false
+        },
+        {
+          "clickRelativeMs": -6222.099853515625,
+          "actualDepthDraws": 39,
+          "actualColorDraws": 70,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": -5488.7998046875,
+          "actualDepthDraws": 39,
+          "actualColorDraws": 70,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": -5072.89990234375,
+          "actualDepthDraws": 39,
+          "actualColorDraws": 70,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 13.30029296875,
+          "actualDepthDraws": 39,
+          "actualColorDraws": 71,
+          "floatSpriteCount": 1,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 383.400146484375,
+          "actualDepthDraws": 39,
+          "actualColorDraws": 71,
+          "floatSpriteCount": 1,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 740.60009765625,
+          "actualDepthDraws": 39,
+          "actualColorDraws": 70,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 1100.900146484375,
+          "actualDepthDraws": 39,
+          "actualColorDraws": 70,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        }
+      ],
+      "aQuality": {
+        "level": 3,
+        "pixelScale": 0.65,
+        "shadowMapSize": 512
+      },
+      "bQuality": {
+        "level": 0,
+        "pixelScale": 1,
+        "shadowMapSize": 1024
+      },
+      "aBuffer": {
+        "width": 460,
+        "height": 135
+      },
+      "bBuffer": {
+        "width": 1280,
+        "height": 546
+      },
+      "oneAcceptedAttack": true,
+      "revisionDelta": 1,
+      "targetHpDelta": -1,
+      "turn": 4,
+      "handCounts": [
+        5,
+        5
+      ],
+      "clockAlignment": {
+        "method": "B relative to trusted A click = (B.timeOrigin - A.timeOrigin) + B.absPerformanceTime - A.trustedClick.absPerformanceTime; never media PTS",
+        "aDocumentTimeOriginMs": 1791691232801.4,
+        "bDocumentTimeOriginMs": 1791691266681.3,
+        "aTrustedClickAbsPerformanceMs": 44830.2,
+        "aDomClickElapsedMs": 1120.1,
+        "precisionCaveat": "Recorded browser timing precision; sub-millisecond ordering is not exact. Time origins do not align native media PTS."
+      }
+    },
+    {
+      "index": 2,
+      "variant": "candidate",
+      "nativeFile": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-2-candidate-arena-only.webm",
+      "nativeSha256": "df04899c6cbf3cd2d469cda274ddb980b99edb4ac5224ef47af9a77f23e4eaee",
+      "nativeShaMatched": true,
+      "sourceFramePTSSeconds": [
+        0,
+        0.157,
+        0.325,
+        0.483,
+        0.644,
+        0.8,
+        1.049,
+        2.032,
+        2.476,
+        2.633,
+        2.798,
+        2.955,
+        3.114,
+        3.267,
+        3.429,
+        3.505,
+        3.661,
+        3.818
+      ],
+      "maximumSourcePTSGapMs": 983.0000000000001,
+      "original250msGatePassed": false,
+      "sameClockRafOver250ms": [
+        {
+          "fromClickMs": 92.39999999999986,
+          "toClickMs": 723.6999999999998,
+          "gapMs": 631.3
+        },
+        {
+          "fromClickMs": 723.6999999999998,
+          "toClickMs": 1075.2999999999997,
+          "gapMs": 351.5999999999999
+        },
+        {
+          "fromClickMs": 1075.2999999999997,
+          "toClickMs": 1420.5,
+          "gapMs": 345.2000000000003
+        }
+      ],
+      "tailBracketed": true,
+      "bRetainedRows": 9,
+      "bDroppedRows": 0,
+      "floatRows": 2,
+      "floatRowsActualDepth": [
+        0
+      ],
+      "floatRowsFullColor": [
+        75
+      ],
+      "ticketCasterCounts": [
+        41
+      ],
+      "bSceneRowsClickRelativeUsingRecordedDocumentTimeOrigins": [
+        {
+          "clickRelativeMs": -7432.69970703125,
+          "actualDepthDraws": 41,
+          "actualColorDraws": 74,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": false
+        },
+        {
+          "clickRelativeMs": -6222.599853515625,
+          "actualDepthDraws": 41,
+          "actualColorDraws": 74,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": -5459.099853515625,
+          "actualDepthDraws": 41,
+          "actualColorDraws": 74,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": -4964.69970703125,
+          "actualDepthDraws": 0,
+          "actualColorDraws": 74,
+          "floatSpriteCount": 0,
+          "reuse": true,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 12.80029296875,
+          "actualDepthDraws": 0,
+          "actualColorDraws": 75,
+          "floatSpriteCount": 1,
+          "reuse": true,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 369.400146484375,
+          "actualDepthDraws": 0,
+          "actualColorDraws": 75,
+          "floatSpriteCount": 1,
+          "reuse": true,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 709.30029296875,
+          "actualDepthDraws": 0,
+          "actualColorDraws": 74,
+          "floatSpriteCount": 0,
+          "reuse": true,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 1005.80029296875,
+          "actualDepthDraws": 0,
+          "actualColorDraws": 74,
+          "floatSpriteCount": 0,
+          "reuse": true,
+          "postCommitted": true
+        }
+      ],
+      "aQuality": {
+        "level": 3,
+        "pixelScale": 0.65,
+        "shadowMapSize": 512
+      },
+      "bQuality": {
+        "level": 0,
+        "pixelScale": 1,
+        "shadowMapSize": 1024
+      },
+      "aBuffer": {
+        "width": 460,
+        "height": 135
+      },
+      "bBuffer": {
+        "width": 1280,
+        "height": 546
+      },
+      "oneAcceptedAttack": true,
+      "revisionDelta": 1,
+      "targetHpDelta": -1,
+      "turn": 6,
+      "handCounts": [
+        6,
+        6
+      ],
+      "clockAlignment": {
+        "method": "B relative to trusted A click = (B.timeOrigin - A.timeOrigin) + B.absPerformanceTime - A.trustedClick.absPerformanceTime; never media PTS",
+        "aDocumentTimeOriginMs": 1791691232801.4,
+        "bDocumentTimeOriginMs": 1791691285274.6,
+        "aTrustedClickAbsPerformanceMs": 63880.499999999985,
+        "aDomClickElapsedMs": 1202.4,
+        "precisionCaveat": "Recorded browser timing precision; sub-millisecond ordering is not exact. Time origins do not align native media PTS."
+      }
+    },
+    {
+      "index": 3,
+      "variant": "candidate",
+      "nativeFile": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-3-candidate-arena-only.webm",
+      "nativeSha256": "03b24cba6a36edefb02d3d15d6a7af819c3cfe4c42358e1ea2786b3bae2c2cff",
+      "nativeShaMatched": true,
+      "sourceFramePTSSeconds": [
+        0,
+        0.16,
+        0.33,
+        0.486,
+        0.647,
+        0.805,
+        1.06,
+        1.798,
+        2.47,
+        2.63,
+        2.796,
+        2.957,
+        3.12,
+        3.284,
+        3.483,
+        3.644,
+        3.729,
+        3.886
+      ],
+      "maximumSourcePTSGapMs": 738,
+      "original250msGatePassed": false,
+      "sameClockRafOver250ms": [
+        {
+          "fromClickMs": 93.59999999999991,
+          "toClickMs": 725.2,
+          "gapMs": 631.6000000000001
+        },
+        {
+          "fromClickMs": 831.8999999999999,
+          "toClickMs": 1424.9999999999998,
+          "gapMs": 593.0999999999999
+        }
+      ],
+      "tailBracketed": true,
+      "bRetainedRows": 9,
+      "bDroppedRows": 0,
+      "floatRows": 2,
+      "floatRowsActualDepth": [
+        0
+      ],
+      "floatRowsFullColor": [
+        79
+      ],
+      "ticketCasterCounts": [
+        43
+      ],
+      "bSceneRowsClickRelativeUsingRecordedDocumentTimeOrigins": [
+        {
+          "clickRelativeMs": -7193.999755859375,
+          "actualDepthDraws": 43,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": false
+        },
+        {
+          "clickRelativeMs": -6121.19970703125,
+          "actualDepthDraws": 43,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": -5435.19970703125,
+          "actualDepthDraws": 43,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": -5001.19970703125,
+          "actualDepthDraws": 0,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": true,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 11.000244140625,
+          "actualDepthDraws": 0,
+          "actualColorDraws": 79,
+          "floatSpriteCount": 1,
+          "reuse": true,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 370.000244140625,
+          "actualDepthDraws": 0,
+          "actualColorDraws": 79,
+          "floatSpriteCount": 1,
+          "reuse": true,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 720.80029296875,
+          "actualDepthDraws": 0,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": true,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 1080.2001953125,
+          "actualDepthDraws": 0,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": true,
+          "postCommitted": true
+        }
+      ],
+      "aQuality": {
+        "level": 3,
+        "pixelScale": 0.65,
+        "shadowMapSize": 512
+      },
+      "bQuality": {
+        "level": 0,
+        "pixelScale": 1,
+        "shadowMapSize": 1024
+      },
+      "aBuffer": {
+        "width": 460,
+        "height": 135
+      },
+      "bBuffer": {
+        "width": 1280,
+        "height": 546
+      },
+      "oneAcceptedAttack": true,
+      "revisionDelta": 1,
+      "targetHpDelta": -1,
+      "turn": 8,
+      "handCounts": [
+        7,
+        7
+      ],
+      "clockAlignment": {
+        "method": "B relative to trusted A click = (B.timeOrigin - A.timeOrigin) + B.absPerformanceTime - A.trustedClick.absPerformanceTime; never media PTS",
+        "aDocumentTimeOriginMs": 1791691232801.4,
+        "bDocumentTimeOriginMs": 1791691303968.3,
+        "aTrustedClickAbsPerformanceMs": 82071.90000000001,
+        "aDomClickElapsedMs": 1217.7,
+        "precisionCaveat": "Recorded browser timing precision; sub-millisecond ordering is not exact. Time origins do not align native media PTS."
+      }
+    },
+    {
+      "index": 4,
+      "variant": "baseline",
+      "nativeFile": "shared-shadow-official-ci-default-2026-10-11T04-00-30-610Z-f2053e61-segment-4-baseline-arena-only.webm",
+      "nativeSha256": "9ee0a379b2a028a9e58db3b1291eafb4a0f2cfdc1b2f6d66b759913a769ce368",
+      "nativeShaMatched": true,
+      "sourceFramePTSSeconds": [
+        0,
+        0.159,
+        0.357,
+        0.439,
+        0.598,
+        0.765,
+        0.934,
+        1.419,
+        2.411,
+        2.59,
+        2.749,
+        2.941,
+        3.1,
+        3.186,
+        3.344,
+        3.517,
+        3.672,
+        3.833
+      ],
+      "maximumSourcePTSGapMs": 992,
+      "original250msGatePassed": false,
+      "sameClockRafOver250ms": [
+        {
+          "fromClickMs": 10.100000000000136,
+          "toClickMs": 391.20000000000005,
+          "gapMs": 381.0999999999999
+        },
+        {
+          "fromClickMs": 494.9000000000001,
+          "toClickMs": 1137.8999999999999,
+          "gapMs": 642.9999999999998
+        },
+        {
+          "fromClickMs": 1137.8999999999999,
+          "toClickMs": 1484.1000000000001,
+          "gapMs": 346.2000000000003
+        }
+      ],
+      "tailBracketed": true,
+      "bRetainedRows": 9,
+      "bDroppedRows": 0,
+      "floatRows": 2,
+      "floatRowsActualDepth": [
+        43
+      ],
+      "floatRowsFullColor": [
+        79
+      ],
+      "ticketCasterCounts": [
+        43
+      ],
+      "bSceneRowsClickRelativeUsingRecordedDocumentTimeOrigins": [
+        {
+          "clickRelativeMs": -7323.999755859375,
+          "actualDepthDraws": 43,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": false
+        },
+        {
+          "clickRelativeMs": -6156.699951171875,
+          "actualDepthDraws": 43,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": -5486.099853515625,
+          "actualDepthDraws": 43,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": -5042.099853515625,
+          "actualDepthDraws": 43,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 14.7001953125,
+          "actualDepthDraws": 43,
+          "actualColorDraws": 79,
+          "floatSpriteCount": 1,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 391.60009765625,
+          "actualDepthDraws": 43,
+          "actualColorDraws": 79,
+          "floatSpriteCount": 1,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 771.60009765625,
+          "actualDepthDraws": 43,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        },
+        {
+          "clickRelativeMs": 1130.60009765625,
+          "actualDepthDraws": 43,
+          "actualColorDraws": 78,
+          "floatSpriteCount": 0,
+          "reuse": false,
+          "postCommitted": true
+        }
+      ],
+      "aQuality": {
+        "level": 3,
+        "pixelScale": 0.65,
+        "shadowMapSize": 512
+      },
+      "bQuality": {
+        "level": 0,
+        "pixelScale": 1,
+        "shadowMapSize": 1024
+      },
+      "aBuffer": {
+        "width": 460,
+        "height": 135
+      },
+      "bBuffer": {
+        "width": 1280,
+        "height": 546
+      },
+      "oneAcceptedAttack": true,
+      "revisionDelta": 1,
+      "targetHpDelta": -1,
+      "turn": 10,
+      "handCounts": [
+        7,
+        7
+      ],
+      "clockAlignment": {
+        "method": "B relative to trusted A click = (B.timeOrigin - A.timeOrigin) + B.absPerformanceTime - A.trustedClick.absPerformanceTime; never media PTS",
+        "aDocumentTimeOriginMs": 1791691232801.4,
+        "bDocumentTimeOriginMs": 1791691321811.6,
+        "aTrustedClickAbsPerformanceMs": 99947.3,
+        "aDomClickElapsedMs": 1202.8,
+        "precisionCaveat": "Recorded browser timing precision; sub-millisecond ordering is not exact. Time origins do not align native media PTS."
+      }
+    }
+  ],
+  "cleanup": {
+    "state": "passed",
+    "operations": [
+      {
+        "stage": "diagnostics",
+        "label": "shared-shadow-A",
+        "startedAt": "2026-10-11T04:02:17.741Z",
+        "status": "passed",
+        "durationMs": 459
+      },
+      {
+        "stage": "contextClose",
+        "label": "shared-shadow-A",
+        "startedAt": "2026-10-11T04:02:18.205Z",
+        "status": "passed",
+        "durationMs": 22
+      },
+      {
+        "stage": "diagnostics",
+        "label": "shared-shadow-B",
+        "startedAt": "2026-10-11T04:02:18.232Z",
+        "status": "passed",
+        "durationMs": 375
+      },
+      {
+        "stage": "contextClose",
+        "label": "shared-shadow-B",
+        "startedAt": "2026-10-11T04:02:18.613Z",
+        "status": "passed",
+        "durationMs": 9
+      },
+      {
+        "stage": "serverClose",
+        "label": "owned-server",
+        "startedAt": "2026-10-11T04:02:18.625Z",
+        "status": "passed",
+        "durationMs": 15
+      }
+    ],
+    "failures": []
+  },
+  "conclusion": "Candidate removed the observed reduced-B depth subpass but all four native source recordings and same-clock RAF windows still contain stalls. This run does not establish that repeated reduced-B shadows are the sole cause or that this cache resolves the Ubuntu failure. Two floating frames per segment do not satisfy the diagnostic minimum of three; natural turns/reloads and caster counts are confounds. Finite performance contribution and GPU queue/completion remain unknown. Per-document timeOrigin alignment is not native PTS alignment."
+}

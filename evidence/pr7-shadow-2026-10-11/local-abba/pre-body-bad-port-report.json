@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "runId": "hardware-headed-2026-10-11T03-39-46-180Z-3433fcbb",
+  "formalAcceptance": false,
+  "playwrightExecutionStatus": "failed",
+  "attributable": true,
+  "sourceIntegrity": {
+    "productSources": true,
+    "formalApp": true,
+    "formalHtml": true,
+    "originals": true,
+    "diagnosticCode": true,
+    "sharedOwnership": true,
+    "fixedSources": true,
+    "fixedBuild": true,
+    "generatedSuite": true,
+    "servedSnapshot": true
+  },
+  "tests": [
+    {
+      "title": "@shared-shadow diagnostic ABBA repeats four real hero attacks with baseline A and reloaded baseline/cache B",
+      "playwrightStatus": "failed",
+      "expectedStatus": "passed",
+      "durationMs": 20101,
+      "retry": 0,
+      "errorCount": 1,
+      "coverage": []
+    }
+  ],
+  "diagnosticOutcome": "diagnostic-incomplete",
+  "originalGapRuleMs": 250,
+  "nativeGapFailureSegments": [],
+  "completeSegments": 0,
+  "cacheObservations": [],
+  "caveat": "A diagnostic completing is not green acceptance. Original formal CI and its prior failure remain independent; natural-turn/reload state confounds are recorded.",
+  "sourceHead": "1eb618be87023ebdb9c2e4fb7f2587b881e80a29",
+  "checkoutHead": "1eb618be87023ebdb9c2e4fb7f2587b881e80a29",
+  "sourceTree": "406e3371819900434a3fc52e094bb77df9042734",
+  "sourceTreeScope": "Actual checked-out content tree; may be the merge tree",
+  "formalAppSha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+  "executionEnvironment": "explicit-local-diagnostic"
+}

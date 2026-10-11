@@ -13,4 +13,8 @@
 *.mp3 binary
 *.m4a binary
 *.ogg binary
+*.webm binary
+*.zip binary
 *.docx binary
+# Retained original Node/TAP output keeps its literal diagnostic blank spaces.
+evidence/pr7-shadow-2026-10-11/controller-node/*.txt whitespace=-blank-at-eol

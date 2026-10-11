@@ -1,5 +1,6 @@
 import { CanvasTexture, SRGBColorSpace, LinearFilter } from "three";
 import { CARD } from "../cards.mjs";
+import { paintFrameRelief, paintMedallionRelief } from "./card-relief.mjs";
 import { HAND_FONT } from "./hand-layout.mjs";
 
 const individual = new Set(Object.keys(CARD).filter(id => CARD[id].art >= 6));
@@ -88,7 +89,8 @@ function lines(ctx, text, width) {
 
 /** Original card faces are textures on physical meshes, never whole-board screenshots. */
 export class CardTextures {
-  constructor({ onChange = () => {} } = {}) {
+  constructor({ onChange = () => {}, relief = true } = {}) {
+    this.relief = !!relief;
     this.onChange = onChange;
     this.entries = new Map();
     this.images = new Map();
@@ -156,6 +158,7 @@ export class CardTextures {
     round(ctx, 0, 0, 512, 720, 28); ctx.fill();
     ctx.fillStyle = colors[c.theme] || colors.leaf;
     round(ctx, 13, 13, 486, 694, 22); ctx.fill();
+    if(this.relief) paintFrameRelief(ctx,13,28,palette);
     ctx.save(); round(ctx, 25, 30, 462, 398, 16); ctx.clip();
     if (image && c.artPath) {
       // The nameplate starts at y=389, so it must not cover the contained image.
@@ -198,12 +201,14 @@ export class CardTextures {
     ctx.fillStyle = "#4d8799";
     ctx.beginPath(); ctx.arc(48, 52, 45, 0, Math.PI * 2); ctx.fill();
     ctx.strokeStyle = "#cfe6dc"; ctx.lineWidth = 5; ctx.stroke();
+    if(this.relief) paintMedallionRelief(ctx,48,52,45,"#4d8799","#cfe6dc",5);
     ctx.fillStyle = "#fff8dd"; ctx.font = "bold 80px Georgia,serif";
     ctx.fillText(String(entry.displayCost ?? c.cost), 48, 81);
     if (c.type !== "spell") {
       for (const [x, value, fill] of [[47, c.atk, "#bd9447"], [465, c.hp, "#b95d4e"]]) {
         ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(x, 670, 38, 0, Math.PI * 2); ctx.fill();
         ctx.strokeStyle = "#ecd8a6"; ctx.lineWidth = 5; ctx.stroke();
+        if(this.relief) paintMedallionRelief(ctx,x,670,38,fill,"#ecd8a6",5);
         ctx.fillStyle = "#fff8dc"; ctx.font = "bold 70px Georgia,serif"; ctx.fillText(String(value), x, 693);
       }
     } else {
@@ -222,6 +227,7 @@ export class CardTextures {
     frame.addColorStop(0, palette[0]); frame.addColorStop(.5, palette[1]); frame.addColorStop(1, palette[2]);
     ctx.fillStyle = frame; round(ctx, 0, 0, 512, 720, 25); ctx.fill();
     ctx.fillStyle = colors[card.theme] || colors.leaf; round(ctx, 10, 10, 492, 700, 18); ctx.fill();
+    if(this.relief) paintFrameRelief(ctx,10,25,palette);
     ctx.save(); round(ctx, 20, 22, 472, 323, 12); ctx.clip();
     if (image && card.artPath) {
       ctx.fillStyle = colors[card.theme] || colors.leaf; ctx.fillRect(20, 22, 472, 323);
@@ -249,11 +255,13 @@ export class CardTextures {
     summary.forEach((line, index) => ctx.fillText(line, 256, (summary.length === 1 ? 560 : 520) + index * 77, 442));
     ctx.fillStyle = "#286b7f"; ctx.beginPath(); ctx.arc(60, 62, 53, 0, Math.PI * 2); ctx.fill();
     ctx.strokeStyle = "#d8f5ed"; ctx.lineWidth = 5; ctx.stroke();
+    if(this.relief) paintMedallionRelief(ctx,60,62,53,"#286b7f","#d8f5ed",5);
     ctx.fillStyle = "#fff9e5"; ctx.font = `bold ${HAND_FONT.cost}px Georgia,serif`; ctx.fillText(String(entry.displayCost ?? card.cost), 60, 96);
     if (card.type !== "spell") {
       for (const [x, value, fill] of [[78, card.atk, "#a87629"], [434, card.hp, "#a7433c"]]) {
         ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(x, 664, 47, 0, Math.PI * 2); ctx.fill();
         ctx.strokeStyle = "#fff0c7"; ctx.lineWidth = 4; ctx.stroke();
+        if(this.relief) paintMedallionRelief(ctx,x,664,47,fill,"#fff0c7",4);
         ctx.fillStyle = "#fff8dd"; ctx.font = `bold ${HAND_FONT.stats}px Georgia,serif`; ctx.fillText(String(value), x, 695);
       }
     } else { ctx.fillStyle = "#635940"; ctx.font = "bold 42px sans-serif"; ctx.fillText("法术", 256, 675); }

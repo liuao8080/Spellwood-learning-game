@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "scope": "Original native-video/DOM evidence recheck, not a game replay",
+  "originalVideoSha256": "50093303a2fd68ada10422eae1d2abf088661c9b1f9eb3d745da3ef1c530ea49",
+  "unchangedNativeGapLimitMs": 250,
+  "nativeGate": "failed",
+  "nativeVideo": {
+    "file": "combat-motion-anonymous-arena-only.webm",
+    "bytes": 45249,
+    "sha256": "50093303a2fd68ada10422eae1d2abf088661c9b1f9eb3d745da3ef1c530ea49",
+    "codec": "vp8",
+    "width": 460,
+    "height": 135,
+    "audioStreams": 0,
+    "recordedFrames": 18,
+    "firstPtsSeconds": 0,
+    "lastPtsSeconds": 3.773,
+    "maximumFrameGapSeconds": 0.977
+  },
+  "trustedClickWindow": {
+    "clickMs": 1151.8,
+    "endMs": 4151.8,
+    "durationMs": 3000,
+    "sampleCount": 25,
+    "maximumOverlappingRafGapMs": 632.3999999999999,
+    "over250ms": 3,
+    "boundarySpanningGaps": [
+      {
+        "from": 1075.6,
+        "to": 1159.5,
+        "ms": 83.90000000000009
+      },
+      {
+        "from": 4089,
+        "to": 4175.9,
+        "ms": 86.89999999999964
+      }
+    ],
+    "lastSampleBeforeEndMs": 4089,
+    "firstSampleAtOrAfterEndMs": 4175.9,
+    "uncoveredTailMs": 62.80000000000018,
+    "tailBracketed": true,
+    "maximumUpdateMs": 3.8,
+    "maximumSubmitMs": 2.9,
+    "beforeClickSampleCount": 16,
+    "afterWindowSampleCount": 5,
+    "caveat": "RAF gaps touching the fixed window retain their full duration; boundary gaps can include time outside it. Unbracketed tail is an unknown stall, never zero. Trace totals cover setup and cleanup and are not comparable wall time."
+  },
+  "observedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "qualitySamples": [
+    {
+      "level": 3,
+      "pixelScale": 0.65,
+      "shadowMapSize": 512
+    }
+  ],
+  "authority": {
+    "renderer": "WebGL2",
+    "normalMotionSamples": 46,
+    "maximumSourceDisplacementPx": 270.6751174378613,
+    "sourceDisplacementAtFirstHpChangePx": 270.6751174378613,
+    "finalSourceDisplacementPx": 0,
+    "visualHpStates": [
+      {
+        "elapsedMs": 0.2,
+        "hp": 18
+      },
+      {
+        "elapsedMs": 2560.3,
+        "hp": 17
+      }
+    ],
+    "authoritativeHealthDelta": -1
+  },
+  "limits": [
+    "Passive diagnostics, DOM observations and media PTS have separate origins; no cross-clock phase alignment inferred",
+    "Native adjacent-frame gaps do not measure unknown time before the first or after the last encoded frame",
+    "Application update/submission numbers are CPU samples, not GPU completion times"
+  ]
+}

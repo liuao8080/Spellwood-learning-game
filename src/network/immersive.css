@@ -21,6 +21,8 @@ body.immersive{height:100dvh;overflow:hidden}
 /* The hand has its own orthographic camera; text stays at readable CSS sizes. */
 #hand-stage{position:fixed;z-index:6;left:190px;right:184px;bottom:env(safe-area-inset-bottom,0px);height:230px;pointer-events:auto}
 #hand-canvas{display:block;width:100%;height:100%;border-radius:18px 18px 0 0}
+#hand-canvas:focus-visible{outline:2px solid #baf3df;outline-offset:-2px}
+#hand-canvas[data-input-modality="pointer"]:focus{outline:none}
 #hand-hint{position:absolute;top:1px;left:50%;transform:translateX(-50%);font-size:12px;white-space:nowrap;color:#c4d4bb;pointer-events:none;text-shadow:0 2px 5px #001710}
 #hand-prev,#hand-next{position:absolute;bottom:7px;width:44px;height:44px;padding:0;font-size:27px;z-index:2;background:#173f37eb;border-color:#e8ca8b7d}
 #hand-prev{left:2px}#hand-next{right:2px}

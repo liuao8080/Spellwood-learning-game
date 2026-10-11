@@ -1,3 +1,5 @@
+import { targetNoticeIdentity, targetNoticeExpired } from '../src/network/target-notice.mjs';
+import { restoreModalOpener } from '../src/network/focus-return.mjs';
 import test from 'node:test';
 import { TEACHER_CATEGORIES } from '../src/question-banks.mjs';
 import assert from 'node:assert/strict';
@@ -18,7 +20,7 @@ import { CollectionView } from '../src/network/collection-view.mjs';
 import { WardrobeView } from '../src/network/wardrobe-view.mjs';
 import { rewardView, savedDailySummary } from '../src/network/reward-view.mjs';
 import { getHeroSkin } from '../src/hero-skins.mjs';
-import { selectedCardOption, cardTargetAllowed, selectedTargetIds, answerCommand, drawFeedbackText } from '../src/network/battle-options.mjs';
+import { selectedCardOption, selectedCardReason, cardTargetAllowed, selectedTargetIds, answerCommand, drawFeedbackText } from '../src/network/battle-options.mjs';
 import { cardGuide } from '../src/card-guide.mjs';
 import { BoardInput } from '../src/arena3d/board-input.mjs';
 import { boardCardInspection, isInspectionKey } from '../src/network/card-inspection.mjs';
@@ -214,7 +216,7 @@ function appModel(t,server) {
   class Identity extends IdentityClient {constructor(config){super({...config,fetch:browser.fetch});}}
   class IdentityView extends IdentityPanel {constructor(config){super({...config,document:doc});}}
   class Desk extends StudyDesk { constructor(config) { super({ ...config, storage: memoryStorage(), locks: null }); } }
-  const sandbox={BoardInput,boardCardInspection,isInspectionKey,TEACHER_CATEGORIES,HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:browser.fetch,IdentityClient:Identity,IdentityPanel:IdentityView,RemoteProgressStore,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,cardArtUrl,CollectionView,WardrobeView,rewardView,savedDailySummary,getHeroSkin,selectedCardOption,cardTargetAllowed,selectedTargetIds,answerCommand,drawFeedbackText,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,queueMicrotask,
+  const sandbox={targetNoticeIdentity,targetNoticeExpired,restoreModalOpener,BoardInput,boardCardInspection,isInspectionKey,TEACHER_CATEGORIES,HandScene:Hand,LobbyScene:Decoration,lobbyView,isPractice:false,studyFetch:browser.fetch,IdentityClient:Identity,IdentityPanel:IdentityView,RemoteProgressStore,ServerClock,durationText,targetPreview,playSceneSound,StudyDesk:Desk,document:doc,ArenaScene:Scene,DuelConnection:Connection,PictureReadiness,CARD,CARDS,DECKS,GRADES,validateCustomDeck,CardLibrary,artThumb,cardArtUrl,CollectionView,WardrobeView,rewardView,savedDailySummary,getHeroSkin,selectedCardOption,selectedCardReason,cardTargetAllowed,selectedTargetIds,answerCommand,drawFeedbackText,cardGuide,selectDifficulty,equippedFinishes,rewardBalance,COLLECTION_TEST_MODE,crypto:webcrypto,console,queueMicrotask,
     addEventListener(name,handler){pageHandlers.set(name,handler);},
     SOUND:{unlock(){},sync(){},duckSpeech(){},visibility(){},play(){}},
     setTimeout(fn,ms){const id=setTimeout(fn,ms);id.unref?.();timers.add(id);return id;},clearTimeout(id){clearTimeout(id);timers.delete(id);},
@@ -447,4 +449,27 @@ test('card inspection shows live resources and returns without spending a card o
   if(card.type!=='spell'){assert.ok(a.html().includes(`${card.atk} 攻击`));assert.ok(a.html().includes(`${card.hp} 生命`));}
   a.click('card-info-close');assert.doesNotMatch(a.html(),/card-info-dialog/);
   assert.deepEqual(a.state().room.self,before);assert.equal(a.capture.sent.length,sent);
+});
+
+
+test('app DOM target notice clears on cancel and authority update but retains a rejected-command warning', async t => {
+  const server=await serverFor(t),apps=await pairedApps(t,server),a=apps.find(x=>x.state().room.canAct);
+  const notification=a.roots.get('#notice');
+  // DOM-model-only notification stimulus; real browser invalid clicks are
+  // covered separately. No game command is injected to manufacture a target.
+  a.selectCard(0);vm.runInContext('notice("请选择亮起的合法目标", "target"); render();',a.sandbox);
+  assert.equal(notification.textContent,'请选择亮起的合法目标');
+  const count=a.capture.sent.length;a.click('clear');assert.equal(notification.textContent,'');assert.equal(a.capture.sent.length,count);
+  a.selectCard(0);vm.runInContext('notice("请选择亮起的合法目标", "target"); render();',a.sandbox);
+  const fresh=structuredClone(a.state().room);fresh.revision+=1;
+  a.sandbox.review.snapshot(fresh);a.sandbox.review.message({type:'review.render'});
+  assert.equal(notification.textContent,'');assert.equal(a.capture.sent.length,count);
+  await until(()=>!a.state().visualBusy,'authority refresh presentation settled');
+  // Stub only this command's rejection to exercise the application's genuine
+  // catch/render path. This is not a real browser/server rejection claim.
+  const command=a.transport.command;a.transport.command=async()=>{throw Object.assign(new Error('rejected'),{code:'ILLEGAL_ACTION'});};
+  a.click('end');await until(()=>!a.state().commandBusy,'rejection settled');
+  assert.equal(notification.textContent,'这个动作当前不可用');assert.equal(notification.dataset.kind,'general');
+  a.selectCard(0);a.click('clear');assert.equal(notification.textContent,'这个动作当前不可用');
+  assert.equal(a.capture.sent.length,count);a.transport.command=command;
 });
