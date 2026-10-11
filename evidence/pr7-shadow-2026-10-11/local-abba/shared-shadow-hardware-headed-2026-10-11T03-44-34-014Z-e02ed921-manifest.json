@@ -1,0 +1,2662 @@
+{
+  "schema": 1,
+  "runId": "hardware-headed-2026-10-11T03-44-34-014Z-e02ed921",
+  "preparedAt": "2026-10-11T03:44:34.082Z",
+  "commit": "1eb618be87023ebdb9c2e4fb7f2587b881e80a29",
+  "tree": "406e3371819900434a3fc52e094bb77df9042734",
+  "sourceHead": "1eb618be87023ebdb9c2e4fb7f2587b881e80a29",
+  "checkoutHead": "1eb618be87023ebdb9c2e4fb7f2587b881e80a29",
+  "sourceTree": "406e3371819900434a3fc52e094bb77df9042734",
+  "sourceTreeScope": "Actual checked-out content tree; may be the merge tree",
+  "checkoutParents": [],
+  "actualGithub": null,
+  "dirtyFiles": [
+    ".github/workflows/browser-acceptance.yml",
+    "CHANGELOG.md",
+    "README.md",
+    "progress.md",
+    "docs/PR7-SHADOW-DIAGNOSTIC-2026-10-11.md",
+    "evidence/pr7-shadow-2026-10-11/",
+    "playwright.shared-shadow.config.mjs",
+    "scripts/build-shared-shadow-diagnostics.mjs",
+    "scripts/recheck-normal-motion.mjs",
+    "tests/diagnostics/"
+  ],
+  "executionEnvironment": "explicit-local-diagnostic",
+  "launch": {
+    "browserName": "chromium",
+    "channel": "chrome",
+    "headless": false,
+    "launchOptions": {
+      "chromiumSandbox": true,
+      "args": [],
+      "ignoreDefaultArgs": [
+        "--enable-unsafe-swiftshader",
+        "--unsafely-disable-devtools-self-xss-warnings"
+      ]
+    }
+  },
+  "attribution": {
+    "productSources": [
+      {
+        "file": "server/Dockerfile",
+        "sha256": "f9513f23172d4d707f6d367fa46f359010e4a7c8fa9cf2d06f1722e9467ac7c4"
+      },
+      {
+        "file": "server/Dockerfile.dockerignore",
+        "sha256": "5adc8f7372fdea94d3409b9c2bcfb3b095a034b0014e70c0a89628ef5afad89b"
+      },
+      {
+        "file": "server/PROTOCOL.md",
+        "sha256": "bc9adf2029e52efb4751cce7a54c2163e87c3ff7a2fae62edcc6f05a9cd38c85"
+      },
+      {
+        "file": "server/README.md",
+        "sha256": "67d83618fb93b511097eeb69a416184f274dd3bb819e49c2f336919c7769c47a"
+      },
+      {
+        "file": "server/WS-LICENSE.txt",
+        "sha256": "2b29dcfe0d6471f7e8c92c5fb38c9f93edee10330937055440192f1832b1ecef"
+      },
+      {
+        "file": "server/admission.mjs",
+        "sha256": "1680b447357d4dd39438cb80fed036c63ae79ce48576c3bb895462df26296ae7"
+      },
+      {
+        "file": "server/duel-adapter.mjs",
+        "sha256": "b15a686d77ff0fa160cd1454fe0d2751fa0dce5a6fdd7595da6f6e866ba1ed6b"
+      },
+      {
+        "file": "server/healthcheck.mjs",
+        "sha256": "c3275e04a92859e07ca60655875140a444b00c28d94c0d0079c5b2ffdd9b297a"
+      },
+      {
+        "file": "server/identity-http.mjs",
+        "sha256": "09cb4f41259a784045d519850f74767ed3575f88de5425eb7fcb3ec17cec7c48"
+      },
+      {
+        "file": "server/identity-store.mjs",
+        "sha256": "ccdad0d5f8d310289f8f2b8c187d5a736e723df3e88238bd5ed49f5061b00e5f"
+      },
+      {
+        "file": "server/index.mjs",
+        "sha256": "4fb7ce0d62911b6a892773d0ff09a5cf54f50452161dd6de53564aefb65ab1b2"
+      },
+      {
+        "file": "server/passwords.mjs",
+        "sha256": "d9d636149f6cc52b1ba7ba3f5896d335c664566a64ea33aa9dffc0c38acd9420"
+      },
+      {
+        "file": "server/player-progress.mjs",
+        "sha256": "72946aa1958e44666fcd509b4beccadd32c9a6c443618eff92f36ecb18f7986e"
+      },
+      {
+        "file": "server/progress-bridge.mjs",
+        "sha256": "284432dce93c1789b9a48d21a533ea92b34ff9b57b8235bd9faacb5d0998de00"
+      },
+      {
+        "file": "server/progress-http.mjs",
+        "sha256": "bf9751e085314ae64922c61f4f4325d515010b9d2b120e52647a9fdef8468081"
+      },
+      {
+        "file": "server/protocol.mjs",
+        "sha256": "96f210f636080c43a47136ba02458f608292d0d88a3883acee5a5606451930da"
+      },
+      {
+        "file": "server/questions.mjs",
+        "sha256": "399a198bf64148874948a3cf506da542fc366fdb06b189bbfb9735891bf6738b"
+      },
+      {
+        "file": "server/service.mjs",
+        "sha256": "0f01354e82e29ffd9e028e0f895946f2f4300656828d32614c3ec3c21d6ea9cd"
+      },
+      {
+        "file": "src/app.mjs",
+        "sha256": "81a6b2f5d2a9c3e4f3ffeff395583677c5339aba36e3809c58181a57e53bec23"
+      },
+      {
+        "file": "src/arena3d/adaptive-quality.mjs",
+        "sha256": "3225a0263a3c78684c80c79a1f818ab547e6d823d1cacd0fefec3f42a2ad7885"
+      },
+      {
+        "file": "src/arena3d/board-input.mjs",
+        "sha256": "856d166ce800b24091c9c4c401cada3a81e3ba40b01e3baafd69e78097eb17ef"
+      },
+      {
+        "file": "src/arena3d/card-relief.mjs",
+        "sha256": "4c7cf07ac5372227d3fec7b683b80cb4ee9482e7d6a22478fe2fb1dd25445037"
+      },
+      {
+        "file": "src/arena3d/card-textures.mjs",
+        "sha256": "e75b35ec4ebe6487ef055b9cb99243c09dbf25cea5ef12d4574262158d57a013"
+      },
+      {
+        "file": "src/arena3d/creature-expansion-v4.mjs",
+        "sha256": "6fd8f1e6c246098cad8fbfc343364dba396bcdf88a419a8b84b0de875be11deb"
+      },
+      {
+        "file": "src/arena3d/creature-expansion.mjs",
+        "sha256": "8145c5f081ffeca9f95c0243637573f61de29da816db9399f3d2b572ded5f510"
+      },
+      {
+        "file": "src/arena3d/effect-warmup.mjs",
+        "sha256": "eb97b4d2e88c0e544a224e0fbc55ea1b78519baf25348a39adcf6f8874467d9d"
+      },
+      {
+        "file": "src/arena3d/elemental-effects.mjs",
+        "sha256": "fb0075da633442787066f7afa10ffefa49756d1f0d0c6b24140f7f7e8403a681"
+      },
+      {
+        "file": "src/arena3d/garment-colors.mjs",
+        "sha256": "dca299441de3a5099c2d2af908bd239d2ca03b63a6711fb8551cdf37cc5bb6eb"
+      },
+      {
+        "file": "src/arena3d/hand-input.mjs",
+        "sha256": "6ede0ec227474b2ac2bd726ffa2c9bb7cb4fbc3c6a5eea1560162242b4a6d140"
+      },
+      {
+        "file": "src/arena3d/hand-layout.mjs",
+        "sha256": "006d3b3562545392343ace923f38ca479e6294aa5d2ea17fd9a63da8e0485b3b"
+      },
+      {
+        "file": "src/arena3d/hand-scene.mjs",
+        "sha256": "b7ed34dd38f4ae285e326b149e648e3795eb3e387b7f7981b79665f878a6f1f6"
+      },
+      {
+        "file": "src/arena3d/hero-geometry.mjs",
+        "sha256": "e707b2375cfbe978e0b475b352abe35bca719471d775f57844c00235778099e4"
+      },
+      {
+        "file": "src/arena3d/hero-models.mjs",
+        "sha256": "12d8fa22a0b5e3fc306004c3b1c5ec1da1254d2ee78133fb34cc078c8da75bb4"
+      },
+      {
+        "file": "src/arena3d/lobby-model.mjs",
+        "sha256": "0781ce59e32f339af522e8e7551fcb6f0a9a0be513f6238d52a84ce6a8875169"
+      },
+      {
+        "file": "src/arena3d/lobby-scene.mjs",
+        "sha256": "0cdcabbc4933333ccf9773ed592ce83e39250dd3d9d53d55fb8671c13ba08c80"
+      },
+      {
+        "file": "src/arena3d/lobby-textures.mjs",
+        "sha256": "ffc8dcdd00907705b415d45070429d0e5fc85d7274b766c01b14368fe2988861"
+      },
+      {
+        "file": "src/arena3d/melee-sequence.mjs",
+        "sha256": "ddf834428394edb841f15ed3897d4699dbca4334588dcd8ac5de103ecfeecf67"
+      },
+      {
+        "file": "src/arena3d/model-utils.mjs",
+        "sha256": "0dc5d19397479f0d8f14984133b3d5cae2f2c68800ab248ea8eff6b27f09e7b8"
+      },
+      {
+        "file": "src/arena3d/models.mjs",
+        "sha256": "a9c52079bf1dde6dd7fcf1d9f5727b5d21c994f9f129012842c5f6929a89140f"
+      },
+      {
+        "file": "src/arena3d/pack-scene.mjs",
+        "sha256": "b9aea375352eac23048dee199ca52a6f15719aa2de931437e7483b0f8839b4f5"
+      },
+      {
+        "file": "src/arena3d/scene.mjs",
+        "sha256": "486eb0e5a74ffae9a129ee39fc453418a1ad8e69ce7ebd2c613aedfe1a5d3bba"
+      },
+      {
+        "file": "src/arena3d/software-renderer.mjs",
+        "sha256": "b28d2f603067b2828b7db20a27f6ba6ba1625db6065ccb6d827e4e235f5f6d5e"
+      },
+      {
+        "file": "src/arena3d/stone-surface.mjs",
+        "sha256": "73655cfe317a5e3f81876c5ea344ce414a3c5ec44db29430f474b691ca442964"
+      },
+      {
+        "file": "src/arena3d/targeting.mjs",
+        "sha256": "68fe454874fc9487c843cb71c64d186577c05833c6cc67f51a6e780a4e602704"
+      },
+      {
+        "file": "src/av/audio.mjs",
+        "sha256": "a22ba6bd72de2d05eb4a0607dfb4288e3b1f2945cc1cf8d44c02c7983e5917ec"
+      },
+      {
+        "file": "src/av/effects.mjs",
+        "sha256": "baf093932734d5ebcd6f829b4915577c93cf41fd6a0e44bc24700d076533c1d6"
+      },
+      {
+        "file": "src/av/geometry.mjs",
+        "sha256": "5485dc33dafec8cb7872de61b77b14e9e712e994537d3a02175f0a4b6cda3b32"
+      },
+      {
+        "file": "src/av/pictures.mjs",
+        "sha256": "e54a83360cd7bd6196972bc7f893e1c1be2c495df2ba3eeefe9f8479e120da48"
+      },
+      {
+        "file": "src/av/speech.mjs",
+        "sha256": "c229e97ada437f9dfa9a17d8032da8b64bc27a06ddf951e30dc6742c61146f12"
+      },
+      {
+        "file": "src/battle-v2.css",
+        "sha256": "fa0a5aaa0d8b27f61766efbced4f39d5b5eba65bcbaf8ced8843688323959551"
+      },
+      {
+        "file": "src/card-guide.mjs",
+        "sha256": "c8a52e8eabc50c24a0e9b8f268eb725ce0ddb82d81a2f95e7700fdcea517a729"
+      },
+      {
+        "file": "src/cards.mjs",
+        "sha256": "6951e44188476c91cb41557dd8bfd84e193833298603cfe07eadf6751c197e4a"
+      },
+      {
+        "file": "src/collection.mjs",
+        "sha256": "004f5cd025b37d988dad2284a897072020cc6315eea8779183598362387e49da"
+      },
+      {
+        "file": "src/combat-rating.mjs",
+        "sha256": "2a6b8b729933364fe2ab3aef34d5cc6ea16c9e4d1504c784dad425d3a3049105"
+      },
+      {
+        "file": "src/curriculum.json",
+        "sha256": "b20c69e4dc839f1476639eecdab9639cd3ce5612005abde85b34e28dab2d619d"
+      },
+      {
+        "file": "src/engine.mjs",
+        "sha256": "2ac483afd9be54bdf3f249203bfff2735287e8fe1916dda2567d5cb0c6999976"
+      },
+      {
+        "file": "src/hero-skins.mjs",
+        "sha256": "b7fc45e528ac0c5504b7d8fd6c317fb5e05499e848454db4089ee3c2eb8566db"
+      },
+      {
+        "file": "src/learning-visuals.mjs",
+        "sha256": "f5bd9688e6144b758139391884fe232adce467bb83d8ce8301cadd12aae072be"
+      },
+      {
+        "file": "src/learning.mjs",
+        "sha256": "bf1f51503bb5cd036d67de62f187c36c13aa789aaa4a039b764a9ade1a13ac11"
+      },
+      {
+        "file": "src/network/app.mjs",
+        "sha256": "1f94506972ddc8649c4e6f2b59c143f0078e54ff47683533f6d646ae71d66610"
+      },
+      {
+        "file": "src/network/audio.mjs",
+        "sha256": "4272127af8d152c132de64c230e39b16c5d91a95b217449432aa20495e103e4e"
+      },
+      {
+        "file": "src/network/battle-options.mjs",
+        "sha256": "16d6015c20ae7b114622128667ea1f241834875005a5ffa4acd7abff60a3abd8"
+      },
+      {
+        "file": "src/network/card-inspection.mjs",
+        "sha256": "8e20708c4a4863feaab6d910f349042a3b20f12cccebe83547b3afa7bf774371"
+      },
+      {
+        "file": "src/network/card-library.mjs",
+        "sha256": "3aa30e7e60e9d1b4f216c379ff5aca943f4680685721a8c6ea8d20b4b105ab58"
+      },
+      {
+        "file": "src/network/client.mjs",
+        "sha256": "e3e679de2186536caed497f5bb2c4876ac81decaeba7f3e90f78ecd4ec7f4e9a"
+      },
+      {
+        "file": "src/network/collection-view.mjs",
+        "sha256": "abcf8b1e2ed12b431fa9cdefba5033b04b5ebe0dddeb23943525b3164295b314"
+      },
+      {
+        "file": "src/network/collection.css",
+        "sha256": "a7bb4cf42d5fa4ed784ab9cdd4fbfdfbc7428ac1ee62a2f7d58ef236ca479461"
+      },
+      {
+        "file": "src/network/deadlines.mjs",
+        "sha256": "fc6fcb75264c37e56dccef759b40d54c001fde84547a892ca7275463063f2793"
+      },
+      {
+        "file": "src/network/focus-return.mjs",
+        "sha256": "3a5fd49fb76c92c70270a162ca3e4a53620c7394753d60c94943742aa21bcf99"
+      },
+      {
+        "file": "src/network/hero-preview.mjs",
+        "sha256": "f5dce7114648c8e1ae93d27902b5f837e8c8fe8fb96ebf089cfde358281ed6a0"
+      },
+      {
+        "file": "src/network/identity-client.mjs",
+        "sha256": "6501b4773f66bf69b4ed33a433b5aea7c5a2d16b36093f849a2d0f32cd18fde2"
+      },
+      {
+        "file": "src/network/identity-view.mjs",
+        "sha256": "ed31baf01935568d95c2f3af42fb495b958d72b60b13d3b9523f1cea7884c327"
+      },
+      {
+        "file": "src/network/identity.css",
+        "sha256": "2e75424eec6599b58c0cfb5c09b711d99c669bb12e1484a7af97827dcfb38879"
+      },
+      {
+        "file": "src/network/immersive.css",
+        "sha256": "4cdbdda344b5205993d6f59bcf6286dcdb63641427a1b0003ef7bc6f52851920"
+      },
+      {
+        "file": "src/network/learning-attention.mjs",
+        "sha256": "6b1f92c14b19031aa0ac550fbe0b758da4b5b7a0f1549aef470c86bdc13e4df8"
+      },
+      {
+        "file": "src/network/lobby-view.mjs",
+        "sha256": "b1311a943144fbb00080c2030397828ea51de205af3ca71c8e788ecf7aa05e91"
+      },
+      {
+        "file": "src/network/progress.mjs",
+        "sha256": "97edc2ae3ccf8eac724a9c80a0be8067ae5df4fb5b52fa2cb91136145109e648"
+      },
+      {
+        "file": "src/network/remote-progress.mjs",
+        "sha256": "b27bad55c55f387730e9d7489c011865286cd61d71bdc9e4189e1e902ca61faf"
+      },
+      {
+        "file": "src/network/responsive-review.html",
+        "sha256": "ae6acaadff75f94f2203c6f464707c4fc5f6823066d20f09d050b208f9eb9860"
+      },
+      {
+        "file": "src/network/reward-view.mjs",
+        "sha256": "d61a36b5486b5fcc5a091c9e371475d1927a9136040fd6c3df3fbcf6fc8e00cc"
+      },
+      {
+        "file": "src/network/runtime.mjs",
+        "sha256": "7ef14a5baf666e3bd99d9ada136073ad5b6364c0b07d19a8ceea84c8cd36ad1c"
+      },
+      {
+        "file": "src/network/safe-area.css",
+        "sha256": "60d05e589ef46864e71faca08b39fc36ed7305398bf083c288107a24468901af"
+      },
+      {
+        "file": "src/network/scene-audio.mjs",
+        "sha256": "5af394c4e2d59c16e4a6674d6e5254a53df3ebe6e25cabedfde2438aff192749"
+      },
+      {
+        "file": "src/network/study-desk.mjs",
+        "sha256": "404e43f27c562d8dfb42358583308fad28247518a1e9efff3b52fa1dc68a0714"
+      },
+      {
+        "file": "src/network/style.css",
+        "sha256": "75a011ad831385990ba1edb8d1d2ccbb32b9b69f927026fbe30644c40a548dba"
+      },
+      {
+        "file": "src/network/target-notice.mjs",
+        "sha256": "ed5b64450734c04e9d348297af66d947c84170d94e5acd24f4c3c47892577bb9"
+      },
+      {
+        "file": "src/network/template.html",
+        "sha256": "df837422aec716511e50157dc48cd2e549d60e2bfd6b85eea750077c2a1f513f"
+      },
+      {
+        "file": "src/network/unit-label-width.mjs",
+        "sha256": "8b7b82db327c37225189c97b80f4a6759c0dbeeb344eba589ef1ad08537e5b4f"
+      },
+      {
+        "file": "src/network/wardrobe-view.mjs",
+        "sha256": "02700fa591ea797ba6dba371a2ab1c51f48ffc1fe57f49cf230d3b87ea573bcb"
+      },
+      {
+        "file": "src/opening.mjs",
+        "sha256": "9a9e0f455823ff5bb3f5665d1bb710740726428e238d32c0b29d656366fca6d5"
+      },
+      {
+        "file": "src/practice/NOBLE-HASHES-LICENSE.txt",
+        "sha256": "4f221aee6e072336700c408c68ab3b96a3fc09f6aebe6f48f1bd99e5ef13faec"
+      },
+      {
+        "file": "src/practice/browser-crypto.mjs",
+        "sha256": "4c3f8e1645761ab26761563250160c17e7a8090a35756995ed08dada1253eed9"
+      },
+      {
+        "file": "src/practice/no-filesystem.mjs",
+        "sha256": "3be54c5b469ef26634c97dc9bfefb1cb73a7351400d9299e7d46eb0a915735b3"
+      },
+      {
+        "file": "src/practice/runtime.mjs",
+        "sha256": "b3864e31ec80952fa7c96a9a4d82153241106d808aaa33ed68891b721f206894"
+      },
+      {
+        "file": "src/question-banks.mjs",
+        "sha256": "25b1ea792084e144c40adea0b46a2317a9cc21de96328c61372b10558f2c1596"
+      },
+      {
+        "file": "src/questions.json",
+        "sha256": "68aa7298f6bb5290167eeab1b87899d28a0735109d3cb29d5135875cfcabcad0"
+      },
+      {
+        "file": "src/random.mjs",
+        "sha256": "80bc636faa90bee79d33ca38643661414ae98aecf9b95830f9464bfe0836cb24"
+      },
+      {
+        "file": "src/reward-journey.mjs",
+        "sha256": "41dac740d05b328d03328f88bde78ed766d7272ff42640d405363a1865f0c36e"
+      },
+      {
+        "file": "src/save-session.mjs",
+        "sha256": "95edb4dad5d88bcb19710342b54d95e33aa6a514cea63ef8b723c6f181c33e3e"
+      },
+      {
+        "file": "src/speech-assets.json",
+        "sha256": "79728bb2618edbd553bff5af2c2e1ca0488eacb9399ef59602394aee19069a4a"
+      },
+      {
+        "file": "src/style.css",
+        "sha256": "680d00d49df0614665ec536715bdf43b6529a6f8d7179cc50469d2ba62abf218"
+      },
+      {
+        "file": "src/teacher-questions.json",
+        "sha256": "401c77b34e55d2321230a3fb0fd4c9eeb1d7b823572c676e7744cfec45657345"
+      },
+      {
+        "file": "src/template.html",
+        "sha256": "cd1ff231a6759f9e15ca85223401d2cfdfac34b0fb83a7a296fadc9d59d46239"
+      },
+      {
+        "file": "src/types.d.ts",
+        "sha256": "0bbd329fa41701e026ec7b085911d889847583b938d122f302d61f7b18c7573f"
+      }
+    ],
+    "formalApp": {
+      "file": "client-dist/app.js",
+      "sha256": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be"
+    },
+    "formalHtml": {
+      "file": "client-dist/index.html",
+      "sha256": "6fcfce84f31d001c2e6a2e5f7f211f71df707b99093a1033211329ab7d4863b2"
+    },
+    "originals": [
+      {
+        "file": "tests/e2e/helpers.mjs",
+        "sha256": "9487fc702713bf96b5e9348fad8131714f49fbc878abd69fe0245752fa186200"
+      },
+      {
+        "file": "tests/e2e/combat-motion-tools.mjs",
+        "sha256": "6fd48f1d9e4ae2161c13b34eb6cc223f88bd9f23632a6babf1632090b156d352"
+      },
+      {
+        "file": "tests/e2e/combat-motion.spec.mjs",
+        "sha256": "c45c356c3fc37812896b1acd3d0eed85f8c84292dde818aa829755f28ba7dd07"
+      },
+      {
+        "file": "playwright.config.mjs",
+        "sha256": "70aaaf52be7bb4a5abe0710e5a908653df76defab222b71d062eca5a1d26029b"
+      },
+      {
+        "file": "scripts/e2e-server.mjs",
+        "sha256": "c4a9521666e588e456296b4998926eaa2254a2b6178c7b9eb7f46df87380bbdb"
+      }
+    ],
+    "diagnosticCode": [
+      {
+        "file": "scripts/build-shared-shadow-diagnostics.mjs",
+        "sha256": "0a278ed4376fe12e83021b8a5785f0c118db8130c7fc16f8cdcfcb89deef1daa"
+      },
+      {
+        "file": "playwright.shared-shadow.config.mjs",
+        "sha256": "b4de69c4426232ac4adc5b7ff796755268eafb00291029222bf1f3140562093f"
+      },
+      {
+        "file": "tests/diagnostics/shared-shadow/build.mjs",
+        "sha256": "45b80b3ea8bab30f29add249c766d6eb43ede9e9a29723f45553e658bb1be71a"
+      },
+      {
+        "file": "tests/diagnostics/shared-shadow/fixture.mjs",
+        "sha256": "6c05052031bda686b54cf01cac7700353d1e5746eaa2eee681067af60636c35b"
+      },
+      {
+        "file": "tests/diagnostics/shared-shadow/observer.mjs",
+        "sha256": "cb4e8ee19c1af211e408c5475db9c26fb7f6b1d455860f20e40144e8930ce46b"
+      },
+      {
+        "file": "tests/diagnostics/shared-shadow/prepare.mjs",
+        "sha256": "a77e42c3be51c64296a491119fa5622036d275168d9fdf6fae1a36cee260767a"
+      },
+      {
+        "file": "tests/diagnostics/shared-shadow/reporter.mjs",
+        "sha256": "a88082dd31aba1e90c57f3f7626d71abeb597cb805cf6efe81f7d604b980e803"
+      },
+      {
+        "file": "tests/diagnostics/shared-shadow/server.mjs",
+        "sha256": "3743116ab64721b6646ff2c77247d87d908dacfbd572813fa5f7e9ea011ce458"
+      },
+      {
+        "file": "tests/diagnostics/shared-shadow/shadow-cache.mjs",
+        "sha256": "8150dae434043fc209df42cfcda00688734f92c02c993870b434e5fb03f0cfa6"
+      },
+      {
+        "file": "tests/diagnostics/shared-shadow/shadow-cache.test.mjs",
+        "sha256": "23974c55af2a123b30557ca79e0fba33f6136228b781f7a2cd14fadb56d16182"
+      },
+      {
+        "file": "tests/diagnostics/shared-shadow/shared-shadow.spec.mjs",
+        "sha256": "2cb7dfe722adde47250b3d522f614649fbbcb4aa0821d555ee54b9b42eb836f4"
+      }
+    ],
+    "sharedOwnership": [
+      {
+        "file": "tests/local/cleanup.mjs",
+        "sha256": "fb43a4b809d08a7663233bf2f2600f416fecc035cb6ab3f559ead02843994987"
+      },
+      {
+        "file": "tests/local/server.mjs",
+        "sha256": "d7de7be28d92f570d43b7ca9d58f3277155886c5c6a86b825228770b68a01070"
+      }
+    ],
+    "fixedSources": [
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/app.mjs",
+        "sha256": "81a6b2f5d2a9c3e4f3ffeff395583677c5339aba36e3809c58181a57e53bec23"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/adaptive-quality.mjs",
+        "sha256": "3225a0263a3c78684c80c79a1f818ab547e6d823d1cacd0fefec3f42a2ad7885"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/board-input.mjs",
+        "sha256": "856d166ce800b24091c9c4c401cada3a81e3ba40b01e3baafd69e78097eb17ef"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/card-relief.mjs",
+        "sha256": "4c7cf07ac5372227d3fec7b683b80cb4ee9482e7d6a22478fe2fb1dd25445037"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/card-textures.mjs",
+        "sha256": "e75b35ec4ebe6487ef055b9cb99243c09dbf25cea5ef12d4574262158d57a013"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/creature-expansion-v4.mjs",
+        "sha256": "6fd8f1e6c246098cad8fbfc343364dba396bcdf88a419a8b84b0de875be11deb"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/creature-expansion.mjs",
+        "sha256": "8145c5f081ffeca9f95c0243637573f61de29da816db9399f3d2b572ded5f510"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/effect-warmup.mjs",
+        "sha256": "eb97b4d2e88c0e544a224e0fbc55ea1b78519baf25348a39adcf6f8874467d9d"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/elemental-effects.mjs",
+        "sha256": "fb0075da633442787066f7afa10ffefa49756d1f0d0c6b24140f7f7e8403a681"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/garment-colors.mjs",
+        "sha256": "dca299441de3a5099c2d2af908bd239d2ca03b63a6711fb8551cdf37cc5bb6eb"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/hand-input.mjs",
+        "sha256": "6ede0ec227474b2ac2bd726ffa2c9bb7cb4fbc3c6a5eea1560162242b4a6d140"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/hand-layout.mjs",
+        "sha256": "006d3b3562545392343ace923f38ca479e6294aa5d2ea17fd9a63da8e0485b3b"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/hand-scene.mjs",
+        "sha256": "b7ed34dd38f4ae285e326b149e648e3795eb3e387b7f7981b79665f878a6f1f6"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/hero-geometry.mjs",
+        "sha256": "e707b2375cfbe978e0b475b352abe35bca719471d775f57844c00235778099e4"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/hero-models.mjs",
+        "sha256": "12d8fa22a0b5e3fc306004c3b1c5ec1da1254d2ee78133fb34cc078c8da75bb4"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/lobby-model.mjs",
+        "sha256": "0781ce59e32f339af522e8e7551fcb6f0a9a0be513f6238d52a84ce6a8875169"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/lobby-scene.mjs",
+        "sha256": "0cdcabbc4933333ccf9773ed592ce83e39250dd3d9d53d55fb8671c13ba08c80"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/lobby-textures.mjs",
+        "sha256": "ffc8dcdd00907705b415d45070429d0e5fc85d7274b766c01b14368fe2988861"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/melee-sequence.mjs",
+        "sha256": "ddf834428394edb841f15ed3897d4699dbca4334588dcd8ac5de103ecfeecf67"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/model-utils.mjs",
+        "sha256": "0dc5d19397479f0d8f14984133b3d5cae2f2c68800ab248ea8eff6b27f09e7b8"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/models.mjs",
+        "sha256": "a9c52079bf1dde6dd7fcf1d9f5727b5d21c994f9f129012842c5f6929a89140f"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/pack-scene.mjs",
+        "sha256": "b9aea375352eac23048dee199ca52a6f15719aa2de931437e7483b0f8839b4f5"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/scene.mjs",
+        "sha256": "7b9739c651bf91f52df4f54672bb001fd86b2eaf25d9c17df28fd7de0a957325"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/software-renderer.mjs",
+        "sha256": "b28d2f603067b2828b7db20a27f6ba6ba1625db6065ccb6d827e4e235f5f6d5e"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/stone-surface.mjs",
+        "sha256": "73655cfe317a5e3f81876c5ea344ce414a3c5ec44db29430f474b691ca442964"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/targeting.mjs",
+        "sha256": "68fe454874fc9487c843cb71c64d186577c05833c6cc67f51a6e780a4e602704"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/av/audio.mjs",
+        "sha256": "a22ba6bd72de2d05eb4a0607dfb4288e3b1f2945cc1cf8d44c02c7983e5917ec"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/av/effects.mjs",
+        "sha256": "baf093932734d5ebcd6f829b4915577c93cf41fd6a0e44bc24700d076533c1d6"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/av/geometry.mjs",
+        "sha256": "5485dc33dafec8cb7872de61b77b14e9e712e994537d3a02175f0a4b6cda3b32"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/av/pictures.mjs",
+        "sha256": "e54a83360cd7bd6196972bc7f893e1c1be2c495df2ba3eeefe9f8479e120da48"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/av/speech.mjs",
+        "sha256": "c229e97ada437f9dfa9a17d8032da8b64bc27a06ddf951e30dc6742c61146f12"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/battle-v2.css",
+        "sha256": "fa0a5aaa0d8b27f61766efbced4f39d5b5eba65bcbaf8ced8843688323959551"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/card-guide.mjs",
+        "sha256": "c8a52e8eabc50c24a0e9b8f268eb725ce0ddb82d81a2f95e7700fdcea517a729"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/cards.mjs",
+        "sha256": "6951e44188476c91cb41557dd8bfd84e193833298603cfe07eadf6751c197e4a"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/collection.mjs",
+        "sha256": "004f5cd025b37d988dad2284a897072020cc6315eea8779183598362387e49da"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/combat-rating.mjs",
+        "sha256": "2a6b8b729933364fe2ab3aef34d5cc6ea16c9e4d1504c784dad425d3a3049105"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/curriculum.json",
+        "sha256": "b20c69e4dc839f1476639eecdab9639cd3ce5612005abde85b34e28dab2d619d"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/engine.mjs",
+        "sha256": "2ac483afd9be54bdf3f249203bfff2735287e8fe1916dda2567d5cb0c6999976"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/hero-skins.mjs",
+        "sha256": "b7fc45e528ac0c5504b7d8fd6c317fb5e05499e848454db4089ee3c2eb8566db"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/learning-visuals.mjs",
+        "sha256": "f5bd9688e6144b758139391884fe232adce467bb83d8ce8301cadd12aae072be"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/learning.mjs",
+        "sha256": "bf1f51503bb5cd036d67de62f187c36c13aa789aaa4a039b764a9ade1a13ac11"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/app.mjs",
+        "sha256": "1f94506972ddc8649c4e6f2b59c143f0078e54ff47683533f6d646ae71d66610"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/audio.mjs",
+        "sha256": "4272127af8d152c132de64c230e39b16c5d91a95b217449432aa20495e103e4e"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/battle-options.mjs",
+        "sha256": "16d6015c20ae7b114622128667ea1f241834875005a5ffa4acd7abff60a3abd8"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/card-inspection.mjs",
+        "sha256": "8e20708c4a4863feaab6d910f349042a3b20f12cccebe83547b3afa7bf774371"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/card-library.mjs",
+        "sha256": "3aa30e7e60e9d1b4f216c379ff5aca943f4680685721a8c6ea8d20b4b105ab58"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/client.mjs",
+        "sha256": "e3e679de2186536caed497f5bb2c4876ac81decaeba7f3e90f78ecd4ec7f4e9a"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/collection-view.mjs",
+        "sha256": "abcf8b1e2ed12b431fa9cdefba5033b04b5ebe0dddeb23943525b3164295b314"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/collection.css",
+        "sha256": "a7bb4cf42d5fa4ed784ab9cdd4fbfdfbc7428ac1ee62a2f7d58ef236ca479461"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/deadlines.mjs",
+        "sha256": "fc6fcb75264c37e56dccef759b40d54c001fde84547a892ca7275463063f2793"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/focus-return.mjs",
+        "sha256": "3a5fd49fb76c92c70270a162ca3e4a53620c7394753d60c94943742aa21bcf99"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/hero-preview.mjs",
+        "sha256": "f5dce7114648c8e1ae93d27902b5f837e8c8fe8fb96ebf089cfde358281ed6a0"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/identity-client.mjs",
+        "sha256": "6501b4773f66bf69b4ed33a433b5aea7c5a2d16b36093f849a2d0f32cd18fde2"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/identity-view.mjs",
+        "sha256": "ed31baf01935568d95c2f3af42fb495b958d72b60b13d3b9523f1cea7884c327"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/identity.css",
+        "sha256": "2e75424eec6599b58c0cfb5c09b711d99c669bb12e1484a7af97827dcfb38879"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/immersive.css",
+        "sha256": "4cdbdda344b5205993d6f59bcf6286dcdb63641427a1b0003ef7bc6f52851920"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/learning-attention.mjs",
+        "sha256": "6b1f92c14b19031aa0ac550fbe0b758da4b5b7a0f1549aef470c86bdc13e4df8"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/lobby-view.mjs",
+        "sha256": "b1311a943144fbb00080c2030397828ea51de205af3ca71c8e788ecf7aa05e91"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/progress.mjs",
+        "sha256": "97edc2ae3ccf8eac724a9c80a0be8067ae5df4fb5b52fa2cb91136145109e648"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/remote-progress.mjs",
+        "sha256": "b27bad55c55f387730e9d7489c011865286cd61d71bdc9e4189e1e902ca61faf"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/responsive-review.html",
+        "sha256": "ae6acaadff75f94f2203c6f464707c4fc5f6823066d20f09d050b208f9eb9860"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/reward-view.mjs",
+        "sha256": "d61a36b5486b5fcc5a091c9e371475d1927a9136040fd6c3df3fbcf6fc8e00cc"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/runtime.mjs",
+        "sha256": "7ef14a5baf666e3bd99d9ada136073ad5b6364c0b07d19a8ceea84c8cd36ad1c"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/safe-area.css",
+        "sha256": "60d05e589ef46864e71faca08b39fc36ed7305398bf083c288107a24468901af"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/scene-audio.mjs",
+        "sha256": "5af394c4e2d59c16e4a6674d6e5254a53df3ebe6e25cabedfde2438aff192749"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/study-desk.mjs",
+        "sha256": "404e43f27c562d8dfb42358583308fad28247518a1e9efff3b52fa1dc68a0714"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/style.css",
+        "sha256": "75a011ad831385990ba1edb8d1d2ccbb32b9b69f927026fbe30644c40a548dba"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/target-notice.mjs",
+        "sha256": "ed5b64450734c04e9d348297af66d947c84170d94e5acd24f4c3c47892577bb9"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/template.html",
+        "sha256": "df837422aec716511e50157dc48cd2e549d60e2bfd6b85eea750077c2a1f513f"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/unit-label-width.mjs",
+        "sha256": "8b7b82db327c37225189c97b80f4a6759c0dbeeb344eba589ef1ad08537e5b4f"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/network/wardrobe-view.mjs",
+        "sha256": "02700fa591ea797ba6dba371a2ab1c51f48ffc1fe57f49cf230d3b87ea573bcb"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/opening.mjs",
+        "sha256": "9a9e0f455823ff5bb3f5665d1bb710740726428e238d32c0b29d656366fca6d5"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/practice/NOBLE-HASHES-LICENSE.txt",
+        "sha256": "4f221aee6e072336700c408c68ab3b96a3fc09f6aebe6f48f1bd99e5ef13faec"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/practice/browser-crypto.mjs",
+        "sha256": "4c3f8e1645761ab26761563250160c17e7a8090a35756995ed08dada1253eed9"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/practice/no-filesystem.mjs",
+        "sha256": "3be54c5b469ef26634c97dc9bfefb1cb73a7351400d9299e7d46eb0a915735b3"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/practice/runtime.mjs",
+        "sha256": "b3864e31ec80952fa7c96a9a4d82153241106d808aaa33ed68891b721f206894"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/question-banks.mjs",
+        "sha256": "25b1ea792084e144c40adea0b46a2317a9cc21de96328c61372b10558f2c1596"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/questions.json",
+        "sha256": "68aa7298f6bb5290167eeab1b87899d28a0735109d3cb29d5135875cfcabcad0"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/random.mjs",
+        "sha256": "80bc636faa90bee79d33ca38643661414ae98aecf9b95830f9464bfe0836cb24"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/reward-journey.mjs",
+        "sha256": "41dac740d05b328d03328f88bde78ed766d7272ff42640d405363a1865f0c36e"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/save-session.mjs",
+        "sha256": "95edb4dad5d88bcb19710342b54d95e33aa6a514cea63ef8b723c6f181c33e3e"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/speech-assets.json",
+        "sha256": "79728bb2618edbd553bff5af2c2e1ca0488eacb9399ef59602394aee19069a4a"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/style.css",
+        "sha256": "680d00d49df0614665ec536715bdf43b6529a6f8d7179cc50469d2ba62abf218"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/teacher-questions.json",
+        "sha256": "401c77b34e55d2321230a3fb0fd4c9eeb1d7b823572c676e7744cfec45657345"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/template.html",
+        "sha256": "cd1ff231a6759f9e15ca85223401d2cfdfac34b0fb83a7a296fadc9d59d46239"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/types.d.ts",
+        "sha256": "0bbd329fa41701e026ec7b085911d889847583b938d122f302d61f7b18c7573f"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/reduced-shadow-cache.mjs",
+        "sha256": "8150dae434043fc209df42cfcda00688734f92c02c993870b434e5fb03f0cfa6"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/shadow-lab-observer.mjs",
+        "sha256": "cb4e8ee19c1af211e408c5475db9c26fb7f6b1d455860f20e40144e8930ce46b"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/app.mjs",
+        "sha256": "81a6b2f5d2a9c3e4f3ffeff395583677c5339aba36e3809c58181a57e53bec23"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/adaptive-quality.mjs",
+        "sha256": "3225a0263a3c78684c80c79a1f818ab547e6d823d1cacd0fefec3f42a2ad7885"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/board-input.mjs",
+        "sha256": "856d166ce800b24091c9c4c401cada3a81e3ba40b01e3baafd69e78097eb17ef"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/card-relief.mjs",
+        "sha256": "4c7cf07ac5372227d3fec7b683b80cb4ee9482e7d6a22478fe2fb1dd25445037"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/card-textures.mjs",
+        "sha256": "e75b35ec4ebe6487ef055b9cb99243c09dbf25cea5ef12d4574262158d57a013"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/creature-expansion-v4.mjs",
+        "sha256": "6fd8f1e6c246098cad8fbfc343364dba396bcdf88a419a8b84b0de875be11deb"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/creature-expansion.mjs",
+        "sha256": "8145c5f081ffeca9f95c0243637573f61de29da816db9399f3d2b572ded5f510"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/effect-warmup.mjs",
+        "sha256": "eb97b4d2e88c0e544a224e0fbc55ea1b78519baf25348a39adcf6f8874467d9d"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/elemental-effects.mjs",
+        "sha256": "fb0075da633442787066f7afa10ffefa49756d1f0d0c6b24140f7f7e8403a681"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/garment-colors.mjs",
+        "sha256": "dca299441de3a5099c2d2af908bd239d2ca03b63a6711fb8551cdf37cc5bb6eb"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/hand-input.mjs",
+        "sha256": "6ede0ec227474b2ac2bd726ffa2c9bb7cb4fbc3c6a5eea1560162242b4a6d140"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/hand-layout.mjs",
+        "sha256": "006d3b3562545392343ace923f38ca479e6294aa5d2ea17fd9a63da8e0485b3b"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/hand-scene.mjs",
+        "sha256": "b7ed34dd38f4ae285e326b149e648e3795eb3e387b7f7981b79665f878a6f1f6"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/hero-geometry.mjs",
+        "sha256": "e707b2375cfbe978e0b475b352abe35bca719471d775f57844c00235778099e4"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/hero-models.mjs",
+        "sha256": "12d8fa22a0b5e3fc306004c3b1c5ec1da1254d2ee78133fb34cc078c8da75bb4"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/lobby-model.mjs",
+        "sha256": "0781ce59e32f339af522e8e7551fcb6f0a9a0be513f6238d52a84ce6a8875169"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/lobby-scene.mjs",
+        "sha256": "0cdcabbc4933333ccf9773ed592ce83e39250dd3d9d53d55fb8671c13ba08c80"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/lobby-textures.mjs",
+        "sha256": "ffc8dcdd00907705b415d45070429d0e5fc85d7274b766c01b14368fe2988861"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/melee-sequence.mjs",
+        "sha256": "ddf834428394edb841f15ed3897d4699dbca4334588dcd8ac5de103ecfeecf67"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/model-utils.mjs",
+        "sha256": "0dc5d19397479f0d8f14984133b3d5cae2f2c68800ab248ea8eff6b27f09e7b8"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/models.mjs",
+        "sha256": "a9c52079bf1dde6dd7fcf1d9f5727b5d21c994f9f129012842c5f6929a89140f"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/pack-scene.mjs",
+        "sha256": "b9aea375352eac23048dee199ca52a6f15719aa2de931437e7483b0f8839b4f5"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/scene.mjs",
+        "sha256": "bdb71f3271d1860adef3b2569a463a09af8c3156376fe158eadcf9a2c9963d73"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/software-renderer.mjs",
+        "sha256": "b28d2f603067b2828b7db20a27f6ba6ba1625db6065ccb6d827e4e235f5f6d5e"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/stone-surface.mjs",
+        "sha256": "73655cfe317a5e3f81876c5ea344ce414a3c5ec44db29430f474b691ca442964"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/targeting.mjs",
+        "sha256": "68fe454874fc9487c843cb71c64d186577c05833c6cc67f51a6e780a4e602704"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/av/audio.mjs",
+        "sha256": "a22ba6bd72de2d05eb4a0607dfb4288e3b1f2945cc1cf8d44c02c7983e5917ec"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/av/effects.mjs",
+        "sha256": "baf093932734d5ebcd6f829b4915577c93cf41fd6a0e44bc24700d076533c1d6"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/av/geometry.mjs",
+        "sha256": "5485dc33dafec8cb7872de61b77b14e9e712e994537d3a02175f0a4b6cda3b32"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/av/pictures.mjs",
+        "sha256": "e54a83360cd7bd6196972bc7f893e1c1be2c495df2ba3eeefe9f8479e120da48"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/av/speech.mjs",
+        "sha256": "c229e97ada437f9dfa9a17d8032da8b64bc27a06ddf951e30dc6742c61146f12"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/battle-v2.css",
+        "sha256": "fa0a5aaa0d8b27f61766efbced4f39d5b5eba65bcbaf8ced8843688323959551"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/card-guide.mjs",
+        "sha256": "c8a52e8eabc50c24a0e9b8f268eb725ce0ddb82d81a2f95e7700fdcea517a729"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/cards.mjs",
+        "sha256": "6951e44188476c91cb41557dd8bfd84e193833298603cfe07eadf6751c197e4a"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/collection.mjs",
+        "sha256": "004f5cd025b37d988dad2284a897072020cc6315eea8779183598362387e49da"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/combat-rating.mjs",
+        "sha256": "2a6b8b729933364fe2ab3aef34d5cc6ea16c9e4d1504c784dad425d3a3049105"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/curriculum.json",
+        "sha256": "b20c69e4dc839f1476639eecdab9639cd3ce5612005abde85b34e28dab2d619d"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/engine.mjs",
+        "sha256": "2ac483afd9be54bdf3f249203bfff2735287e8fe1916dda2567d5cb0c6999976"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/hero-skins.mjs",
+        "sha256": "b7fc45e528ac0c5504b7d8fd6c317fb5e05499e848454db4089ee3c2eb8566db"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/learning-visuals.mjs",
+        "sha256": "f5bd9688e6144b758139391884fe232adce467bb83d8ce8301cadd12aae072be"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/learning.mjs",
+        "sha256": "bf1f51503bb5cd036d67de62f187c36c13aa789aaa4a039b764a9ade1a13ac11"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/app.mjs",
+        "sha256": "1f94506972ddc8649c4e6f2b59c143f0078e54ff47683533f6d646ae71d66610"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/audio.mjs",
+        "sha256": "4272127af8d152c132de64c230e39b16c5d91a95b217449432aa20495e103e4e"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/battle-options.mjs",
+        "sha256": "16d6015c20ae7b114622128667ea1f241834875005a5ffa4acd7abff60a3abd8"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/card-inspection.mjs",
+        "sha256": "8e20708c4a4863feaab6d910f349042a3b20f12cccebe83547b3afa7bf774371"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/card-library.mjs",
+        "sha256": "3aa30e7e60e9d1b4f216c379ff5aca943f4680685721a8c6ea8d20b4b105ab58"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/client.mjs",
+        "sha256": "e3e679de2186536caed497f5bb2c4876ac81decaeba7f3e90f78ecd4ec7f4e9a"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/collection-view.mjs",
+        "sha256": "abcf8b1e2ed12b431fa9cdefba5033b04b5ebe0dddeb23943525b3164295b314"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/collection.css",
+        "sha256": "a7bb4cf42d5fa4ed784ab9cdd4fbfdfbc7428ac1ee62a2f7d58ef236ca479461"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/deadlines.mjs",
+        "sha256": "fc6fcb75264c37e56dccef759b40d54c001fde84547a892ca7275463063f2793"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/focus-return.mjs",
+        "sha256": "3a5fd49fb76c92c70270a162ca3e4a53620c7394753d60c94943742aa21bcf99"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/hero-preview.mjs",
+        "sha256": "f5dce7114648c8e1ae93d27902b5f837e8c8fe8fb96ebf089cfde358281ed6a0"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/identity-client.mjs",
+        "sha256": "6501b4773f66bf69b4ed33a433b5aea7c5a2d16b36093f849a2d0f32cd18fde2"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/identity-view.mjs",
+        "sha256": "ed31baf01935568d95c2f3af42fb495b958d72b60b13d3b9523f1cea7884c327"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/identity.css",
+        "sha256": "2e75424eec6599b58c0cfb5c09b711d99c669bb12e1484a7af97827dcfb38879"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/immersive.css",
+        "sha256": "4cdbdda344b5205993d6f59bcf6286dcdb63641427a1b0003ef7bc6f52851920"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/learning-attention.mjs",
+        "sha256": "6b1f92c14b19031aa0ac550fbe0b758da4b5b7a0f1549aef470c86bdc13e4df8"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/lobby-view.mjs",
+        "sha256": "b1311a943144fbb00080c2030397828ea51de205af3ca71c8e788ecf7aa05e91"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/progress.mjs",
+        "sha256": "97edc2ae3ccf8eac724a9c80a0be8067ae5df4fb5b52fa2cb91136145109e648"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/remote-progress.mjs",
+        "sha256": "b27bad55c55f387730e9d7489c011865286cd61d71bdc9e4189e1e902ca61faf"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/responsive-review.html",
+        "sha256": "ae6acaadff75f94f2203c6f464707c4fc5f6823066d20f09d050b208f9eb9860"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/reward-view.mjs",
+        "sha256": "d61a36b5486b5fcc5a091c9e371475d1927a9136040fd6c3df3fbcf6fc8e00cc"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/runtime.mjs",
+        "sha256": "7ef14a5baf666e3bd99d9ada136073ad5b6364c0b07d19a8ceea84c8cd36ad1c"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/safe-area.css",
+        "sha256": "60d05e589ef46864e71faca08b39fc36ed7305398bf083c288107a24468901af"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/scene-audio.mjs",
+        "sha256": "5af394c4e2d59c16e4a6674d6e5254a53df3ebe6e25cabedfde2438aff192749"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/study-desk.mjs",
+        "sha256": "404e43f27c562d8dfb42358583308fad28247518a1e9efff3b52fa1dc68a0714"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/style.css",
+        "sha256": "75a011ad831385990ba1edb8d1d2ccbb32b9b69f927026fbe30644c40a548dba"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/target-notice.mjs",
+        "sha256": "ed5b64450734c04e9d348297af66d947c84170d94e5acd24f4c3c47892577bb9"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/template.html",
+        "sha256": "df837422aec716511e50157dc48cd2e549d60e2bfd6b85eea750077c2a1f513f"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/unit-label-width.mjs",
+        "sha256": "8b7b82db327c37225189c97b80f4a6759c0dbeeb344eba589ef1ad08537e5b4f"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/network/wardrobe-view.mjs",
+        "sha256": "02700fa591ea797ba6dba371a2ab1c51f48ffc1fe57f49cf230d3b87ea573bcb"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/opening.mjs",
+        "sha256": "9a9e0f455823ff5bb3f5665d1bb710740726428e238d32c0b29d656366fca6d5"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/practice/NOBLE-HASHES-LICENSE.txt",
+        "sha256": "4f221aee6e072336700c408c68ab3b96a3fc09f6aebe6f48f1bd99e5ef13faec"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/practice/browser-crypto.mjs",
+        "sha256": "4c3f8e1645761ab26761563250160c17e7a8090a35756995ed08dada1253eed9"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/practice/no-filesystem.mjs",
+        "sha256": "3be54c5b469ef26634c97dc9bfefb1cb73a7351400d9299e7d46eb0a915735b3"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/practice/runtime.mjs",
+        "sha256": "b3864e31ec80952fa7c96a9a4d82153241106d808aaa33ed68891b721f206894"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/question-banks.mjs",
+        "sha256": "25b1ea792084e144c40adea0b46a2317a9cc21de96328c61372b10558f2c1596"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/questions.json",
+        "sha256": "68aa7298f6bb5290167eeab1b87899d28a0735109d3cb29d5135875cfcabcad0"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/random.mjs",
+        "sha256": "80bc636faa90bee79d33ca38643661414ae98aecf9b95830f9464bfe0836cb24"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/reward-journey.mjs",
+        "sha256": "41dac740d05b328d03328f88bde78ed766d7272ff42640d405363a1865f0c36e"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/save-session.mjs",
+        "sha256": "95edb4dad5d88bcb19710342b54d95e33aa6a514cea63ef8b723c6f181c33e3e"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/speech-assets.json",
+        "sha256": "79728bb2618edbd553bff5af2c2e1ca0488eacb9399ef59602394aee19069a4a"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/style.css",
+        "sha256": "680d00d49df0614665ec536715bdf43b6529a6f8d7179cc50469d2ba62abf218"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/teacher-questions.json",
+        "sha256": "401c77b34e55d2321230a3fb0fd4c9eeb1d7b823572c676e7744cfec45657345"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/template.html",
+        "sha256": "cd1ff231a6759f9e15ca85223401d2cfdfac34b0fb83a7a296fadc9d59d46239"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/types.d.ts",
+        "sha256": "0bbd329fa41701e026ec7b085911d889847583b938d122f302d61f7b18c7573f"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/reduced-shadow-cache.mjs",
+        "sha256": "8150dae434043fc209df42cfcda00688734f92c02c993870b434e5fb03f0cfa6"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/shadow-lab-observer.mjs",
+        "sha256": "cb4e8ee19c1af211e408c5475db9c26fb7f6b1d455860f20e40144e8930ce46b"
+      }
+    ],
+    "fixedBuild": [
+      {
+        "file": "test-results/shared-shadow-fixed/build-manifest.json",
+        "sha256": "19701109fc27341f142e6325118fbbc59cfef5db281ecd4887708de094675b57"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/fixed-client/app.js",
+        "sha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/fixed-client/index.html",
+        "sha256": "6fcfce84f31d001c2e6a2e5f7f211f71df707b99093a1033211329ab7d4863b2"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/fixed-client/lab-baseline.html",
+        "sha256": "8adc040d5451f1c447b36b9dea5101aa1d7e6e33942fc5457440fbb80bbb0e26"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/fixed-client/lab-baseline.js",
+        "sha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/fixed-client/lab-candidate.html",
+        "sha256": "b0a43c1532a04d6f4df29bb54e1c5442d60c8febe659d531adaeeaebd5d9325b"
+      },
+      {
+        "file": "test-results/shared-shadow-fixed/fixed-client/lab-candidate.js",
+        "sha256": "6b5f3a9348cf3f0f8c0b39f9d2f6ba5fa049330661ccf63a371073b16cc2566c"
+      }
+    ],
+    "generatedSuite": [
+      {
+        "file": "test-results/shared-shadow-suite-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921/helpers.mjs",
+        "sha256": "c32ca75c83e3c9e34c23e31f7283640f183a3fd27a50236644607289966187b1"
+      },
+      {
+        "file": "test-results/shared-shadow-suite-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921/combat-motion-tools.mjs",
+        "sha256": "6fd48f1d9e4ae2161c13b34eb6cc223f88bd9f23632a6babf1632090b156d352"
+      },
+      {
+        "file": "test-results/shared-shadow-suite-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921/shared-shadow.spec.mjs",
+        "sha256": "2cb7dfe722adde47250b3d522f614649fbbcb4aa0821d555ee54b9b42eb836f4"
+      }
+    ],
+    "servedSnapshot": [
+      {
+        "file": "test-results/shared-shadow-work-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921/client/app.js",
+        "sha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31"
+      },
+      {
+        "file": "test-results/shared-shadow-work-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921/client/index.html",
+        "sha256": "6fcfce84f31d001c2e6a2e5f7f211f71df707b99093a1033211329ab7d4863b2"
+      },
+      {
+        "file": "test-results/shared-shadow-work-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921/client/lab-baseline.html",
+        "sha256": "8adc040d5451f1c447b36b9dea5101aa1d7e6e33942fc5457440fbb80bbb0e26"
+      },
+      {
+        "file": "test-results/shared-shadow-work-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921/client/lab-baseline.js",
+        "sha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31"
+      },
+      {
+        "file": "test-results/shared-shadow-work-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921/client/lab-candidate.html",
+        "sha256": "b0a43c1532a04d6f4df29bb54e1c5442d60c8febe659d531adaeeaebd5d9325b"
+      },
+      {
+        "file": "test-results/shared-shadow-work-hardware-headed-2026-10-11T03-44-34-014Z-e02ed921/client/lab-candidate.js",
+        "sha256": "6b5f3a9348cf3f0f8c0b39f9d2f6ba5fa049330661ccf63a371073b16cc2566c"
+      }
+    ]
+  },
+  "staticFiles": [
+    {
+      "route": "/app.js",
+      "file": "test-results/shared-shadow-fixed/fixed-client/app.js",
+      "sha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31"
+    },
+    {
+      "route": "/",
+      "file": "test-results/shared-shadow-fixed/fixed-client/index.html",
+      "sha256": "6fcfce84f31d001c2e6a2e5f7f211f71df707b99093a1033211329ab7d4863b2"
+    },
+    {
+      "route": "/lab-baseline.html",
+      "file": "test-results/shared-shadow-fixed/fixed-client/lab-baseline.html",
+      "sha256": "8adc040d5451f1c447b36b9dea5101aa1d7e6e33942fc5457440fbb80bbb0e26"
+    },
+    {
+      "route": "/lab-baseline.js",
+      "file": "test-results/shared-shadow-fixed/fixed-client/lab-baseline.js",
+      "sha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31"
+    },
+    {
+      "route": "/lab-candidate.html",
+      "file": "test-results/shared-shadow-fixed/fixed-client/lab-candidate.html",
+      "sha256": "b0a43c1532a04d6f4df29bb54e1c5442d60c8febe659d531adaeeaebd5d9325b"
+    },
+    {
+      "route": "/lab-candidate.js",
+      "file": "test-results/shared-shadow-fixed/fixed-client/lab-candidate.js",
+      "sha256": "6b5f3a9348cf3f0f8c0b39f9d2f6ba5fa049330661ccf63a371073b16cc2566c"
+    }
+  ],
+  "build": {
+    "schema": 1,
+    "builtAt": "2026-10-11T03:44:19.990Z",
+    "commit": "1eb618be87023ebdb9c2e4fb7f2587b881e80a29",
+    "tree": "406e3371819900434a3fc52e094bb77df9042734",
+    "formalSha": "b059f5bf1100fdaee258efac63508f466c035cdd6f9abdfde98f74f68d4678be",
+    "helperFile": "tests/diagnostics/shared-shadow/shadow-cache.mjs",
+    "helperSha": "8150dae434043fc209df42cfcda00688734f92c02c993870b434e5fb03f0cfa6",
+    "observerSha": "cb4e8ee19c1af211e408c5475db9c26fb7f6b1d455860f20e40144e8930ce46b",
+    "builderFile": "tests/diagnostics/shared-shadow/build.mjs",
+    "builderSha": "45b80b3ea8bab30f29add249c766d6eb43ede9e9a29723f45553e658bb1be71a",
+    "variants": [
+      {
+        "variant": "baseline",
+        "copiedSources": [
+          {
+            "originalFile": "src/app.mjs",
+            "originalSha256": "81a6b2f5d2a9c3e4f3ffeff395583677c5339aba36e3809c58181a57e53bec23",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/app.mjs",
+            "sha256": "81a6b2f5d2a9c3e4f3ffeff395583677c5339aba36e3809c58181a57e53bec23",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/adaptive-quality.mjs",
+            "originalSha256": "3225a0263a3c78684c80c79a1f818ab547e6d823d1cacd0fefec3f42a2ad7885",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/adaptive-quality.mjs",
+            "sha256": "3225a0263a3c78684c80c79a1f818ab547e6d823d1cacd0fefec3f42a2ad7885",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/board-input.mjs",
+            "originalSha256": "856d166ce800b24091c9c4c401cada3a81e3ba40b01e3baafd69e78097eb17ef",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/board-input.mjs",
+            "sha256": "856d166ce800b24091c9c4c401cada3a81e3ba40b01e3baafd69e78097eb17ef",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/card-relief.mjs",
+            "originalSha256": "4c7cf07ac5372227d3fec7b683b80cb4ee9482e7d6a22478fe2fb1dd25445037",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/card-relief.mjs",
+            "sha256": "4c7cf07ac5372227d3fec7b683b80cb4ee9482e7d6a22478fe2fb1dd25445037",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/card-textures.mjs",
+            "originalSha256": "e75b35ec4ebe6487ef055b9cb99243c09dbf25cea5ef12d4574262158d57a013",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/card-textures.mjs",
+            "sha256": "e75b35ec4ebe6487ef055b9cb99243c09dbf25cea5ef12d4574262158d57a013",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/creature-expansion-v4.mjs",
+            "originalSha256": "6fd8f1e6c246098cad8fbfc343364dba396bcdf88a419a8b84b0de875be11deb",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/creature-expansion-v4.mjs",
+            "sha256": "6fd8f1e6c246098cad8fbfc343364dba396bcdf88a419a8b84b0de875be11deb",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/creature-expansion.mjs",
+            "originalSha256": "8145c5f081ffeca9f95c0243637573f61de29da816db9399f3d2b572ded5f510",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/creature-expansion.mjs",
+            "sha256": "8145c5f081ffeca9f95c0243637573f61de29da816db9399f3d2b572ded5f510",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/effect-warmup.mjs",
+            "originalSha256": "eb97b4d2e88c0e544a224e0fbc55ea1b78519baf25348a39adcf6f8874467d9d",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/effect-warmup.mjs",
+            "sha256": "eb97b4d2e88c0e544a224e0fbc55ea1b78519baf25348a39adcf6f8874467d9d",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/elemental-effects.mjs",
+            "originalSha256": "fb0075da633442787066f7afa10ffefa49756d1f0d0c6b24140f7f7e8403a681",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/elemental-effects.mjs",
+            "sha256": "fb0075da633442787066f7afa10ffefa49756d1f0d0c6b24140f7f7e8403a681",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/garment-colors.mjs",
+            "originalSha256": "dca299441de3a5099c2d2af908bd239d2ca03b63a6711fb8551cdf37cc5bb6eb",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/garment-colors.mjs",
+            "sha256": "dca299441de3a5099c2d2af908bd239d2ca03b63a6711fb8551cdf37cc5bb6eb",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/hand-input.mjs",
+            "originalSha256": "6ede0ec227474b2ac2bd726ffa2c9bb7cb4fbc3c6a5eea1560162242b4a6d140",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/hand-input.mjs",
+            "sha256": "6ede0ec227474b2ac2bd726ffa2c9bb7cb4fbc3c6a5eea1560162242b4a6d140",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/hand-layout.mjs",
+            "originalSha256": "006d3b3562545392343ace923f38ca479e6294aa5d2ea17fd9a63da8e0485b3b",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/hand-layout.mjs",
+            "sha256": "006d3b3562545392343ace923f38ca479e6294aa5d2ea17fd9a63da8e0485b3b",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/hand-scene.mjs",
+            "originalSha256": "b7ed34dd38f4ae285e326b149e648e3795eb3e387b7f7981b79665f878a6f1f6",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/hand-scene.mjs",
+            "sha256": "b7ed34dd38f4ae285e326b149e648e3795eb3e387b7f7981b79665f878a6f1f6",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/hero-geometry.mjs",
+            "originalSha256": "e707b2375cfbe978e0b475b352abe35bca719471d775f57844c00235778099e4",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/hero-geometry.mjs",
+            "sha256": "e707b2375cfbe978e0b475b352abe35bca719471d775f57844c00235778099e4",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/hero-models.mjs",
+            "originalSha256": "12d8fa22a0b5e3fc306004c3b1c5ec1da1254d2ee78133fb34cc078c8da75bb4",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/hero-models.mjs",
+            "sha256": "12d8fa22a0b5e3fc306004c3b1c5ec1da1254d2ee78133fb34cc078c8da75bb4",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/lobby-model.mjs",
+            "originalSha256": "0781ce59e32f339af522e8e7551fcb6f0a9a0be513f6238d52a84ce6a8875169",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/lobby-model.mjs",
+            "sha256": "0781ce59e32f339af522e8e7551fcb6f0a9a0be513f6238d52a84ce6a8875169",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/lobby-scene.mjs",
+            "originalSha256": "0cdcabbc4933333ccf9773ed592ce83e39250dd3d9d53d55fb8671c13ba08c80",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/lobby-scene.mjs",
+            "sha256": "0cdcabbc4933333ccf9773ed592ce83e39250dd3d9d53d55fb8671c13ba08c80",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/lobby-textures.mjs",
+            "originalSha256": "ffc8dcdd00907705b415d45070429d0e5fc85d7274b766c01b14368fe2988861",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/lobby-textures.mjs",
+            "sha256": "ffc8dcdd00907705b415d45070429d0e5fc85d7274b766c01b14368fe2988861",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/melee-sequence.mjs",
+            "originalSha256": "ddf834428394edb841f15ed3897d4699dbca4334588dcd8ac5de103ecfeecf67",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/melee-sequence.mjs",
+            "sha256": "ddf834428394edb841f15ed3897d4699dbca4334588dcd8ac5de103ecfeecf67",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/model-utils.mjs",
+            "originalSha256": "0dc5d19397479f0d8f14984133b3d5cae2f2c68800ab248ea8eff6b27f09e7b8",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/model-utils.mjs",
+            "sha256": "0dc5d19397479f0d8f14984133b3d5cae2f2c68800ab248ea8eff6b27f09e7b8",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/models.mjs",
+            "originalSha256": "a9c52079bf1dde6dd7fcf1d9f5727b5d21c994f9f129012842c5f6929a89140f",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/models.mjs",
+            "sha256": "a9c52079bf1dde6dd7fcf1d9f5727b5d21c994f9f129012842c5f6929a89140f",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/pack-scene.mjs",
+            "originalSha256": "b9aea375352eac23048dee199ca52a6f15719aa2de931437e7483b0f8839b4f5",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/pack-scene.mjs",
+            "sha256": "b9aea375352eac23048dee199ca52a6f15719aa2de931437e7483b0f8839b4f5",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/scene.mjs",
+            "originalSha256": "486eb0e5a74ffae9a129ee39fc453418a1ad8e69ce7ebd2c613aedfe1a5d3bba",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/scene.mjs",
+            "sha256": "7b9739c651bf91f52df4f54672bb001fd86b2eaf25d9c17df28fd7de0a957325",
+            "modifiedForLab": true
+          },
+          {
+            "originalFile": "src/arena3d/software-renderer.mjs",
+            "originalSha256": "b28d2f603067b2828b7db20a27f6ba6ba1625db6065ccb6d827e4e235f5f6d5e",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/software-renderer.mjs",
+            "sha256": "b28d2f603067b2828b7db20a27f6ba6ba1625db6065ccb6d827e4e235f5f6d5e",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/stone-surface.mjs",
+            "originalSha256": "73655cfe317a5e3f81876c5ea344ce414a3c5ec44db29430f474b691ca442964",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/stone-surface.mjs",
+            "sha256": "73655cfe317a5e3f81876c5ea344ce414a3c5ec44db29430f474b691ca442964",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/targeting.mjs",
+            "originalSha256": "68fe454874fc9487c843cb71c64d186577c05833c6cc67f51a6e780a4e602704",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/targeting.mjs",
+            "sha256": "68fe454874fc9487c843cb71c64d186577c05833c6cc67f51a6e780a4e602704",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/av/audio.mjs",
+            "originalSha256": "a22ba6bd72de2d05eb4a0607dfb4288e3b1f2945cc1cf8d44c02c7983e5917ec",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/av/audio.mjs",
+            "sha256": "a22ba6bd72de2d05eb4a0607dfb4288e3b1f2945cc1cf8d44c02c7983e5917ec",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/av/effects.mjs",
+            "originalSha256": "baf093932734d5ebcd6f829b4915577c93cf41fd6a0e44bc24700d076533c1d6",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/av/effects.mjs",
+            "sha256": "baf093932734d5ebcd6f829b4915577c93cf41fd6a0e44bc24700d076533c1d6",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/av/geometry.mjs",
+            "originalSha256": "5485dc33dafec8cb7872de61b77b14e9e712e994537d3a02175f0a4b6cda3b32",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/av/geometry.mjs",
+            "sha256": "5485dc33dafec8cb7872de61b77b14e9e712e994537d3a02175f0a4b6cda3b32",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/av/pictures.mjs",
+            "originalSha256": "e54a83360cd7bd6196972bc7f893e1c1be2c495df2ba3eeefe9f8479e120da48",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/av/pictures.mjs",
+            "sha256": "e54a83360cd7bd6196972bc7f893e1c1be2c495df2ba3eeefe9f8479e120da48",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/av/speech.mjs",
+            "originalSha256": "c229e97ada437f9dfa9a17d8032da8b64bc27a06ddf951e30dc6742c61146f12",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/av/speech.mjs",
+            "sha256": "c229e97ada437f9dfa9a17d8032da8b64bc27a06ddf951e30dc6742c61146f12",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/battle-v2.css",
+            "originalSha256": "fa0a5aaa0d8b27f61766efbced4f39d5b5eba65bcbaf8ced8843688323959551",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/battle-v2.css",
+            "sha256": "fa0a5aaa0d8b27f61766efbced4f39d5b5eba65bcbaf8ced8843688323959551",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/card-guide.mjs",
+            "originalSha256": "c8a52e8eabc50c24a0e9b8f268eb725ce0ddb82d81a2f95e7700fdcea517a729",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/card-guide.mjs",
+            "sha256": "c8a52e8eabc50c24a0e9b8f268eb725ce0ddb82d81a2f95e7700fdcea517a729",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/cards.mjs",
+            "originalSha256": "6951e44188476c91cb41557dd8bfd84e193833298603cfe07eadf6751c197e4a",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/cards.mjs",
+            "sha256": "6951e44188476c91cb41557dd8bfd84e193833298603cfe07eadf6751c197e4a",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/collection.mjs",
+            "originalSha256": "004f5cd025b37d988dad2284a897072020cc6315eea8779183598362387e49da",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/collection.mjs",
+            "sha256": "004f5cd025b37d988dad2284a897072020cc6315eea8779183598362387e49da",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/combat-rating.mjs",
+            "originalSha256": "2a6b8b729933364fe2ab3aef34d5cc6ea16c9e4d1504c784dad425d3a3049105",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/combat-rating.mjs",
+            "sha256": "2a6b8b729933364fe2ab3aef34d5cc6ea16c9e4d1504c784dad425d3a3049105",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/curriculum.json",
+            "originalSha256": "b20c69e4dc839f1476639eecdab9639cd3ce5612005abde85b34e28dab2d619d",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/curriculum.json",
+            "sha256": "b20c69e4dc839f1476639eecdab9639cd3ce5612005abde85b34e28dab2d619d",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/engine.mjs",
+            "originalSha256": "2ac483afd9be54bdf3f249203bfff2735287e8fe1916dda2567d5cb0c6999976",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/engine.mjs",
+            "sha256": "2ac483afd9be54bdf3f249203bfff2735287e8fe1916dda2567d5cb0c6999976",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/hero-skins.mjs",
+            "originalSha256": "b7fc45e528ac0c5504b7d8fd6c317fb5e05499e848454db4089ee3c2eb8566db",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/hero-skins.mjs",
+            "sha256": "b7fc45e528ac0c5504b7d8fd6c317fb5e05499e848454db4089ee3c2eb8566db",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/learning-visuals.mjs",
+            "originalSha256": "f5bd9688e6144b758139391884fe232adce467bb83d8ce8301cadd12aae072be",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/learning-visuals.mjs",
+            "sha256": "f5bd9688e6144b758139391884fe232adce467bb83d8ce8301cadd12aae072be",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/learning.mjs",
+            "originalSha256": "bf1f51503bb5cd036d67de62f187c36c13aa789aaa4a039b764a9ade1a13ac11",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/learning.mjs",
+            "sha256": "bf1f51503bb5cd036d67de62f187c36c13aa789aaa4a039b764a9ade1a13ac11",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/app.mjs",
+            "originalSha256": "1f94506972ddc8649c4e6f2b59c143f0078e54ff47683533f6d646ae71d66610",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/app.mjs",
+            "sha256": "1f94506972ddc8649c4e6f2b59c143f0078e54ff47683533f6d646ae71d66610",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/audio.mjs",
+            "originalSha256": "4272127af8d152c132de64c230e39b16c5d91a95b217449432aa20495e103e4e",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/audio.mjs",
+            "sha256": "4272127af8d152c132de64c230e39b16c5d91a95b217449432aa20495e103e4e",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/battle-options.mjs",
+            "originalSha256": "16d6015c20ae7b114622128667ea1f241834875005a5ffa4acd7abff60a3abd8",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/battle-options.mjs",
+            "sha256": "16d6015c20ae7b114622128667ea1f241834875005a5ffa4acd7abff60a3abd8",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/card-inspection.mjs",
+            "originalSha256": "8e20708c4a4863feaab6d910f349042a3b20f12cccebe83547b3afa7bf774371",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/card-inspection.mjs",
+            "sha256": "8e20708c4a4863feaab6d910f349042a3b20f12cccebe83547b3afa7bf774371",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/card-library.mjs",
+            "originalSha256": "3aa30e7e60e9d1b4f216c379ff5aca943f4680685721a8c6ea8d20b4b105ab58",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/card-library.mjs",
+            "sha256": "3aa30e7e60e9d1b4f216c379ff5aca943f4680685721a8c6ea8d20b4b105ab58",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/client.mjs",
+            "originalSha256": "e3e679de2186536caed497f5bb2c4876ac81decaeba7f3e90f78ecd4ec7f4e9a",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/client.mjs",
+            "sha256": "e3e679de2186536caed497f5bb2c4876ac81decaeba7f3e90f78ecd4ec7f4e9a",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/collection-view.mjs",
+            "originalSha256": "abcf8b1e2ed12b431fa9cdefba5033b04b5ebe0dddeb23943525b3164295b314",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/collection-view.mjs",
+            "sha256": "abcf8b1e2ed12b431fa9cdefba5033b04b5ebe0dddeb23943525b3164295b314",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/collection.css",
+            "originalSha256": "a7bb4cf42d5fa4ed784ab9cdd4fbfdfbc7428ac1ee62a2f7d58ef236ca479461",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/collection.css",
+            "sha256": "a7bb4cf42d5fa4ed784ab9cdd4fbfdfbc7428ac1ee62a2f7d58ef236ca479461",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/deadlines.mjs",
+            "originalSha256": "fc6fcb75264c37e56dccef759b40d54c001fde84547a892ca7275463063f2793",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/deadlines.mjs",
+            "sha256": "fc6fcb75264c37e56dccef759b40d54c001fde84547a892ca7275463063f2793",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/focus-return.mjs",
+            "originalSha256": "3a5fd49fb76c92c70270a162ca3e4a53620c7394753d60c94943742aa21bcf99",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/focus-return.mjs",
+            "sha256": "3a5fd49fb76c92c70270a162ca3e4a53620c7394753d60c94943742aa21bcf99",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/hero-preview.mjs",
+            "originalSha256": "f5dce7114648c8e1ae93d27902b5f837e8c8fe8fb96ebf089cfde358281ed6a0",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/hero-preview.mjs",
+            "sha256": "f5dce7114648c8e1ae93d27902b5f837e8c8fe8fb96ebf089cfde358281ed6a0",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/identity-client.mjs",
+            "originalSha256": "6501b4773f66bf69b4ed33a433b5aea7c5a2d16b36093f849a2d0f32cd18fde2",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/identity-client.mjs",
+            "sha256": "6501b4773f66bf69b4ed33a433b5aea7c5a2d16b36093f849a2d0f32cd18fde2",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/identity-view.mjs",
+            "originalSha256": "ed31baf01935568d95c2f3af42fb495b958d72b60b13d3b9523f1cea7884c327",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/identity-view.mjs",
+            "sha256": "ed31baf01935568d95c2f3af42fb495b958d72b60b13d3b9523f1cea7884c327",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/identity.css",
+            "originalSha256": "2e75424eec6599b58c0cfb5c09b711d99c669bb12e1484a7af97827dcfb38879",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/identity.css",
+            "sha256": "2e75424eec6599b58c0cfb5c09b711d99c669bb12e1484a7af97827dcfb38879",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/immersive.css",
+            "originalSha256": "4cdbdda344b5205993d6f59bcf6286dcdb63641427a1b0003ef7bc6f52851920",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/immersive.css",
+            "sha256": "4cdbdda344b5205993d6f59bcf6286dcdb63641427a1b0003ef7bc6f52851920",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/learning-attention.mjs",
+            "originalSha256": "6b1f92c14b19031aa0ac550fbe0b758da4b5b7a0f1549aef470c86bdc13e4df8",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/learning-attention.mjs",
+            "sha256": "6b1f92c14b19031aa0ac550fbe0b758da4b5b7a0f1549aef470c86bdc13e4df8",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/lobby-view.mjs",
+            "originalSha256": "b1311a943144fbb00080c2030397828ea51de205af3ca71c8e788ecf7aa05e91",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/lobby-view.mjs",
+            "sha256": "b1311a943144fbb00080c2030397828ea51de205af3ca71c8e788ecf7aa05e91",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/progress.mjs",
+            "originalSha256": "97edc2ae3ccf8eac724a9c80a0be8067ae5df4fb5b52fa2cb91136145109e648",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/progress.mjs",
+            "sha256": "97edc2ae3ccf8eac724a9c80a0be8067ae5df4fb5b52fa2cb91136145109e648",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/remote-progress.mjs",
+            "originalSha256": "b27bad55c55f387730e9d7489c011865286cd61d71bdc9e4189e1e902ca61faf",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/remote-progress.mjs",
+            "sha256": "b27bad55c55f387730e9d7489c011865286cd61d71bdc9e4189e1e902ca61faf",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/responsive-review.html",
+            "originalSha256": "ae6acaadff75f94f2203c6f464707c4fc5f6823066d20f09d050b208f9eb9860",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/responsive-review.html",
+            "sha256": "ae6acaadff75f94f2203c6f464707c4fc5f6823066d20f09d050b208f9eb9860",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/reward-view.mjs",
+            "originalSha256": "d61a36b5486b5fcc5a091c9e371475d1927a9136040fd6c3df3fbcf6fc8e00cc",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/reward-view.mjs",
+            "sha256": "d61a36b5486b5fcc5a091c9e371475d1927a9136040fd6c3df3fbcf6fc8e00cc",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/runtime.mjs",
+            "originalSha256": "7ef14a5baf666e3bd99d9ada136073ad5b6364c0b07d19a8ceea84c8cd36ad1c",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/runtime.mjs",
+            "sha256": "7ef14a5baf666e3bd99d9ada136073ad5b6364c0b07d19a8ceea84c8cd36ad1c",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/safe-area.css",
+            "originalSha256": "60d05e589ef46864e71faca08b39fc36ed7305398bf083c288107a24468901af",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/safe-area.css",
+            "sha256": "60d05e589ef46864e71faca08b39fc36ed7305398bf083c288107a24468901af",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/scene-audio.mjs",
+            "originalSha256": "5af394c4e2d59c16e4a6674d6e5254a53df3ebe6e25cabedfde2438aff192749",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/scene-audio.mjs",
+            "sha256": "5af394c4e2d59c16e4a6674d6e5254a53df3ebe6e25cabedfde2438aff192749",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/study-desk.mjs",
+            "originalSha256": "404e43f27c562d8dfb42358583308fad28247518a1e9efff3b52fa1dc68a0714",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/study-desk.mjs",
+            "sha256": "404e43f27c562d8dfb42358583308fad28247518a1e9efff3b52fa1dc68a0714",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/style.css",
+            "originalSha256": "75a011ad831385990ba1edb8d1d2ccbb32b9b69f927026fbe30644c40a548dba",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/style.css",
+            "sha256": "75a011ad831385990ba1edb8d1d2ccbb32b9b69f927026fbe30644c40a548dba",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/target-notice.mjs",
+            "originalSha256": "ed5b64450734c04e9d348297af66d947c84170d94e5acd24f4c3c47892577bb9",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/target-notice.mjs",
+            "sha256": "ed5b64450734c04e9d348297af66d947c84170d94e5acd24f4c3c47892577bb9",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/template.html",
+            "originalSha256": "df837422aec716511e50157dc48cd2e549d60e2bfd6b85eea750077c2a1f513f",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/template.html",
+            "sha256": "df837422aec716511e50157dc48cd2e549d60e2bfd6b85eea750077c2a1f513f",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/unit-label-width.mjs",
+            "originalSha256": "8b7b82db327c37225189c97b80f4a6759c0dbeeb344eba589ef1ad08537e5b4f",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/unit-label-width.mjs",
+            "sha256": "8b7b82db327c37225189c97b80f4a6759c0dbeeb344eba589ef1ad08537e5b4f",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/wardrobe-view.mjs",
+            "originalSha256": "02700fa591ea797ba6dba371a2ab1c51f48ffc1fe57f49cf230d3b87ea573bcb",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/network/wardrobe-view.mjs",
+            "sha256": "02700fa591ea797ba6dba371a2ab1c51f48ffc1fe57f49cf230d3b87ea573bcb",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/opening.mjs",
+            "originalSha256": "9a9e0f455823ff5bb3f5665d1bb710740726428e238d32c0b29d656366fca6d5",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/opening.mjs",
+            "sha256": "9a9e0f455823ff5bb3f5665d1bb710740726428e238d32c0b29d656366fca6d5",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/practice/NOBLE-HASHES-LICENSE.txt",
+            "originalSha256": "4f221aee6e072336700c408c68ab3b96a3fc09f6aebe6f48f1bd99e5ef13faec",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/practice/NOBLE-HASHES-LICENSE.txt",
+            "sha256": "4f221aee6e072336700c408c68ab3b96a3fc09f6aebe6f48f1bd99e5ef13faec",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/practice/browser-crypto.mjs",
+            "originalSha256": "4c3f8e1645761ab26761563250160c17e7a8090a35756995ed08dada1253eed9",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/practice/browser-crypto.mjs",
+            "sha256": "4c3f8e1645761ab26761563250160c17e7a8090a35756995ed08dada1253eed9",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/practice/no-filesystem.mjs",
+            "originalSha256": "3be54c5b469ef26634c97dc9bfefb1cb73a7351400d9299e7d46eb0a915735b3",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/practice/no-filesystem.mjs",
+            "sha256": "3be54c5b469ef26634c97dc9bfefb1cb73a7351400d9299e7d46eb0a915735b3",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/practice/runtime.mjs",
+            "originalSha256": "b3864e31ec80952fa7c96a9a4d82153241106d808aaa33ed68891b721f206894",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/practice/runtime.mjs",
+            "sha256": "b3864e31ec80952fa7c96a9a4d82153241106d808aaa33ed68891b721f206894",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/question-banks.mjs",
+            "originalSha256": "25b1ea792084e144c40adea0b46a2317a9cc21de96328c61372b10558f2c1596",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/question-banks.mjs",
+            "sha256": "25b1ea792084e144c40adea0b46a2317a9cc21de96328c61372b10558f2c1596",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/questions.json",
+            "originalSha256": "68aa7298f6bb5290167eeab1b87899d28a0735109d3cb29d5135875cfcabcad0",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/questions.json",
+            "sha256": "68aa7298f6bb5290167eeab1b87899d28a0735109d3cb29d5135875cfcabcad0",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/random.mjs",
+            "originalSha256": "80bc636faa90bee79d33ca38643661414ae98aecf9b95830f9464bfe0836cb24",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/random.mjs",
+            "sha256": "80bc636faa90bee79d33ca38643661414ae98aecf9b95830f9464bfe0836cb24",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/reward-journey.mjs",
+            "originalSha256": "41dac740d05b328d03328f88bde78ed766d7272ff42640d405363a1865f0c36e",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/reward-journey.mjs",
+            "sha256": "41dac740d05b328d03328f88bde78ed766d7272ff42640d405363a1865f0c36e",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/save-session.mjs",
+            "originalSha256": "95edb4dad5d88bcb19710342b54d95e33aa6a514cea63ef8b723c6f181c33e3e",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/save-session.mjs",
+            "sha256": "95edb4dad5d88bcb19710342b54d95e33aa6a514cea63ef8b723c6f181c33e3e",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/speech-assets.json",
+            "originalSha256": "79728bb2618edbd553bff5af2c2e1ca0488eacb9399ef59602394aee19069a4a",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/speech-assets.json",
+            "sha256": "79728bb2618edbd553bff5af2c2e1ca0488eacb9399ef59602394aee19069a4a",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/style.css",
+            "originalSha256": "680d00d49df0614665ec536715bdf43b6529a6f8d7179cc50469d2ba62abf218",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/style.css",
+            "sha256": "680d00d49df0614665ec536715bdf43b6529a6f8d7179cc50469d2ba62abf218",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/teacher-questions.json",
+            "originalSha256": "401c77b34e55d2321230a3fb0fd4c9eeb1d7b823572c676e7744cfec45657345",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/teacher-questions.json",
+            "sha256": "401c77b34e55d2321230a3fb0fd4c9eeb1d7b823572c676e7744cfec45657345",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/template.html",
+            "originalSha256": "cd1ff231a6759f9e15ca85223401d2cfdfac34b0fb83a7a296fadc9d59d46239",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/template.html",
+            "sha256": "cd1ff231a6759f9e15ca85223401d2cfdfac34b0fb83a7a296fadc9d59d46239",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/types.d.ts",
+            "originalSha256": "0bbd329fa41701e026ec7b085911d889847583b938d122f302d61f7b18c7573f",
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/types.d.ts",
+            "sha256": "0bbd329fa41701e026ec7b085911d889847583b938d122f302d61f7b18c7573f",
+            "modifiedForLab": false
+          },
+          {
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/reduced-shadow-cache.mjs",
+            "sha256": "8150dae434043fc209df42cfcda00688734f92c02c993870b434e5fb03f0cfa6",
+            "addedForLab": true
+          },
+          {
+            "file": "test-results/shared-shadow-fixed/source-baseline/src/arena3d/shadow-lab-observer.mjs",
+            "sha256": "cb4e8ee19c1af211e408c5475db9c26fb7f6b1d455860f20e40144e8930ce46b",
+            "addedForLab": true
+          }
+        ],
+        "script": "lab-baseline.js",
+        "html": "lab-baseline.html",
+        "appSha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31",
+        "htmlSha256": "8adc040d5451f1c447b36b9dea5101aa1d7e6e33942fc5457440fbb80bbb0e26",
+        "appBytes": 2307731
+      },
+      {
+        "variant": "candidate",
+        "copiedSources": [
+          {
+            "originalFile": "src/app.mjs",
+            "originalSha256": "81a6b2f5d2a9c3e4f3ffeff395583677c5339aba36e3809c58181a57e53bec23",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/app.mjs",
+            "sha256": "81a6b2f5d2a9c3e4f3ffeff395583677c5339aba36e3809c58181a57e53bec23",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/adaptive-quality.mjs",
+            "originalSha256": "3225a0263a3c78684c80c79a1f818ab547e6d823d1cacd0fefec3f42a2ad7885",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/adaptive-quality.mjs",
+            "sha256": "3225a0263a3c78684c80c79a1f818ab547e6d823d1cacd0fefec3f42a2ad7885",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/board-input.mjs",
+            "originalSha256": "856d166ce800b24091c9c4c401cada3a81e3ba40b01e3baafd69e78097eb17ef",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/board-input.mjs",
+            "sha256": "856d166ce800b24091c9c4c401cada3a81e3ba40b01e3baafd69e78097eb17ef",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/card-relief.mjs",
+            "originalSha256": "4c7cf07ac5372227d3fec7b683b80cb4ee9482e7d6a22478fe2fb1dd25445037",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/card-relief.mjs",
+            "sha256": "4c7cf07ac5372227d3fec7b683b80cb4ee9482e7d6a22478fe2fb1dd25445037",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/card-textures.mjs",
+            "originalSha256": "e75b35ec4ebe6487ef055b9cb99243c09dbf25cea5ef12d4574262158d57a013",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/card-textures.mjs",
+            "sha256": "e75b35ec4ebe6487ef055b9cb99243c09dbf25cea5ef12d4574262158d57a013",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/creature-expansion-v4.mjs",
+            "originalSha256": "6fd8f1e6c246098cad8fbfc343364dba396bcdf88a419a8b84b0de875be11deb",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/creature-expansion-v4.mjs",
+            "sha256": "6fd8f1e6c246098cad8fbfc343364dba396bcdf88a419a8b84b0de875be11deb",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/creature-expansion.mjs",
+            "originalSha256": "8145c5f081ffeca9f95c0243637573f61de29da816db9399f3d2b572ded5f510",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/creature-expansion.mjs",
+            "sha256": "8145c5f081ffeca9f95c0243637573f61de29da816db9399f3d2b572ded5f510",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/effect-warmup.mjs",
+            "originalSha256": "eb97b4d2e88c0e544a224e0fbc55ea1b78519baf25348a39adcf6f8874467d9d",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/effect-warmup.mjs",
+            "sha256": "eb97b4d2e88c0e544a224e0fbc55ea1b78519baf25348a39adcf6f8874467d9d",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/elemental-effects.mjs",
+            "originalSha256": "fb0075da633442787066f7afa10ffefa49756d1f0d0c6b24140f7f7e8403a681",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/elemental-effects.mjs",
+            "sha256": "fb0075da633442787066f7afa10ffefa49756d1f0d0c6b24140f7f7e8403a681",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/garment-colors.mjs",
+            "originalSha256": "dca299441de3a5099c2d2af908bd239d2ca03b63a6711fb8551cdf37cc5bb6eb",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/garment-colors.mjs",
+            "sha256": "dca299441de3a5099c2d2af908bd239d2ca03b63a6711fb8551cdf37cc5bb6eb",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/hand-input.mjs",
+            "originalSha256": "6ede0ec227474b2ac2bd726ffa2c9bb7cb4fbc3c6a5eea1560162242b4a6d140",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/hand-input.mjs",
+            "sha256": "6ede0ec227474b2ac2bd726ffa2c9bb7cb4fbc3c6a5eea1560162242b4a6d140",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/hand-layout.mjs",
+            "originalSha256": "006d3b3562545392343ace923f38ca479e6294aa5d2ea17fd9a63da8e0485b3b",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/hand-layout.mjs",
+            "sha256": "006d3b3562545392343ace923f38ca479e6294aa5d2ea17fd9a63da8e0485b3b",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/hand-scene.mjs",
+            "originalSha256": "b7ed34dd38f4ae285e326b149e648e3795eb3e387b7f7981b79665f878a6f1f6",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/hand-scene.mjs",
+            "sha256": "b7ed34dd38f4ae285e326b149e648e3795eb3e387b7f7981b79665f878a6f1f6",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/hero-geometry.mjs",
+            "originalSha256": "e707b2375cfbe978e0b475b352abe35bca719471d775f57844c00235778099e4",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/hero-geometry.mjs",
+            "sha256": "e707b2375cfbe978e0b475b352abe35bca719471d775f57844c00235778099e4",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/hero-models.mjs",
+            "originalSha256": "12d8fa22a0b5e3fc306004c3b1c5ec1da1254d2ee78133fb34cc078c8da75bb4",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/hero-models.mjs",
+            "sha256": "12d8fa22a0b5e3fc306004c3b1c5ec1da1254d2ee78133fb34cc078c8da75bb4",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/lobby-model.mjs",
+            "originalSha256": "0781ce59e32f339af522e8e7551fcb6f0a9a0be513f6238d52a84ce6a8875169",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/lobby-model.mjs",
+            "sha256": "0781ce59e32f339af522e8e7551fcb6f0a9a0be513f6238d52a84ce6a8875169",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/lobby-scene.mjs",
+            "originalSha256": "0cdcabbc4933333ccf9773ed592ce83e39250dd3d9d53d55fb8671c13ba08c80",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/lobby-scene.mjs",
+            "sha256": "0cdcabbc4933333ccf9773ed592ce83e39250dd3d9d53d55fb8671c13ba08c80",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/lobby-textures.mjs",
+            "originalSha256": "ffc8dcdd00907705b415d45070429d0e5fc85d7274b766c01b14368fe2988861",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/lobby-textures.mjs",
+            "sha256": "ffc8dcdd00907705b415d45070429d0e5fc85d7274b766c01b14368fe2988861",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/melee-sequence.mjs",
+            "originalSha256": "ddf834428394edb841f15ed3897d4699dbca4334588dcd8ac5de103ecfeecf67",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/melee-sequence.mjs",
+            "sha256": "ddf834428394edb841f15ed3897d4699dbca4334588dcd8ac5de103ecfeecf67",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/model-utils.mjs",
+            "originalSha256": "0dc5d19397479f0d8f14984133b3d5cae2f2c68800ab248ea8eff6b27f09e7b8",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/model-utils.mjs",
+            "sha256": "0dc5d19397479f0d8f14984133b3d5cae2f2c68800ab248ea8eff6b27f09e7b8",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/models.mjs",
+            "originalSha256": "a9c52079bf1dde6dd7fcf1d9f5727b5d21c994f9f129012842c5f6929a89140f",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/models.mjs",
+            "sha256": "a9c52079bf1dde6dd7fcf1d9f5727b5d21c994f9f129012842c5f6929a89140f",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/pack-scene.mjs",
+            "originalSha256": "b9aea375352eac23048dee199ca52a6f15719aa2de931437e7483b0f8839b4f5",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/pack-scene.mjs",
+            "sha256": "b9aea375352eac23048dee199ca52a6f15719aa2de931437e7483b0f8839b4f5",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/scene.mjs",
+            "originalSha256": "486eb0e5a74ffae9a129ee39fc453418a1ad8e69ce7ebd2c613aedfe1a5d3bba",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/scene.mjs",
+            "sha256": "bdb71f3271d1860adef3b2569a463a09af8c3156376fe158eadcf9a2c9963d73",
+            "modifiedForLab": true
+          },
+          {
+            "originalFile": "src/arena3d/software-renderer.mjs",
+            "originalSha256": "b28d2f603067b2828b7db20a27f6ba6ba1625db6065ccb6d827e4e235f5f6d5e",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/software-renderer.mjs",
+            "sha256": "b28d2f603067b2828b7db20a27f6ba6ba1625db6065ccb6d827e4e235f5f6d5e",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/stone-surface.mjs",
+            "originalSha256": "73655cfe317a5e3f81876c5ea344ce414a3c5ec44db29430f474b691ca442964",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/stone-surface.mjs",
+            "sha256": "73655cfe317a5e3f81876c5ea344ce414a3c5ec44db29430f474b691ca442964",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/arena3d/targeting.mjs",
+            "originalSha256": "68fe454874fc9487c843cb71c64d186577c05833c6cc67f51a6e780a4e602704",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/targeting.mjs",
+            "sha256": "68fe454874fc9487c843cb71c64d186577c05833c6cc67f51a6e780a4e602704",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/av/audio.mjs",
+            "originalSha256": "a22ba6bd72de2d05eb4a0607dfb4288e3b1f2945cc1cf8d44c02c7983e5917ec",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/av/audio.mjs",
+            "sha256": "a22ba6bd72de2d05eb4a0607dfb4288e3b1f2945cc1cf8d44c02c7983e5917ec",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/av/effects.mjs",
+            "originalSha256": "baf093932734d5ebcd6f829b4915577c93cf41fd6a0e44bc24700d076533c1d6",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/av/effects.mjs",
+            "sha256": "baf093932734d5ebcd6f829b4915577c93cf41fd6a0e44bc24700d076533c1d6",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/av/geometry.mjs",
+            "originalSha256": "5485dc33dafec8cb7872de61b77b14e9e712e994537d3a02175f0a4b6cda3b32",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/av/geometry.mjs",
+            "sha256": "5485dc33dafec8cb7872de61b77b14e9e712e994537d3a02175f0a4b6cda3b32",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/av/pictures.mjs",
+            "originalSha256": "e54a83360cd7bd6196972bc7f893e1c1be2c495df2ba3eeefe9f8479e120da48",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/av/pictures.mjs",
+            "sha256": "e54a83360cd7bd6196972bc7f893e1c1be2c495df2ba3eeefe9f8479e120da48",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/av/speech.mjs",
+            "originalSha256": "c229e97ada437f9dfa9a17d8032da8b64bc27a06ddf951e30dc6742c61146f12",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/av/speech.mjs",
+            "sha256": "c229e97ada437f9dfa9a17d8032da8b64bc27a06ddf951e30dc6742c61146f12",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/battle-v2.css",
+            "originalSha256": "fa0a5aaa0d8b27f61766efbced4f39d5b5eba65bcbaf8ced8843688323959551",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/battle-v2.css",
+            "sha256": "fa0a5aaa0d8b27f61766efbced4f39d5b5eba65bcbaf8ced8843688323959551",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/card-guide.mjs",
+            "originalSha256": "c8a52e8eabc50c24a0e9b8f268eb725ce0ddb82d81a2f95e7700fdcea517a729",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/card-guide.mjs",
+            "sha256": "c8a52e8eabc50c24a0e9b8f268eb725ce0ddb82d81a2f95e7700fdcea517a729",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/cards.mjs",
+            "originalSha256": "6951e44188476c91cb41557dd8bfd84e193833298603cfe07eadf6751c197e4a",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/cards.mjs",
+            "sha256": "6951e44188476c91cb41557dd8bfd84e193833298603cfe07eadf6751c197e4a",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/collection.mjs",
+            "originalSha256": "004f5cd025b37d988dad2284a897072020cc6315eea8779183598362387e49da",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/collection.mjs",
+            "sha256": "004f5cd025b37d988dad2284a897072020cc6315eea8779183598362387e49da",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/combat-rating.mjs",
+            "originalSha256": "2a6b8b729933364fe2ab3aef34d5cc6ea16c9e4d1504c784dad425d3a3049105",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/combat-rating.mjs",
+            "sha256": "2a6b8b729933364fe2ab3aef34d5cc6ea16c9e4d1504c784dad425d3a3049105",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/curriculum.json",
+            "originalSha256": "b20c69e4dc839f1476639eecdab9639cd3ce5612005abde85b34e28dab2d619d",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/curriculum.json",
+            "sha256": "b20c69e4dc839f1476639eecdab9639cd3ce5612005abde85b34e28dab2d619d",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/engine.mjs",
+            "originalSha256": "2ac483afd9be54bdf3f249203bfff2735287e8fe1916dda2567d5cb0c6999976",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/engine.mjs",
+            "sha256": "2ac483afd9be54bdf3f249203bfff2735287e8fe1916dda2567d5cb0c6999976",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/hero-skins.mjs",
+            "originalSha256": "b7fc45e528ac0c5504b7d8fd6c317fb5e05499e848454db4089ee3c2eb8566db",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/hero-skins.mjs",
+            "sha256": "b7fc45e528ac0c5504b7d8fd6c317fb5e05499e848454db4089ee3c2eb8566db",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/learning-visuals.mjs",
+            "originalSha256": "f5bd9688e6144b758139391884fe232adce467bb83d8ce8301cadd12aae072be",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/learning-visuals.mjs",
+            "sha256": "f5bd9688e6144b758139391884fe232adce467bb83d8ce8301cadd12aae072be",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/learning.mjs",
+            "originalSha256": "bf1f51503bb5cd036d67de62f187c36c13aa789aaa4a039b764a9ade1a13ac11",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/learning.mjs",
+            "sha256": "bf1f51503bb5cd036d67de62f187c36c13aa789aaa4a039b764a9ade1a13ac11",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/app.mjs",
+            "originalSha256": "1f94506972ddc8649c4e6f2b59c143f0078e54ff47683533f6d646ae71d66610",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/app.mjs",
+            "sha256": "1f94506972ddc8649c4e6f2b59c143f0078e54ff47683533f6d646ae71d66610",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/audio.mjs",
+            "originalSha256": "4272127af8d152c132de64c230e39b16c5d91a95b217449432aa20495e103e4e",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/audio.mjs",
+            "sha256": "4272127af8d152c132de64c230e39b16c5d91a95b217449432aa20495e103e4e",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/battle-options.mjs",
+            "originalSha256": "16d6015c20ae7b114622128667ea1f241834875005a5ffa4acd7abff60a3abd8",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/battle-options.mjs",
+            "sha256": "16d6015c20ae7b114622128667ea1f241834875005a5ffa4acd7abff60a3abd8",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/card-inspection.mjs",
+            "originalSha256": "8e20708c4a4863feaab6d910f349042a3b20f12cccebe83547b3afa7bf774371",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/card-inspection.mjs",
+            "sha256": "8e20708c4a4863feaab6d910f349042a3b20f12cccebe83547b3afa7bf774371",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/card-library.mjs",
+            "originalSha256": "3aa30e7e60e9d1b4f216c379ff5aca943f4680685721a8c6ea8d20b4b105ab58",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/card-library.mjs",
+            "sha256": "3aa30e7e60e9d1b4f216c379ff5aca943f4680685721a8c6ea8d20b4b105ab58",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/client.mjs",
+            "originalSha256": "e3e679de2186536caed497f5bb2c4876ac81decaeba7f3e90f78ecd4ec7f4e9a",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/client.mjs",
+            "sha256": "e3e679de2186536caed497f5bb2c4876ac81decaeba7f3e90f78ecd4ec7f4e9a",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/collection-view.mjs",
+            "originalSha256": "abcf8b1e2ed12b431fa9cdefba5033b04b5ebe0dddeb23943525b3164295b314",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/collection-view.mjs",
+            "sha256": "abcf8b1e2ed12b431fa9cdefba5033b04b5ebe0dddeb23943525b3164295b314",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/collection.css",
+            "originalSha256": "a7bb4cf42d5fa4ed784ab9cdd4fbfdfbc7428ac1ee62a2f7d58ef236ca479461",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/collection.css",
+            "sha256": "a7bb4cf42d5fa4ed784ab9cdd4fbfdfbc7428ac1ee62a2f7d58ef236ca479461",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/deadlines.mjs",
+            "originalSha256": "fc6fcb75264c37e56dccef759b40d54c001fde84547a892ca7275463063f2793",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/deadlines.mjs",
+            "sha256": "fc6fcb75264c37e56dccef759b40d54c001fde84547a892ca7275463063f2793",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/focus-return.mjs",
+            "originalSha256": "3a5fd49fb76c92c70270a162ca3e4a53620c7394753d60c94943742aa21bcf99",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/focus-return.mjs",
+            "sha256": "3a5fd49fb76c92c70270a162ca3e4a53620c7394753d60c94943742aa21bcf99",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/hero-preview.mjs",
+            "originalSha256": "f5dce7114648c8e1ae93d27902b5f837e8c8fe8fb96ebf089cfde358281ed6a0",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/hero-preview.mjs",
+            "sha256": "f5dce7114648c8e1ae93d27902b5f837e8c8fe8fb96ebf089cfde358281ed6a0",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/identity-client.mjs",
+            "originalSha256": "6501b4773f66bf69b4ed33a433b5aea7c5a2d16b36093f849a2d0f32cd18fde2",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/identity-client.mjs",
+            "sha256": "6501b4773f66bf69b4ed33a433b5aea7c5a2d16b36093f849a2d0f32cd18fde2",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/identity-view.mjs",
+            "originalSha256": "ed31baf01935568d95c2f3af42fb495b958d72b60b13d3b9523f1cea7884c327",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/identity-view.mjs",
+            "sha256": "ed31baf01935568d95c2f3af42fb495b958d72b60b13d3b9523f1cea7884c327",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/identity.css",
+            "originalSha256": "2e75424eec6599b58c0cfb5c09b711d99c669bb12e1484a7af97827dcfb38879",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/identity.css",
+            "sha256": "2e75424eec6599b58c0cfb5c09b711d99c669bb12e1484a7af97827dcfb38879",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/immersive.css",
+            "originalSha256": "4cdbdda344b5205993d6f59bcf6286dcdb63641427a1b0003ef7bc6f52851920",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/immersive.css",
+            "sha256": "4cdbdda344b5205993d6f59bcf6286dcdb63641427a1b0003ef7bc6f52851920",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/learning-attention.mjs",
+            "originalSha256": "6b1f92c14b19031aa0ac550fbe0b758da4b5b7a0f1549aef470c86bdc13e4df8",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/learning-attention.mjs",
+            "sha256": "6b1f92c14b19031aa0ac550fbe0b758da4b5b7a0f1549aef470c86bdc13e4df8",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/lobby-view.mjs",
+            "originalSha256": "b1311a943144fbb00080c2030397828ea51de205af3ca71c8e788ecf7aa05e91",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/lobby-view.mjs",
+            "sha256": "b1311a943144fbb00080c2030397828ea51de205af3ca71c8e788ecf7aa05e91",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/progress.mjs",
+            "originalSha256": "97edc2ae3ccf8eac724a9c80a0be8067ae5df4fb5b52fa2cb91136145109e648",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/progress.mjs",
+            "sha256": "97edc2ae3ccf8eac724a9c80a0be8067ae5df4fb5b52fa2cb91136145109e648",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/remote-progress.mjs",
+            "originalSha256": "b27bad55c55f387730e9d7489c011865286cd61d71bdc9e4189e1e902ca61faf",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/remote-progress.mjs",
+            "sha256": "b27bad55c55f387730e9d7489c011865286cd61d71bdc9e4189e1e902ca61faf",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/responsive-review.html",
+            "originalSha256": "ae6acaadff75f94f2203c6f464707c4fc5f6823066d20f09d050b208f9eb9860",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/responsive-review.html",
+            "sha256": "ae6acaadff75f94f2203c6f464707c4fc5f6823066d20f09d050b208f9eb9860",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/reward-view.mjs",
+            "originalSha256": "d61a36b5486b5fcc5a091c9e371475d1927a9136040fd6c3df3fbcf6fc8e00cc",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/reward-view.mjs",
+            "sha256": "d61a36b5486b5fcc5a091c9e371475d1927a9136040fd6c3df3fbcf6fc8e00cc",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/runtime.mjs",
+            "originalSha256": "7ef14a5baf666e3bd99d9ada136073ad5b6364c0b07d19a8ceea84c8cd36ad1c",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/runtime.mjs",
+            "sha256": "7ef14a5baf666e3bd99d9ada136073ad5b6364c0b07d19a8ceea84c8cd36ad1c",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/safe-area.css",
+            "originalSha256": "60d05e589ef46864e71faca08b39fc36ed7305398bf083c288107a24468901af",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/safe-area.css",
+            "sha256": "60d05e589ef46864e71faca08b39fc36ed7305398bf083c288107a24468901af",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/scene-audio.mjs",
+            "originalSha256": "5af394c4e2d59c16e4a6674d6e5254a53df3ebe6e25cabedfde2438aff192749",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/scene-audio.mjs",
+            "sha256": "5af394c4e2d59c16e4a6674d6e5254a53df3ebe6e25cabedfde2438aff192749",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/study-desk.mjs",
+            "originalSha256": "404e43f27c562d8dfb42358583308fad28247518a1e9efff3b52fa1dc68a0714",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/study-desk.mjs",
+            "sha256": "404e43f27c562d8dfb42358583308fad28247518a1e9efff3b52fa1dc68a0714",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/style.css",
+            "originalSha256": "75a011ad831385990ba1edb8d1d2ccbb32b9b69f927026fbe30644c40a548dba",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/style.css",
+            "sha256": "75a011ad831385990ba1edb8d1d2ccbb32b9b69f927026fbe30644c40a548dba",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/target-notice.mjs",
+            "originalSha256": "ed5b64450734c04e9d348297af66d947c84170d94e5acd24f4c3c47892577bb9",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/target-notice.mjs",
+            "sha256": "ed5b64450734c04e9d348297af66d947c84170d94e5acd24f4c3c47892577bb9",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/template.html",
+            "originalSha256": "df837422aec716511e50157dc48cd2e549d60e2bfd6b85eea750077c2a1f513f",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/template.html",
+            "sha256": "df837422aec716511e50157dc48cd2e549d60e2bfd6b85eea750077c2a1f513f",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/unit-label-width.mjs",
+            "originalSha256": "8b7b82db327c37225189c97b80f4a6759c0dbeeb344eba589ef1ad08537e5b4f",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/unit-label-width.mjs",
+            "sha256": "8b7b82db327c37225189c97b80f4a6759c0dbeeb344eba589ef1ad08537e5b4f",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/network/wardrobe-view.mjs",
+            "originalSha256": "02700fa591ea797ba6dba371a2ab1c51f48ffc1fe57f49cf230d3b87ea573bcb",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/network/wardrobe-view.mjs",
+            "sha256": "02700fa591ea797ba6dba371a2ab1c51f48ffc1fe57f49cf230d3b87ea573bcb",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/opening.mjs",
+            "originalSha256": "9a9e0f455823ff5bb3f5665d1bb710740726428e238d32c0b29d656366fca6d5",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/opening.mjs",
+            "sha256": "9a9e0f455823ff5bb3f5665d1bb710740726428e238d32c0b29d656366fca6d5",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/practice/NOBLE-HASHES-LICENSE.txt",
+            "originalSha256": "4f221aee6e072336700c408c68ab3b96a3fc09f6aebe6f48f1bd99e5ef13faec",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/practice/NOBLE-HASHES-LICENSE.txt",
+            "sha256": "4f221aee6e072336700c408c68ab3b96a3fc09f6aebe6f48f1bd99e5ef13faec",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/practice/browser-crypto.mjs",
+            "originalSha256": "4c3f8e1645761ab26761563250160c17e7a8090a35756995ed08dada1253eed9",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/practice/browser-crypto.mjs",
+            "sha256": "4c3f8e1645761ab26761563250160c17e7a8090a35756995ed08dada1253eed9",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/practice/no-filesystem.mjs",
+            "originalSha256": "3be54c5b469ef26634c97dc9bfefb1cb73a7351400d9299e7d46eb0a915735b3",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/practice/no-filesystem.mjs",
+            "sha256": "3be54c5b469ef26634c97dc9bfefb1cb73a7351400d9299e7d46eb0a915735b3",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/practice/runtime.mjs",
+            "originalSha256": "b3864e31ec80952fa7c96a9a4d82153241106d808aaa33ed68891b721f206894",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/practice/runtime.mjs",
+            "sha256": "b3864e31ec80952fa7c96a9a4d82153241106d808aaa33ed68891b721f206894",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/question-banks.mjs",
+            "originalSha256": "25b1ea792084e144c40adea0b46a2317a9cc21de96328c61372b10558f2c1596",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/question-banks.mjs",
+            "sha256": "25b1ea792084e144c40adea0b46a2317a9cc21de96328c61372b10558f2c1596",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/questions.json",
+            "originalSha256": "68aa7298f6bb5290167eeab1b87899d28a0735109d3cb29d5135875cfcabcad0",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/questions.json",
+            "sha256": "68aa7298f6bb5290167eeab1b87899d28a0735109d3cb29d5135875cfcabcad0",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/random.mjs",
+            "originalSha256": "80bc636faa90bee79d33ca38643661414ae98aecf9b95830f9464bfe0836cb24",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/random.mjs",
+            "sha256": "80bc636faa90bee79d33ca38643661414ae98aecf9b95830f9464bfe0836cb24",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/reward-journey.mjs",
+            "originalSha256": "41dac740d05b328d03328f88bde78ed766d7272ff42640d405363a1865f0c36e",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/reward-journey.mjs",
+            "sha256": "41dac740d05b328d03328f88bde78ed766d7272ff42640d405363a1865f0c36e",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/save-session.mjs",
+            "originalSha256": "95edb4dad5d88bcb19710342b54d95e33aa6a514cea63ef8b723c6f181c33e3e",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/save-session.mjs",
+            "sha256": "95edb4dad5d88bcb19710342b54d95e33aa6a514cea63ef8b723c6f181c33e3e",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/speech-assets.json",
+            "originalSha256": "79728bb2618edbd553bff5af2c2e1ca0488eacb9399ef59602394aee19069a4a",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/speech-assets.json",
+            "sha256": "79728bb2618edbd553bff5af2c2e1ca0488eacb9399ef59602394aee19069a4a",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/style.css",
+            "originalSha256": "680d00d49df0614665ec536715bdf43b6529a6f8d7179cc50469d2ba62abf218",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/style.css",
+            "sha256": "680d00d49df0614665ec536715bdf43b6529a6f8d7179cc50469d2ba62abf218",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/teacher-questions.json",
+            "originalSha256": "401c77b34e55d2321230a3fb0fd4c9eeb1d7b823572c676e7744cfec45657345",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/teacher-questions.json",
+            "sha256": "401c77b34e55d2321230a3fb0fd4c9eeb1d7b823572c676e7744cfec45657345",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/template.html",
+            "originalSha256": "cd1ff231a6759f9e15ca85223401d2cfdfac34b0fb83a7a296fadc9d59d46239",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/template.html",
+            "sha256": "cd1ff231a6759f9e15ca85223401d2cfdfac34b0fb83a7a296fadc9d59d46239",
+            "modifiedForLab": false
+          },
+          {
+            "originalFile": "src/types.d.ts",
+            "originalSha256": "0bbd329fa41701e026ec7b085911d889847583b938d122f302d61f7b18c7573f",
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/types.d.ts",
+            "sha256": "0bbd329fa41701e026ec7b085911d889847583b938d122f302d61f7b18c7573f",
+            "modifiedForLab": false
+          },
+          {
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/reduced-shadow-cache.mjs",
+            "sha256": "8150dae434043fc209df42cfcda00688734f92c02c993870b434e5fb03f0cfa6",
+            "addedForLab": true
+          },
+          {
+            "file": "test-results/shared-shadow-fixed/source-candidate/src/arena3d/shadow-lab-observer.mjs",
+            "sha256": "cb4e8ee19c1af211e408c5475db9c26fb7f6b1d455860f20e40144e8930ce46b",
+            "addedForLab": true
+          }
+        ],
+        "script": "lab-candidate.js",
+        "html": "lab-candidate.html",
+        "appSha256": "6b5f3a9348cf3f0f8c0b39f9d2f6ba5fa049330661ccf63a371073b16cc2566c",
+        "htmlSha256": "b0a43c1532a04d6f4df29bb54e1c5442d60c8febe659d531adaeeaebd5d9325b",
+        "appBytes": 2307791
+      }
+    ],
+    "staticFiles": [
+      {
+        "route": "/app.js",
+        "file": "test-results/shared-shadow-fixed/fixed-client/app.js",
+        "sha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31"
+      },
+      {
+        "route": "/",
+        "file": "test-results/shared-shadow-fixed/fixed-client/index.html",
+        "sha256": "6fcfce84f31d001c2e6a2e5f7f211f71df707b99093a1033211329ab7d4863b2"
+      },
+      {
+        "route": "/lab-baseline.html",
+        "file": "test-results/shared-shadow-fixed/fixed-client/lab-baseline.html",
+        "sha256": "8adc040d5451f1c447b36b9dea5101aa1d7e6e33942fc5457440fbb80bbb0e26"
+      },
+      {
+        "route": "/lab-baseline.js",
+        "file": "test-results/shared-shadow-fixed/fixed-client/lab-baseline.js",
+        "sha256": "641c004c0884c933f2472f9459a2f5e30120c08557519a6decfc259a6cb3cc31"
+      },
+      {
+        "route": "/lab-candidate.html",
+        "file": "test-results/shared-shadow-fixed/fixed-client/lab-candidate.html",
+        "sha256": "b0a43c1532a04d6f4df29bb54e1c5442d60c8febe659d531adaeeaebd5d9325b"
+      },
+      {
+        "route": "/lab-candidate.js",
+        "file": "test-results/shared-shadow-fixed/fixed-client/lab-candidate.js",
+        "sha256": "6b5f3a9348cf3f0f8c0b39f9d2f6ba5fa049330661ccf63a371073b16cc2566c"
+      }
+    ],
+    "policy": "Isolated diagnostic: A always baseline, B selected static candidate or baseline; formal source/b059 and original body/gate untouched",
+    "qualityChanges": 0,
+    "clockChanges": 0,
+    "gameStateChanges": 0,
+    "normalMotionCache": false,
+    "perMeshCallbackInstrumentation": false
+  },
+  "formalAcceptance": false,
+  "originalMaximumFrameGapMs": 250,
+  "originalInitialGuestLimitMs": 25000,
+  "retries": 0,
+  "originalHelpersUnchanged": true,
+  "originalCombatBodyUnchanged": true,
+  "driver": "Explicit independent shared-shadow diagnostic; ABBA real UI/reload, never replaces original acceptance",
+  "transportAdaptations": [
+    "Dedicated loopback4191/owned DB/server",
+    "Fixed public static B entry and real reload/reconnect",
+    "Shared bounded cleanup; any failure remains red",
+    "Unique redacted evidence names and final primitive lab observations"
+  ]
+}

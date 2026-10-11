@@ -1,0 +1,2448 @@
+{
+  "schema": 2,
+  "combatMotion": {
+    "status": "failed",
+    "stages": [
+      {
+        "name": "isolated-guests",
+        "limitMs": 25000,
+        "status": "passed",
+        "elapsedMs": 9593
+      },
+      {
+        "name": "settings-and-legal-deck",
+        "limitMs": 30000,
+        "status": "passed",
+        "elapsedMs": 11362
+      },
+      {
+        "name": "real-match-and-opening",
+        "limitMs": 15000,
+        "status": "passed",
+        "elapsedMs": 4707
+      },
+      {
+        "name": "ordinary-turns-to-melee",
+        "limitMs": 18000,
+        "status": "passed",
+        "elapsedMs": 5587
+      },
+      {
+        "name": "selected-target-and-before-image",
+        "limitMs": 7000,
+        "status": "passed",
+        "elapsedMs": 2767
+      },
+      {
+        "name": "passive-observer-and-arena-recorder",
+        "limitMs": 5000,
+        "status": "passed",
+        "elapsedMs": 1005
+      },
+      {
+        "name": "single-trusted-attack",
+        "limitMs": 3500,
+        "status": "passed",
+        "elapsedMs": 1397
+      },
+      {
+        "name": "native-recording-completion",
+        "limitMs": 8000,
+        "status": "passed",
+        "elapsedMs": 2711
+      },
+      {
+        "name": "settled-after-image",
+        "limitMs": 4000,
+        "status": "passed",
+        "elapsedMs": 836
+      },
+      {
+        "name": "decode-original-video-frames",
+        "limitMs": 22000,
+        "status": "passed",
+        "elapsedMs": 379
+      },
+      {
+        "name": "motion-and-authority-evidence",
+        "limitMs": 4000,
+        "status": "failed",
+        "elapsedMs": 180
+      }
+    ],
+    "screenshots": [
+      {
+        "file": "-combat-motion-normal-melee-leaves-its-slot-changes-hero-HP-once-and-returns-00-selected-before-single-attack.png",
+        "elapsedMs": 778
+      },
+      {
+        "file": "-combat-motion-normal-melee-leaves-its-slot-changes-hero-HP-once-and-returns-01-settled-after-single-attack.png",
+        "elapsedMs": 772
+      }
+    ],
+    "coverage": {
+      "normalMotionViewer": "A",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "otherParticipantReducedMotion": true,
+      "attackCount": 1,
+      "audio": false,
+      "maximumRecordedFrameGapSeconds": 0.25
+    },
+    "visualReview": {
+      "status": "required",
+      "checks": [
+        "target line or arrow",
+        "departure",
+        "contact flash",
+        "floating damage",
+        "return"
+      ]
+    },
+    "caveat": "WebM uses lossy VP8. PNGs are unchanged decoded video frames, not lossless canvas captures. Native frame PTS describe this recording, not exact animation duration. WebGL2 does not prove physical GPU acceleration.",
+    "latestAuthority": {
+      "revision": 6,
+      "phase": "playing",
+      "turn": 3,
+      "activeSeat": 0,
+      "assisted": false,
+      "players": [
+        {
+          "seat": 0,
+          "hp": 18,
+          "armor": 0,
+          "mana": 2,
+          "maxMana": 2,
+          "handCount": 4,
+          "deckCount": 15,
+          "controller": "human",
+          "board": [
+            {
+              "uid": "u1",
+              "cardId": "acorn_squirrel",
+              "atk": 1,
+              "hp": 2,
+              "maxHp": 2,
+              "ready": false,
+              "shield": false
+            }
+          ]
+        },
+        {
+          "seat": 1,
+          "hp": 17,
+          "armor": 0,
+          "mana": 1,
+          "maxMana": 1,
+          "handCount": 5,
+          "deckCount": 15,
+          "controller": "human",
+          "board": []
+        }
+      ]
+    },
+    "before": {
+      "revision": 5,
+      "phase": "playing",
+      "turn": 3,
+      "activeSeat": 0,
+      "assisted": false,
+      "players": [
+        {
+          "seat": 0,
+          "hp": 18,
+          "armor": 0,
+          "mana": 2,
+          "maxMana": 2,
+          "handCount": 4,
+          "deckCount": 15,
+          "controller": "human",
+          "board": [
+            {
+              "uid": "u1",
+              "cardId": "acorn_squirrel",
+              "atk": 1,
+              "hp": 2,
+              "maxHp": 2,
+              "ready": true,
+              "shield": false
+            }
+          ]
+        },
+        {
+          "seat": 1,
+          "hp": 18,
+          "armor": 0,
+          "mana": 1,
+          "maxMana": 1,
+          "handCount": 5,
+          "deckCount": 15,
+          "controller": "human",
+          "board": []
+        }
+      ]
+    },
+    "sourceUid": "u1",
+    "sourceCard": "acorn_squirrel",
+    "renderEnvironment": {
+      "path": "WebGL2",
+      "contextReadable": true,
+      "vendor": "WebKit",
+      "renderer": "WebKit WebGL",
+      "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "caveat": "Read-only facts from the isolated CI browser; not a frame-rate measurement or a cause of earlier slowness"
+    },
+    "dom": {
+      "samples": [
+        {
+          "elapsedMs": 0.2,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 2.1,
+            "submitMs": 1.3,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3.7,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 2.1,
+            "submitMs": 0.9,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 79.9,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.6,
+            "submitMs": 1,
+            "anchorMs": 0.1,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 156.3,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.9,
+            "submitMs": 1.3,
+            "anchorMs": 0,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 238.7,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1,
+            "submitMs": 1.2,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 313.5,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 0.1,
+            "submitMs": 1.4,
+            "anchorMs": 0,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 391.3,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.1,
+            "submitMs": 1,
+            "anchorMs": 0,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 467.3,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 2.4,
+            "submitMs": 1.2,
+            "anchorMs": 0,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 545.3,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.3,
+            "submitMs": 1.1,
+            "anchorMs": 0.2,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 622.4,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.8,
+            "submitMs": 1.1,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 696.8,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.5,
+            "submitMs": 1,
+            "anchorMs": 0.1,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 772.3,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.8,
+            "submitMs": 1.1,
+            "anchorMs": 0,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 848.6,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.5,
+            "submitMs": 1.5,
+            "anchorMs": 0.1,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 925,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.8,
+            "submitMs": 1.3,
+            "anchorMs": 0,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 999.4,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.6,
+            "submitMs": 1,
+            "anchorMs": 0.1,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 1075.6,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.6,
+            "submitMs": 1,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 1159.5,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": false,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.6,
+            "submitMs": 1,
+            "anchorMs": 0,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 1239.2,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": false,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.4,
+            "submitMs": 2.9,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 1871.6,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": false,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 2.8,
+            "submitMs": 1.5,
+            "anchorMs": 0,
+            "frameGapMs": 617,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 2213.4,
+          "source": {
+            "x": 192.62,
+            "y": 143.38,
+            "hp": 2
+          },
+          "enemyHp": 18,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": false,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 2.8,
+            "submitMs": 1.3,
+            "anchorMs": 0.2,
+            "frameGapMs": 350,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 2560.3,
+          "source": {
+            "x": 483.83,
+            "y": 150,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": false,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 3.8,
+            "submitMs": 1.8,
+            "anchorMs": 0.1,
+            "frameGapMs": 350,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 2645.1,
+          "source": {
+            "x": 483.83,
+            "y": 150,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": false,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 2,
+            "submitMs": 1.4,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 2725.4,
+          "source": {
+            "x": 483.83,
+            "y": 150,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": false,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.2,
+            "submitMs": 1.3,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 2800.6,
+          "source": {
+            "x": 477.57,
+            "y": 150,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": false,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.3,
+            "submitMs": 1.2,
+            "anchorMs": 0.1,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 2880.1,
+          "source": {
+            "x": 384.07,
+            "y": 150,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": false,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.2,
+            "submitMs": 1.7,
+            "anchorMs": 0,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 2955.8,
+          "source": {
+            "x": 235.28,
+            "y": 146.78,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": false,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 2.7,
+            "submitMs": 1,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3032.1,
+          "source": {
+            "x": 213.48,
+            "y": 145.65,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": false,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.2,
+            "submitMs": 2.4,
+            "anchorMs": 0,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3108.3,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 2.1,
+            "submitMs": 1.1,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3184,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.2,
+            "submitMs": 1.1,
+            "anchorMs": 0.2,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3259.6,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.9,
+            "submitMs": 1.2,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3336.5,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 3,
+            "submitMs": 1.2,
+            "anchorMs": 0,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3410.6,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.8,
+            "submitMs": 1,
+            "anchorMs": 0.1,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3486.3,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.7,
+            "submitMs": 1.3,
+            "anchorMs": 0,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3562.4,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 0,
+            "submitMs": 1,
+            "anchorMs": 0.1,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3637.5,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.6,
+            "submitMs": 1.2,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3710.1,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.3,
+            "submitMs": 0.9,
+            "anchorMs": 0.1,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3788.1,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 2.2,
+            "submitMs": 1,
+            "anchorMs": 0,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3862.1,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.8,
+            "submitMs": 1.1,
+            "anchorMs": 0.1,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 3938.8,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.6,
+            "submitMs": 1.3,
+            "anchorMs": 0,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 4011.9,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 2.1,
+            "submitMs": 1.1,
+            "anchorMs": 0,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 4089,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.4,
+            "submitMs": 1.2,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 4175.9,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.2,
+            "submitMs": 1.2,
+            "anchorMs": 0.2,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 4253.3,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.1,
+            "submitMs": 1.6,
+            "anchorMs": 0,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 4329.2,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 2.3,
+            "submitMs": 1.7,
+            "anchorMs": 0.1,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 4407.6,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 1.5,
+            "submitMs": 1.8,
+            "anchorMs": 0,
+            "frameGapMs": 83,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        },
+        {
+          "elapsedMs": 4483.8,
+          "source": {
+            "x": 213.19,
+            "y": 145.64,
+            "hp": 2
+          },
+          "enemyHp": 17,
+          "arena": {
+            "x": 0,
+            "y": 24,
+            "width": 708,
+            "height": 208
+          },
+          "renderer": "WebGL2",
+          "reducedMotion": false,
+          "arenaHidden": false,
+          "visibility": "visible",
+          "inputReady": true,
+          "effectWarmup": "ready",
+          "effectWarmupDraw": "performed",
+          "effectWarmupDrawMs": 133,
+          "effectWarmupCompileMs": 175,
+          "timing": {
+            "updateMs": 0,
+            "submitMs": 1.8,
+            "anchorMs": 0,
+            "frameGapMs": 67,
+            "qualityLevel": 3,
+            "pixelScale": 0.65,
+            "shadowMapSize": 512
+          }
+        }
+      ],
+      "clicks": [
+        {
+          "elapsedMs": 1151.8,
+          "trusted": true
+        }
+      ],
+      "final": {
+        "elapsedMs": 4555,
+        "source": {
+          "x": 213.19,
+          "y": 145.64,
+          "hp": 2
+        },
+        "enemyHp": 17,
+        "arena": {
+          "x": 0,
+          "y": 24,
+          "width": 708,
+          "height": 208
+        },
+        "renderer": "WebGL2",
+        "reducedMotion": false,
+        "arenaHidden": false,
+        "visibility": "visible",
+        "inputReady": true,
+        "effectWarmup": "ready",
+        "effectWarmupDraw": "performed",
+        "effectWarmupDrawMs": 133,
+        "effectWarmupCompileMs": 175,
+        "timing": {
+          "updateMs": 0,
+          "submitMs": 1.8,
+          "anchorMs": 0,
+          "frameGapMs": 67,
+          "qualityLevel": 3,
+          "pixelScale": 0.65,
+          "shadowMapSize": 512
+        }
+      },
+      "sampleLimit": 360,
+      "observationLimitMs": 6000,
+      "delivery": "complete",
+      "diagnostics": {
+        "support": {
+          "longtask": "observing",
+          "long-animation-frame": "observing"
+        },
+        "entries": [
+          {
+            "type": "longtask",
+            "elapsedMs": 0.2,
+            "durationMs": 73
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 79.3,
+            "durationMs": 79
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 159.8,
+            "durationMs": 77
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 238.5,
+            "durationMs": 73
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 312.5,
+            "durationMs": 75
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 389.1,
+            "durationMs": 76
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 466.7,
+            "durationMs": 76
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 543.5,
+            "durationMs": 75
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 619.3,
+            "durationMs": 81
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 702.5,
+            "durationMs": 75
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 778,
+            "durationMs": 77
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 855.3,
+            "durationMs": 74
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 929.8,
+            "durationMs": 77
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 700.5,
+            "durationMs": 76.9,
+            "blockingDurationMs": 24.9,
+            "renderStartMs": 702.5,
+            "styleAndLayoutStartMs": 705.1,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 1008.9,
+            "durationMs": 76
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 1085.5,
+            "durationMs": 74
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 855.2,
+            "durationMs": 73.8,
+            "blockingDurationMs": 23.7,
+            "renderStartMs": 855.3,
+            "styleAndLayoutStartMs": 857.6,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 1160.5,
+            "durationMs": 74
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 1235.5,
+            "durationMs": 75
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 1007.2,
+            "durationMs": 77.1,
+            "blockingDurationMs": 25.8,
+            "renderStartMs": 1008.9,
+            "styleAndLayoutStartMs": 1011.7,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 1311.7,
+            "durationMs": 75
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 1388,
+            "durationMs": 74
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 1160.1,
+            "durationMs": 74.3,
+            "blockingDurationMs": 24.1,
+            "renderStartMs": 1160.5,
+            "styleAndLayoutStartMs": 1163.2,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 1462.7,
+            "durationMs": 75
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 1539,
+            "durationMs": 78
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 1622.8,
+            "durationMs": 77
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 1310.9,
+            "durationMs": 75.5,
+            "blockingDurationMs": 25.1,
+            "renderStartMs": 1311.7,
+            "styleAndLayoutStartMs": 1315.2,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 1701,
+            "durationMs": 623
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 2332.6,
+            "durationMs": 341
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 1462.2,
+            "durationMs": 75.6,
+            "blockingDurationMs": 25.1,
+            "renderStartMs": 1462.8,
+            "styleAndLayoutStartMs": 1465.8,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 2674.9,
+            "durationMs": 344
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3020.1,
+            "durationMs": 86
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 1700.1,
+            "durationMs": 361.7,
+            "blockingDurationMs": 311.1,
+            "renderStartMs": 1701,
+            "styleAndLayoutStartMs": 1705.5,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3107.5,
+            "durationMs": 81
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3189,
+            "durationMs": 74
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 2674.3,
+            "durationMs": 344.5,
+            "blockingDurationMs": 294.2,
+            "renderStartMs": 2675,
+            "styleAndLayoutStartMs": 2682.7,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3263.9,
+            "durationMs": 78
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3342.9,
+            "durationMs": 74
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 3106.5,
+            "durationMs": 81.5,
+            "blockingDurationMs": 30.9,
+            "renderStartMs": 3107.5,
+            "styleAndLayoutStartMs": 3111.5,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3417.7,
+            "durationMs": 76
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3494.2,
+            "durationMs": 74
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 3263.8,
+            "durationMs": 78.1,
+            "blockingDurationMs": 28.1,
+            "renderStartMs": 3263.9,
+            "styleAndLayoutStartMs": 3267.8,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3569,
+            "durationMs": 78
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3647.6,
+            "durationMs": 74
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 3417.3,
+            "durationMs": 76.1,
+            "blockingDurationMs": 26.1,
+            "renderStartMs": 3417.7,
+            "styleAndLayoutStartMs": 3422.1,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3722.5,
+            "durationMs": 75
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3798.4,
+            "durationMs": 75
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 3568.9,
+            "durationMs": 77.5,
+            "blockingDurationMs": 27.5,
+            "renderStartMs": 3569,
+            "styleAndLayoutStartMs": 3575,
+            "scriptCount": 1,
+            "scriptDurationMs": 5.3,
+            "forcedStyleAndLayoutMs": 1
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3873.8,
+            "durationMs": 75
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 3949.4,
+            "durationMs": 77
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 3722.2,
+            "durationMs": 75.5,
+            "blockingDurationMs": 25.5,
+            "renderStartMs": 3722.5,
+            "styleAndLayoutStartMs": 3725.9,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4027.4,
+            "durationMs": 72
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4100.8,
+            "durationMs": 73
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 3873.5,
+            "durationMs": 75,
+            "blockingDurationMs": 24.8,
+            "renderStartMs": 3873.9,
+            "styleAndLayoutStartMs": 3877.1,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4173.9,
+            "durationMs": 75
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4251.1,
+            "durationMs": 73
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 4027,
+            "durationMs": 72.8,
+            "blockingDurationMs": 22.7,
+            "renderStartMs": 4027.4,
+            "styleAndLayoutStartMs": 4028.7,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4325.3,
+            "durationMs": 76
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4402.1,
+            "durationMs": 72
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 4173.8,
+            "durationMs": 75.2,
+            "blockingDurationMs": 25.2,
+            "renderStartMs": 4173.9,
+            "styleAndLayoutStartMs": 4176.7,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4474.9,
+            "durationMs": 77
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4552.4,
+            "durationMs": 85
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 4324.9,
+            "durationMs": 76.6,
+            "blockingDurationMs": 26.4,
+            "renderStartMs": 4325.3,
+            "styleAndLayoutStartMs": 4328.5,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4639.6,
+            "durationMs": 74
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4716.6,
+            "durationMs": 74
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 4474.7,
+            "durationMs": 76.8,
+            "blockingDurationMs": 26.6,
+            "renderStartMs": 4474.9,
+            "styleAndLayoutStartMs": 4478.5,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4791.2,
+            "durationMs": 76
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4870.4,
+            "durationMs": 76
+          },
+          {
+            "type": "long-animation-frame",
+            "elapsedMs": 4638,
+            "durationMs": 75.8,
+            "blockingDurationMs": 25.2,
+            "renderStartMs": 4639.6,
+            "styleAndLayoutStartMs": 4642.3,
+            "scriptCount": 0,
+            "scriptDurationMs": 0,
+            "forcedStyleAndLayoutMs": 0
+          },
+          {
+            "type": "longtask",
+            "elapsedMs": 4948,
+            "durationMs": 72
+          }
+        ],
+        "entryLimit": 96,
+        "elapsedMs": 5021.6,
+        "caveat": "Diagnostic observer overhead is unmeasured. Missing entries do not prove absence of stalls. These are browser CPU timeline entries, not GPU timers."
+      }
+    },
+    "captureSupport": {
+      "supported": true,
+      "mimeType": "video/webm;codecs=vp8",
+      "width": 460,
+      "height": 135
+    },
+    "recording": {
+      "code": "CAPTURE_COMPLETE",
+      "scope": "Only the anonymous arena canvas; no DOM, hand canvas, display capture or audio",
+      "requestedFrameRate": 30,
+      "requestedAfterClickMs": 3000,
+      "hardLimitMs": 6000,
+      "byteLimit": 2097152,
+      "startElapsedMs": 235.1,
+      "stopElapsedMs": 4248.900000000045,
+      "trustedClickElapsedMs": 1151.900000000045,
+      "width": 460,
+      "height": 135,
+      "audioTracks": 0,
+      "file": "combat-motion-anonymous-arena-only.webm",
+      "bytes": 45249
+    },
+    "after": {
+      "revision": 6,
+      "phase": "playing",
+      "turn": 3,
+      "activeSeat": 0,
+      "assisted": false,
+      "players": [
+        {
+          "seat": 0,
+          "hp": 18,
+          "armor": 0,
+          "mana": 2,
+          "maxMana": 2,
+          "handCount": 4,
+          "deckCount": 15,
+          "controller": "human",
+          "board": [
+            {
+              "uid": "u1",
+              "cardId": "acorn_squirrel",
+              "atk": 1,
+              "hp": 2,
+              "maxHp": 2,
+              "ready": false,
+              "shield": false
+            }
+          ]
+        },
+        {
+          "seat": 1,
+          "hp": 17,
+          "armor": 0,
+          "mana": 1,
+          "maxMana": 1,
+          "handCount": 5,
+          "deckCount": 15,
+          "controller": "human",
+          "board": []
+        }
+      ]
+    },
+    "decoded": {
+      "method": "ffprobe source-frame PTS; ffmpeg selects existing frame indices with vsync 0; no interpolation, scaling or speed change",
+      "caveat": "PNG files are original decoded frames of a lossy WebM recording, not lossless copies of the source canvas",
+      "video": {
+        "file": "combat-motion-anonymous-arena-only.webm",
+        "bytes": 45249,
+        "sha256": "50093303a2fd68ada10422eae1d2abf088661c9b1f9eb3d745da3ef1c530ea49",
+        "codec": "vp8",
+        "width": 460,
+        "height": 135,
+        "audioStreams": 0,
+        "recordedFrames": 18,
+        "firstPtsSeconds": 0,
+        "lastPtsSeconds": 3.773,
+        "maximumFrameGapSeconds": 0.977
+      },
+      "selectedFrames": [
+        {
+          "file": "combat-motion-arena-frame-00.png",
+          "sourceIndex": 0,
+          "ptsSeconds": 0,
+          "blackPercent": 32,
+          "bytes": 63061,
+          "sha256": "da37a325294228b94613cb7d70326f2b63d24f24a2a51439b9d6dd0345a25c9b"
+        },
+        {
+          "file": "combat-motion-arena-frame-01.png",
+          "sourceIndex": 1,
+          "ptsSeconds": 0.152,
+          "blackPercent": 32,
+          "bytes": 63366,
+          "sha256": "fa43f7b49b5f1a75955d9c16d414743527220e3a18da8227b74fde7f5f191dfb"
+        },
+        {
+          "file": "combat-motion-arena-frame-02.png",
+          "sourceIndex": 2,
+          "ptsSeconds": 0.306,
+          "blackPercent": 32,
+          "bytes": 63858,
+          "sha256": "74785d37f802a210438acfb99d6c62dab2be781fcc89e0b6299f5d144bbfaa17"
+        },
+        {
+          "file": "combat-motion-arena-frame-03.png",
+          "sourceIndex": 3,
+          "ptsSeconds": 0.458,
+          "blackPercent": 32,
+          "bytes": 66685,
+          "sha256": "610abb59f1c4768e21f8117248df230a485ffa8af590c5217449462e5da4cbc3"
+        },
+        {
+          "file": "combat-motion-arena-frame-04.png",
+          "sourceIndex": 5,
+          "ptsSeconds": 0.76,
+          "blackPercent": 32,
+          "bytes": 67812,
+          "sha256": "1aeae9c1c9afb3f5090be88c76edd0e6f7fb5ae1c61593416cf95a453b2cec8a"
+        },
+        {
+          "file": "combat-motion-arena-frame-05.png",
+          "sourceIndex": 6,
+          "ptsSeconds": 1,
+          "blackPercent": 32,
+          "bytes": 64605,
+          "sha256": "3ec0b4801ddf6dabf89c6d23c1a1777638ccd8a92fdec2295ef1c219a145d6df"
+        },
+        {
+          "file": "combat-motion-arena-frame-06.png",
+          "sourceIndex": 7,
+          "ptsSeconds": 1.977,
+          "blackPercent": 32,
+          "bytes": 65163,
+          "sha256": "f0c7ac3351772d56101820a50216b7d002a9fdf19ae0256e6d5263b3c0c70ee7"
+        },
+        {
+          "file": "combat-motion-arena-frame-07.png",
+          "sourceIndex": 8,
+          "ptsSeconds": 2.406,
+          "blackPercent": 32,
+          "bytes": 64924,
+          "sha256": "690c323806046d7933d6214e9e080f40aced9c8bc74c0ca94097790a92b83cec"
+        },
+        {
+          "file": "combat-motion-arena-frame-08.png",
+          "sourceIndex": 10,
+          "ptsSeconds": 2.717,
+          "blackPercent": 32,
+          "bytes": 65936,
+          "sha256": "cb610949505c7875d433b2e0e8f3d9d8aa728cd71aa99bfcbe63fc4f26919beb"
+        },
+        {
+          "file": "combat-motion-arena-frame-09.png",
+          "sourceIndex": 12,
+          "ptsSeconds": 3.02,
+          "blackPercent": 32,
+          "bytes": 65815,
+          "sha256": "93e323d38dba8f759bb4bb8ebbc6a52e56fbd17c6a270a8d304097d773a2eff1"
+        },
+        {
+          "file": "combat-motion-arena-frame-10.png",
+          "sourceIndex": 15,
+          "ptsSeconds": 3.471,
+          "blackPercent": 32,
+          "bytes": 65526,
+          "sha256": "b725471becfcb41c9d538035c8731bffbdcae9f80282ecdee32bb1497eff2488"
+        },
+        {
+          "file": "combat-motion-arena-frame-11.png",
+          "sourceIndex": 17,
+          "ptsSeconds": 3.773,
+          "blackPercent": 32,
+          "bytes": 65479,
+          "sha256": "38a8a2a1ba988d6b1625a1d86177b5d870fb5f6d905c925e0a9795cda1898f3a"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "type": "battle.action",
+        "action": "attack",
+        "accepted": true
+      }
+    ],
+    "newEvents": [
+      {
+        "kind": "attack",
+        "seat": 0,
+        "revision": 6
+      }
+    ],
+    "summary": {
+      "renderer": "WebGL2",
+      "normalMotionSamples": 46,
+      "maximumSourceDisplacementPx": 270.6751174378613,
+      "sourceDisplacementAtFirstHpChangePx": 270.6751174378613,
+      "finalSourceDisplacementPx": 0,
+      "visualHpStates": [
+        {
+          "elapsedMs": 0.2,
+          "hp": 18
+        },
+        {
+          "elapsedMs": 2560.3,
+          "hp": 17
+        }
+      ],
+      "authoritativeHealthDelta": -1
+    },
+    "failedStage": "motion-and-authority-evidence"
+  }
+}

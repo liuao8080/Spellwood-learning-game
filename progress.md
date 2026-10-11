@@ -38,3 +38,12 @@ Original prompt: 接手词灵对决 Spellwood PR #6 的实际最新版本，先�
 
 - Physical-phone/public human matchmaking/low-end GPU/audio/long whole-session FPS and adaptive recovery under pressure unverified.320 far hero and short landscape units still small.
 - Source delivery uses independent codex/local-gpu-refinement and a draft PR against codex/teacher-expansion-integrated; merge/public deployment require a separate user instruction.
+
+## 2026-10-11 PR7 cloud melee follow-up
+
+- Official run38030577115: head1eb618b, checkout0773964, tree matches406e337.313 safe original files SHA/bytes verified.28/29 browsers and32/32 scoped Node; original250ms received977ms. Actual official Headless Shell156/r1248 with SwiftShader Subzero. Same-clock trusted+3s RAF632.4/341.8/346.9ms confirms browser stall; CPU submission is not GPU completion. Original failure retained.
+- Three original-case controls on M4 Chrome154: Metal36ms, headedSwiftShader199ms, headlessSwiftShader163ms. Product/default quality unchanged; LLVM vs Subzero/ARM vs x86/environment differences prevent cloud parity. Two software RAF tails10/38.3ms unknown.
+- Real read-only copied-source Metal probe confirms B31 static-shadow-input float frames ×37 actual depth draws=1147 over493ms; A normal attack60 distinct keys. Probe max.5ms float CPU overhead is not GPU time. Software25s startup failure and interrupted hardware run remain red history.
+- Lab-only conservative cache + full-scene ABBA baseline/candidate/candidate/baseline, same A room/source via real UI/reloads, is being reviewed/frozen. Complete color counters include SpriteRenderer, stock matrix updater safety and warmup/context invalidation are audited. No product src changes or quality/gate changes before actual cloud causal/pixel evidence.
+- New dedicated real PR7 Actions job preserves original complete acceptance; main workflow is absent so manual dispatch presently unavailable without forbidden main changes. Safe selected originals in evidence/pr7-shadow-2026-10-11, source hashes in retained-files.json; source push is distinct from merge/deploy.
+- Fresh local ABBA hardware-headed-2026-10-11T03-44-34-014Z-e02ed921 completed4:51/38/49/51ms,all10sourceIntegrity true,31Bfloat frames each. Baseline depth37→candidate0→candidate0→baseline43 with fullcolor67/71/75/79; input-key casters37/39/41/43 reflect natural turn/hand growth. No cloud cause/pixel claim. Prior pre-body20s red caused chosen4190 Fetch bad port; strict port4191 transport fix reviewed, all budgets kept. Original formalb059/src0diff.
